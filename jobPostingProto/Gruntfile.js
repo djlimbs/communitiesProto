@@ -38,7 +38,7 @@ module.exports = function(grunt) {
     watch: {
       application_code: {
         files: ['app/*.js'],
-        tasks: ['neuter']
+        tasks: ['neuter', 'gh-pages']
       },
 
      // handlebars_templates: {
