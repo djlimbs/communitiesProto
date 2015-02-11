@@ -57,6 +57,39 @@ App.JobSearchController = Ember.ObjectController.extend({
                 self.set('isSearching', false);
                 if (res) {
                     var parsedResult = parseResult(res);
+
+                    var jobPostings = parsedResult.data.jobPostings;
+
+                    jobPostings.forEach(function(jp) {
+                        var firstLocationString = '';
+                        var otherLocationsString;
+                        var otherLocationsCount = 0;
+
+                        jp.locations.forEach(function(l, i) {
+                            var location = '';
+
+                            location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+                            if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+                                location += ', ' + l.Location__r.Country_Province__c;
+                            }
+
+                            if (i === 0) {
+                                firstLocationString = location;
+                            } else if (i === 1) {
+                                otherLocationsCount++;
+                                otherLocationsString = location;
+                            } else {
+                                otherLocationsCount++;
+                                otherLocationsString += ', ' + location;
+                            }
+                        });
+
+                        jp.firstLocationString = firstLocationString;
+                        jp.otherLocationsString = otherLocationsString;
+                        jp.otherLocationsCount = otherLocationsCount;
+                    });
+
                     self.set('searchResults', parsedResult.data.jobPostings);
                     console.log(parsedResult);
                 } else {
