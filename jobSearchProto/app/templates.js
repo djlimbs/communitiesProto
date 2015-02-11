@@ -87,21 +87,21 @@ function program7(depth0,data) {
     'value': ("searchTerm")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"column--md--6\">\n                            <div class=\"form__group mar--md--bn\">\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-location\"></div>\n                                    ");
-  hashContexts = {'content': depth0,'value': depth0};
-  hashTypes = {'content': "ID",'value': "ID"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
-    'content': ("locations"),
-    'value': ("selectedLocation")
-  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"column--md--6\">\n                            <div class=\"form__group mar--sm--tm mar--md--bn\">\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    ");
+  data.buffer.push("\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"column--md--6\">\n                            <div class=\"form__group mar--md--bn\">\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    ");
   hashContexts = {'content': depth0,'value': depth0};
   hashTypes = {'content': "ID",'value': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
     'content': ("jobFamilies"),
     'value': ("selectedJobFamily")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                                </div>\n                            </div>\n                        </div>\n\n\n                        <div class=\"column--md--6\">\n                            <div class=\"row\">\n                                <div class=\"column--sm--6\">\n                                    <div class=\"form__group mar--sm--tm mar--md--bn\">\n                                        <div class=\"select__wrap\">\n                                            <div class=\"input__icon juicon juicon-down\"></div>\n                                            <select>\n                                                <option value=\"\">25</option>\n                                                <option value=\"category1\">category 1</option>\n                                            </select>\n                                        </div>\n                                    </div>\n                                </div>\n                                <div class=\"column--sm--6\">\n                                    <div class=\"form__group mar--sm--tm mar--md--bn\">\n                                        <div class=\"select__wrap\">\n                                            <div class=\"input__icon juicon juicon-down\"></div>\n                                            <select>\n                                                <option value=\"\">mi</option>\n                                                <option value=\"category1\">category 1</option>\n                                            </select>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n\n\n                        <div class=\"column--md--6\">\n                            ");
+  data.buffer.push("\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"column--md--6\">\n                            <div class=\"form__group mar--sm--tm mar--md--bn\">\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-location\"></div>\n                                    ");
+  hashContexts = {'content': depth0,'value': depth0};
+  hashTypes = {'content': "ID",'value': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'content': ("locations"),
+    'value': ("selectedLocation")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"column--md--6\">\n                            ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "isNear", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
