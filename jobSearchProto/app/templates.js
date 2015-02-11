@@ -283,10 +283,10 @@ function program3(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "applications", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n    <hr class=\"show-brkpoint--md\">\n\n    <div class=\"content__section\" data-twttr-id=\"twttr-sandbox-0\">\n        <h3 class=\"mar--sm--tn mar--sm--bm\">\n            <span class=\"juicon juicon-twitter text-faded\"></span> \n            <a href=\"https://www.twitter.com/salesforcejobs\">@Salesforcejobs</a>\n        </h3>\n\n        ");
+  data.buffer.push("\n\n    <div class=\"content__section\" data-twttr-id=\"twttr-sandbox-0\">\n        <h3 class=\"mar--sm--tn mar--sm--bm\">\n            <span class=\"juicon juicon-twitter text-faded\"></span> \n            <a href=\"https://www.twitter.com/salesforcejobs\">@Salesforcejobs</a>\n        </h3>\n\n        ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "twitter", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "salesforce-twitter", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n    </div>\n</div>\n\n\n");
   return buffer;
   
