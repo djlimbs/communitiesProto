@@ -175,7 +175,7 @@ App.JobSearchRoute = Ember.Route.extend( {
                 });
 
                 var applicationObj = {
-                    jobTitle: app.Requisition__r.Job_Title__c,
+                    jobTitle: app.Job_Posting__r.Name,
                     firstLocationString: firstLocationString,
                     otherLocationsString: otherLocationsString,
                     otherLocationsCount: otherLocationsCount,
@@ -187,7 +187,7 @@ App.JobSearchRoute = Ember.Route.extend( {
         }
 
         return {
-            radiusOptions: ['10', '25', '50'],
+            radiusOptions: ['5', '10', '25', '50'],
             radiusUnits: ['mi', 'km'],
             locations: ['All locations', 'Near...', 'Near me', 'Remote/Telecommute'],
             jobFamilies: jobFamilies,
