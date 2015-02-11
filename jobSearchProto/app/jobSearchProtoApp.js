@@ -10,7 +10,7 @@ var updateHeight = function() {
 };
 
 var globalThis = this;
-//
+
 Ember.View.reopen({
     willInsertElement: function() {
         Ember.run.debounce(globalThis, updateHeight, 100);
@@ -22,13 +22,8 @@ Ember.View.reopen({
 
 App.JobSearchView = Ember.View.extend({
     didInsertElement: function() {
-        //console.log(window.innerHeight);
-        $(window).resize(function() {
-            console.log('b');
-            console.log(window.innerHeight);
-            //parent.alertsize();
-
-            //parent.alertsize(window.innerHeight);
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
         });
     }
 });
@@ -109,11 +104,52 @@ App.JobSearchRoute = Ember.Route.extend( {
             jobFamilies.addObjects(parsedJobSearchMap.jobFamilies.getEach('value'));
         }
 
+        var applications = [];
+
+        if (!Ember.isEmpty(parsedJobSearchMap.applications)) {
+            parsedJobSearchMap.applications.forEach(function(app) {
+                var firstLocationString = '';
+                var otherLocationsString;
+                var otherLocationsCount = 0;
+
+                app.locations.forEach(function(l, i) {
+                    var location = '';
+
+                    location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+                    if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+                        location += ', ' + l.Location__r.Country_Province__c;
+                    }
+
+                    if (i === 0) {
+                        firstLocationString = location;
+                    } else if (i === 1) {
+                        otherLocationsCount++;
+                        otherLocationsString = location;
+                    } else {
+                        otherLocationsCount++;
+                        otherLocationsString += ', ' + location;
+                    }
+                });
+
+                var applicationObj = {
+                    jobTitle: app.Requisition__r.Job_Title__c,
+                    firstLocationString: firstLocationString,
+                    otherLocationsString: otherLocationsString,
+                    otherLocationsCount: otherLocationsCount,
+                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c
+                };
+
+                applications.addObject(applicationObj);
+            });
+        }
+
         return {
             radiusOptions: ['10', '25', '50'],
             radiusUnits: ['mi', 'km'],
             locations: ['All locations', 'Near...', 'Near me', 'Remote/Telecommute'],
-            jobFamilies: jobFamilies
+            jobFamilies: jobFamilies,
+            applications: applications
         };
     }
 });

@@ -135,7 +135,7 @@ function program7(depth0,data) {
 Ember.TEMPLATES["searchResults"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashContexts, hashTypes, escapeExpression=this.escapeExpression, self=this;
+  var buffer = '', stack1, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -173,7 +173,80 @@ function program1(depth0,data) {
     'itemController': ("jobPosting")
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n            </div>\n\n            <div class=\"column--md--4\">\n                <div class=\"content__section mar--md--bxl\">\n                    <h3 class=\"mar--sm--tn mar--sm--bn\"><span class=\"juicon juicon-bookmark text-faded\"></span> My saved jobs</h3>\n                    <ul class=\"list-style-type-none mar--sm--n\">\n                        <li class=\"mar--sm--bm mar--sm--tm\">\n                            <h4 class=\"mar--sm--n\"><a href=\"communities__prototype__job--v2.html\">Chief Technology Officer</a></h4>\n                            <h5 class=\"mar--sm--n text-faded\">Chicago, IL</h5>\n                        </li>\n                        <li class=\"mar--sm--bm mar--sm--tm\">\n                            <h4 class=\"mar--sm--n\"><a href=\"communities__prototype__job--v2.html\">Software Developer</a></h4>\n                            <h5 class=\"mar--sm--n text-faded\">Chicago, IL &amp; <a href=\"communities__prototype__job--v2.html\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"San Francisco, CA | Boston, MA\">2 others</a></h5>\n                            <small class=\"label label--secondary\">Applied</small>\n                        </li>\n                        <li class=\"mar--sm--bm mar--sm--tm\">\n                            <h4 class=\"mar--sm--n\"><a href=\"communities__prototype__job--v2.html\">Software Developer</a></h4>\n                            <h5 class=\"mar--sm--n text-faded\">San Francisco, CA &amp; <a href=\"communities__prototype__job--v2.html\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"Chicago, IL | Boston, MA\">2 others</a></h5>\n                            <small class=\"label label--success\">Offer extended</small>\n                        </li>\n                    </ul>\n                </div>\n                <hr class=\"show-brkpoint--md\">\n                <div class=\"content__section\">\n                    <h3 class=\"mar--sm--tn mar--sm--bn\"><span class=\"juicon juicon-twitter text-faded\"></span> Recent tweets <a href=\"#\">@Salesforce</a></h3>\n                    <ul class=\"list-style-type-none\">\n                        <li class=\"card\">\n                            <div class=\"card__body\">\n                                <span>\"</span><a href=\"#\" class=\"text-faded\">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>\"</span>\n                            </div>\n                        </li>\n                        <li class=\"card\">\n                            <div class=\"card__body\">\n                                <span>\"</span><a href=\"#\" class=\"text-faded\">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>\"</span>\n                            </div>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n\n        </div>\n    </div>\n</div>");
+  data.buffer.push("\n            </div>\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "sideBar", options) : helperMissing.call(depth0, "partial", "sideBar", options))));
+  data.buffer.push("\n\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["sideBar"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n        <div class=\"content__section mar--md--bxl\">\n            <h3 class=\"mar--sm--tn mar--sm--bn\"><span class=\"juicon juicon-bookmark text-faded\"></span> My saved jobs</h3>\n            <ul class=\"list-style-type-none mar--sm--n\">\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "application", "in", "applications", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            </ul>\n        </div>\n        <hr class=\"show-brkpoint--md\">\n    ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    <li class=\"mar--sm--bm mar--sm--tm\">\n                        <h4 class=\"mar--sm--n\"><a href=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.jobPostingUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\" target=\"_top\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.jobTitle", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></h4>\n                        <h5 class=\"mar--sm--n text-faded\">\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.firstLocationString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" \n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "application.otherLocationsString", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                        </h5>\n                        <small class=\"label label--secondary\">Applied</small>\n                    </li>\n                ");
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push(" &amp; <a href=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.jobPostingUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\" target=\"_top\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" others</a>\n                            ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"column--md--4\">\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "applications", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n    <div class=\"content__section\">\n        <h3 class=\"mar--sm--tn mar--sm--bn\"><span class=\"juicon juicon-twitter text-faded\"></span> Recent tweets <a href=\"#\">@Salesforce</a></h3>\n        <ul class=\"list-style-type-none\">\n            <li class=\"card\">\n                <div class=\"card__body\">\n                    <span>\"</span><a href=\"#\" class=\"text-faded\">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>\"</span>\n                </div>\n            </li>\n            <li class=\"card\">\n                <div class=\"card__body\">\n                    <span>\"</span><a href=\"#\" class=\"text-faded\">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>\"</span>\n                </div>\n            </li>\n        </ul>\n    </div>\n</div>");
   return buffer;
   
 });

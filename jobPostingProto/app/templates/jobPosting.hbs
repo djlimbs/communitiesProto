@@ -24,7 +24,12 @@
                         </ul>
                     </div>
                     <h1 class="has-subheading page__heading">{{jobPosting.Name}}</h1>
-                    <h2 class="page__subheading">Chicago, IL</h2>
+                    <h2 class="page__subheading">
+                        {{firstLocationString}} 
+
+                        {{#if otherLocationsString}} &amp; <a href="communities__prototype__job--v2.html" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound otherLocationsString}}">{{otherLocationsCount}} others</a>
+                        {{/if}}
+                    </h2>
                 </nav>
                 <p>{{{jobPosting.Job_Description__c}}}</p>
                 <hr class="mar--sm--txl mar--sm--bxl">

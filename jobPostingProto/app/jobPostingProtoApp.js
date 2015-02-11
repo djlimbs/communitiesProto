@@ -249,6 +249,28 @@ App.JobPostingController = Ember.ObjectController.extend({
 App.JobPostingRoute = Ember.Route.extend( {
     model: function(params) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
+            if (!Ember.isEmpty(jobPostingMap.jpLocations)) {
+                var firstLocationString = '';
+                var otherLocationsString;
+                var otherLocationsCount = 0;
+
+                jobPostingMap.jpLocations.forEach(function(l, i) {
+                    if (i === 0) {
+                        firstLocationString = l.Location__r.Name;
+                    } else if (i === 1) {
+                        otherLocationsCount++;
+                        otherLocationsString = l.Location__r.Name;
+                    } else {
+                        otherLocationsCount++;
+                        otherLocationsString += ', ' + l.Location__r.Name;
+                    }
+                });
+
+                jobPostingMap.firstLocationString = firstLocationString;
+                jobPostingMap.otherLocationsString = otherLocationsString;
+                jobPostingMap.otherLocationsCount = otherLocationsCount;
+            }
+
             if (parent.applyWithLinkedIn === true && !Ember.isNone(jobPostingMap.linkedInMap) 
                         && Ember.isNone(jobPostingMap.application)) {
                 var saveObj = createSaveObj(jobPostingMap.jobPosting, jobPostingMap.loggedInUser, jobPostingMap.linkedInMap);
