@@ -10,7 +10,7 @@ var updateHeight = function() {
 };
 
 var globalThis = this;
-
+//
 Ember.View.reopen({
     willInsertElement: function() {
         Ember.run.debounce(globalThis, updateHeight, 100);
