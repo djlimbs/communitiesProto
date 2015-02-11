@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      'build/jobPostingProto.js': 'app/jobPostingProtoCompiler.js'
+      'build/jobPostingProto.pck.js': 'app/jobPostingProtoCompiler.js'
     },
 
     /*
@@ -104,6 +104,17 @@ module.exports = function(grunt) {
     */
     build_test_runner_file: {
       all: ['test/**/*_test.js']
+    },
+
+    /* 
+      Push to github pages
+    */
+    'gh-pages': {
+      options: {
+        base: 'build',
+        add: true,
+      },
+      src: ['**.pck.js']
     }
   });
   
@@ -113,7 +124,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-neuter');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-ember-templates');
-  
+  grunt.loadNpmTasks('grunt-gh-pages');
+
   /*
     A task to build the test runner html file that get place in
     /test so it will be picked up by the qunit task. Will
