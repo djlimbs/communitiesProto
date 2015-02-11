@@ -9,7 +9,7 @@ function updateHeight() {
     });
 };
 
-var globalThis = this;
+var globalThis = this; 
 
 function createSaveObj(jobPosting, loggedInUser, linkedInMap) {
     var saveObj = {};
