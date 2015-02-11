@@ -1,3 +1,13 @@
+Ember.TEMPLATES["components/twitter"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  
+
+
+  data.buffer.push("ssss\n\n<a class=\"twitter-timeline\"\n   width=\"100%\"\n   height=\"300\"\n   href=\"https://twitter.com/salesforcejobs\"\n   data-widget-id=\"565570508859916289\"\n   data-chrome=\"noheader nofooter\"\n   data-border-color=\"#dadee2\">\n    Tweets by @salesforcejobs\n</a>");
+  
+});
+
 Ember.TEMPLATES["jobSearch"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -273,7 +283,11 @@ function program3(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "applications", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    <div class=\"content__section\">\n        <h3 class=\"mar--sm--tn mar--sm--bn\"><span class=\"juicon juicon-twitter text-faded\"></span> Recent tweets <a href=\"#\">@Salesforce</a></h3>\n        <ul class=\"list-style-type-none\">\n            <li class=\"card\">\n                <div class=\"card__body\">\n                    <span>\"</span><a href=\"#\" class=\"text-faded\">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>\"</span>\n                </div>\n            </li>\n            <li class=\"card\">\n                <div class=\"card__body\">\n                    <span>\"</span><a href=\"#\" class=\"text-faded\">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>\"</span>\n                </div>\n            </li>\n        </ul>\n    </div>\n</div>");
+  data.buffer.push("\n\n    <hr class=\"show-brkpoint--md\">\n\n    <div class=\"content__section\" data-twttr-id=\"twttr-sandbox-0\">\n        <h3 class=\"mar--sm--tn mar--sm--bm\">\n            <span class=\"juicon juicon-twitter text-faded\"></span> \n            <a href=\"https://www.twitter.com/salesforcejobs\">@Salesforcejobs</a>\n        </h3>\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "twitter", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n    </div>\n</div>\n\n\n");
   return buffer;
   
 });
