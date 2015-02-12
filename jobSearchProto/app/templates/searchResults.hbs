@@ -24,14 +24,17 @@
                                         {{/if}}
                                     </h2>
                                 </div>
-                                <div class="column--md--4">
-                                    <button class="float--right button button--primary mar--sm--only--rs mar--md--lxs show-brkpoint--md theme-border-color theme-link-color" {{action "clickApply"}}>Apply <span class="show-brkpoint--md">Now</span></button>
-                                </div>
                             </div>
                             <div class="card__text">
-                                <p>{{{searchResult.Job_Description__c}}}</p>
+                                {{#each field in searchResult.fieldsToDisplay}}
+                                    {{#if field.value}}
+                                        <div class="job-field">
+                                            <h4 class="job-field-label">{{field.label}}</h4>
+                                            {{field.value}}
+                                        </div>
+                                    {{/if}}
+                                {{/each}}
                             </div>
-                            <button type="button" class="button button--primary show-brkpoint--sm--only width--full theme-bg-color theme-link-color" {{action "clickApply"}}>Apply</button>
                         </div>
                     </div>
                 {{/each}}

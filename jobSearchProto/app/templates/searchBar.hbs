@@ -68,9 +68,9 @@
             </div>
             <h1 class="text-center mar--sm--tn mar--sm--bxl">
                 {{#if searchResults}}
+                {{#unless areSearchTermsEmpty}}
                     <span class=" text-white">{{numberOfJobs}}  <span class="text-faded">jobs found</span></span>
-                {{else}}
-                    <span> </span>
+                {{/unless}}
                 {{/if}}
             </h1>
         </div>

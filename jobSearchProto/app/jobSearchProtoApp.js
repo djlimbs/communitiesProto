@@ -25,6 +25,11 @@ App.JobSearchView = Ember.View.extend({
         $('body').tooltip({
             selector: '[data-toggle=tooltip]'
         });
+    },
+    keyPress: function(e) {
+        if (e.keyCode === 13) {
+            this.get('controller').send('clickSearch');
+        }
     }
 });
 
@@ -33,17 +38,44 @@ App.SalesforceTwitterComponent = Ember.Component.extend({
     layoutName: 'components/twitter',
     didInsertElement: function() {
         !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+        Ember.run.later(this, updateHeight, 1000);
     }
 });
 
 
 App.JobSearchController = Ember.ObjectController.extend({
+    init: function() {
+        this._super();
+
+        var searchTerm
+            , nearValue;
+
+        if (!Ember.isEmpty(parent.searchTerm)) {
+            searchTerm = decodeURI(parent.searchTerm);
+            this.set('searchTerm', searchTerm);
+        }
+
+        if (!Ember.isEmpty(parent.nearValue)) {
+            nearValue = decodeURI(parent.nearValue);
+            this.set('selectedLocation', 'Near...');
+            this.set('nearValue', nearValue);
+        }
+
+        Ember.run.later(this, function() {
+            this.send('clickSearch');
+        }, 1000);
+    },
     searchTerm: null,
     selectedLocation: null,
     selectedJobFamily: null,
     nearValue: null,
     selectedRadius: null,
     selectedUnit: null,
+    areSearchTermsEmpty: function() {
+        return Ember.isEmpty(this.get('searchTerm')) 
+                    && this.get('selectedLocation') === 'All locations'
+                    && this.get('selectedJobFamily') === 'All divisions';
+    }.property('searchTerm', 'selectedLocation', 'selectedJobFamily'),
     numberOfJobs: function() {
         var searchResults = this.get('searchResults');
 
@@ -70,37 +102,48 @@ App.JobSearchController = Ember.ObjectController.extend({
                     var jobPostings = parsedResult.data.jobPostings;
 
                     jobPostings.forEach(function(jp) {
-                        var firstLocationString = '';
-                        var otherLocationsString;
-                        var otherLocationsCount = 0;
+                        // Build location string
+                        if (!Ember.isEmpty(jp.locations)) {
+                            var firstLocationString = '';
+                            var otherLocationsString;
+                            var otherLocationsCount = 0;
+                            jp.locations.forEach(function(l, i) {
+                                var location = '';
 
-                        jp.locations.forEach(function(l, i) {
-                            var location = '';
+                                location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
 
-                            location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+                                if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+                                    location += ', ' + l.Location__r.Country_Province__c;
+                                }
 
-                            if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
-                                location += ', ' + l.Location__r.Country_Province__c;
-                            }
+                                if (i === 0) {
+                                    firstLocationString = location;
+                                } else if (i === 1) {
+                                    otherLocationsCount++;
+                                    otherLocationsString = location;
+                                } else {
+                                    otherLocationsCount++;
+                                    otherLocationsString += ', ' + location;
+                                }
+                            });
 
-                            if (i === 0) {
-                                firstLocationString = location;
-                            } else if (i === 1) {
-                                otherLocationsCount++;
-                                otherLocationsString = location;
-                            } else {
-                                otherLocationsCount++;
-                                otherLocationsString += ', ' + location;
-                            }
+                            jp.firstLocationString = firstLocationString;
+                            jp.otherLocationsString = otherLocationsString;
+                            jp.otherLocationsCount = otherLocationsCount;
+                        }
+                        
+                        // Build display
+                        jp.fieldsToDisplay = [];
+                        self.get('jobPostingFieldsToDisplay').forEach(function(field) {
+                            jp.fieldsToDisplay.addObject({
+                                label: field.label,
+                                value: jp[field.name]
+                            });
                         });
-
-                        jp.firstLocationString = firstLocationString;
-                        jp.otherLocationsString = otherLocationsString;
-                        jp.otherLocationsCount = otherLocationsCount;
                     });
 
-                    self.set('searchResults', parsedResult.data.jobPostings);
-                    console.log(parsedResult);
+                    console.log(jobPostings);
+                    self.set('searchResults', jobPostings);
                 } else {
 
                 }
@@ -191,6 +234,7 @@ App.JobSearchRoute = Ember.Route.extend( {
             radiusUnits: ['mi', 'km'],
             locations: ['All locations', 'Near...', 'Near me', 'Remote/Telecommute'],
             jobFamilies: jobFamilies,
+            jobPostingFieldsToDisplay: parsedJobSearchMap.jobPostingFieldsToDisplay,
             applications: applications
         };
     }

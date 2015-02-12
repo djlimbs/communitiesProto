@@ -36,7 +36,9 @@ function createSaveObj(jobPosting, loggedInUser, linkedInMap) {
         Contact__c: loggedInUser.ContactId,
         First_Name__c: loggedInUser.FirstName,
         Last_Name__c: loggedInUser.LastName,
-        Email__c: loggedInUser.Email
+        Email__c: loggedInUser.Email,
+        Street_Address__c: !Ember.isNone(linkedInMap) ? linkedInMap.mainAddress : null,
+        Job_Posting__c: jobPosting.Id
     };
 
     return saveObj;
@@ -97,6 +99,13 @@ Ember.View.reopen({
     }
 });
 
+App.JobPostingView = Ember.View.extend({
+    didInsertElement: function() {
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        });
+    }
+});
 
 App.JobPostingController = Ember.ObjectController.extend({
     appliedMessage: function() {
@@ -262,14 +271,22 @@ App.JobPostingRoute = Ember.Route.extend( {
                 var otherLocationsCount = 0;
 
                 jobPostingMap.jpLocations.forEach(function(l, i) {
+                    var location = '';
+
+                    location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+                    if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+                        location += ', ' + l.Location__r.Country_Province__c;
+                    }
+
                     if (i === 0) {
-                        firstLocationString = l.Location__r.Name;
+                        firstLocationString = location;
                     } else if (i === 1) {
                         otherLocationsCount++;
-                        otherLocationsString = l.Location__r.Name;
+                        otherLocationsString = location;
                     } else {
                         otherLocationsCount++;
-                        otherLocationsString += ', ' + l.Location__r.Name;
+                        otherLocationsString += ', ' + location;
                     }
                 });
 
