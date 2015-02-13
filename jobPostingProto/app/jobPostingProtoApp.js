@@ -308,7 +308,7 @@ App.JobPostingRoute = Ember.Route.extend( {
                     var otherLocationsString;
                     var otherLocationsCount = 0;
 
-                    var obj = getProperties(app.locations);
+                    var obj = createLocationStrings(app.locations);
 
                     var applicationObj = {
                         jobTitle: app.Job_Posting__r.Name,
@@ -329,7 +329,7 @@ App.JobPostingRoute = Ember.Route.extend( {
                 var otherLocationsString;
                 var otherLocationsCount = 0;
 
-                var obj = getProperties(jobPostingMap.jpLocations);
+                var obj = createLocationStrings(jobPostingMap.jpLocations);
 
                 jobPostingMap.firstLocationString = obj.firstLocationString;
                 jobPostingMap.otherLocationsString = obj.otherLocationsString;
