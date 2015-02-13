@@ -10,6 +10,41 @@ App.SalesforceTwitterComponent = Ember.Component.extend({
     }
 });
 
+function createLocationStrings(locations){
+
+    var firstLocationString = '';
+    var otherLocationsString;
+    var otherLocationsCount = 0;
+
+    locations.forEach(function(l, i) {
+        var location = '';
+
+        location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+        if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+            location += ', ' + l.Location__r.Country_Province__c;
+        }
+
+        if (i === 0) {
+            firstLocationString = location;
+        } else if (i === 1) {
+            otherLocationsCount++;
+            otherLocationsString = location;
+        } else {
+            otherLocationsCount++;
+            otherLocationsString += ', ' + location;
+        }
+    });
+
+    var obj = {
+        firstLocationString: firstLocationString,
+        otherLocationsString: otherLocationsString,
+        otherLocationsCount: otherLocationsCount
+    };
+
+    return obj;
+};
+
 function updateHeight() {
     Ember.run.scheduleOnce('afterRender', this, function() {
         parent.resizeIframe();
@@ -273,31 +308,13 @@ App.JobPostingRoute = Ember.Route.extend( {
                     var otherLocationsString;
                     var otherLocationsCount = 0;
 
-                    app.locations.forEach(function(l, i) {
-                        var location = '';
-
-                        location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
-
-                        if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
-                            location += ', ' + l.Location__r.Country_Province__c;
-                        }
-
-                        if (i === 0) {
-                            firstLocationString = location;
-                        } else if (i === 1) {
-                            otherLocationsCount++;
-                            otherLocationsString = location;
-                        } else {
-                            otherLocationsCount++;
-                            otherLocationsString += ', ' + location;
-                        }
-                    });
+                    var obj = getProperties(app.locations);
 
                     var applicationObj = {
                         jobTitle: app.Job_Posting__r.Name,
-                        firstLocationString: firstLocationString,
-                        otherLocationsString: otherLocationsString,
-                        otherLocationsCount: otherLocationsCount,
+                        firstLocationString: obj.firstLocationString,
+                        otherLocationsString: obj.otherLocationsString,
+                        otherLocationsCount: obj.otherLocationsCount,
                         jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c
                     };
 
@@ -312,29 +329,11 @@ App.JobPostingRoute = Ember.Route.extend( {
                 var otherLocationsString;
                 var otherLocationsCount = 0;
 
-                jobPostingMap.jpLocations.forEach(function(l, i) {
-                    var location = '';
+                var obj = getProperties(jobPostingMap.jpLocations);
 
-                    location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
-
-                    if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
-                        location += ', ' + l.Location__r.Country_Province__c;
-                    }
-
-                    if (i === 0) {
-                        firstLocationString = location;
-                    } else if (i === 1) {
-                        otherLocationsCount++;
-                        otherLocationsString = location;
-                    } else {
-                        otherLocationsCount++;
-                        otherLocationsString += ', ' + location;
-                    }
-                });
-
-                jobPostingMap.firstLocationString = firstLocationString;
-                jobPostingMap.otherLocationsString = otherLocationsString;
-                jobPostingMap.otherLocationsCount = otherLocationsCount;
+                jobPostingMap.firstLocationString = obj.firstLocationString;
+                jobPostingMap.otherLocationsString = obj.otherLocationsString;
+                jobPostingMap.otherLocationsCount = obj.otherLocationsCount;
             }
 
             if (parent.applyWithLinkedIn === true && !Ember.isNone(jobPostingMap.linkedInMap) 
