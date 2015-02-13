@@ -74,7 +74,7 @@ App.JobSearchController = Ember.ObjectController.extend({
     areSearchTermsEmpty: function() {
         return Ember.isEmpty(this.get('searchTerm')) 
                     && this.get('selectedLocation') === 'All locations'
-                    && this.get('selectedJobFamily') === 'All divisions';
+                    && this.get('selectedJobFamily') === 'All categories';
     }.property('searchTerm', 'selectedLocation', 'selectedJobFamily'),
     numberOfJobs: function() {
         var searchResults = this.get('searchResults');
@@ -137,7 +137,7 @@ App.JobSearchController = Ember.ObjectController.extend({
                         self.get('jobPostingFieldsToDisplay').forEach(function(field) {
                             jp.fieldsToDisplay.addObject({
                                 label: field.label,
-                                value: jp[field.name]
+                                value: field.type === 'DATE' ? moment(jp[field.name]).format('MMM D, YYYY') : jp[field.name]
                             });
                         });
                     });
@@ -183,7 +183,7 @@ App.JobPostingController = Ember.ObjectController.extend({
 // Routes
 App.JobSearchRoute = Ember.Route.extend( {
     model: function(params) {
-        var jobFamilies = ['All divisions'];
+        var jobFamilies = ['All categories'];
 
         if (!Ember.isEmpty(parsedJobSearchMap.jobFamilies)) {
             jobFamilies.addObjects(parsedJobSearchMap.jobFamilies.getEach('value'));
