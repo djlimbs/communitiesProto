@@ -161,10 +161,27 @@ App.JobSearchController = Ember.ObjectController.extend({
                 } else {
                     x.innerHTML = "Geolocation is not supported by this browser.";
                 }
+            } else if (searchObj.selectedLocation === 'Near...') {
+                var googleCallback = function(results) {
+                    var location = results.results[0];
+
+                    searchObj.latitude = location.geometry.location.lat
+                    searchObj.longitude = location.geometry.location.lng;
+
+                    cont.searchJobs(JSON.stringify(searchObj), callback);
+                };
+
+                this.findLocation(googleCallback, this.get('nearValue'));
             } else {
                 cont.searchJobs(JSON.stringify(searchObj), callback);
             }
         }
+    },
+    findLocation: function(callback, searchTerm){
+        var self = this;
+        $.ajax({
+            url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + searchTerm +'&key=' + self.get('apiKey')
+        }).done(callback)
     }
 });
 
@@ -235,7 +252,8 @@ App.JobSearchRoute = Ember.Route.extend( {
             locations: ['All locations', 'Near...', 'Near me', 'Remote/Telecommute'],
             jobFamilies: jobFamilies,
             jobPostingFieldsToDisplay: parsedJobSearchMap.jobPostingFieldsToDisplay,
-            applications: applications
+            applications: applications,
+            apiKey: parsedJobSearchMap.apiKey
         };
     }
 });
