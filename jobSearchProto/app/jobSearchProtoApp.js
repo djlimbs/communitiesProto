@@ -62,7 +62,7 @@ App.JobSearchController = Ember.ObjectController.extend({
         }
 
         Ember.run.later(this, function() {
-            this.send('clickSearch');
+            this.search(false);
         }, 1000);
     },
     searchTerm: null,
@@ -71,11 +71,6 @@ App.JobSearchController = Ember.ObjectController.extend({
     nearValue: null,
     selectedRadius: null,
     selectedUnit: null,
-    areSearchTermsEmpty: function() {
-        return Ember.isEmpty(this.get('searchTerm')) 
-                    && this.get('selectedLocation') === 'All locations'
-                    && this.get('selectedJobFamily') === 'All categories';
-    }.property('searchTerm', 'selectedLocation', 'selectedJobFamily'),
     numberOfJobs: function() {
         var searchResults = this.get('searchResults');
 
@@ -87,94 +82,7 @@ App.JobSearchController = Ember.ObjectController.extend({
     isRemote: Ember.computed.equal('selectedLocation', 'Remote/Telecommute'),
     actions: {
         clickSearch: function() {
-            this.set('isSearching', true);
-
-            var self = this;
-
-            var searchObj = this.getProperties('searchTerm', 'selectedLocation', 'selectedJobFamily', 
-                                                'nearValue', 'selectedRadius', 'selectedUnit');
-
-            var callback = function(res, evt) {
-                self.set('isSearching', false);
-                if (res) {
-                    var parsedResult = parseResult(res);
-
-                    var jobPostings = parsedResult.data.jobPostings;
-
-                    jobPostings.forEach(function(jp) {
-                        // Build location string
-                        if (!Ember.isEmpty(jp.locations)) {
-                            var firstLocationString = '';
-                            var otherLocationsString;
-                            var otherLocationsCount = 0;
-                            jp.locations.forEach(function(l, i) {
-                                var location = '';
-
-                                location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
-
-                                if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
-                                    location += ', ' + l.Location__r.Country_Province__c;
-                                }
-
-                                if (i === 0) {
-                                    firstLocationString = location;
-                                } else if (i === 1) {
-                                    otherLocationsCount++;
-                                    otherLocationsString = location;
-                                } else {
-                                    otherLocationsCount++;
-                                    otherLocationsString += ', ' + location;
-                                }
-                            });
-
-                            jp.firstLocationString = firstLocationString;
-                            jp.otherLocationsString = otherLocationsString;
-                            jp.otherLocationsCount = otherLocationsCount;
-                        }
-                        
-                        // Build display
-                        jp.fieldsToDisplay = [];
-                        self.get('jobPostingFieldsToDisplay').forEach(function(field) {
-                            jp.fieldsToDisplay.addObject({
-                                label: field.label,
-                                value: field.type === 'DATE' ? moment(jp[field.name]).format('MMM D, YYYY') : jp[field.name]
-                            });
-                        });
-                    });
-
-                    console.log(jobPostings);
-                    self.set('searchResults', jobPostings);
-                } else {
-
-                }
-            };
-
-            if (searchObj.selectedLocation === 'Near me') {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        searchObj.latitude = position.coords.latitude;
-                        searchObj.longitude = position.coords.longitude;
-
-                        console.log(searchObj);
-                        cont.searchJobs(JSON.stringify(searchObj), callback);
-                    });
-                } else {
-                    x.innerHTML = "Geolocation is not supported by this browser.";
-                }
-            } else if (searchObj.selectedLocation === 'Near...') {
-                var googleCallback = function(results) {
-                    var location = results.results[0];
-
-                    searchObj.latitude = location.geometry.location.lat
-                    searchObj.longitude = location.geometry.location.lng;
-
-                    cont.searchJobs(JSON.stringify(searchObj), callback);
-                };
-
-                this.findLocation(googleCallback, this.get('nearValue'));
-            } else {
-                cont.searchJobs(JSON.stringify(searchObj), callback);
-            }
+            this.search(true);
         }
     },
     findLocation: function(callback, searchTerm){
@@ -182,6 +90,97 @@ App.JobSearchController = Ember.ObjectController.extend({
         $.ajax({
             url: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + searchTerm +'&key=' + self.get('apiKey')
         }).done(callback)
+    },
+    search: function(showResultsCount) {
+        this.set('isSearching', true);
+
+        var self = this;
+
+        var searchObj = this.getProperties('searchTerm', 'selectedLocation', 'selectedJobFamily', 
+                                            'nearValue', 'selectedRadius', 'selectedUnit');
+
+        var callback = function(res, evt) {
+            self.set('isSearching', false);
+            if (res) {
+                var parsedResult = parseResult(res);
+
+                var jobPostings = parsedResult.data.jobPostings;
+
+                jobPostings.forEach(function(jp) {
+                    // Build location string
+                    if (!Ember.isEmpty(jp.locations)) {
+                        var firstLocationString = '';
+                        var otherLocationsString;
+                        var otherLocationsCount = 0;
+                        jp.locations.forEach(function(l, i) {
+                            var location = '';
+
+                            location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+                            if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+                                location += ', ' + l.Location__r.Country_Province__c;
+                            }
+
+                            if (i === 0) {
+                                firstLocationString = location;
+                            } else if (i === 1) {
+                                otherLocationsCount++;
+                                otherLocationsString = location;
+                            } else {
+                                otherLocationsCount++;
+                                otherLocationsString += ', ' + location;
+                            }
+                        });
+
+                        jp.firstLocationString = firstLocationString;
+                        jp.otherLocationsString = otherLocationsString;
+                        jp.otherLocationsCount = otherLocationsCount;
+                    }
+                    
+                    // Build display
+                    jp.fieldsToDisplay = [];
+                    self.get('jobPostingFieldsToDisplay').forEach(function(field) {
+                        jp.fieldsToDisplay.addObject({
+                            label: field.label,
+                            value: field.type === 'DATE' ? moment(jp[field.name]).format('MMM D, YYYY') : jp[field.name]
+                        });
+                    });
+                });
+                
+                self.set('showResultsCount', showResultsCount);
+
+                self.set('searchResults', jobPostings);
+            } else {
+
+            }
+        };
+
+        if (searchObj.selectedLocation === 'Near me') {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    searchObj.latitude = position.coords.latitude;
+                    searchObj.longitude = position.coords.longitude;
+
+                    console.log(searchObj);
+                    cont.searchJobs(JSON.stringify(searchObj), callback);
+                });
+            } else {
+                x.innerHTML = "Geolocation is not supported by this browser.";
+            }
+        } else if (searchObj.selectedLocation === 'Near...') {
+            var googleCallback = function(results) {
+                var location = results.results[0];
+
+                searchObj.latitude = location.geometry.location.lat
+                searchObj.longitude = location.geometry.location.lng;
+
+                cont.searchJobs(JSON.stringify(searchObj), callback);
+            };
+
+            this.findLocation(googleCallback, this.get('nearValue'));
+        } else {
+            cont.searchJobs(JSON.stringify(searchObj), callback);
+        }
     }
 });
 
