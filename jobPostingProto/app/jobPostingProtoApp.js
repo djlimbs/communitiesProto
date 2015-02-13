@@ -110,7 +110,7 @@ App.JobPostingView = Ember.View.extend({
 App.JobPostingController = Ember.ObjectController.extend({
     appliedMessage: function() {
         if (!Ember.isNone(this.get('application'))) {
-            return this.get('justApplied') === true ? 'You have successfully applied.' : 'You already applied.';
+            return this.get('justApplied') === true ? 'Thank you for applying!' : 'Thank you for applying!';
         } else {
             return null;
         }
@@ -265,6 +265,48 @@ App.JobPostingController = Ember.ObjectController.extend({
 App.JobPostingRoute = Ember.Route.extend( {
     model: function(params) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
+            var applications = [];
+
+            if (!Ember.isEmpty(jobPostingMap.applications)) {
+                jobPostingMap.applications.forEach(function(app) {
+                    var firstLocationString = '';
+                    var otherLocationsString;
+                    var otherLocationsCount = 0;
+
+                    app.locations.forEach(function(l, i) {
+                        var location = '';
+
+                        location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+                        if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+                            location += ', ' + l.Location__r.Country_Province__c;
+                        }
+
+                        if (i === 0) {
+                            firstLocationString = location;
+                        } else if (i === 1) {
+                            otherLocationsCount++;
+                            otherLocationsString = location;
+                        } else {
+                            otherLocationsCount++;
+                            otherLocationsString += ', ' + location;
+                        }
+                    });
+
+                    var applicationObj = {
+                        jobTitle: app.Job_Posting__r.Name,
+                        firstLocationString: firstLocationString,
+                        otherLocationsString: otherLocationsString,
+                        otherLocationsCount: otherLocationsCount,
+                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c
+                    };
+
+                    applications.addObject(applicationObj);
+                });
+            }
+
+            jobPostingMap.applications = applications;
+
             if (!Ember.isEmpty(jobPostingMap.jpLocations)) {
                 var firstLocationString = '';
                 var otherLocationsString;

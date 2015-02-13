@@ -54,6 +54,26 @@
                 </div>
                 <hr>
 
+                {{#if applications}}
+                    <div class="content__section mar--md--bxl">
+                        <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> My saved jobs</h3>
+                        <ul class="list-style-type-none mar--sm--n">
+                            {{#each application in applications}}
+                                <li class="mar--sm--bm mar--sm--tm">
+                                    <h4 class="mar--sm--n"><a href="{{unbound application.jobPostingUrl}}" target="_top">{{application.jobTitle}}</a></h4>
+                                    <h5 class="mar--sm--n text-faded">
+                                        {{application.firstLocationString}} 
+                                        {{#if application.otherLocationsString}} &amp; <a href="{{unbound application.jobPostingUrl}}" target="_top" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound application.otherLocationsString}}">{{application.otherLocationsCount}} others</a>
+                                        {{/if}}
+                                    </h5>
+                                    <small class="label label--secondary">Applied</small>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <hr class="show-brkpoint--md">
+                {{/if}}
+
                 <h3 class="mar--sm--tn mar--sm--bm">
                     <span class="juicon juicon-twitter text-faded"></span> 
                     <a href="https://www.twitter.com/salesforcejobs">@Salesforcejobs</a>
