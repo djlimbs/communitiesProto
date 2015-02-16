@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template : Form Preview</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/commuity-styles.css">
+</head>
+<body>
+    <div class="scope-container">
+        <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal__shell">
+                <div class="modal__content">
+                    <div class="modal__top">
+                        <!--<button type="button" class="close" data-dismiss="modal">-->
+                            <!--<span class="close-modal-x"></span><span class="sr-only">Close</span>-->
+                        <!--</button>-->
+                        <h2 class="modal__heading" id="myModalLabel">Before you begin...</h2>
+                    </div>
+                    <div class="modal__body">
+                        <p class="mar--sm--tn">Please confirm the location where you'd prefer to work.</p>
+                        <div class="form__group">
+                            <div class="select__wrap">
+                                <div class="input__icon juicon juicon-down"></div>
+                                <select>
+                                    <option>Chicago, IL (Closest)</option>
+                                    <option>Boston, MA</option>
+                                    <option>London, GB, UK</option>
+                                    <option>Remote</option>
+                                    <option>San Francisco, CA (Primary)</option>
+                                    <option>Vancouver, BC, CA</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal__footer">
+                        <button type="button" class="button button--primary" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content pad--md--ts pad--md--bl pad--sm--only--n pad--sm--tm">
+            <div class="content__section show-brkpoint--md">
+                <img class="mar--sm--bxl theme-logo" src="../css/img/logo-tagline-company.png"/>
+            </div>
+            <div class="row mar--sm--only--n">
+                <div class="column--md--3 pad--sm--only--n">
+                    <ul class="list-group wizardNav show-brkpoint--md mar--md--tn">
+                        <li class="list-group__item active"><a href="#aboutMe">Contact Info</a></li>
+                        <li class="list-group__item"><a href="#resume">Resume</a></li>
+                        <li class="list-group__item"><a href="#skills">Skills</a></li>
+                        <li class="list-group__item"><a href="#empHistory">Employment History</a></li>
+                        <li class="list-group__item"><a href="#edHistory">Education History</a></li>
+                        <li class="list-group__item"><a href="#general">General</a></li>
+                        <li class="list-group__item"><a href="#jobSpecific">Job Specific</a></li>
+                        <li class="list-group__item disabled"><a href="#legallyRequired">Legally Required</a></li>
+                    </ul>
+                </div>
+                <div class="column--md--9 pad--sm--only--n">
+                    <div class="content mar--md--tm pad--md--n mar--md--bm show-brkpoint--sm--only">
+                        <hr class="show-brkpoint--md"/>
+                        <button class="button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev" style="top:0;left:0;"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">Previous</span></button>
+                        <button class="button button--primary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--rs float--right next" style="top:0;right:0;"><span class="show-brkpoint--md">Next</span> <span class="juicon juicon-forward"></span> </button>
+                        <div class="pad--sm--lxxl pad--sm--rxxl text-center pad--sm--tm text-faded">
+                            <span class="currentNumber">1</span>/<span class="totalNumber">8</span>
+                        </div>
+                    </div>
+                    <div class="wizardContent">
+                        <div id="aboutMe" class="wizardSection pad--sm--only--n active">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Contact Info</h1>
+                            <div class="panel">
+                                <div class="list-heading">
+                                    <h4 class="list-heading__title has-radius-top">General Info</h4>
+                                </div>
+                                <div class="panel__body pad--sm--bn">
+                                    <div class="row">
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="firstName" class="">
+                                                    First Name
+                                                    <span data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom" class="has-tooltip juicon juicon-info-circle"></span>
+                                                </label>
+                                                <input id="firstName" type="text"/>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="preferredName">Preferred Name</label>
+                                                <input id="preferredName" type="text"/>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group ">
+                                                <label for="middleName">Middle Name</label>
+                                                <input id="middleName" type="text"/>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group ">
+                                                <label for="lastName" class="">
+                                                    Last Name
+                                                    <span data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom" class="has-tooltip juicon juicon-info-circle"></span>
+                                                </label>
+                                                <input id="lastName" type="text"/>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-heading">
+                                    <h4 class="list-heading__title">Contact Info</h4>
+                                </div>
+                                <div class="panel__body pad--sm--bn">
+                                    <div class="row">
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="email" class="">Email</label>
+                                                <input id="email" type="text"/>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="mobilePhone">Mobile Phone</label>
+                                                <input id="mobilePhone" type="tel"/>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group ">
+                                                <label for="homePhone">Home Phone</label>
+                                                <input id="homePhone" type="tel"/>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group ">
+                                                <label for="workPhone">Work Phone</label>
+                                                <input id="workPhone" type="tel"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="list-heading">
+                                    <h4 class="list-heading__title">Address Info</h4>
+                                </div>
+                                <div class="panel__body pad--md--bn">
+                                    <div class="row">
+                                        <div class="column--md--12">
+                                            <div class="form__group">
+                                                <label class="">Street Address</label>
+                                                <textarea id="streetAddress1"></textarea>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="city" class="">City</label>
+                                                <input id="city" type="text"/>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="state" class="">State/Province</label>
+                                                <input id="state" type="text"/>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="zip" class="">Zip/Postal Code</label>
+                                                <input id="zip" type="text"/>
+                                                <small class="input-error-content">Error</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label for="country">Country</label>
+                                                <input id="country" type="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="resume" class="wizardSection pad--sm--only--n active">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Resume</h1>
+                            <div class="panel">
+                                <div class="panel__body">
+                                    <p class="mar--sm--tn">
+                                        please upload your resume or select it from another source
+                                    </p>
+                                    <div class="button-group inline-block float--left">
+                                        <div class="button button--secondary" data-toggle="dropdown">Upload <span class="show-brkpoint--md">your</span> resume <span class="juicon juicon-upload"></span></div>
+                                        <ul class="dropdown-menu">
+                                            <li class="dropdown-menu__list-item"><a href="#"><span class="juicon juicon-dropbox"></span> from Dropbox</a></li>
+                                            <li class="dropdown-menu__list-item"><a href="#"><span class="juicon juicon-google-drive"></span> from Google Drive</a></li>
+                                            <li class="dropdown-menu__list-item"><a href="#"><span class="juicon juicon-upload"></span> from Device</a></li>
+                                        </ul>
+                                    </div>
+                                    <span class="input-size inline-block float--left mar--sm--lm text-faded">No file selected</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="skills" class="wizardSection pad--sm--only--n active">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Skills</h1>
+
+                            <div class="content__section">
+                                <input multiple id="select2multi"/>
+                            </div>
+                        </div>
+                        <div id="empHistory" class="wizardSection pad--sm--only--n active">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Employment History</h1>
+                            <div class="panel">
+                                <div class="panel__component panel__component--removable">
+                                    <button type="button" class="close"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+                                    <div class="row">
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label>Company Name</label>
+                                                <input type="text"/>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label>Job Title</label>
+                                                <input type="text"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="column--md--6">
+                                            <div class="form__group mar--md--bn mar--md--tm">
+                                                <label>Start Date</label>
+                                                <div class="row input__group">
+                                                    <div class="column--md--8">
+                                                        <input type="text"/>
+                                                    </div>
+                                                    <div class="column--md--4">
+                                                        <button type="button" class="button button--secondary datepicker" data-date-format="yyyy-mm-dd" data-date="2012-02-20">
+                                                            <span class="juicon juicon-calendar"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <small class="input-error-content">You need stuff in this thing</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group mar--md--bn mar--md--tm">
+                                                <label>End Date</label>
+                                                <div class="row input__group">
+                                                    <div class="column--md--8">
+                                                        <input type="text"/>
+                                                    </div>
+                                                    <div class="column--md--4">
+                                                        <button type="button" class="button button--secondary datepicker" data-date-format="yyyy-mm-dd" data-date="2012-02-20">
+                                                            <span class="juicon juicon-calendar"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <small class="input-error-content">You need stuff in this thing</small>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group mar--md--bn mar--md--tm">
+                                                <label>Is Current</label>
+                                                <div class="input-size">
+                                                    <input type="checkbox" name="checkboxCurrent"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel__component">
+                                    <button class="button button--primary width--full--sm--only">Add Employment History <span class="juicon juicon-plus"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="edHistory" class="wizardSection pad--sm--only--n active">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Education History</h1>                            <div class="panel">
+                                <div class="panel__component panel__component--removable">
+                                    <button type="button" class="close"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+
+                                    <div class="row">
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label>School Name</label>
+                                                <input type="text"/>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group">
+                                                <label>Education level</label>
+                                                <div class="select__wrap">
+                                                    <div class="input__icon juicon juicon-down"></div>
+                                                    <select>
+                                                        <option>None</option>
+                                                        <option>High School Diploma/GED</option>
+                                                        <option>Technical Diploma</option>
+                                                        <option>Associates Degree</option>
+                                                        <option>Non-degree Program</option>
+                                                        <option>Bachelor's Degree</option>
+                                                        <option>Master's Degree</option>
+                                                        <option>Doctorate Degree</option>
+                                                        <option>Post-doctorate degree</option>
+                                                        <option>Other</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="column--md--6">
+                                            <div class="form__group mar--sm--tm">
+                                                <label>Start Date</label>
+                                                <div class="row input__group">
+                                                    <div class="column--md--8">
+                                                        <input type="text"/>
+                                                    </div>
+                                                    <div class="column--md--4">
+                                                        <button type="button" class="button button--secondary datepicker" data-date-format="yyyy-mm-dd" data-date="2012-02-20">
+                                                            <span class="juicon juicon-calendar"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group mar--sm--tm">
+                                                <label>End Date</label>
+                                                <div class="row input__group">
+                                                    <div class="column--md--8">
+                                                        <input type="text"/>
+                                                    </div>
+                                                    <div class="column--md--4">
+                                                        <button type="button" class="button button--secondary datepicker" data-date-format="yyyy-mm-dd" data-date="2012-02-20">
+                                                            <span class="juicon juicon-calendar"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column--md--6">
+                                            <div class="form__group mar--md--tm">
+                                                <label>Status</label>
+                                                <div class="select__wrap">
+                                                    <div class="input__icon juicon juicon-down"></div>
+                                                    <select>
+                                                        <option>Currently enrolled</option>
+                                                        <option>Completed</option>
+                                                        <option>Did not finish</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel__component">
+                                    <button class="button button--primary width--full--sm--only">Add Education History <span class="juicon juicon-plus"></span></button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="general" class="wizardSection pad--sm--only--n hide">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">General</h1>
+                            <div class="content__section pad--sm--only--tn">
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Are you legally eligible for employment in the country in which the job is located?
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio1"/></span><span class="part__body">Yes</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio1"/></span><span class="part__body">No</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Do you now, or will you in the future, require any form of visa sponsorship?
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio2"/></span><span class="part__body">Yes</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio2"/></span><span class="part__body">No</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Are you comfortable working in a fast-paced environment?
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio3"/></span><span class="part__body">Yes</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio3"/></span><span class="part__body">No</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Would you describe yourself as customer-focused?
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio4"/></span><span class="part__body">Yes, very much</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio4"/></span><span class="part__body">Yes, to an extend</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio4"/></span><span class="part__body">Not really</span></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="jobSpecific" class="wizardSection pad--sm--only--n hide">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Job Specific</h1>
+                            <h1 class="section__title mar--sm--bn">Technical Information</h1>
+                            <div class="content__section pad--sm--only--tn">
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Indicate the languages you have had at least 1 year of experience with: (Check all that apply.)
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">C or C++</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">C#</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">Perl</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">Java</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">SQL</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">PL/SQL</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">ABAP</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">Visual Basic</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">SAPScript</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">HTML</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">XML</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">DHTML</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">Unix Shell Scripting</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">RPGIV</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox1"/></span><span class="part__body">Other</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    How many full life-cycle projects have you completed?
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="checkbox2"/></span><span class="part__body">1 to 3 projects</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="checkbox2"/></span><span class="part__body">4 to 6 projects</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="checkbox2"/></span><span class="part__body">7 to 9 projects</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="checkbox2"/></span><span class="part__body">More than 10 projects</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="checkbox2"/></span><span class="part__body">I have never completed a full life-cycle project</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    What technical roles have you held over the last 3 years? (Check all that apply.)
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">System Administrator</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Data Analyst</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Programmer/Analyst</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Programmer/Developer</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Application Engineer</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Database Administrator (DBA)</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Technical Project Manager</span></label>
+                                    </li>
+                                    <li class="form__group">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="checkbox" name="checkbox3"/></span><span class="part__body">Other</span></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="legallyRequired" class="wizardSection pad--sm--only--n hide">
+                            <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Legally Required</h1>
+                            <h1 class="section__title mar--sm--bn">Self-Identification</h1>
+                            <div class="content__section pad--sm--only--tn">
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Gender:
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio5"/></span><span class="part__body">Female</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio5"/></span><span class="part__body">Male</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio5"/></span><span class="part__body">I do not wish to provide this information</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Race:
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">Hispanic or Latino</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">American Indian or Alaska Native</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">Asian</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">Black or African American</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">Native Hawaiian or Other Pacific Islander</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <input type="radio" name="radio6"/><label> White</label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">Two or more races</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio6"/></span><span class="part__body">I do not wish to provide this information</span></label>
+                                    </li>
+                                </ul>
+                                <p class="mar--sm--tm mar--md--txl">
+                                    Veteran Type:
+                                </p>
+                                <ul class="form__group list-style-type-none">
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio7"/></span><span class="part__body">Yes, I belong to one or more of the classifications of protected veterans listed above</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio7"/></span><span class="part__body">Yes, I have served in the U.S. military ground, naval or air service but I do not belong to one of the above categories</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio7"/></span><span class="part__body">No, I do not fall in any of the above categories</span></label>
+                                    </li>
+                                    <li class="form__group mar--sm--tm">
+                                        <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="radio7"/></span><span class="part__body">I do not wish to provide this information</span></label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="content mar--sm--tm pad--md--n mar--sm--bm">
+                            <hr class="show-brkpoint--md"/>
+                            <button class="button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev" style="top:0;left:0;"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">Previous</span></button>
+                            <button class="button button--primary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--rs float--right next" style="top:0;right:0;"><span class="show-brkpoint--md">Next</span> <span class="juicon juicon-forward"></span> </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer>
+                <div class="content__section">
+                    <img class="mar--sm--txl theme-logo" src="../css/img/logo-tagline-company.png"/>
+                    <ul class="inline-list text-left pad--sm--tm fss">
+                        <li class="inline-list__item">&copy; 2015</li>
+                        <li class="inline-list__item"><a href="#">Privacy</a></li>
+                        <li class="inline-list__item"><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+
+
+    </div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="../js/jui.js"></script>
+<script type="text/javascript" src="../lib/moment/moment.js"></script>
+<script type="text/javascript" src="../lib/datepicker/js/datepicker.js"></script>
+    <script type="text/javascript" src="../lib/select2/js/select2.js"></script>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#select2multi").select2({
+                placeholder: "Choose or type skills...",
+                tags: ['analytical', 'behavioral', 'business', 'computer', 'communication', 'critical thinking', 'customer service', 'design', 'ux', 'ui', 'animation']
+            });
+
+            $('.datepicker').datepicker()
+                    .on('changeDate', function(ev){
+                        $('.datepicker').datepicker('hide');
+                    });
+
+            //top wizard nav
+            $('.wizardNav > li > a').click(function(event) {
+                event.preventDefault();//stop browser to take action for clicked anchor
+
+                //get displaying tab content jQuery selector
+                var active_tab_selector = $('.wizardNav > li.active > a').attr('href');
+
+                //hide displaying tab content
+                $(active_tab_selector).removeClass('active');
+                $(active_tab_selector).addClass('hide');
+
+                //find active navigation and remove 'active' css
+                var active_nav = $('.wizardNav > li.active');
+                active_nav.removeClass('active');
+
+                //add 'active' css into clicked navigation
+                $(this).parents('li').addClass('active');
+
+                var target_tab_selector = $(this).attr('href');
+                $(target_tab_selector).removeClass('hide');
+                $(target_tab_selector).addClass('active');
+            })
+
+
+
+            //next/previous
+            $(".wizardContent .wizardSection").each(function(e) {
+                if (e != 0)
+                    $(this).addClass('hide').removeClass('active');
+            });
+
+            $(".next").click(function(event){
+                //get displaying tab content jQuery selector
+                var active_tab_selector = $('.wizardNav > li.active > a').attr('href');
+
+                //find active navigation and remove 'active' css
+                var active_nav = $('.wizardNav > li.active');
+                active_nav.removeClass('active').next().addClass('active');
+
+                //add 'active' css into clicked navigation
+                $(this).parents('li').addClass('active');
+
+                if ($(".wizardContent .wizardSection.active").next().length != 0)
+                    $(".wizardContent .wizardSection.active").next().removeClass('hide').addClass('active').prev().addClass('hide').removeClass('active');
+
+                else {
+                    event.preventDefault();//stop browser to take action for clicked anchor
+                    active_nav.addClass('active');
+
+                }
+                $(".currentNumber").text(parseInt($(".currentNumber").text()) + 1);
+                return false;
+
+
+
+            });
+
+            $(".prev").click(function(event){
+                //get displaying tab content jQuery selector
+                var active_tab_selector = $('.wizardNav > li.active > a').attr('href');
+
+                //find active navigation and remove 'active' css
+                var active_nav = $('.wizardNav > li.active');
+                active_nav.removeClass('active').prev().addClass('active');
+
+                if ($(".wizardContent .wizardSection.active").prev().length != 0)
+                    $(".wizardContent .wizardSection.active").prev().addClass('active').removeClass('hide').next().addClass('hide').removeClass('active');
+                else {
+                    event.preventDefault();//stop browser to take action for clicked anchor
+                    active_nav.addClass('active');
+                }
+                $(".currentNumber").text(parseInt($(".currentNumber").text()) - 1);
+                return false;
+
+            });
+
+            $('.prev, .next').on("click",function(){
+                $(window).scrollTop(0);
+            });
+
+            $('#locationModal').modal({
+                show: true,
+                backdrop: 'static'
+            })
+
+
+        });
+
+
+    </script>
+
+</body>
+</html>
