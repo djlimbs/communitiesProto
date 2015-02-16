@@ -134,6 +134,13 @@ Ember.View.reopen({
     }
 });
 
+App.LocationModalView = Ember.View.extend({
+    templateName: 'locationModal',
+    didInsertElement: function() {
+        
+    }
+});
+
 App.JobPostingView = Ember.View.extend({
     didInsertElement: function() {
         $('body').tooltip({
@@ -214,7 +221,18 @@ App.JobPostingController = Ember.ObjectController.extend({
     },
     actions: {
         clickApply: function() {
-            console.log(this.get('jobPosting'));
+            $('#locationModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+
+            $('#modalOk').click(function() {
+                $('#modalOk').unbind('click');
+
+                window.open('https://djlimbs.github.io/communitiesProto/applyflow/prototype/communities__prototype__apply-flow.html');
+            });
+            //window.open('https://djlimbs.github.io/communitiesProto/applyflow/prototype/communities__prototype__apply-flow.html');
+            /*console.log(this.get('jobPosting'));
             console.log(this.get('loggedInUser'));
 
             var jobPosting = this.get('jobPosting');
@@ -265,33 +283,49 @@ App.JobPostingController = Ember.ObjectController.extend({
                         // error handling
                     }
                 });
-            }
+            }*/
         },
         clickApplyWithLinkedIn: function() {
-            if (!Ember.isNone(this.get('linkedInMap'))) {
-                var self = this
-                    , saveObj = createSaveObj(this.get('jobPosting'), this.get('loggedInUser'), this.get('linkedInMap'));
-                
-                cont.applyToJob(JSON.stringify(saveObj), function(res, evt) {
-                    if (res) {
-                        var parsedResult = parseResult(res);
+            var self = this;
 
-                        if (!Ember.isEmpty(parsedResult.errorMessages)) {
-                            // error handling
+            $('#locationModal').modal({
+                show: true,
+                backdrop: 'static'
+            });
+
+            $('#modalOk').click(function() {
+                $('#modalOk').unbind('click');
+
+                if (!Ember.isNone(self.get('linkedInMap'))) {
+                    var saveObj = createSaveObj(self.get('jobPosting'), self.get('loggedInUser'), self.get('linkedInMap'));
+                    
+                    cont.applyToJob(JSON.stringify(saveObj), function(res, evt) {
+                        if (res) {
+                            var parsedResult = parseResult(res);
+
+                            if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                                // error handling
+                            } else {
+                                console.log(parsedResult);
+
+                                self.set('application', parsedResult.data.application);
+                                self.set('justApplied', true);
+                                window.parent.scrollTo(0,0)
+                            }
                         } else {
-                            console.log(parsedResult);
-
-                            self.set('application', parsedResult.data.application);
-                            self.set('justApplied', true);
-                            window.parent.scrollTo(0,0)
+                            // error handling
                         }
-                    } else {
-                        // error handling
-                    }
-                });
-            } else {
-                window.parent.location.href = this.get('applyWithLinkedInUrl');
-            }
+                    });
+                } else {
+                    window.parent.location.href = self.get('applyWithLinkedInUrl');
+                }            
+            });
+        },
+        clickTweet: function() {
+            var currentUrl = window.parent.location.href;
+            var tweetString = 'Check out this #dreamjob at #Salesforce ' + currentUrl;
+
+            window.open('http://twitter.com/home/?status=' + encodeURIComponent(tweetString));
         }
     }
 });

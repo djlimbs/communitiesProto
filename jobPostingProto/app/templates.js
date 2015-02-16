@@ -92,7 +92,11 @@ function program7(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"scope-container brand__border-accent--top\" style=\"border-top-color: #cf5c60\">\n    <div class=\"content pad--sm--tm\">\n        <div class=\"row\">\n            <div class=\"column--md--8\">\n                ");
+  data.buffer.push("<div class=\"scope-container brand__border-accent--top\" style=\"border-top-color: #cf5c60\">\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "locationModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n    <div class=\"content pad--sm--tm\">\n        <div class=\"row\">\n            <div class=\"column--md--8\">\n                ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "appliedMessage", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -140,11 +144,19 @@ function program7(depth0,data) {
     'disabled': ("disableApplyButton")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" data-toggle=\"dropdown\">Apply <span class=\"show-brkpoint--md\">Now</span></button>\n                    <ul class=\"dropdown-menu dropdown-menu--up\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-envelope\"></span> Apply with email</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  data.buffer.push(" data-toggle=\"dropdown\">Apply <span class=\"show-brkpoint--md\">Now</span></button>\n                    <ul class=\"dropdown-menu dropdown-menu--up\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickApply", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"juicon juicon-envelope\"></span> Apply with email</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickApplyWithLinkedIn", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("><span class=\"juicon juicon-linkedin\"></span> Apply with LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-facebook\"></span> Apply with Facebook</a></li>\n                    </ul>\n                </div>\n                <span class=\"mar--sm--lm\">or <a href=\"#\" class=\"text-underline saveJobLink\">save this job</a> if you're not ready</span>\n            </div>\n            <div class=\"column--md--4 mar--sm--only--txl\">\n                <div class=\"button-group width--full inline-block vam width--full--sm--only\">\n                    <button class=\"button button--secondary width--full theme-border-color theme-link-color\" data-toggle=\"dropdown\">Share Job <span class=\"juicon juicon-share\"></span></button>\n                    <ul class=\"dropdown-menu\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-twitter\"></span> Twitter</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-linkedin\"></span> LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-facebook\"></span> Facebook</a></li>\n                    </ul>\n                </div>\n                <hr>\n\n                ");
+  data.buffer.push("><span class=\"juicon juicon-linkedin\"></span> Apply with LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-facebook\"></span> Apply with Facebook</a></li>\n                    </ul>\n                </div>\n                <span class=\"mar--sm--lm\">or <a href=\"#\" class=\"text-underline saveJobLink\">save this job</a> if you're not ready</span>\n            </div>\n            <div class=\"column--md--4 mar--sm--only--txl\">\n                <div class=\"button-group width--full inline-block vam width--full--sm--only\">\n                    <button class=\"button button--secondary width--full theme-border-color theme-link-color\" data-toggle=\"dropdown\">Share Job <span class=\"juicon juicon-share\"></span></button>\n                    <ul class=\"dropdown-menu\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickTweet", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"juicon juicon-twitter\"></span> Twitter</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-linkedin\"></span> LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-facebook\"></span> Facebook</a></li>\n                    </ul>\n                </div>\n                <hr>\n\n                ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "applications", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -155,5 +167,15 @@ function program7(depth0,data) {
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "salesforce-twitter", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n            </div>\n\n            \n        </div>\n    </div>\n</div>");
   return buffer;
+  
+});
+
+Ember.TEMPLATES["locationModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  
+
+
+  data.buffer.push("<div class=\"modal fade\" id=\"locationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <!--<button type=\"button\" class=\"close\" data-dismiss=\"modal\">-->\n                    <!--<span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>-->\n                <!--</button>-->\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Before you begin...</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p class=\"mar--sm--tn\">Please confirm the location where you'd prefer to work.</p>\n                <div class=\"form__group\">\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        <select>\n                            <option>Chicago, IL (Closest)</option>\n                            <option>Boston, MA</option>\n                            <option>London, GB, UK</option>\n                            <option>Remote</option>\n                            <option>San Francisco, CA (Primary)</option>\n                            <option>Vancouver, BC, CA</option>\n                        </select>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal__footer\">\n                <button id=\"modalOk\" type=\"button\" class=\"button button--primary\" data-dismiss=\"modal\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
   
 });
