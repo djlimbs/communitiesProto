@@ -234,7 +234,7 @@ App.JobSearchRoute = Ember.Route.extend( {
                 });
 
                 var applicationObj = {
-                    jobTitle: app.Job_Posting__r.Name,
+                    jobTitle: !Ember.isNone(app.Job_Posting__r) ? app.Job_Posting__r.Name : null,
                     firstLocationString: firstLocationString,
                     otherLocationsString: otherLocationsString,
                     otherLocationsCount: otherLocationsCount,
