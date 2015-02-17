@@ -48,11 +48,11 @@
                         <li class="list-group__item active"><a href="#aboutMe">Contact Info</a></li>
                         <li class="list-group__item"><a href="#resume">Resume</a></li>
                         <li class="list-group__item"><a href="#skills">Skills</a></li>
-                        <li class="list-group__item"><a href="#empHistory">Employment History</a></li>
-                        <li class="list-group__item"><a href="#edHistory">Education History</a></li>
+                        <li class="list-group__item disabled"><a href="#" disabled="disabled">Employment History</a></li>
+                        <li class="list-group__item disabled"><a href="#" disabled="disabled">Education History</a></li>
                         <li class="list-group__item"><a href="#general">General</a></li>
                         <li class="list-group__item"><a href="#jobSpecific">Job Specific</a></li>
-                        <li class="list-group__item disabled"><a href="#legallyRequired">Legally Required</a></li>
+                        <li class="list-group__item disabled"><a href="#" disabled="disabled">Legally Required</a></li>
                     </ul>
                 </div>
                 <div class="column--md--9 pad--sm--only--n">
@@ -84,18 +84,6 @@
                                             </div>
                                         </div>
                                         <div class="column--md--6">
-                                            <div class="form__group">
-                                                <label for="preferredName">Preferred Name</label>
-                                                <input id="preferredName" type="text"/>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group ">
-                                                <label for="middleName">Middle Name</label>
-                                                <input id="middleName" type="text"/>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
                                             <div class="form__group ">
                                                 <label for="lastName" class="">
                                                     Last Name
@@ -123,60 +111,6 @@
                                             <div class="form__group">
                                                 <label for="mobilePhone">Mobile Phone</label>
                                                 <input id="mobilePhone" type="tel"/>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group ">
-                                                <label for="homePhone">Home Phone</label>
-                                                <input id="homePhone" type="tel"/>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group ">
-                                                <label for="workPhone">Work Phone</label>
-                                                <input id="workPhone" type="tel"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="list-heading">
-                                    <h4 class="list-heading__title">Address Info</h4>
-                                </div>
-                                <div class="panel__body pad--md--bn">
-                                    <div class="row">
-                                        <div class="column--md--12">
-                                            <div class="form__group">
-                                                <label class="">Street Address</label>
-                                                <textarea id="streetAddress1"></textarea>
-                                                <small class="input-error-content">Error</small>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group">
-                                                <label for="city" class="">City</label>
-                                                <input id="city" type="text"/>
-                                                <small class="input-error-content">Error</small>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group">
-                                                <label for="state" class="">State/Province</label>
-                                                <input id="state" type="text"/>
-                                                <small class="input-error-content">Error</small>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group">
-                                                <label for="zip" class="">Zip/Postal Code</label>
-                                                <input id="zip" type="text"/>
-                                                <small class="input-error-content">Error</small>
-                                            </div>
-                                        </div>
-                                        <div class="column--md--6">
-                                            <div class="form__group">
-                                                <label for="country">Country</label>
-                                                <input id="country" type="text"/>
                                             </div>
                                         </div>
                                     </div>
@@ -632,21 +566,24 @@
 
                 //get displaying tab content jQuery selector
                 var active_tab_selector = $('.wizardNav > li.active > a').attr('href');
-
-                //hide displaying tab content
-                $(active_tab_selector).removeClass('active');
-                $(active_tab_selector).addClass('hide');
-
-                //find active navigation and remove 'active' css
-                var active_nav = $('.wizardNav > li.active');
-                active_nav.removeClass('active');
-
-                //add 'active' css into clicked navigation
-                $(this).parents('li').addClass('active');
-
                 var target_tab_selector = $(this).attr('href');
-                $(target_tab_selector).removeClass('hide');
-                $(target_tab_selector).addClass('active');
+
+                if (target_tab_selector !== '#') {
+                    //hide displaying tab content
+                    $(active_tab_selector).removeClass('active');
+                    $(active_tab_selector).addClass('hide');
+
+                    //find active navigation and remove 'active' css
+                    var active_nav = $('.wizardNav > li.active');
+                    active_nav.removeClass('active');
+
+                    //add 'active' css into clicked navigation
+                    $(this).parents('li').addClass('active');
+
+                    $(target_tab_selector).removeClass('hide');
+                    $(target_tab_selector).addClass('active');
+                }
+                
             })
 
 
