@@ -7,6 +7,7 @@ App.SalesforceTwitterComponent = Ember.Component.extend({
     layoutName: 'components/twitter',
     didInsertElement: function() {
         !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+        Ember.run.later(this, updateHeight, 500);
     }
 });
 
@@ -226,6 +227,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                 backdrop: 'static'
             });
 
+            window.parent.scrollTo(0,0);
+
             $('#modalOk').click(function() {
                 $('#modalOk').unbind('click');
 
@@ -292,6 +295,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                 show: true,
                 backdrop: 'static'
             });
+
+            window.parent.scrollTo(0,0);
 
             $('#modalOk').click(function() {
                 $('#modalOk').unbind('click');
