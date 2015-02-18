@@ -7,7 +7,9 @@ App = Ember.Application.create({
 // Routes
 App.ApplyRoute = Ember.Route.extend( {
     model: function(params) {
-        return {}
+        return {
+            companyLogoUrl: companyLogoUrl
+        }
     }
 });
 
