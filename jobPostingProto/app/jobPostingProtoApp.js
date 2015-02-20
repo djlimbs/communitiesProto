@@ -147,6 +147,12 @@ App.JobPostingView = Ember.View.extend({
         $('body').tooltip({
             selector: '[data-toggle=tooltip]'
         });
+
+        $('body').on('touchstart.jui.dropdown', '.dropdown-menu', function (e) { 
+            e.stopPropagation(); 
+        });
+        
+        $('.dropdown-menu').on('touchstart.dropdown.data-api', function(e) { e.stopPropagation() })
     }
 });
 
@@ -330,7 +336,7 @@ App.JobPostingController = Ember.ObjectController.extend({
             var currentUrl = window.parent.location.href;
             var tweetString = 'Check out this #dreamjob at #Salesforce ' + currentUrl;
 
-            window.open('http://twitter.com/home/?status=' + encodeURIComponent(tweetString));
+            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetString));
         }
     }
 });

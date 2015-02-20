@@ -1,0 +1,12 @@
+<div class="column--md--6">
+    <div class="form__group">
+        <label for="firstName" class="">
+            {{field.label}}
+            {{#if field.helpText}}
+                <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle"></span>
+            {{/if}}
+        </label>
+        {{input type="tel" value=field.value}}
+        <small class="input-error-content">Error</small>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="column--md--6">
+    <div class="form__group mar--md--bn mar--md--tm">
+        <label data-qa-label="fieldName">{{field.label}}</label>
+        <div class="select__wrap">
+            <div class="input__icon juicon juicon-down"></div>
+            {{view "select"
+                    content=field.picklistValues
+                    optionLabelPath="content.label"
+                    optionValuePath="content.value"
+                    value=field.value
+                    data-qa-input="select"}}
+        </div>
+    </div>
+</div>

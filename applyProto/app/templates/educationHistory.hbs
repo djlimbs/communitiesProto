@@ -1,0 +1,17 @@
+<div id="edHistory" class="wizardSection pad--sm--only--n active">
+    <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Education History</h1>                            <div class="panel">
+        {{#each educationHistory in model}}
+            <div class="panel__component panel__component--removable">
+                <button type="button" class="close"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+                <div class="row">
+                    {{#each field in educationHistory.fields}}
+                        {{partial field.partial}}
+                    {{/each}}
+                </div>
+            </div>
+        {{/each}}
+        <div class="panel__component">
+            <button class="button button--primary width--full--sm--only">Add Education History <span class="juicon juicon-plus"></span></button>
+        </div>
+    </div>
+</div>

@@ -59,6 +59,9 @@ App.JobSearchController = Ember.ObjectController.extend({
             nearValue = decodeURI(parent.nearValue);
             this.set('selectedLocation', 'Near...');
             this.set('nearValue', nearValue);
+        } else {
+            this.set('nearValue', 'San Francisco');
+            this.set('selectedLocation', 'Near...');
         }
 
         Ember.run.later(this, function() {
