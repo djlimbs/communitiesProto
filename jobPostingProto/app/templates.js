@@ -156,7 +156,15 @@ function program7(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickTweet", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("><span class=\"juicon juicon-twitter\"></span> Twitter</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-linkedin\"></span> LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-facebook\"></span> Facebook</a></li>\n                    </ul>\n                </div>\n                <hr>\n\n                ");
+  data.buffer.push("><span class=\"juicon juicon-twitter\"></span> Twitter</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLinkedIn", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"juicon juicon-linkedin\"></span> LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickFacebook", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"juicon juicon-facebook\"></span> Facebook</a></li>\n                    </ul>\n                </div>\n                <hr>\n\n                ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "applications", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
