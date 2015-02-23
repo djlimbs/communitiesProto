@@ -335,9 +335,52 @@ App.JobPostingController = Ember.ObjectController.extend({
         clickTweet: function() {
             var currentUrl = window.parent.location.href;
             var tweetString = 'Check out this #dreamjob at #Salesforce ' + currentUrl;
+            var width = 626;
+            var height = 436;
+            var left = (screen.width / 2) - (width / 2);
+            var top = (screen.height / 2) - (height / 2);
 
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetString));
-        }
+            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetString),
+                        'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
+                        'menubar=no, toolbar=no, resizable=yes, scrollbars=yes'
+                );
+        },
+        clickLinkedIn: function (){
+            var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Home';
+            var title = 'Title';
+            var source = 'https://www.appiphony.com'; // This does not show up anywhere except on url
+            var summary = 'Summary';
+            var docTitle = document.title; // This is the document where the Share Button is
+            var width = 626;
+            var height = 436;
+            var left = (screen.width / 2) - (width / 2);
+            var top = (screen.height / 2) - (height / 2);
+
+            window.open('http://www.linkedin.com/shareArticle?mini=true&url='+ 
+                        encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + 
+                        '&source=' + encodeURIComponent(source) + '&summary=' + encodeURIComponent(summary) + '&t=' + encodeURIComponent(docTitle),
+                        'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
+                        'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
+
+            return false;
+        },
+        clickFacebook: function (){
+            var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Home';
+            var docTitle = document.title; // This is the document where the Share Button is
+            var width = 626;
+            var height = 436;
+            var left = (screen.width / 2) - (width / 2);
+            var top = (screen.height / 2) - (height / 2);
+
+            window.open('http://www.facebook.com/sharer.php?u='+ 
+                        encodeURIComponent(url)+ '&t=' + encodeURIComponent(docTitle),
+                        'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
+                        'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
+
+            return false;
+        },
+
+
     }
 });
 
