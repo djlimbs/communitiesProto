@@ -571,7 +571,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n            <div class=\"panel__component panel__component--removable\">\n                <button type=\"button\" class=\"close\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                <div class=\"row\">\n                    ");
+  data.buffer.push("\n            <div class=\"panel__component panel__component--removable\">\n                <button type=\"button\" class=\"close\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteEducationHistory", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                <div class=\"row\">\n                    ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "field", "in", "educationHistory.fields", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -596,7 +600,11 @@ function program2(depth0,data) {
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "educationHistory", "in", "model", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\">Add Education History <span class=\"juicon juicon-plus\"></span></button>\n        </div>\n    </div>\n</div>");
+  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddEducationHistory", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Add Education History <span class=\"juicon juicon-plus\"></span></button>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -609,7 +617,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n            <div class=\"panel__component panel__component--removable\">\n                <button type=\"button\" class=\"close\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                <div class=\"row\">\n                    ");
+  data.buffer.push("\n            <div class=\"panel__component panel__component--removable\">\n                <button type=\"button\" class=\"close\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteEmploymentHistory", "employmentHistory", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                <div class=\"row\">\n                    ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "field", "in", "employmentHistory.fields", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -634,7 +646,11 @@ function program2(depth0,data) {
   hashContexts = {};
   stack1 = helpers.each.call(depth0, "employmentHistory", "in", "model", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\">Add Employment History <span class=\"juicon juicon-plus\"></span></button>\n        </div>\n    </div>\n</div>");
+  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddEmploymentHistory", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Add Employment History <span class=\"juicon juicon-plus\"></span></button>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -740,7 +756,7 @@ function program6(depth0,data) {
   hashContexts = {'name': depth0,'value': depth0};
   hashTypes = {'name': "ID",'value': "ID"};
   options = {hash:{
-    'name': ("fe.Id"),
+    'name': ("fe.value"),
     'value': ("answer.Value__c")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['radio-button'] || (depth0 && depth0['radio-button'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "radio-button", options))));
@@ -983,7 +999,7 @@ function program6(depth0,data) {
   hashContexts = {'name': depth0,'value': depth0};
   hashTypes = {'name': "ID",'value': "ID"};
   options = {hash:{
-    'name': ("fe.Id"),
+    'name': ("fe.value"),
     'value': ("answer.Value__c")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['radio-button'] || (depth0 && depth0['radio-button'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "radio-button", options))));
@@ -1226,7 +1242,7 @@ function program6(depth0,data) {
   hashContexts = {'name': depth0,'value': depth0};
   hashTypes = {'name': "ID",'value': "ID"};
   options = {hash:{
-    'name': ("fe.Id"),
+    'name': ("fe.value"),
     'value': ("answer.Value__c")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['radio-button'] || (depth0 && depth0['radio-button'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "radio-button", options))));

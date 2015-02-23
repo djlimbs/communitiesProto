@@ -63,7 +63,7 @@ function createSaveObj(jobPosting, loggedInUser, linkedInMap) {
         }
 
         if (!Ember.isNone(linkedInMap.positions && !Ember.isEmpty(linkedInMap.positions.values))) {
-            saveObj.employmentHistory = createEmplyomentHistoryObj(linkedInMap.positions.values);
+            saveObj.employmentHistory = createEmploymentHistoryObj(linkedInMap.positions.values);
         }
     }
 
@@ -94,7 +94,7 @@ function createEducationHistoryObj(educations) {
     });
 };
 
-function createEmplyomentHistoryObj(positions) {
+function createEmploymentHistoryObj(positions) {
     return positions.map(function(p) {
         // Positions from LinkedIn only have year and month in startDate/endDate
         var startDate;

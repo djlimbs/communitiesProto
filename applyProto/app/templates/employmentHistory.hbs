@@ -3,7 +3,7 @@
     <div class="panel">
         {{#each employmentHistory in model}}
             <div class="panel__component panel__component--removable">
-                <button type="button" class="close"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" {{action "clickDeleteEmploymentHistory" employmentHistory}}><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
                 <div class="row">
                     {{#each field in employmentHistory.fields}}
                         {{partial field.partial}}
@@ -12,7 +12,7 @@
             </div>
         {{/each}}
         <div class="panel__component">
-            <button class="button button--primary width--full--sm--only">Add Employment History <span class="juicon juicon-plus"></span></button>
+            <button class="button button--primary width--full--sm--only" {{action "clickAddEmploymentHistory"}}>Add Employment History <span class="juicon juicon-plus"></span></button>
         </div>
     </div>
 </div>

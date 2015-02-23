@@ -32,8 +32,8 @@ App.DatePickerComponent = Ember.Component.extend({
                     $input.val(moment(event.date).format(locale));
                    
                     $datepicker.datepicker('hide');
-                })
-                .datepicker('setValue', moment(dateValue).toDate());
+                });
+                //.datepicker('setValue', moment(dateValue).toDate());
 
             if (!Ember.isNone(dateValue)) {
                 $input.val(moment(dateValue).format(locale));
