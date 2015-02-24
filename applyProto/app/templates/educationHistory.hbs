@@ -2,7 +2,7 @@
     <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Education History</h1>                            <div class="panel">
         {{#each educationHistory in model}}
             <div class="panel__component panel__component--removable">
-                <button type="button" class="close" {{action "clickDeleteEducationHistory"}}><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" {{action "clickDeleteEducationHistory" educationHistory}}><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
                 <div class="row">
                     {{#each field in educationHistory.fields}}
                         {{partial field.partial}}

@@ -574,7 +574,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component panel__component--removable\">\n                <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteEducationHistory", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteEducationHistory", "educationHistory", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                <div class=\"row\">\n                    ");
   hashTypes = {};
   hashContexts = {};
@@ -1423,11 +1423,10 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 
   data.buffer.push("<div id=\"skills\" class=\"wizardSection pad--sm--only--n active\">\n    <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\">Skills</h1>\n\n    <div class=\"content__section\">\n        ");
-  hashContexts = {'value': depth0,'options': depth0};
-  hashTypes = {'value': "ID",'options': "ID"};
+  hashContexts = {'value': depth0};
+  hashTypes = {'value': "ID"};
   options = {hash:{
-    'value': ("selectedSkills"),
-    'options': ("allSkills")
+    'value': ("selectedSkills")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['select-2'] || (depth0 && depth0['select-2'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "select-2", options))));
   data.buffer.push("\n    </div>\n</div>");

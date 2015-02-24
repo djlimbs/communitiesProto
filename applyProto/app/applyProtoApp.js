@@ -11,7 +11,8 @@ var fieldTypeToPartialMap = {
     'PHONE' : 'telField',
     'TEXTAREA' : 'textArea',
     'DATE' : 'date',
-    'PICKLIST' : 'picklist'
+    'PICKLIST' : 'picklist',
+    'BOOLEAN' : 'checkbox'
 };
 
 var appFieldsToLinkedInMap = {
@@ -42,7 +43,7 @@ function getEmploymentHistoryBlock(employmentHistoryObj) {
         parsedApplyMap.employmentHistoryFields.forEach(function(f) {
             var fieldObjWithValue = JSON.parse(JSON.stringify(f));
 
-            fieldObjWithValue.value = null;
+            //fieldObjWithValue.value = null;
             fieldObjWithValue.partial = fieldTypeToPartialMap[f.type];
             employmentHistoryBlock.fields.addObject(fieldObjWithValue);
         });
@@ -57,6 +58,8 @@ function getEmploymentHistoryBlock(employmentHistoryObj) {
         newBlock.fields.forEach(function(f) {
             f.value = employmentHistoryObj[f.name];
         });
+
+        newBlock.Id = employmentHistoryObj.Id;
     }
 
     return newBlock;
@@ -70,7 +73,7 @@ function getEducationHistoryBlock(educationHistoryObj) {
     
         parsedApplyMap.educationHistoryFields.forEach(function(f) {
             var fieldObjWithValue = JSON.parse(JSON.stringify(f));
-            fieldObjWithValue.value = null;
+            //fieldObjWithValue.value = null;
             fieldObjWithValue.partial = fieldTypeToPartialMap[f.type];
             educationHistoryBlock.fields.addObject(fieldObjWithValue);
         });
@@ -85,12 +88,14 @@ function getEducationHistoryBlock(educationHistoryObj) {
         newBlock.fields.forEach(function(f) {
             f.value = educationHistoryObj[f.name];
         });
+
+        newBlock.Id = educationHistoryObj.Id;
     }
 
     return newBlock;
 }
 
-function createEducationHistoryObj(educations) {
+function convertLinkedInToEduationHistoryObj(educations) {
     return educations.map(function(e) {
         // Educations from linkedIn only have year in the startDate/endDate
 
@@ -105,7 +110,7 @@ function createEducationHistoryObj(educations) {
     });
 }
 
-function createEmploymentHistoryObj(positions) {
+function convertLinkedInToEmploymentHistoryObj(positions) {
     return positions.map(function(p) {
         // Positions from LinkedIn only have year and month in startDate/endDate
         var startDate;
@@ -139,34 +144,44 @@ function createEmploymentHistoryObj(positions) {
 
 function createApplicantRequiredDataObj(legalFormElements) {
     return legalFormElements.map(function(fe) {
-        return {
-            Application__c: appId,
-            Form_Element__c: fe.Id,
-            Question__c: fe.Text__c,
-            Value__c: fe.value
+        if (!Ember.isEmpty(fe.value)) {
+            return {
+                Id: fe.applicantRequiredDataId,
+                Application__c: appId,
+                Form_Element__c: fe.Id,
+                Question__c: fe.Text__c,
+                Value__c: fe.value
+            }
+        } else {
+            null;
         }
-    });
+    }).compact();
 }
 
 function createApplicantResponseObj(formElements) {
     return formElements.map(function(fe) {
-        var applicantResponseObj = {
-            Application__c: appId,
-            Form_Element__c: fe.Id,
-            Date__c: moment().format('YYYY-MM-DD'),
-            Question__c: fe.Text__c,
-            Value__c: fe.value
-        };
+        if (!Ember.isEmpty(fe.value)) {
+            var applicantResponseObj = {
+                Id: fe.applicantResponseId,
+                Application__c: appId,
+                Form_Element__c: fe.Id,
+                Date__c: moment().format('YYYY-MM-DD'),
+                Question__c: fe.Text__c,
+                Value__c: fe.value
+            };
 
-        if (!Ember.isNone(fe.Answer_Choices__r)) {
-            var answerChoice = fe.Answer_Choices__r.records.findBy('Value__c', fe.value);
+            if (!Ember.isNone(fe.Answer_Choices__r)) {
+                var answerChoice = fe.Answer_Choices__r.records.findBy('Value__c', fe.value);
 
-            applicantResponseObj.Answer_Choice__c = answerChoice.Id;
-            applicantResponseObj.Score__c = answerChoice.Score__c;
+                applicantResponseObj.Answer_Choice__c = answerChoice.Id;
+                applicantResponseObj.Score__c = answerChoice.Score__c;
+            }
+
+            return applicantResponseObj;
+        } else {
+            return null;
         }
-
-        return applicantResponseObj;
-    });
+    }).compact();
 }
 
 function generateRemoteActionCallback(self, successFunction, isPromise) {
@@ -203,10 +218,47 @@ App.Select2Component = Ember.TextField.extend({
     attributeBindings: ['multiple'],
     multiple: true,
     didInsertElement: function() {
-        var options = this.get('options');
+        var self = this;
         this.$().select2({
-            placeholder: "Choose or type skills...",
-            tags: options.getEach('Name')
+            multiple: true,
+            minimumInputLength: 3,
+            query: function (query) {
+
+                var callback = function(parsedResult) {
+                    var data = {
+                        results: []
+                    };
+
+                    parsedResult.data.skills.forEach(function(skill) {
+                        data.results.push({
+                            id: skill.Name,
+                            text: skill.Name
+                        });
+                    });
+
+                    query.callback(data);
+                };
+
+                cont.searchSkills(query.term, generateRemoteActionCallback(self, callback, false));
+            },
+            createSearchChoice: function(term, data) { 
+                if ($(data).filter(function() { 
+                    return this.text.localeCompare(term)===0; 
+                }).length===0) {
+                    return {
+                        id:term, 
+                        text:term
+                    };
+                } 
+            },
+            initSelection : function (element, callback) {
+                var data = [];
+                $(element.val().split(",")).each(function () {
+                    data.push({id: this, text: this});
+                });
+                callback(data);
+            },
+            placeholder: "Choose or type skills..."
         });
     }
 });
@@ -259,15 +311,11 @@ App.ApplyController = Ember.ObjectController.extend({
     }.property('currentPath'),
     isContactInfo: Ember.computed.equal('currentPath', 'contactInfo'),
     isLegallyRequired: Ember.computed.equal('currentPath', 'legallyRequired'),
-    isEmploymentHistoryIncomplete: false,
-    isEducationHistoryIncomplete: false,
-    isGeneralIncomplete: false,
-    isLegallyRequiredIncomplete: false,
-    isJobSpecificIncomplete: false,
     disableNext: function() {
         var currentPath = this.get('currentPath');
         var incompleteProperty = ('is ' + currentPath + ' incomplete').camelize();
-
+        console.log(incompleteProperty)
+        console.log(this.get(incompleteProperty));
         return this.get(incompleteProperty);
     }.property('currentPath', 'isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
                     'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete'),
@@ -275,37 +323,31 @@ App.ApplyController = Ember.ObjectController.extend({
         return this.get('isContactInfoIncomplete');
     }.property('isContactInfoIncomplete'),
     disableSkills: function() {
-        return false;
-        //return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete'),
     disableEmploymentHistory: function() {
-        return false;
-        //return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('isSkillsIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('isSkillsIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete'),
     disableEducationHistory: function() {
-        return false;
-        //return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-        //                || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryComplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
+                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete'),
     disableGeneral: function() {
-        return false;
-        //return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-        //                || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-        //                || this.get('isEducationHistoryIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
+                       || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
+                       || this.get('isEducationHistoryIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete'),
     disableJobSpecific: function() {
-        return false;
-        // return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-        //                 || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-        //                 || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
+                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
+                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'isGeneralIncomplete'),
     disableLegallyRequired: function() {
-        return false;
-        // return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-        //                 || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-        //                 || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') || this.get('isJobSpecificIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
+                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
+                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') || this.get('isJobSpecificIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 
                             'isGeneralIncomplete', 'isJobSpecificIncomplete'),
@@ -389,6 +431,12 @@ App.SkillsController = Ember.ObjectController.extend({
 });
 
 App.EmploymentHistoryController = Ember.ArrayController.extend({
+    needs: ['apply'],
+    employmentHistoryYearsBinding: 'controllers.apply.employmentHistoryYears',
+    employmentHistoryDidChenge: function() {
+        console.log(this.get('employmentHistoryYears'));
+        this.get('controllers.apply').set('isEmploymentHistoryIncomplete', false);
+    }.observes('[]'),
     actions: {
         clickAddEmploymentHistory: function() {
             var employmentHistoryBlock = getEmploymentHistoryBlock();
@@ -535,14 +583,22 @@ App.ApplyRoute = Ember.Route.extend( {
             applicationObj.employmentHistoryYears = hiringModel.employmentHistory.selectedEmploymentHistoryYears;
             applicationObj.employmentHistoryArray = [];
 
+            if (!Ember.isEmpty(parsedApplyMap.employmentHistories)) {
+                parsedApplyMap.employmentHistories.forEach(function(eh) {
+                    applicationObj.employmentHistoryArray.addObject(getEmploymentHistoryBlock(eh));
+                });
+            }
+
             // if we don't have data already but have logged in via linkedin
             if (Ember.isEmpty(applicationObj.employmentHistoryArray) && !Ember.isNone(linkedInMap) 
                     && !Ember.isEmpty(linkedInMap.positions)) {
-                var employmentHistoryObjs = createEmploymentHistoryObj(linkedInMap.positions.values);
+                var employmentHistoryObjs = convertLinkedInToEmploymentHistoryObj(linkedInMap.positions.values);
                 employmentHistoryObjs.forEach(function(eh) {
                     applicationObj.employmentHistoryArray.addObject(getEmploymentHistoryBlock(eh));
                 });
-            } else {
+            }  
+
+            if (Ember.isEmpty(applicationObj.employmentHistoryArray)) {
                 applicationObj.employmentHistoryArray.addObject(getEmploymentHistoryBlock());
             }
         }
@@ -550,25 +606,39 @@ App.ApplyRoute = Ember.Route.extend( {
         if (hiringModel.educationHistory.isEnabled === true) {
             applicationObj.educationHistoryArray = [];
 
-            
+            // if we have data already.
+            if (!Ember.isEmpty(parsedApplyMap.educationHistories)) {
+                parsedApplyMap.educationHistories.forEach(function(eh) {
+                    applicationObj.educationHistoryArray.addObject(getEducationHistoryBlock(eh));
+                });
+            }
 
             // if we don't have data already but have logged in via linkedin
             if (Ember.isEmpty(applicationObj.educationHistoryArray) && !Ember.isNone(linkedInMap) 
                     && !Ember.isEmpty(linkedInMap.educations)) {
-                var educationHistoryObjs = createEducationHistoryObj(linkedInMap.educations.values);
+                var educationHistoryObjs = convertLinkedInToEduationHistoryObj(linkedInMap.educations.values);
                 educationHistoryObjs.forEach(function(eh) {
                     applicationObj.educationHistoryArray.addObject(getEducationHistoryBlock(eh));
                 });
-            } else {
+            }  
+
+            // if we don't have any data at all.
+            if (Ember.isEmpty(applicationObj.educationHistoryArray)) {
                 applicationObj.educationHistoryArray.addObject(getEducationHistoryBlock());
             }
         }
 
         if (hiringModel.skills.isEnabled === true) {
             applicationObj.skills = {
-                allSkills: parsedApplyMap.allSkills,
                 selectedSkills: ''
             };
+
+            // if we have data
+            if (!Ember.isEmpty(parsedApplyMap.skills)) {
+                var skillsArray = parsedApplyMap.skills.getEach('Skill__r').getEach('Name');
+
+                applicationObj.skills.selectedSkills = skillsArray.join(',');
+            }
 
             // if we dont have data already but logged in via linkedin
             if (Ember.isEmpty(applicationObj.skills.selectedSkills) && !Ember.isNone(linkedInMap)
@@ -581,16 +651,67 @@ App.ApplyRoute = Ember.Route.extend( {
             }
         }
 
-        // Check if we have data
+        // Check if we have general data
+        applicationObj.generalFormElements = parsedApplyMap.generalFormElements;
         applicationObj.isGeneralIncomplete = true;
+
+        if (!Ember.isEmpty(parsedApplyMap.generalApplicantResponses)) {
+            parsedApplyMap.generalApplicantResponses.forEach(function(aR) {
+                var feToUpdate = applicationObj.generalFormElements.findBy('Id', aR.Form_Element__c);
+
+                if (!Ember.isNone(feToUpdate)) {
+                    feToUpdate.applicantResponseId = aR.Id;
+                    feToUpdate.value = aR.Value__c;
+                }
+
+            });
+
+            if (parsedApplyMap.generalApplicantResponses.length === applicationObj.generalFormElements.length) {
+                applicationObj.isGeneralIncomplete = false;
+            }
+        }
+
+
+        // Check if we have job specific data
+
         applicationObj.isJobSpecificIncomplete = true;
+        applicationObj.jobSpecificFormElements = parsedApplyMap.jobSpecificFormElements;
+
+        if(!Ember.isEmpty(parsedApplyMap.jobSpecificApplicantResponses)) {
+            parsedApplyMap.jobSpecificApplicantResponses.forEach(function(aR) {
+                var feToUpdate = applicationObj.jobSpecificFormElements.findBy('Id', aR.Form_Element__c);
+
+                if (!Ember.isNone(feToUpdate)) {
+                    feToUpdate.applicantResponseId = aR.Id;
+                    feToUpdate.value = aR.Value__c;
+                }
+            });
+
+            if (parsedApplyMap.jobSpecificApplicantResponses.length === applicationObj.jobSpecificFormElements.length) {
+                applicationObj.isJobSpecificIncomplete = false;
+            }
+        }
+
+        // Check if we have legal data
+        applicationObj.legalFormElements = parsedApplyMap.legalFormElements;
         applicationObj.isLegallyRequiredIncomplete = true;
 
-        applicationObj.numSections = applicationObj.sectionArray.length;
+        if(!Ember.isEmpty(parsedApplyMap.legalApplicantRequiredData)) {
+            parsedApplyMap.legalApplicantRequiredData.forEach(function(aRD) {
+                var feToUpdate = applicationObj.legalFormElements.findBy('Id', aRD.Form_Element__c);
 
-        applicationObj.generalFormElements = parsedApplyMap.generalFormElements;
-        applicationObj.jobSpecificFormElements = parsedApplyMap.jobSpecificFormElements;
-        applicationObj.legalFormElements = parsedApplyMap.legalFormElements;
+                if (!Ember.isNone(feToUpdate)) {
+                    feToUpdate.applicantRequiredDataId = aRD.Id;
+                    feToUpdate.value = aRD.Value__c;
+                }
+            });
+
+            if (parsedApplyMap.legalApplicantRequiredData.length === applicationObj.legalFormElements.length) {
+                applicationObj.isLegallyRequiredIncomplete = false;
+            }
+        }
+
+        applicationObj.numSections = applicationObj.sectionArray.length;
 
         console.log('***MODEL');
         console.log(applicationObj);
@@ -687,45 +808,24 @@ App.SkillsRoute = Ember.Route.extend({
         willTransition: function(transition) {
             var applyModel = this.modelFor('apply');
             var skillsModel = this.modelFor('skills');
-            var selectedSkills = skillsModel.selectedSkills;
-            var allSkills = skillsModel.allSkills;
-            var skillObjs = [];
-
-            if (!Ember.isEmpty(selectedSkills)) {
-                selectedSkills = selectedSkills.split(',');
-
-                selectedSkills.forEach(function(skill) {
-                    var foundSkill = allSkills.findBy('Name', skill);
-                    var skillObj = {
-                        Name: skill
-                    };
-
-                    if (!Ember.isNone(foundSkill)) {
-                        skillObj.Id = foundSkill.Id;
-                    }
-
-                    skillObjs.addObject(skillObj);
-                });
+            var selectedSkillsString = skillsModel.selectedSkills;
+            var selectedSkills = [];
+            
+            if (!Ember.isEmpty(selectedSkillsString)) {
+                selectedSkills = selectedSkillsString.split(',');
             }
 
             var saveObj = {
                 applicationId: appId,
-                skills: skillObjs
+                skills: selectedSkills,
+                flattenedSkills: selectedSkillsString.replace(/,/g, ', ')
             };
 
-            cont.saveSkills(JSON.stringify(saveObj), function(res, evt) {
-                if (res) {
-                    var parsedResult = parseResult(res);
+            var callback = function(parsedResult) {
+                console.log(parsedResult);
+            };
 
-                    if (Ember.isEmpty(parsedResult.errorMessages)) {
-                        console.log(parsedResult)
-                    } else {
-                        console.log(parsedResult.errorMessages[0]);
-                    }
-                } else {
-                    // error
-                }
-            });
+            cont.saveSkills(JSON.stringify(saveObj), generateRemoteActionCallback(self, callback, false));
         }
     }
 });
@@ -741,18 +841,53 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
         willTransition: function(transition) {
             var applyModel = this.modelFor('apply');
             var employmentHistoryObjArray = [];
+            var flattenedEmploymentHistory = '';
 
             applyModel.employmentHistoryArray.forEach(function(eh) {
-                var employmentHistoryObj = {};
+                var employmentHistoryObj = {
+                    Id: eh.Id,
+                    eId: eh.eId,
+                    Application__c: appId
+                };
 
                 eh.fields.forEach(function(field) {
                     employmentHistoryObj[field.name] = field.value;
                 });
 
+                // add employment history to flattened string
+                flattenedEmploymentHistory += employmentHistoryObj.Name + '\n'
+                            + employmentHistoryObj.Job_Title__c + '\n'
+                            + employmentHistoryObj.Start_Date__c + ' - ';
+
+                if (employmentHistoryObj.Is_Current__c == true) {
+                    flattenedEmploymentHistory += 'present';
+                } else if (employmentHistoryObj.End_Date__c != null) {
+                    flattenedEmploymentHistory += employmentHistoryObj.End_Date__c;
+                }
+
+                flattenedEmploymentHistory += '\n\n';
+
                 employmentHistoryObjArray.addObject(employmentHistoryObj);
             });
 
-            console.log(employmentHistoryObjArray);
+            var employmentHistoriesObj = {
+                employmentHistories: employmentHistoryObjArray,
+                appId: appId,
+                flattenedEmploymentHistory: flattenedEmploymentHistory
+            };
+
+            var successCallback = function(parsedResult) {
+                console.log(parsedResult);
+
+                Object.keys(parsedResult.data.eIdToEHMap).forEach(function(eId) {
+                    var eHToUpdate = applyModel.employmentHistoryArray.findBy('eId', parseInt(eId));
+                    eHToUpdate.Id = parsedResult.data.eIdToEHMap[eId].Id;
+                });
+
+                console.log(applyModel.employmentHistoryArray);
+            };
+
+            cont.saveEmploymentHistory(JSON.stringify(employmentHistoriesObj), generateRemoteActionCallback(self, successCallback, false));
         }
     }
 });
@@ -767,7 +902,9 @@ App.EducationHistoryRoute = Ember.Route.extend({
     actions: {
         willTransition: function(transition) {
             var applyModel = this.modelFor('apply');
+            var educationHistoryModel = this.modelFor('educationHistory');
             var educationHistoryObjArray = [];
+            var flattenedEducationHistory = '';
 
             applyModel.educationHistoryArray.forEach(function(eh) {
                 var educationHistoryObj = {
@@ -780,18 +917,32 @@ App.EducationHistoryRoute = Ember.Route.extend({
                     educationHistoryObj[field.name] = field.value;
                 });
 
+                // add education history to flattened string
+                flattenedEducationHistory += educationHistoryObj.Name__c + '\n'
+                            + educationHistoryObj.Education_Level__c;
+
+                if (!Ember.isNone(educationHistoryObj.Status__c)) {
+                    flattenedEducationHistory += ' (' + educationHistoryObj.Status__c + ')';
+                } 
+                
+                flattenedEducationHistory += '\n' 
+                                          + educationHistoryObj.Start_Date__c + ' - ' + educationHistoryObj.End_Date__c
+                                          + '\n\n';
+
                 educationHistoryObjArray.addObject(educationHistoryObj);
             });
 
             var educationHistoriesObj = {
-                educationHistories: educationHistoryObjArray
+                educationHistories: educationHistoryObjArray,
+                appId: appId,
+                flattenedEducationHistory: flattenedEducationHistory
             };
 
             var successCallback = function(parsedResult) {
                 console.log(parsedResult);
 
                 Object.keys(parsedResult.data.eIdToEHMap).forEach(function(eId) {
-                    var eHToUpdate = applyModel.educationHistoryArray.findBy('eId', parseInt(eId));
+                    var eHToUpdate = educationHistoryModel.findBy('eId', parseInt(eId));
                     eHToUpdate.Id = parsedResult.data.eIdToEHMap[eId].Id;
                 });
 
@@ -810,7 +961,52 @@ App.GeneralRoute = Ember.Route.extend({
     actions: {
         willTransition: function(transition) {
             var formElementAnswers = this.modelFor('general');
+            if (!Ember.isEmpty(formElementAnswers)) {
+                var applicantResponseObj = createApplicantResponseObj(formElementAnswers);
+
+                var callback = function(parsedResult) {
+                    // Use Form Element as a unique identifier since we'll never have two answer responses
+                    // for the same form element on an application.
+                    Object.keys(parsedResult.data.feIdToARMap).forEach(function(feId) {
+                        var aRToUpdate = formElementAnswers.findBy('Id', feId);
+                        aRToUpdate.applicantResponseId = parsedResult.data.feIdToARMap[feId].Id;
+                    });
+                };
+
+                var generalSaveObj = {
+                    applicantResponses: applicantResponseObj
+                };
+
+                cont.saveApplicantResponses(JSON.stringify(generalSaveObj), generateRemoteActionCallback(self, callback, false));
+            }   
+        }
+    }
+});
+
+
+App.JobSpecificRoute = Ember.Route.extend({
+    model: function(params) {
+        return this.modelFor('apply').jobSpecificFormElements;
+    },
+    actions: {
+        willTransition: function(transition) {
+            var formElementAnswers = this.modelFor('jobSpecific');
             var applicantResponseObj = createApplicantResponseObj(formElementAnswers);
+
+            var callback = function(parsedResult) {
+                // Use Form Element as a unique identifier since we'll never have two answer responses
+                // for the same form element on an application.
+                Object.keys(parsedResult.data.feIdToARMap).forEach(function(feId) {
+                    var aRToUpdate = formElementAnswers.findBy('Id', feId);
+                    aRToUpdate.applicantResponseId = parsedResult.data.feIdToARMap[feId].Id;
+                });
+            };
+
+            var jobSpecificSaveObj = {
+                applicantResponses: applicantResponseObj
+            };
+
+            cont.saveApplicantResponses(JSON.stringify(jobSpecificSaveObj), generateRemoteActionCallback(self, callback, false));
         }
     }
 });
@@ -823,21 +1019,25 @@ App.LegallyRequiredRoute = Ember.Route.extend({
         willTransition: function(transition) {
             var formElementAnswers = this.modelFor('legallyRequired');
             var applicantRequiredDataObj = createApplicantRequiredDataObj(formElementAnswers);
+
+            var callback = function(parsedResult) {
+                // Use Form Element as a unique identifier since we'll never have two answer responses
+                // for the same form element on an application.
+                Object.keys(parsedResult.data.feIdToARDMap).forEach(function(feId) {
+                    var aRDToUpdate = formElementAnswers.findBy('Id', feId);
+                    aRDToUpdate.applicantRequiredDataId = parsedResult.data.feIdToARDMap[feId].Id;
+                });
+            };
+
+            var legallyRequiredSaveObj = {
+                applicantRequiredDatas: applicantRequiredDataObj
+            };
+
+            cont.saveApplicantRequiredData(JSON.stringify(legallyRequiredSaveObj), generateRemoteActionCallback(self, callback, false));
         }
     }
 });
 
-App.JobSpecificRoute = Ember.Route.extend({
-    model: function(params) {
-        return this.modelFor('apply').jobSpecificFormElements;
-    },
-    actions: {
-        willTransition: function(transition) {
-            var formElementAnswers = this.modelFor('jobSpecific');
-            var applicantResponseObj = createApplicantResponseObj(formElementAnswers);
-        }
-    }
-});
 
 
 // Router
