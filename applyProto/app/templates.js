@@ -1419,9 +1419,18 @@ function program3(depth0,data) {
 Ember.TEMPLATES["skills"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  
+  var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div id=\"skills\" class=\"wizardSection pad--sm--only--n active\">\n    <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\">Skills</h1>\n\n    <div class=\"content__section\">\n        <input multiple id=\"select2multi\"/>\n    </div>\n</div>");
+  data.buffer.push("<div id=\"skills\" class=\"wizardSection pad--sm--only--n active\">\n    <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\">Skills</h1>\n\n    <div class=\"content__section\">\n        ");
+  hashContexts = {'value': depth0,'options': depth0};
+  hashTypes = {'value': "ID",'options': "ID"};
+  options = {hash:{
+    'value': ("selectedSkills"),
+    'options': ("allSkills")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['select-2'] || (depth0 && depth0['select-2'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "select-2", options))));
+  data.buffer.push("\n    </div>\n</div>");
+  return buffer;
   
 });
