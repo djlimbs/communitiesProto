@@ -168,6 +168,10 @@ function convertLinkedInToEmploymentHistoryObj(positions) {
         return {
             Name: !Ember.isNone(p.company) ? p.company.name : null,
             Job_Title__c: p.title,
+            Start_Month__c: !Ember.isNone(p.startDate) ? p.startDate.month : null,
+            Start_Year__c: !Ember.isNone(p.startDate) ? p.startDate.year : null,
+            End_Month__c: !Ember.isNone(p.endDate) ? p.endDate.month : null,
+            End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
             Start_Date__c: startDate,
             Is_Current__c: p.isCurrent,
             End_Date__c: endDate
@@ -471,30 +475,59 @@ App.EmploymentHistoryController = Ember.ArrayController.extend({
         var employmentHistoryYears = this.get('employmentHistoryYears');
         var currentHistoryLength = currentHistory.length;
         var hasEmptyField = false;
+        var isHistoryTooShort = true;
+
+        var dateRanges = [];
 
         currentHistory.getEach('fields').forEach(function(fieldArray) {
             var isCurrentField = fieldArray.findBy('name', 'Is_Current__c');
             var isCurrentChecked;
             var endDateFields = ['End_Year__c', 'End_Month__c'];
+            var dateRange = {
+                startDate: {
+                    month: null,
+                    year: null,
+                    momentValue: null
+                },
+                endDate: {
+                    month: null,
+                    year: null,
+                    momentValue: null
+                }
+            };
 
             if (!Ember.isNone(isCurrentField)) {
                 isCurrentChecked = isCurrentField.value;
             }
 
+
             fieldArray.forEach(function(field) {
-                console.log(field);
+                if (field.name === 'Start_Year__c' && !Ember.isEmpty(field.value)) {
+                    dateRange.startDate.year = field.value;
+                } else if (field.name === 'Start_Month__c' && !Ember.isEmpty(field.value)) {
+                    dateRange.startDate.month = field.value;
+                } else if (field.name === 'End_Year__c' && !Ember.isEmpty(field.value) && isCurrentChecked !== true) {
+                    dateRange.endDate.year = field.value;
+                } else if (field.name === 'End_Month__c' && !Ember.isEmpty(field.value) && isCurrentChecked !== true) {
+                    dateRange.endDate.month = field.value;
+                }
+
                 if (endDateFields.indexOf(field.name) !== -1 && isCurrentChecked !== true && Ember.isEmpty(field.value)) {
                     hasEmptyField = true;
                 } else if (endDateFields.indexOf(field.name) === -1 && Ember.isEmpty(field.value)) {
                     hasEmptyField = true;
                 }
             });
+
+            if (isCurrentChecked === true) {
+                dateRange.endDate.momentValue = moment();
+            }
+
+          //  if (!Ember.isEmpty(dateRange.startDate.month) && !Ember.isEmpty(dateRange.startDate.year)
+          //  dateRange.startDate.momentValue = moment(dateRange.startDate)
         });
 
-        console.log(hasEmptyField);
-        // calculate fields some how.
-
-        this.get('controllers.apply').set('isEmploymentHistoryIncomplete', hasEmptyField);
+        this.get('controllers.apply').set('isEmploymentHistoryIncomplete', hasEmptyField && isHistoryTooShort);
     }.observes('[]', '[].@each.fields'),
     actions: {
         clickAddEmploymentHistory: function() {
