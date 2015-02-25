@@ -157,6 +157,27 @@ App.JobPostingView = Ember.View.extend({
 });
 
 App.JobPostingController = Ember.ObjectController.extend({
+    allMyJobs: function(){
+        var applications = this.get('applications');
+        var savedJobs = this.get('savedJobs');
+
+        console.log('APPLICATIONS');
+        console.log(applications);
+        console.log('SAVE JOBS');
+        console.log(savedJobs);
+
+        var allMyJobsArray = applications.concat(savedJobs);
+
+        console.log('ALL MY JOBS');
+        console.log(allMyJobsArray)
+
+        return allMyJobsArray;
+    }.property('applications', 'savedJobs'),
+
+    jobIsSaved: function(){
+        return this.get('isJobSaved');
+    }.property('isJobSaved'),
+
     appliedMessage: function() {
         if (!Ember.isNone(this.get('application'))) {
             return this.get('justApplied') === true ? 'Thank you for applying!' : 'Thank you for applying!';
@@ -317,7 +338,7 @@ App.JobPostingController = Ember.ObjectController.extend({
                             if (!Ember.isEmpty(parsedResult.errorMessages)) {
                                 // error handling
                             } else {
-                                console.log(parsedResult);
+                                //console.log(parsedResult);
 
                                 self.set('application', parsedResult.data.application);
                                 self.set('justApplied', true);
@@ -380,6 +401,121 @@ App.JobPostingController = Ember.ObjectController.extend({
             return false;
         },
 
+        saveJob: function (){
+            // Check if user is loged in
+            if (this.get('loggedInUser').ContactId) {
+                var self = this;
+
+                if(self.get('isJobSaved')){
+                    self.set('isJobSaved', false);
+                } else {
+                    self.set('isJobSaved', true);
+                }
+
+               
+                
+
+                var jobPosting = self.get('jobPosting');
+
+                //console.log('JOB POSTING: ')
+                //console.log(jobPosting);
+
+                var jsonString = {
+                    jobPostingId: jobPosting.Id,
+                    isJobSaved: self.get('isJobSaved'),
+                    jobName: jobPosting.Name,
+                    candidateId: self.get('loggedInUser').Id,
+                    expressedBy: 'Recruiter', // Picklist
+                    origReqId: jobPosting.Requisition__c,
+                    positionId: jobPosting.Requisition__r.Position__c
+                };
+
+                cont.saveJob(JSON.stringify(jsonString), function(results, responseObj){
+                    if (results) {
+                        var parsedResult = parseResult(results);
+                        console.log('RESULTS 2: ');
+                        console.log(parsedResult.data.savedJobs);
+
+                        var savedJobs = [];
+
+                        if (!Ember.isEmpty(parsedResult.data.savedJobs)){
+                            parsedResult.data.savedJobs.forEach(function(savedJob) {
+                                var firstLocationString = '';
+                                var otherLocationsString;
+                                var otherLocationsCount = 0;
+
+                                var obj = createLocationStrings(savedJob.locations);
+
+                                var jobObj = {
+                                    jobTitle: savedJob.Name,
+                                    firstLocationString: obj.firstLocationString,
+                                    otherLocationsString: obj.otherLocationsString,
+                                    otherLocationsCount: obj.otherLocationsCount,
+                                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c
+                                };
+
+                                savedJobs.addObject(jobObj); 
+                            });
+                        }    
+
+                        self.set('savedJobs', savedJobs);
+
+
+                    } else {
+                            // error handling
+                    }
+                });
+            } else {
+                console.log('LOGIO IN!')
+                var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Login/';
+                window.parent.location.replace(url);
+            };
+
+
+            
+        },
+
+        // changeButton: function(){
+        //     if(this.get('isJobSaved')){
+        //         this.set('isJobSaved', false);
+        //     } else {
+        //         this.set('isJobSaved', true);
+        //     }
+
+        // },
+
+
+        // clickTry: function (){
+        //     FB.ui({
+        //       method: 'share_open_graph',
+        //       action_type: 'og.likes',
+        //       action_properties: JSON.stringify({
+        //           object:'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s',
+        //       })
+        //     }, function(response){});
+        // },
+
+
+        clickTry: function (){
+            FB.ui({
+                method: 'feed',
+                name: 'Facebook Dialogs',
+                link: '',
+                picture: 'http://fbrell.com/f8.jpg',
+                caption: 'Reference Documentation',
+                description: 'Dialogs provide a simple, consistent interface for applications to interface with users.',
+                
+                method: 'share_open_graph',
+                action_type: 'og.likes',
+                action_properties: JSON.stringify({
+                    object:'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s',
+              })
+            }, function(response){});
+        },
+
+
+
+
 
     }
 });
@@ -387,6 +523,21 @@ App.JobPostingController = Ember.ObjectController.extend({
 // Routes
 App.JobPostingRoute = Ember.Route.extend( {
     model: function(params) {
+        // console.log('MODEL');
+        // console.log(jobPostingMap.currentSavedJob);
+        // console.log(jobPostingMap);
+
+
+/*        if (!Ember.isEmpty(jobPostingMap.currentSavedJob)) {
+            this.set('isJobSaved', true);  
+        } else {
+            this.set('isJobSaved', false);  
+        };
+
+
+
+        console.log(this.get('isJobSaved'));*/
+
         return new Ember.RSVP.Promise(function(resolve, reject) {
             var applications = [];
 
@@ -424,11 +575,45 @@ App.JobPostingRoute = Ember.Route.extend( {
                 jobPostingMap.otherLocationsCount = obj.otherLocationsCount;
             }
 
+
+            // saved jobs
+            var savedJobs = [];
+            if (!Ember.isEmpty(jobPostingMap.savedJobs)) {                
+                jobPostingMap.savedJobs.forEach(function(savedJob) {
+                    console.log('RESULTS 1: ');
+                    console.log(jobPostingMap.savedJobs);
+
+                    var firstLocationString = '';
+                    var otherLocationsString;
+                    var otherLocationsCount = 0;
+
+                    //console.log('Inside')
+                    var obj = createLocationStrings(savedJob.locations);
+
+                    var jobObj = {
+                        jobTitle: savedJob.Name,
+                        firstLocationString: obj.firstLocationString,
+                        otherLocationsString: obj.otherLocationsString,
+                        otherLocationsCount: obj.otherLocationsCount,
+                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c
+                    };
+
+                    savedJobs.addObject(jobObj); 
+                });
+
+
+
+                //console.log('SAVED JOBS: ');
+                //console.log(savedJobs);
+            }
+            jobPostingMap.savedJobs = savedJobs;
+
+
             if (parent.applyWithLinkedIn === true && !Ember.isNone(jobPostingMap.linkedInMap) 
                         && Ember.isNone(jobPostingMap.application)) {
                 var saveObj = createSaveObj(jobPostingMap.jobPosting, jobPostingMap.loggedInUser, jobPostingMap.linkedInMap);
 
-                console.log(saveObj);
+                //console.log(saveObj);
 
                 cont.applyToJob(JSON.stringify(saveObj), function(res, evt) {
                     if (res) {
@@ -437,7 +622,7 @@ App.JobPostingRoute = Ember.Route.extend( {
                         if (!Ember.isEmpty(parsedResult.errorMessages)) {
                             // error handling
                         } else {
-                            console.log(parsedResult);
+                            //console.log(parsedResult);
 
                             jobPostingMap.application = parsedResult.data.application;
                             jobPostingMap.justApplied = true;

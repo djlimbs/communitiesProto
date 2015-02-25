@@ -3,6 +3,13 @@
     <div class="content pad--sm--tm">
         <div class="row">
             <div class="column--md--8">
+                {{#if jobIsSaved}}
+                    <div class="alert alert--success mar--sm--bm saveAlert">
+                        <button type="button" class="close" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">Close</span></button>
+                        <strong>You saved this job</strong>
+                    </div>
+                {{/if}}
+
                 {{#if appliedMessage}}
                     <div class="alert alert--success mar--sm--bm">
                         <button type="button" class="close show-brkpoint--sm--only" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">Close</span></button>
@@ -42,7 +49,14 @@
                         <li class="dropdown-menu__list-item"><a href="#"><span class="juicon juicon-facebook"></span> Apply with Facebook</a></li>
                     </ul>
                 </div>
-                <span class="mar--sm--lm">or <a href="#" class="text-underline saveJobLink">save this job</a> if you're not ready</span>
+
+                {{#if jobIsSaved}}
+                    <span class="mar--sm--lm dontSaveJobText"><a href="#" class="text-underline dontSaveJobLink text-error" {{action "saveJob"}}>I'm not interested in this job. Don't save it.</a></span>
+                {{else}}
+                    <span class="mar--sm--lm">or <a href="#" class="text-underline saveJobLink" {{action "saveJob"}}>    save this job</a> if you're not ready</span>
+                {{/if}}
+
+                
             </div>
             <div class="column--md--4 mar--sm--only--txl">
                 <div class="button-group width--full inline-block vam width--full--sm--only">
@@ -51,15 +65,20 @@
                         <li class="dropdown-menu__list-item"><a href="#" {{action "clickTweet"}}><span class="juicon juicon-twitter"></span> Twitter</a></li>
                         <li class="dropdown-menu__list-item"><a href="#" {{action "clickLinkedIn"}}><span class="juicon juicon-linkedin"></span> LinkedIn</a></li>
                         <li class="dropdown-menu__list-item"><a href="#" {{action "clickFacebook"}}><span class="juicon juicon-facebook"></span> Facebook</a></li>
+
+
+
+                        {{!-- <li class="dropdown-menu__list-item"><a href="#" {{action "clickTry"}}><span class="juicon juicon-facebook"></span> Try</a></li> --}}
                     </ul>
                 </div>
                 <hr>
 
-                {{#if applications}}
+
+                {{#if allMyJobs}}
                     <div class="content__section mar--md--bxl">
-                        <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> My saved jobs</h3>
+                        <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> All my jobs</h3>
                         <ul class="list-style-type-none mar--sm--n">
-                            {{#each application in applications}}
+                            {{#each application in allMyJobs}} 
                                 <li class="mar--sm--bm mar--sm--tm">
                                     <h4 class="mar--sm--n"><a href="{{unbound application.jobPostingUrl}}" target="_top">{{application.jobTitle}}</a></h4>
                                     <h5 class="mar--sm--n text-faded">
@@ -74,6 +93,7 @@
                     </div>
                     <hr class="show-brkpoint--md">
                 {{/if}}
+
 
                 <h3 class="mar--sm--tn mar--sm--bm">
                     <span class="juicon juicon-twitter text-faded"></span> 
