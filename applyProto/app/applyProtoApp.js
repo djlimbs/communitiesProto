@@ -12,7 +12,8 @@ var fieldTypeToPartialMap = {
     'TEXTAREA' : 'textArea',
     'DATE' : 'date',
     'PICKLIST' : 'picklist',
-    'BOOLEAN' : 'checkbox'
+    'BOOLEAN' : 'checkbox',
+    'DOUBLE' : 'telField'
 };
 
 var appFieldsToLinkedInMap = {
@@ -20,6 +21,21 @@ var appFieldsToLinkedInMap = {
     'Last_Name__c' : 'lastName',
     'Email__c' : 'emailAddress',
     'Mobile_Phone__c' : 'phoneNumbers'
+};
+
+var numberToMonthMap = {
+    '1' : 'January',
+    '2' : 'February',
+    '3' : 'March',
+    '4' : 'April',
+    '5' : 'May',
+    '6' : 'June',
+    '7' : 'July',
+    '8' : 'August',
+    '9' : 'September',
+    '10' : 'October',
+    '11' : 'November',
+    '12' : 'December'
 };
 
 var employmentHistoryBlock;
@@ -42,9 +58,17 @@ function getEmploymentHistoryBlock(employmentHistoryObj) {
 
         parsedApplyMap.employmentHistoryFields.forEach(function(f) {
             var fieldObjWithValue = JSON.parse(JSON.stringify(f));
+            if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
+                fieldObjWithValue.partial = 'monthPicklist';
+                fieldObjWithValue.picklistValues.forEach(function(pv) {
+                    pv.label = numberToMonthMap[pv.value];
+                });
+            } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
+                fieldObjWithValue.partial = 'yearTelField';
+            } else {
+                fieldObjWithValue.partial = fieldTypeToPartialMap[f.type];
+            }
 
-            //fieldObjWithValue.value = null;
-            fieldObjWithValue.partial = fieldTypeToPartialMap[f.type];
             employmentHistoryBlock.fields.addObject(fieldObjWithValue);
         });
     }
@@ -73,8 +97,17 @@ function getEducationHistoryBlock(educationHistoryObj) {
     
         parsedApplyMap.educationHistoryFields.forEach(function(f) {
             var fieldObjWithValue = JSON.parse(JSON.stringify(f));
-            //fieldObjWithValue.value = null;
-            fieldObjWithValue.partial = fieldTypeToPartialMap[f.type];
+
+            if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
+                fieldObjWithValue.partial = 'monthPicklist';
+                fieldObjWithValue.picklistValues.forEach(function(pv) {
+                    pv.label = numberToMonthMap[pv.value];
+                });
+            } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
+                fieldObjWithValue.partial = 'yearTelField';
+            } else {
+                fieldObjWithValue.partial = fieldTypeToPartialMap[f.type];
+            }
             educationHistoryBlock.fields.addObject(fieldObjWithValue);
         });
     }
@@ -434,9 +467,35 @@ App.EmploymentHistoryController = Ember.ArrayController.extend({
     needs: ['apply'],
     employmentHistoryYearsBinding: 'controllers.apply.employmentHistoryYears',
     employmentHistoryDidChenge: function() {
-        console.log(this.get('employmentHistoryYears'));
-        this.get('controllers.apply').set('isEmploymentHistoryIncomplete', false);
-    }.observes('[]'),
+        var currentHistory = this.get('[]');
+        var employmentHistoryYears = this.get('employmentHistoryYears');
+        var currentHistoryLength = currentHistory.length;
+        var hasEmptyField = false;
+
+        currentHistory.getEach('fields').forEach(function(fieldArray) {
+            var isCurrentField = fieldArray.findBy('name', 'Is_Current__c');
+            var isCurrentChecked;
+            var endDateFields = ['End_Year__c', 'End_Month__c'];
+
+            if (!Ember.isNone(isCurrentField)) {
+                isCurrentChecked = isCurrentField.value;
+            }
+
+            fieldArray.forEach(function(field) {
+                console.log(field);
+                if (endDateFields.indexOf(field.name) !== -1 && isCurrentChecked !== true && Ember.isEmpty(field.value)) {
+                    hasEmptyField = true;
+                } else if (endDateFields.indexOf(field.name) === -1 && Ember.isEmpty(field.value)) {
+                    hasEmptyField = true;
+                }
+            });
+        });
+
+        console.log(hasEmptyField);
+        // calculate fields some how.
+
+        this.get('controllers.apply').set('isEmploymentHistoryIncomplete', hasEmptyField);
+    }.observes('[]', '[].@each.fields'),
     actions: {
         clickAddEmploymentHistory: function() {
             var employmentHistoryBlock = getEmploymentHistoryBlock();
@@ -448,7 +507,37 @@ App.EmploymentHistoryController = Ember.ArrayController.extend({
     }
 });
 
+App.HistoryFieldController = Ember.ObjectController.extend({
+    valuesDidChange: function() {
+        this.get('parentController').notifyPropertyChange('[].@each.fields');
+    }.observes('value')
+});
+
 App.EducationHistoryController = Ember.ArrayController.extend({
+    educationHistoryDidChenge: function() {
+     /*   var currentHistory = this.get('[]');
+        var hasEmptyField = false;
+
+        currentHistory.getEach('fields').forEach(function(fieldArray) {
+            var statusField = fieldArray.findBy('name', 'Status__c');
+            var isCurrentlyEnrolled;
+            var endDateFields = ['End_Year__c', 'End_Month__c'];
+
+            if (!Ember.isNone(statusField)) {
+                isCurrentlyEnrolled = isCurrentlyEnrolled.value === 'Currently Enrolled';
+            }
+
+            fieldArray.forEach(function(field) {
+                if (endDateFields.indexOf(field.name) !== -1 && isCurrentChecked !== true && Ember.isEmpty(field.value)) {
+                    hasEmptyField = true;
+                } else if (endDateFields.indexOf(field.name) === -1 && Ember.isEmpty(field.value)) {
+                    hasEmptyField = true;
+                }
+            });
+        });
+
+        this.get('controllers.apply').set('isEducationHistoryIncomplete', hasEmptyField);*/
+    }.observes('[]', '[].@each.fields'),
     actions: {
         clickAddEducationHistory: function() {
             var educationHistoryBlock = getEducationHistoryBlock();
@@ -520,6 +609,9 @@ App.ApplyRoute = Ember.Route.extend( {
 
         // Setup contact info fields.
         applicationObj.contactFields = {
+            nameFieldsLabel: parsedApplyMap.nameFieldsLabel,
+            contactFieldsLabel: parsedApplyMap.contactFieldsLabel,
+            addressFieldsLabel: parsedApplyMap.addressFieldsLabel,
             name: [],
             contact: [],
             address: []
@@ -554,32 +646,56 @@ App.ApplyRoute = Ember.Route.extend( {
         });
 
         // Setup application sections
-        ['resume', 'skills', 'employmentHistory', 'educationHistory'].forEach(function(appSection) {
-            var applicationObjProperty = ('is ' + appSection + ' enabled').camelize();
-            var applicationIncompleteProperty = ('is ' + appSection + ' incomplete').camelize();
 
-            if (hiringModel[appSection].isEnabled === true) {
-                applicationObj[applicationObjProperty] = true;
-                applicationObj.sectionArray.addObject(appSection);
-
-                // Check if we have data in it already
-                applicationObj[applicationIncompleteProperty] = true;
-
-            } else {
-                applicationObj[applicationObjProperty] = false;
-                applicationObj[applicationIncompleteProperty] = false;
-            }
-        });
-
-        applicationObj.sectionArray.addObjects(['general', 'jobSpecific', 'legallyRequired']);
-
+        // Resume section
         if (hiringModel.resume.isEnabled === true) {
+            applicationObj.isResumeEnabled = true;
+            applicationObj.sectionArray.addObject('resume');
+
             if (!Ember.isEmpty(parsedApplyMap.resumeFileName)) {
                 applicationObj.resume.resumeFileName = parsedApplyMap.resumeFileName;
+                applicationObj.isResumeIncomplete = false;
             }
+        } else {
+            applicationObj.isResumeEnabled = false;
+            applicationObj.isResumeIncomplete = false;
         }
 
+        // Skills section
+        if (hiringModel.skills.isEnabled === true) {
+            applicationObj.isSkillsEnabled = true;
+            applicationObj.sectionArray.addObject('skills');
+
+            applicationObj.skills = {
+                selectedSkills: ''
+            };
+
+            // if we have data
+            if (!Ember.isEmpty(parsedApplyMap.skills)) {
+                var skillsArray = parsedApplyMap.skills.getEach('Skill__r').getEach('Name');
+
+                applicationObj.skills.selectedSkills = skillsArray.join(',');
+            }
+
+            // if we dont have data already but logged in via linkedin
+            if (Ember.isEmpty(applicationObj.skills.selectedSkills) && !Ember.isNone(linkedInMap)
+                    && !Ember.isEmpty(linkedInMap.skills)) {
+                var skillsArray = [];
+                linkedInMap.skills.values.forEach(function(skill) {
+                    skillsArray.addObject(skill.skill.name);
+                });
+                applicationObj.skills.selectedSkills = skillsArray.join(',');
+            }
+        } else {
+            applicationObj.isSkillsEnabled = false;
+            applicationObj.isSkillsIncomplete = false;
+        }
+
+        // Employment History section
         if (hiringModel.employmentHistory.isEnabled === true) {
+            applicationObj.isEmploymentHistoryEnabled = true;
+            applicationObj.sectionArray.addObject('employmentHistory');
+
             applicationObj.employmentHistoryYears = hiringModel.employmentHistory.selectedEmploymentHistoryYears;
             applicationObj.employmentHistoryArray = [];
 
@@ -601,9 +717,16 @@ App.ApplyRoute = Ember.Route.extend( {
             if (Ember.isEmpty(applicationObj.employmentHistoryArray)) {
                 applicationObj.employmentHistoryArray.addObject(getEmploymentHistoryBlock());
             }
+        } else {
+            applicationObj.isEmploymentHistoryEnabled = false;
+            applicationObj.isEmploymentHistoryIncomplete = false;
         }
 
+        // Education History section
         if (hiringModel.educationHistory.isEnabled === true) {
+            applicationObj.isEducationHistoryEnabled = true;
+            applicationObj.sectionArray.addObject('educationHistory');
+
             applicationObj.educationHistoryArray = [];
 
             // if we have data already.
@@ -626,30 +749,12 @@ App.ApplyRoute = Ember.Route.extend( {
             if (Ember.isEmpty(applicationObj.educationHistoryArray)) {
                 applicationObj.educationHistoryArray.addObject(getEducationHistoryBlock());
             }
+        } else {
+            applicationObj.isEducationHistoryEnabled = false;
+            applicationObj.isEducationHistoryIncomplete = false;
         }
 
-        if (hiringModel.skills.isEnabled === true) {
-            applicationObj.skills = {
-                selectedSkills: ''
-            };
-
-            // if we have data
-            if (!Ember.isEmpty(parsedApplyMap.skills)) {
-                var skillsArray = parsedApplyMap.skills.getEach('Skill__r').getEach('Name');
-
-                applicationObj.skills.selectedSkills = skillsArray.join(',');
-            }
-
-            // if we dont have data already but logged in via linkedin
-            if (Ember.isEmpty(applicationObj.skills.selectedSkills) && !Ember.isNone(linkedInMap)
-                    && !Ember.isEmpty(linkedInMap.skills)) {
-                var skillsArray = [];
-                linkedInMap.skills.values.forEach(function(skill) {
-                    skillsArray.addObject(skill.skill.name);
-                });
-                applicationObj.skills.selectedSkills = skillsArray.join(',');
-            }
-        }
+        applicationObj.sectionArray.addObjects(['general', 'jobSpecific', 'legallyRequired']);
 
         // Check if we have general data
         applicationObj.generalFormElements = parsedApplyMap.generalFormElements;
@@ -743,19 +848,19 @@ App.ContactInfoRoute = Ember.Route.extend({
                 });
             });
 
-            // cont.saveContactInfo(JSON.stringify(contactInfoObj), function(res, evt) {
-            //     if (res) {
-            //         var parsedResult = parseResult(res);
+            cont.saveContactInfo(JSON.stringify(contactInfoObj), function(res, evt) {
+                if (res) {
+                    var parsedResult = parseResult(res);
 
-            //         if (Ember.isEmpty(parsedResult.errorMessages)) {
-            //             console.log(parsedResult.data);
-            //         } else {
-            //             console.log(parsedResult.errorMessages[0]);
-            //         }
-            //     } else {
+                    if (Ember.isEmpty(parsedResult.errorMessages)) {
+                        console.log(parsedResult.data);
+                    } else {
+                        console.log(parsedResult.errorMessages[0]);
+                    }
+                } else {
 
-            //     }
-            // });
+                }
+            });
         }
     }
 }); 

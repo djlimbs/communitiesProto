@@ -2,10 +2,10 @@
     <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Employment History</h1>
     <div class="panel">
         {{#each employmentHistory in model}}
-            <div class="panel__component panel__component--removable">
+            <div class="panel__component panel__component--removable pad--sm--tn">
                 <button type="button" class="close" {{action "clickDeleteEmploymentHistory" employmentHistory}}><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
                 <div class="row">
-                    {{#each field in employmentHistory.fields}}
+                    {{#each field in employmentHistory.fields itemController="historyField"}}
                         {{partial field.partial}}
                     {{/each}}
                 </div>
