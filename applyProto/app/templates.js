@@ -427,6 +427,25 @@ function program27(depth0,data) {
   data.buffer.push(" style=\"top:0;right:0;\" ");
   hashTypes = {};
   hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDone", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"show-brkpoint--md\">Done</span> <span class=\"juicon juicon-forward\"></span> </button>\n                        ");
+  return buffer;
+  }
+
+function program29(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n                            <button ");
+  hashContexts = {'class': depth0,'disabled': depth0};
+  hashTypes = {'class': "STRING",'disabled': "STRING"};
+  options = {hash:{
+    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled"),
+    'disabled': ("disableNext")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" style=\"top:0;right:0;\" ");
+  hashTypes = {};
+  hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNext", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("><span class=\"show-brkpoint--md\">Next</span> <span class=\"juicon juicon-forward\"></span> </button>\n                        ");
   return buffer;
@@ -525,7 +544,7 @@ function program27(depth0,data) {
   data.buffer.push("\n\n                        ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers.unless.call(depth0, "isLegallyRequired", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "isLegallyRequired", {hash:{},inverse:self.program(29, program29, data),fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    </div>\n                </div>\n            </div>\n        </div>\n        <footer>\n            <div class=\"content__section\">\n                <img class=\"mar--sm--txl theme-logo\" src=\"");
   hashTypes = {};

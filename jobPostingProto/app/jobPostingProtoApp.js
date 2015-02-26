@@ -161,15 +161,7 @@ App.JobPostingController = Ember.ObjectController.extend({
         var applications = this.get('applications');
         var savedJobs = this.get('savedJobs');
 
-        console.log('APPLICATIONS');
-        console.log(applications);
-        console.log('SAVE JOBS');
-        console.log(savedJobs);
-
         var allMyJobsArray = applications.concat(savedJobs);
-
-        console.log('ALL MY JOBS');
-        console.log(allMyJobsArray)
 
         return allMyJobsArray;
     }.property('applications', 'savedJobs'),
@@ -249,6 +241,7 @@ App.JobPostingController = Ember.ObjectController.extend({
     },
     actions: {
         clickApply: function() {
+            var self = this;
             $('#locationModal').modal({
                 show: true,
                 backdrop: 'static'
@@ -259,7 +252,15 @@ App.JobPostingController = Ember.ObjectController.extend({
             $('#modalOk').click(function() {
                 $('#modalOk').unbind('click');
 
-                window.open('https://djlimbs.github.io/communitiesProto/applyflow/prototype/communities__prototype__apply-flow.html');
+                var applyObj = {
+                    requisitionId: self.get('jobPosting').Requisition__c,
+                    jobPostingId: self.get('jobPosting').Id,
+                    location: 'Some place'
+                };
+
+                var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
+
+                window.open(applyUrl);
             });
             //window.open('https://djlimbs.github.io/communitiesProto/applyflow/prototype/communities__prototype__apply-flow.html');
             /*console.log(this.get('jobPosting'));
@@ -554,7 +555,9 @@ App.JobPostingRoute = Ember.Route.extend( {
                         firstLocationString: obj.firstLocationString,
                         otherLocationsString: obj.otherLocationsString,
                         otherLocationsCount: obj.otherLocationsCount,
-                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c
+                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c,
+                        isApplication: true,
+                        hasJobOffer: !Ember.isEmpty(app.jobOffer)
                     };
 
                     applications.addObject(applicationObj);
@@ -580,9 +583,6 @@ App.JobPostingRoute = Ember.Route.extend( {
             var savedJobs = [];
             if (!Ember.isEmpty(jobPostingMap.savedJobs)) {                
                 jobPostingMap.savedJobs.forEach(function(savedJob) {
-                    console.log('RESULTS 1: ');
-                    console.log(jobPostingMap.savedJobs);
-
                     var firstLocationString = '';
                     var otherLocationsString;
                     var otherLocationsCount = 0;
@@ -595,7 +595,8 @@ App.JobPostingRoute = Ember.Route.extend( {
                         firstLocationString: obj.firstLocationString,
                         otherLocationsString: obj.otherLocationsString,
                         otherLocationsCount: obj.otherLocationsCount,
-                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c
+                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c,
+                        isSavedJob: true
                     };
 
                     savedJobs.addObject(jobObj); 

@@ -47,38 +47,49 @@ function program5(depth0,data) {
 
 function program7(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                    <span class=\"mar--sm--lm dontSaveJobText\"><a href=\"#\" class=\"text-underline dontSaveJobLink text-error\" ");
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveJob", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">I'm not interested in this job. Don't save it.</a></span>\n                ");
+  stack1 = helpers['if'].call(depth0, "jobIsSaved", {hash:{},inverse:self.program(10, program10, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                ");
   return buffer;
   }
-
-function program9(depth0,data) {
+function program8(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                    <span class=\"mar--sm--lm\">or <a href=\"#\" class=\"text-underline saveJobLink\" ");
+  data.buffer.push("\n                        <span class=\"mar--sm--lm dontSaveJobText\"><a href=\"#\" class=\"text-underline dontSaveJobLink text-error\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveJob", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">    save this job</a> if you're not ready</span>\n                ");
+  data.buffer.push(">I'm not interested in this job. Don't save it.</a></span>\n                    ");
   return buffer;
   }
 
-function program11(depth0,data) {
+function program10(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                        <span class=\"mar--sm--lm\">or <a href=\"#\" class=\"text-underline saveJobLink\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveJob", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">    save this job</a> if you're not ready</span>\n                    ");
+  return buffer;
+  }
+
+function program12(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
   data.buffer.push("\n                    <div class=\"content__section mar--md--bxl\">\n                        <h3 class=\"mar--sm--tn mar--sm--bn\"><span class=\"juicon juicon-bookmark text-faded\"></span> All my jobs</h3>\n                        <ul class=\"list-style-type-none mar--sm--n\">\n                            ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "application", "in", "allMyJobs", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "application", "in", "allMyJobs", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                        </ul>\n                    </div>\n                    <hr class=\"show-brkpoint--md\">\n                ");
   return buffer;
   }
-function program12(depth0,data) {
+function program13(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
   data.buffer.push(" \n                                <li class=\"mar--sm--bm mar--sm--tm\">\n                                    <h4 class=\"mar--sm--n\"><a href=\"");
@@ -96,12 +107,17 @@ function program12(depth0,data) {
   data.buffer.push(" \n                                        ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "application.otherLocationsString", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "application.otherLocationsString", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                                    </h5>\n                                    <small class=\"label label--secondary\">Applied</small>\n                                </li>\n                            ");
+  data.buffer.push("\n                                    </h5>\n                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "application.isApplication", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                </li>\n                            ");
   return buffer;
   }
-function program13(depth0,data) {
+function program14(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
   data.buffer.push(" &amp; <a href=\"");
@@ -118,6 +134,29 @@ function program13(depth0,data) {
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" others</a>\n                                        ");
   return buffer;
+  }
+
+function program16(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "application.hasJobOffer", {hash:{},inverse:self.program(19, program19, data),fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                    ");
+  return buffer;
+  }
+function program17(depth0,data) {
+  
+  
+  data.buffer.push("\n                                            <small class=\"label label--success\">Offer extended</small>\n                                        ");
+  }
+
+function program19(depth0,data) {
+  
+  
+  data.buffer.push("\n                                            <small class=\"label label--secondary\">Applied</small>\n                                        ");
   }
 
   data.buffer.push("<div class=\"scope-container brand__border-accent--top\" style=\"border-top-color: #cf5c60\">\n    ");
@@ -188,7 +227,7 @@ function program13(depth0,data) {
   data.buffer.push("><span class=\"juicon juicon-linkedin\"></span> Apply with LinkedIn</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\"><span class=\"juicon juicon-facebook\"></span> Apply with Facebook</a></li>\n                    </ul>\n                </div>\n\n                ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "jobIsSaved", {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers.unless.call(depth0, "disableApplyButton", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n\n                \n            </div>\n            <div class=\"column--md--4 mar--sm--only--txl\">\n                <div class=\"button-group width--full inline-block vam width--full--sm--only\">\n                    <button class=\"button button--secondary width--full theme-border-color theme-link-color\" data-toggle=\"dropdown\">Share Job <span class=\"juicon juicon-share\"></span></button>\n                    <ul class=\"dropdown-menu\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
   hashTypes = {};
@@ -205,7 +244,7 @@ function program13(depth0,data) {
   data.buffer.push("><span class=\"juicon juicon-facebook\"></span> Facebook</a></li>\n\n\n\n                        \n                    </ul>\n                </div>\n                <hr>\n\n\n                ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "allMyJobs", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "allMyJobs", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n\n\n                <h3 class=\"mar--sm--tn mar--sm--bm\">\n                    <span class=\"juicon juicon-twitter text-faded\"></span> \n                    <a href=\"https://www.twitter.com/salesforcejobs\">@Salesforcejobs</a>\n                </h3>\n\n                ");
   hashTypes = {};

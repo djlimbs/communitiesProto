@@ -404,6 +404,9 @@ App.ApplyController = Ember.ObjectController.extend({
             var nextPath = sectionArray[sectionArray.indexOf(currentPath) - 1];
 
             this.transitionToRoute(nextPath);
+        },
+        clickDone: function() {
+            this.transitionToRoute('submit');
         }
     }
 
@@ -691,7 +694,7 @@ App.ApplyRoute = Ember.Route.extend( {
             }
         } else {
             applicationObj.isResumeEnabled = false;
-            applicationObj.isResumeIncomplete = false;
+            applicationObj.isResumeIncomplete = true;
         }
 
         // Skills section
@@ -1176,6 +1179,11 @@ App.LegallyRequiredRoute = Ember.Route.extend({
     }
 });
 
+App.SubmitRoute = Ember.Route.extend({
+    model: function(params) {
+        console.log('redirect to job posting');
+    }
+});
 
 
 // Router
@@ -1189,7 +1197,7 @@ App.Router.map(function() {
         this.resource('general', { path: '/general' });
         this.resource('jobSpecific', { path: '/jobSpecific' });
         this.resource('legallyRequired', { path: '/legallyRequired' });
-
+        this.resource('submit', { path: '/submit' });
     });
 });
 
