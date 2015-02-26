@@ -585,6 +585,12 @@ App.EducationHistoryController = Ember.ArrayController.extend({
     }
 });
 
+App.GeneralController = Ember.ArrayController.extend({
+    didAnswerChange: function() {
+        console.log('change');
+    }.observes('[].@each.value')
+});
+
 App.FormElementController = Ember.ObjectController.extend({
     // Element Types
     isEtNone: function(){

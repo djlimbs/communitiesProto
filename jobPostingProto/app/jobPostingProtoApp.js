@@ -3,6 +3,13 @@ App = Ember.Application.create({
     rootElement: '#application'
 });
 
+Ember.Handlebars.helper('formatDate', function(value, dateFormat, options) {
+
+  var escaped = typeof value === 'string' ? Handlebars.Utils.escapeExpression(value) : value;
+
+  return new Ember.Handlebars.SafeString(value === null ? 'N/A' : moment.utc(escaped).format(typeof dateFormat === 'string' ? dateFormat : 'MMM D, YYYY'));
+});
+
 App.SalesforceTwitterComponent = Ember.Component.extend({
     layoutName: 'components/twitter',
     didInsertElement: function() {
@@ -161,7 +168,7 @@ App.JobPostingController = Ember.ObjectController.extend({
         var applications = this.get('applications');
         var savedJobs = this.get('savedJobs');
 
-        var allMyJobsArray = applications.concat(savedJobs);
+        var allMyJobsArray = applications.concat(savedJobs).sortBy('CreatedDate').reverse();
 
         return allMyJobsArray;
     }.property('applications', 'savedJobs'),
@@ -169,10 +176,28 @@ App.JobPostingController = Ember.ObjectController.extend({
     jobIsSaved: function(){
         return this.get('isJobSaved');
     }.property('isJobSaved'),
-
+    appliedAlertClass: function() {
+        var application = this.get('application');
+        if (!Ember.isNone(application)) {
+            if (application.Status__c === 'In Progress') {
+                return 'alert--warning';
+            } else {
+                return 'alert--success';
+            }
+        } else {
+            return null;
+        }
+    }.property('application'),
     appliedMessage: function() {
-        if (!Ember.isNone(this.get('application'))) {
-            return this.get('justApplied') === true ? 'Thank you for applying!' : 'Thank you for applying!';
+        var application = this.get('application');
+        if (!Ember.isNone(application)) {
+            if (this.get('justApplied') === true) {
+                return 'Thank you for applying';
+            } else if (application.Status__c === 'In Progress') {
+                return 'Your application is currently in progress';
+            } else {
+                return 'Thank you for applying';
+            }
         } else {
             return null;
         }
@@ -262,59 +287,6 @@ App.JobPostingController = Ember.ObjectController.extend({
 
                 window.open(applyUrl);
             });
-            //window.open('https://djlimbs.github.io/communitiesProto/applyflow/prototype/communities__prototype__apply-flow.html');
-            /*console.log(this.get('jobPosting'));
-            console.log(this.get('loggedInUser'));
-
-            var jobPosting = this.get('jobPosting');
-            var loggedInUser = this.get('loggedInUser');
-            var linkedInMap = this.get('linkedInMap');
-            var saveObj = {};
-
-            console.log(linkedInMap);
-
-            if (loggedInUser.UserType === 'Guest') {
-                // GO TO login
-                console.log('goto login'); //get URL prefix son.
-                window.parent.location.href = parent.authLoginUrl;
-                //window.parent.location.href='/Login';
-            } else {
-
-                if (!Ember.isNone(linkedInMap)) {
-
-                    if (!Ember.isNone(linkedInMap.educations && !Ember.isEmpty(linkedInMap.educations.values))) {
-                        saveObj.educationHistory = this.createEducationHistoryObj(linkedInMap.educations.values);
-                    }
-
-                    if (!Ember.isNone(linkedInMap.positions && !Ember.isEmpty(linkedInMap.positions.values))) {
-                        saveObj.employmentHistory = this.createEmplyomentHistoryObj(linkedInMap.positions.values);
-                    }
-                }
-
-                saveObj.application = {
-                    Requisition__c: jobPosting.Requisition__c,
-                    Contact__c: loggedInUser.ContactId,
-                    First_Name__c: loggedInUser.FirstName,
-                    Last_Name__c: loggedInUser.LastName,
-                    Email__c: loggedInUser.Email
-                };
-
-                console.log(saveObj);
-
-                cont.applyToJob(JSON.stringify(saveObj), function(res, evt) {
-                    if (res) {
-                        var parsedResult = parseResult(res);
-
-                        if (!Ember.isEmpty(parsedResult.errorMessages)) {
-                            // error handling
-                        } else {
-                            console.log(parsedResult);
-                        }
-                    } else {
-                        // error handling
-                    }
-                });
-            }*/
         },
         clickApplyWithLinkedIn: function() {
             var self = this;
@@ -557,7 +529,8 @@ App.JobPostingRoute = Ember.Route.extend( {
                         otherLocationsCount: obj.otherLocationsCount,
                         jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c,
                         isApplication: true,
-                        hasJobOffer: !Ember.isEmpty(app.jobOffer)
+                        hasJobOffer: !Ember.isEmpty(app.jobOffer),
+                        statusText: app.Status__c === 'Completed' ? 'Applied' : 'In Progress'
                     };
 
                     applications.addObject(applicationObj);

@@ -6,12 +6,12 @@
                 {{#if jobIsSaved}}
                     <div class="alert alert--success mar--sm--bm saveAlert">
                         <button type="button" class="close" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">Close</span></button>
-                        <strong>You saved this job</strong>
+                        <strong>You saved this job {{#if savedJob}}on {{formatDate savedJob.CreatedDate}}{{/if}}</strong>
                     </div>
                 {{/if}}
 
                 {{#if appliedMessage}}
-                    <div class="alert alert--success mar--sm--bm">
+                    <div {{bind-attr class=":alert appliedAlertClass :mar--sm--bm"}}>
                         <button type="button" class="close show-brkpoint--sm--only" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">Close</span></button>
                         <button type="button" class="close close-timeout show-brkpoint--md">
                             <svg class="close-progress" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" enable-background="new 0 0 40 40">
@@ -78,7 +78,7 @@
 
                 {{#if allMyJobs}}
                     <div class="content__section mar--md--bxl">
-                        <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> All my jobs</h3>
+                        <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> My jobs</h3>
                         <ul class="list-style-type-none mar--sm--n">
                             {{#each application in allMyJobs}} 
                                 <li class="mar--sm--bm mar--sm--tm">
@@ -92,7 +92,7 @@
                                         {{#if application.hasJobOffer}}
                                             <small class="label label--success">Offer extended</small>
                                         {{else}}
-                                            <small class="label label--secondary">Applied</small>
+                                            <small class="label label--secondary">{{application.statusText}}</small>
                                         {{/if}}
                                     {{/if}}
                                 </li>
