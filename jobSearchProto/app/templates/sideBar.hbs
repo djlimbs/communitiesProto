@@ -1,9 +1,10 @@
 <div class="column--md--4">
-    {{#if applications}}
+
+    {{#if allMyJobs}}
         <div class="content__section mar--md--bxl">
-            <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> My saved jobs</h3>
+            <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> My jobs</h3>
             <ul class="list-style-type-none mar--sm--n">
-                {{#each application in applications}}
+                {{#each application in allMyJobs}} 
                     <li class="mar--sm--bm mar--sm--tm">
                         <h4 class="mar--sm--n"><a href="{{unbound application.jobPostingUrl}}" target="_top">{{application.jobTitle}}</a></h4>
                         <h5 class="mar--sm--n text-faded">

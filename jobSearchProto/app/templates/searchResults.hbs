@@ -2,6 +2,7 @@
     <div class="content pad--md--txl pad--md--bl">
         <div class="row">
             <div class="column--md--8">
+
                 <div class="alert alert--success mar--md--bm hide">
                     <button type="button" class="close show-brkpoint--sm--only" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">Close</span></button>
                     <button type="button" class="close close-timeout show-brkpoint--md">
@@ -12,9 +13,25 @@
                     </button>
                     <strong>You've successfully applied for this job.</strong>
                 </div>
+
+                
                 {{#each searchResult in searchResults itemController="jobPosting"}}
                     <div class="card">
                         <div class="card__body">
+
+
+                            {{#if searchResult.isJobApplied}}
+                                <button href="prototype__job.html" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md" disabled="disabled">Applied</button>
+                            {{else}}
+                                {{#if searchResult.isJobSaved}}
+                                    <a href="prototype__job.html" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md"{{action "saveJob" searchResult}}>Saved</a>
+                                {{else}}
+                                    <a href="prototype__job.html" class="float--right button button--primary  theme-bg-color mar--sm--only--rs mar--md--lxs show-brkpoint--md theme-bg-color" {{action "saveJob" searchResult}}>Save</a>
+                                {{/if}}
+                            {{/if}}
+
+                            
+
                             <div class="row">
                                 <div class="column--md--8">
                                     <h1 class="page__heading has-subheading"><a href="#" {{action "clickApply"}}>{{searchResult.Name}}</a></h1>
