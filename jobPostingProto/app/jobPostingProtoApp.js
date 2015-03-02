@@ -265,8 +265,16 @@ App.JobPostingController = Ember.ObjectController.extend({
     jobOfferUrl: function() {
         var application = this.get('application');
         if (!Ember.isNone(application) && !Ember.isNone(application.Job_Offers__r) 
-                    && application.Job_Offers__r.records[0].Status__c === 'Extended') {
-            return 'goto offer';
+                    && ['Extended', 'Accepted', 'Declined'].indexOf(application.Job_Offers__r.records[0].Status__c) !== -1) {
+            return '/' + parent.urlPrefix.split('/')[1] + '/to_offerLetterCandidate?id=' + application.Job_Offers__r.records[0].Id;
+        } else {
+            return null;
+        }
+    }.property('application'),
+    continueApplicationUrl: function() {
+        var application = this.get('application');
+        if (!Ember.isNone(application) && application.Status__c === 'In Progress') {
+            return '/' + parent.urlPrefix.split('/')[1] + '/apply?id=' + application.Id;
         } else {
             return null;
         }
@@ -292,18 +300,38 @@ App.JobPostingController = Ember.ObjectController.extend({
         var application = this.get('application');
         if (!Ember.isNone(application)) {
             if (this.get('justApplied') === true) {
-                return 'Thank you for applying';
+                return 'Thank you for applying!';
             } else if (Ember.isNone(application.Job_Offers__r) && application.Status__c === 'In Progress') {
-                return 'Your application is currently in progress';
+                var continueApplicationUrl = this.get('continueApplicationUrl');
+                var appliedMessage = '';
+                var numDaysSinceApply = moment().diff(moment(application.CreatedDate), 'days');
+
+                if (numDaysSinceApply === 0) {
+                    appliedMessage = 'You began applying for this job today. <a href="' + continueApplicationUrl + '" target="_top">Finish now</a>';
+                } else if (numDaysSinceApply === 1) {
+                    appliedMessage = 'You began applying for this job 1 day ago. <a href="' + continueApplicationUrl + '" target="_top">Finish now</a>';
+                } else {
+                    appliedMessage = 'You began applying for this job ' + moment().diff(moment(application.CreatedDate), 'days') + 
+                                        ' days ago. <a href="' + continueApplicationUrl + '" target="_top">Finish now</a>';
+                }
+
+                return appliedMessage;
             } else if (!Ember.isNone(application.Job_Offers__r) && application.Job_Offers__r.records[0].Status__c === 'Extended') {
                 return 'Congratulations! You\'ve received an offer on this job!';
+            } else if (!Ember.isNone(application.Job_Offers__r) && ['Accepted', 'Declined'].indexOf(application.Job_Offers__r.records[0].Status__c) !== -1) {
+                return null;
             } else {
-                return 'You applied for this job on ' + moment(application.CreatedDate).format('MMM D, YYYY');
+                return 'You applied for this job on ' + moment(application.Applied_On__c).format('MMM D, YYYY') + '.';
             }
         } else {
             return null;
         }
     }.property('justApplied', 'application'),
+    justApplied: function() {
+        var application = this.get('application');
+        return !Ember.isNone(application) && Ember.isNone(application.Job_Offers__r) 
+                && application.Status__c === 'Completed' && moment().diff(moment(application.Applied_On__c), 'hours') < 24;
+    }.property('application'),
     hasApplied: function() {
         return !Ember.isNone(this.get('application'));
     }.property('application'),
@@ -722,8 +750,24 @@ App.JobPostingRoute = Ember.Route.extend( {
                         jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c,
                         isApplication: true,
                         hasJobOffer: !Ember.isEmpty(app.Job_Offers__r),
-                        statusText: app.Status__c === 'Completed' ? 'Applied' : 'In Progress'
+                        jobOfferStatus: !Ember.isEmpty(app.Job_Offers__r) ? app.Job_Offers__r.records[0].Status__c : null,
+                        statusText: app.Status__c === 'Completed' ? 'Applied' : 'In Progress',
+                        isRemoteAvailable: app.Requisition__r.Allow_Remote_Employees__c
                     };
+
+                    if (!Ember.isEmpty(app.Job_Offers__r)) {
+                        if (['Accepted', 'Extended'].indexOf(app.Job_Offers__r.records[0].Status__c) !== -1) {
+                            applicationObj.jobLabelClass = 'label--success';
+                        } else {
+                            applicationObj.jobLabelClass = 'label--secondary';
+                        }
+                    } else {
+                        if (app.Status__c === 'In Progress') {
+                            applicationObj.jobLabelClass = 'label--warning';
+                        } else {
+                            applicationObj.jobLabelClass = 'label--secondary';
+                        }
+                    }
 
                     applications.addObject(applicationObj);
                 });
@@ -743,22 +787,27 @@ App.JobPostingRoute = Ember.Route.extend( {
             var savedJobs = [];
             if (!Ember.isEmpty(jobPostingMap.savedJobs)) {                
                 jobPostingMap.savedJobs.forEach(function(savedJob) {
-                    var firstLocationString = '';
-                    var otherLocationsString;
-                    var otherLocationsCount = 0;
+                    if (Ember.isNone(savedJob.Application__r) || 
+                            (!Ember.isNone(savedJob.Application__r) && savedJob.Application__r.Job_Posting__c !== savedJob.Job_Posting__c)) {
 
-                    var obj = createLocationStrings(savedJob.locations);
 
-                    var jobObj = {
-                        jobTitle: savedJob.Name,
-                        firstLocationString: obj.firstLocationString,
-                        otherLocationsString: obj.otherLocationsString,
-                        otherLocationsCount: obj.otherLocationsCount,
-                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c,
-                        isSavedJob: true
-                    };
+                        var firstLocationString = '';
+                        var otherLocationsString;
+                        var otherLocationsCount = 0;
 
-                    savedJobs.addObject(jobObj); 
+                        var obj = createLocationStrings(savedJob.locations);
+
+                        var jobObj = {
+                            jobTitle: savedJob.Name,
+                            firstLocationString: obj.firstLocationString,
+                            otherLocationsString: obj.otherLocationsString,
+                            otherLocationsCount: obj.otherLocationsCount,
+                            jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c,
+                            isSavedJob: true
+                        };
+
+                        savedJobs.addObject(jobObj); 
+                    }
                 });
             }
             jobPostingMap.savedJobs = savedJobs;

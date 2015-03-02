@@ -1055,59 +1055,58 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
             });
 
             // check months
-            var employmentRanges = [];
-            var earliestStartDate;
-            var latestEndDate;
+            var hasGap = false;
+            if (requiredHistoryLength !== 0) {
+                var employmentRanges = [];
+                var earliestStartDate;
+                var latestEndDate;
 
-            employmentHistoryObjArray.forEach(function(eh) {
-                var startDate = moment(eh.Start_Month__c+'/1/'+eh.Start_Year__c, 'M/D/YYYY');
-                var endDate = moment(eh.End_Month__c+'/1/'+eh.End_Year__c, 'M/D/YYYY');
+                employmentHistoryObjArray.forEach(function(eh) {
+                    var startDate = moment(eh.Start_Month__c+'/1/'+eh.Start_Year__c, 'M/D/YYYY');
+                    var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+'/1/'+eh.End_Year__c, 'M/D/YYYY');
 
-                var startDateMs = startDate.valueOf();
-                var endDateMs = endDate.valueOf();
+                    var startDateMs = startDate.valueOf();
+                    var endDateMs = endDate.valueOf();
 
-                employmentRanges.addObject({
-                    startDate: startDate,
-                    startDateMs: startDateMs,
-                    endDate: endDate,
-                    endDateMs: endDateMs
+                    employmentRanges.addObject({
+                        startDate: startDate,
+                        startDateMs: startDateMs,
+                        endDate: endDate,
+                        endDateMs: endDateMs
+                    });
+
+                    if (Ember.isNone(earliestStartDate) || earliestStartDate.valueOf() > startDateMs) {
+                        earliestStartDate = startDate;
+                    }
+
+                    if (Ember.isNone(latestEndDate) || latestEndDate.valueOf() < endDateMs) {
+                        latestEndDate = endDate;
+                    }
                 });
 
-                if (Ember.isNone(earliestStartDate) || earliestStartDate.valueOf() > startDateMs) {
-                    earliestStartDate = startDate;
+                var monthIterator = moment().startOf('month');
+                var requiredLengthIterator = 0;
+                var gaplessHistoryMonths = 0;
+
+                function checkEmployedDuring(month, ranges) {
+                    return ranges.any(function(r) {
+                        var monthMs = month.valueOf();
+                        return monthMs >= r.startDateMs && monthMs <= r.endDateMs;
+                    });
                 }
 
-                if (Ember.isNone(latestEndDate) || latestEndDate.valueOf() < endDateMs) {
-                    latestEndDate = endDate;
-                }
-            });
+                do {
+                    if (checkEmployedDuring(monthIterator, employmentRanges) !== true) {
+                        hasGap = true;
+                    }
 
-            var monthIterator = moment(earliestStartDate);
-
-            var gaplessHistoryMonths = 0;
-
-            function checkEmployedDuring(month, ranges) {
-                return ranges.any(function(r) {
-                    var monthMs = month.valueOf();
-                    return monthMs >= r.startDateMs && monthMs <= r.endDateMs;
-                });
+                    monthIterator.subtract(1, 'months');
+                    requiredLengthIterator++;
+                } while (requiredLengthIterator <= requiredHistoryLength && hasGap === false)
             }
 
-            do {
-                if (checkEmployedDuring(monthIterator, employmentRanges) === true) {
-                    gaplessHistoryMonths++;
-                } else {
-                    gaplessHistoryMonths = 0;
-                }
 
-                monthIterator.add(1, 'months');
-            } while (monthIterator.valueOf() <= latestEndDate.valueOf())
-
-            if (gaplessHistoryMonths >= requiredHistoryLength) {
-                historyIsLongEnough = true;
-            }
-
-            if (historyIsLongEnough === true) {
+            if (hasGap === false) {
                 var employmentHistoriesObj = {
                     employmentHistories: employmentHistoryObjArray,
                     appId: appId,
