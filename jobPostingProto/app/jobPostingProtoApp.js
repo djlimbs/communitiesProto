@@ -399,7 +399,7 @@ App.JobPostingController = Ember.ObjectController.extend({
                             applyUrl += '&prefersRemote=true';
                         }
                         console.log(applyUrl);
-                        window.open(applyUrl);
+                        window.parent.location.href = applyUrl;
                     });
                 };
 

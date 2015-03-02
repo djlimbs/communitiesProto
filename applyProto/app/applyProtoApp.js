@@ -463,11 +463,11 @@ App.ResumeController = Ember.ObjectController.extend({
 
 App.SkillsController = Ember.ObjectController.extend({
     needs: ['apply'],
-    skillsDidChange: function() {
+    /*skillsDidChange: function() {
         var skills = this.get('selectedSkills');
 
-        this.get('controllers.apply').set('isSkillsIncomplete', Ember.isEmpty(skills) ? true : false);
-    }.observes('selectedSkills')
+        //this.get('controllers.apply').set('isSkillsIncomplete', Ember.isEmpty(skills) ? true : false);
+    }.observes('selectedSkills')*/
 });
 
 App.EmploymentHistoryController = Ember.ArrayController.extend({
@@ -731,7 +731,7 @@ App.ApplyRoute = Ember.Route.extend( {
         // Skills section
         if (hiringModel.skills.isEnabled === true) {
             applicationObj.isSkillsEnabled = true;
-            applicationObj.isSkillsIncomplete = true;
+            applicationObj.isSkillsIncomplete = false;
 
             applicationObj.sectionArray.addObject('skills');
 

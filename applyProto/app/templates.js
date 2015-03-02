@@ -76,7 +76,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label data-qa-label=\"fieldName\">");
+  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label data-qa-label=\"fieldName\" class=\"required-field\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -112,7 +112,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label for=\"firstName\" class=\"\">\n            ");
+  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label for=\"firstName\" class=\"required-field\">\n            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -137,7 +137,7 @@ function program1(depth0,data) {
 Ember.TEMPLATES["_textArea"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+  var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -150,22 +150,15 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"column--md--12\">\n    <div class=\"form__group\">\n        <label ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
-  options = {hash:{
-    'class': ("field.isRequired:required-field")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" data-qa-label=\"fieldName\">\n            ");
+  data.buffer.push("<div class=\"column--md--12\">\n    <div class=\"form__group\">\n        <label class=\"required-field\" data-qa-label=\"fieldName\">\n            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n            ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  stack1 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </label>\n        ");
   hashContexts = {'value': depth0,'data-qa-input': depth0};
   hashTypes = {'value': "ID",'data-qa-input': "STRING"};
@@ -195,7 +188,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label for=\"firstName\" class=\"\">\n            ");
+  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label for=\"firstName\" class=\"required-field\">\n            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
