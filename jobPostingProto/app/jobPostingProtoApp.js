@@ -24,7 +24,7 @@ function createLocationStrings(locations){
     var otherLocationsString;
     var otherLocationsCount = 0;
 
-    locations.forEach(function(l, i) {
+    locations.sortBy('Primary__c').reverse().forEach(function(l, i) {
         var location = '';
 
         location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
@@ -51,7 +51,48 @@ function createLocationStrings(locations){
     };
 
     return obj;
-};
+}
+
+function parsePostingLocations(locations, allowRemote) {
+    var primaryLocation;
+    var returnObj = {
+        locationObjs: [],
+        locationsString: ''
+    };
+
+    locations.sortBy('Primary__c').reverse().forEach(function(l, i) {
+        var updatedLocationObj = l;
+        var location = '';
+
+        location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
+
+        if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
+            location += ', ' + l.Location__r.Country_Province__c;
+        }
+
+        if (i === 0) {
+            returnObj.locationsString = location;
+        } else {
+            returnObj.locationsString += ' | ' + location;
+        }
+
+        updatedLocationObj.formattedLocationString = location;
+        if (l.Primary__c === true) {
+            updatedLocationObj.formattedLocationString += ' (Primary)';
+            primaryLocation = l;
+        }
+        returnObj.locationObjs.addObject(Ember.Object.create(updatedLocationObj));
+    });
+
+    if (allowRemote === true) {
+        returnObj.locationObjs.addObject({
+            Id: 'Remote',
+            formattedLocationString: 'Remote'
+        });
+    }
+
+    return returnObj;
+}
 
 function updateHeight() {
     Ember.run.scheduleOnce('afterRender', this, function() {
@@ -66,11 +107,11 @@ function createSaveObj(jobPosting, loggedInUser, linkedInMap) {
 
     if (!Ember.isNone(linkedInMap)) {
         if (!Ember.isNone(linkedInMap.educations && !Ember.isEmpty(linkedInMap.educations.values))) {
-            saveObj.educationHistory = createEducationHistoryObj(linkedInMap.educations.values);
+            saveObj.educationHistory = convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
         }
 
         if (!Ember.isNone(linkedInMap.positions && !Ember.isEmpty(linkedInMap.positions.values))) {
-            saveObj.employmentHistory = createEmploymentHistoryObj(linkedInMap.positions.values);
+            saveObj.employmentHistory = convertLinkedInToEmploymentHistoryObj(linkedInMap.positions.values);
         }
     }
 
@@ -87,21 +128,26 @@ function createSaveObj(jobPosting, loggedInUser, linkedInMap) {
     return saveObj;
 };
 
-function createEducationHistoryObj(educations) {
+function convertLinkedInToEducationHistoryObj(educations) {
     return educations.map(function(e) {
         // Educations from linkedIn only have year in the startDate/endDate
 
         return {
-            Education_Level__c: e.degree,
+            Education_Level__c: degreePicklistValues.indexOf(e.degree) !== -1 ? e.degree : 'Other',
             Start_Date__c: !Ember.isNone(e.startDate) ? moment.utc(e.startDate.year, 'YYYY').format('YYYY-MM-DD') : null,
+            Start_Month__c: !Ember.isNone(e.startDate) ? e.startDate.month : null,
+            Start_Year__c: !Ember.isNone(e.startDate) ? e.startDate.year : null,
+            End_Month__c: !Ember.isNone(e.endDate) ? e.endDate.month : null,
+            End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null,
             Name: e.schoolName,
+            Name__c: e.schoolName,
             Status__c: null,
             End_Date__c: !Ember.isNone(e.endDate) ? moment.utc(e.endDate.year, 'YYYY').format('YYYY-MM-DD') : null
         };
     });
-};
+}
 
-function createEmploymentHistoryObj(positions) {
+function convertLinkedInToEmploymentHistoryObj(positions) {
     return positions.map(function(p) {
         // Positions from LinkedIn only have year and month in startDate/endDate
         var startDate;
@@ -126,11 +172,51 @@ function createEmploymentHistoryObj(positions) {
         return {
             Name: !Ember.isNone(p.company) ? p.company.name : null,
             Job_Title__c: p.title,
+            Start_Month__c: !Ember.isNone(p.startDate) ? p.startDate.month : null,
+            Start_Year__c: !Ember.isNone(p.startDate) ? p.startDate.year : null,
+            End_Month__c: !Ember.isNone(p.endDate) ? p.endDate.month : null,
+            End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
             Start_Date__c: startDate,
             Is_Current__c: p.isCurrent,
             End_Date__c: endDate
         };
     });
+}
+
+function getGeolocationDistance(p1, p2) {
+    var rad = function(x) { return x * Math.PI / 180 };
+
+    var R = 6371;
+    var dLat  = rad(p2.latitude - p1.latitude);
+    var dLong = rad(p2.longitude - p1.longitude);
+
+    var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+            Math.cos(rad(p1.latitude)) * Math.cos(rad(p2.latitude)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    var d = R * c;
+
+    return Math.round(d);
+}
+
+var degreePicklistValues = [];
+
+if (!Ember.isEmpty(jobPostingMap.degreeFields)) {
+    degreePicklistValues = jobPostingMap.degreeFields.getEach('value');
+}
+
+var numberToMonthMap = {
+    '1' : 'January',
+    '2' : 'February',
+    '3' : 'March',
+    '4' : 'April',
+    '5' : 'May',
+    '6' : 'June',
+    '7' : 'July',
+    '8' : 'August',
+    '9' : 'September',
+    '10' : 'October',
+    '11' : 'November',
+    '12' : 'December'
 };
 
 Ember.View.reopen({
@@ -174,15 +260,29 @@ App.JobPostingController = Ember.ObjectController.extend({
     }.property('applications', 'savedJobs'),
 
     jobIsSaved: function(){
-        return this.get('isJobSaved');
-    }.property('isJobSaved'),
+        return this.get('isJobSaved') && Ember.isNone(this.get('application'));
+    }.property('isJobSaved', 'application'),
+    jobOfferUrl: function() {
+        var application = this.get('application');
+        if (!Ember.isNone(application) && !Ember.isNone(application.Job_Offers__r) 
+                    && application.Job_Offers__r.records[0].Status__c === 'Extended') {
+            return 'goto offer';
+        } else {
+            return null;
+        }
+    }.property('application'),
     appliedAlertClass: function() {
         var application = this.get('application');
-        if (!Ember.isNone(application)) {
-            if (application.Status__c === 'In Progress') {
+
+        if (this.get('justApplied') === true) {
+            return 'alert--success';
+        } else if (!Ember.isNone(application)) {
+            if (Ember.isNone(application.Job_Offers__r) && application.Status__c === 'In Progress') {
                 return 'alert--warning';
-            } else {
+            } else if (!Ember.isNone(application.Job_Offers__r) && application.Job_Offers__r.records[0].Status__c === 'Extended') {
                 return 'alert--success';
+            } else {
+                return 'alert--info';
             }
         } else {
             return null;
@@ -193,10 +293,12 @@ App.JobPostingController = Ember.ObjectController.extend({
         if (!Ember.isNone(application)) {
             if (this.get('justApplied') === true) {
                 return 'Thank you for applying';
-            } else if (application.Status__c === 'In Progress') {
+            } else if (Ember.isNone(application.Job_Offers__r) && application.Status__c === 'In Progress') {
                 return 'Your application is currently in progress';
+            } else if (!Ember.isNone(application.Job_Offers__r) && application.Job_Offers__r.records[0].Status__c === 'Extended') {
+                return 'Congratulations! You\'ve received an offer on this job!';
             } else {
-                return 'Thank you for applying';
+                return 'You applied for this job on ' + moment(application.CreatedDate).format('MMM D, YYYY');
             }
         } else {
             return null;
@@ -220,73 +322,118 @@ App.JobPostingController = Ember.ObjectController.extend({
     //applyWithLinkedInUrl: function() {
     //    return parent.urlPrefix + '/Apply%20with%20LinkedIn?id=' + this.get('jobPosting').Id;
     //}.property('Id'),
-    createEducationHistoryObj: function(educations) {
-        return educations.map(function(e) {
-            // Educations from linkedIn only have year in the startDate/endDate
-
-            return {
-                Education_Level__c: e.degree,
-                Start_Date__c: !Ember.isNone(e.startDate) ? moment.utc(e.startDate.year, 'YYYY').format('YYYY-MM-DD') : null,
-                Name: e.schoolName,
-                Status__c: null,
-                End_Date__c: !Ember.isNone(e.endDate) ? moment.utc(e.endDate.year, 'YYYY').format('YYYY-MM-DD') : null
-            };
-        });
-    },
-    createEmplyomentHistoryObj: function(positions) {
-        return positions.map(function(p) {
-            // Positions from LinkedIn only have year and month in startDate/endDate
-            var startDate;
-            var endDate;
-
-            if (!Ember.isNone(p.startDate)) {
-                if (!Ember.isNone(p.startDate.month)) {
-                    startDate = moment.utc(p.startDate.month + '/' + p.startDate.year, 'M/YYYY').format('YYYY-MM-DD');
-                } else {
-                    startDate = moment.utc(p.startDate.year, 'YYYY').format('YYYY-MM-DD');
-                }
-            }
-
-            if (!Ember.isNone(p.endDate)) {
-                if (!Ember.isNone(p.endDate.month)) {
-                    endDate = moment.utc(p.endDate.month + '/' + p.endDate.year, 'M/YYYY').format('YYYY-MM-DD');
-                } else {
-                    endDate = moment.utc(p.endDate.year, 'YYYY').format('YYYY-MM-DD');
-                }
-            }
-
-            return {
-                Name: !Ember.isNone(p.company) ? p.company.name : null,
-                Job_Title__c: p.title,
-                Start_Date__c: startDate,
-                Is_Current__c: p.isCurrent,
-                End_Date__c: endDate
-            };
-        });
-    },
     actions: {
         clickApply: function() {
             var self = this;
-            $('#locationModal').modal({
-                show: true,
-                backdrop: 'static'
-            });
 
-            window.parent.scrollTo(0,0);
-
-            $('#modalOk').click(function() {
-                $('#modalOk').unbind('click');
-
+            if (self.get('locations').length === 1) {
+                
                 var applyObj = {
                     requisitionId: self.get('jobPosting').Requisition__c,
                     jobPostingId: self.get('jobPosting').Id,
-                    location: 'Some place'
+                    location: self.get('locations')[0].Id
                 };
 
                 var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
 
-                window.open(applyUrl);
-            });
+                console.log(applyUrl);
+                //window.open(applyUrl);
+            } else {
+                var applyCallback = function(selectedLocation) {
+                    $('#locationModal').modal({
+                        show: true,
+                        backdrop: 'static'
+                    });
+
+                    window.parent.scrollTo(0,0);
+
+                    if (!Ember.isNone(selectedLocation)) {
+                        self.set('selectedLocation', selectedLocation.Id);
+                    }
+
+                    $('#modalOk').click(function() {
+                        $('#modalOk').unbind('click');
+
+                        var applyObj = {
+                            requisitionId: self.get('jobPosting').Requisition__c,
+                            jobPostingId: self.get('jobPosting').Id,
+                            location: self.get('selectedLocation')
+                        };
+
+                        if (self.get('selectedLocation') === 'Remote') {
+                            applyObj.location = self.get('locations').findBy('Primary__c', true).Id,
+                            applyObj.prefersRemote = true;    
+                        }
+
+                        var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
+
+                        if (applyObj.prefersRemote === true) {
+                            applyUrl += '&prefersRemote=true';
+                        }
+                        console.log(applyUrl);
+                        window.open(applyUrl);
+                    });
+                };
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+
+                        if (Ember.isNone(position)) {
+                            var primaryLocation = self.get('locations').findBy('Primary__c', true);
+
+                            applyCallback(primaryLocation);
+                        } else {
+                            var userGeo = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            };
+
+                            var closestLocation;
+
+                            self.get('locations').forEach(function(l) {
+
+                                if (l.Id !== 'Remote') {
+                                    var locationGeo = {
+                                        latitude: l.Location__r.Geographical_Location__Latitude__s,
+                                        longitude: l.Location__r.Geographical_Location__Longitude__s
+                                    };
+
+                                    var distance = getGeolocationDistance(userGeo, locationGeo);
+
+                                    if (Ember.isNone(closestLocation) || distance < closestLocation.distance) {
+                                        closestLocation = l;
+                                        closestLocation.distance = distance;
+                                    }
+                                }
+                                
+                            });
+
+                            var locationString = closestLocation.formattedLocationString;
+
+                            if (locationString.indexOf('(Primary)') !== -1) {
+                                locationString = locationString.split('(Primary)')[0] + '(Primary, Closest)';
+                            } else {
+                                locationString += ' (Closest)';
+                            }
+
+                            closestLocation.set('formattedLocationString', locationString);
+                            console.log(closestLocation);
+
+                            applyCallback(closestLocation);
+                            // find closest location.
+                        }
+                        
+                    }, function(error) {
+                        var primaryLocation = self.get('locations').findBy('Primary__c', true);
+
+                        applyCallback(primaryLocation);
+                    });;
+                } else {
+                    var primaryLocation = self.get('locations').findBy('Primary__c', true);
+
+                    applyCallback(primaryLocation);
+                }
+            }
         },
         clickApplyWithLinkedIn: function() {
             var self = this;
@@ -301,7 +448,7 @@ App.JobPostingController = Ember.ObjectController.extend({
             $('#modalOk').click(function() {
                 $('#modalOk').unbind('click');
 
-                if (!Ember.isNone(self.get('linkedInMap'))) {
+                /*if (!Ember.isNone(self.get('linkedInMap'))) {
                     var saveObj = createSaveObj(self.get('jobPosting'), self.get('loggedInUser'), self.get('linkedInMap'));
                     
                     cont.applyToJob(JSON.stringify(saveObj), function(res, evt) {
@@ -323,7 +470,7 @@ App.JobPostingController = Ember.ObjectController.extend({
                     });
                 } else {
                     window.parent.location.href = self.get('applyWithLinkedInUrl');
-                }            
+                }      */      
             });
         },
         clickTweet: function() {
@@ -376,32 +523,92 @@ App.JobPostingController = Ember.ObjectController.extend({
 
         saveJob: function (){
             // Check if user is loged in
-            if (this.get('loggedInUser').ContactId) {
-                var self = this;
+            var self = this;
 
+            if (this.get('loggedInUser').UserType !== 'Guest') {
                 if(self.get('isJobSaved')){
                     self.set('isJobSaved', false);
                 } else {
                     self.set('isJobSaved', true);
                 }
 
-               
-                
-
                 var jobPosting = self.get('jobPosting');
+                var linkedInMap = this.get('linkedInMap');
 
                 //console.log('JOB POSTING: ')
                 //console.log(jobPosting);
 
                 var jsonString = {
-                    jobPostingId: jobPosting.Id,
+                    Job_Posting__c: jobPosting.Id,
                     isJobSaved: self.get('isJobSaved'),
-                    jobName: jobPosting.Name,
-                    candidateId: self.get('loggedInUser').Id,
-                    expressedBy: 'Recruiter', // Picklist
-                    origReqId: jobPosting.Requisition__c,
-                    positionId: jobPosting.Requisition__r.Position__c
+                    Name: jobPosting.Name,
+                    Candidate__c: self.get('loggedInUser').Id,
+                    Expressed_By__c: 'Candidate', // Picklist
+                    Orig_Requisition__c: jobPosting.Requisition__c,
+                    Position__c: jobPosting.Requisition__r.Position__c
                 };
+
+                if (!Ember.isNone(linkedInMap)) {
+                    if (!Ember.isNone(linkedInMap.educations && !Ember.isEmpty(linkedInMap.educations.values))) {
+                        var educationHistories = convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
+                        var flattenedEducationHistory = '';
+
+                        educationHistories.forEach(function(eh) {
+                            // add education history to flattened string
+                            flattenedEducationHistory += eh.Name__c + '\n'
+                                        + eh.Education_Level__c;
+
+                            if (!Ember.isNone(eh.Status__c)) {
+                                flattenedEducationHistory += ' (' + eh.Status__c + ')';
+                            } 
+                            
+                            flattenedEducationHistory += '\n' 
+                                                      + eh.Start_Year__c
+                                                      + ' - ' + eh.End_Year__c
+                                                      + '\n\n';
+                        });
+
+                        jsonString.Education_History__c = flattenedEducationHistory;
+                    }
+
+                    if (!Ember.isNone(linkedInMap.positions && !Ember.isEmpty(linkedInMap.positions.values))) {
+                        var employmentHistories = convertLinkedInToEmploymentHistoryObj(linkedInMap.positions.values);
+                        var flattenedEmploymentHistory = '';
+
+                        employmentHistories.forEach(function(eh) {
+                            // add employment history to flattened string
+                            flattenedEmploymentHistory += eh.Name + '\n'
+                                        + eh.Job_Title__c + '\n';
+
+                            if (!Ember.isNone(eh.Start_Month__c)){
+                                flattenedEmploymentHistory += numberToMonthMap[eh.Start_Month__c] + ' ';
+                            }
+
+                            flattenedEmploymentHistory += eh.Start_Year__c + ' - ';
+
+                            if (eh.Is_Current__c == true) {
+                                flattenedEmploymentHistory += 'present';
+                            } else if (!Ember.isNone(eh.End_Month__c)) {
+                                flattenedEmploymentHistory += numberToMonthMap[eh.End_Month__c] + ' ';
+                            }
+
+                            if (!Ember.isNone(eh.End_Year__c)) {
+                                flattenedEmploymentHistory += eh.End_Year__c;
+                            }
+
+                            flattenedEmploymentHistory += '\n\n';
+                        });
+                        jsonString.Employment_History__c = flattenedEmploymentHistory;
+                    }
+
+                    if (!Ember.isNone(linkedInMap.skills && !Ember.isEmpty(linkedInMap.skills.values))) {
+                        var skillsArray = [];
+                        linkedInMap.skills.values.forEach(function(skill) {
+                            skillsArray.addObject(skill.skill.name);
+                        });
+                        jsonString.Skills__c = skillsArray.join(', ');
+                    }
+                }
 
                 cont.saveJob(JSON.stringify(jsonString), function(results, responseObj){
                     if (results) {
@@ -439,9 +646,9 @@ App.JobPostingController = Ember.ObjectController.extend({
                     }
                 });
             } else {
-                console.log('LOGIO IN!')
-                var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Login/';
-                window.parent.location.replace(url);
+                var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Login?startURL=' +
+                            parent.urlPrefix + '/JobPosting?id%3D' + self.get('jobPosting').Id + '%26saveJob%3Dtrue';
+                window.parent.location.href = url;
             };
 
 
@@ -496,21 +703,6 @@ App.JobPostingController = Ember.ObjectController.extend({
 // Routes
 App.JobPostingRoute = Ember.Route.extend( {
     model: function(params) {
-        // console.log('MODEL');
-        // console.log(jobPostingMap.currentSavedJob);
-        // console.log(jobPostingMap);
-
-
-/*        if (!Ember.isEmpty(jobPostingMap.currentSavedJob)) {
-            this.set('isJobSaved', true);  
-        } else {
-            this.set('isJobSaved', false);  
-        };
-
-
-
-        console.log(this.get('isJobSaved'));*/
-
         return new Ember.RSVP.Promise(function(resolve, reject) {
             var applications = [];
 
@@ -529,7 +721,7 @@ App.JobPostingRoute = Ember.Route.extend( {
                         otherLocationsCount: obj.otherLocationsCount,
                         jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c,
                         isApplication: true,
-                        hasJobOffer: !Ember.isEmpty(app.jobOffer),
+                        hasJobOffer: !Ember.isEmpty(app.Job_Offers__r),
                         statusText: app.Status__c === 'Completed' ? 'Applied' : 'In Progress'
                     };
 
@@ -539,18 +731,13 @@ App.JobPostingRoute = Ember.Route.extend( {
 
             jobPostingMap.applications = applications;
 
+            jobPostingMap.isRemoteAvailable = jobPostingMap.jobPosting.Requisition__r.Allow_Remote_Employees__c;
+
             if (!Ember.isEmpty(jobPostingMap.jpLocations)) {
-                var firstLocationString = '';
-                var otherLocationsString;
-                var otherLocationsCount = 0;
-
-                var obj = createLocationStrings(jobPostingMap.jpLocations);
-
-                jobPostingMap.firstLocationString = obj.firstLocationString;
-                jobPostingMap.otherLocationsString = obj.otherLocationsString;
-                jobPostingMap.otherLocationsCount = obj.otherLocationsCount;
+                var parsedLocations = parsePostingLocations(jobPostingMap.jpLocations, jobPostingMap.isRemoteAvailable);
+                jobPostingMap.locationString = parsedLocations.locationsString;
+                jobPostingMap.locations = parsedLocations.locationObjs;
             }
-
 
             // saved jobs
             var savedJobs = [];
@@ -560,7 +747,6 @@ App.JobPostingRoute = Ember.Route.extend( {
                     var otherLocationsString;
                     var otherLocationsCount = 0;
 
-                    //console.log('Inside')
                     var obj = createLocationStrings(savedJob.locations);
 
                     var jobObj = {
@@ -574,20 +760,17 @@ App.JobPostingRoute = Ember.Route.extend( {
 
                     savedJobs.addObject(jobObj); 
                 });
-
-
-
-                //console.log('SAVED JOBS: ');
-                //console.log(savedJobs);
             }
             jobPostingMap.savedJobs = savedJobs;
 
+            jobPostingMap.jpFields.forEach(function(f) {
+                f.value = jobPostingMap.jobPosting[f.name];
+            });
 
             if (parent.applyWithLinkedIn === true && !Ember.isNone(jobPostingMap.linkedInMap) 
                         && Ember.isNone(jobPostingMap.application)) {
                 var saveObj = createSaveObj(jobPostingMap.jobPosting, jobPostingMap.loggedInUser, jobPostingMap.linkedInMap);
 
-                //console.log(saveObj);
 
                 cont.applyToJob(JSON.stringify(saveObj), function(res, evt) {
                     if (res) {
@@ -596,8 +779,6 @@ App.JobPostingRoute = Ember.Route.extend( {
                         if (!Ember.isEmpty(parsedResult.errorMessages)) {
                             // error handling
                         } else {
-                            //console.log(parsedResult);
-
                             jobPostingMap.application = parsedResult.data.application;
                             jobPostingMap.justApplied = true;
                             resolve(jobPostingMap);
@@ -611,6 +792,13 @@ App.JobPostingRoute = Ember.Route.extend( {
                 resolve(jobPostingMap);
             }
         });
+    },
+    setupController: function(controller, model) {
+        controller.set('model', model);
+
+        if (parent.saveJob === true && Ember.isNone(model.savedJob)) {
+            controller.send('saveJob');
+        }
     }
 });
 

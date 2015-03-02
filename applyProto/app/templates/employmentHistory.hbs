@@ -1,5 +1,8 @@
 <div id="empHistory" class="wizardSection pad--sm--only--n active">
     <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm">Employment History</h1>
+    {{#if errorMessage}}
+        <span class="required-field text-error pad--sm--bm block pad--sm--only--lm pad--sm--only--rm text-left-center">{{errorMessage}} </span>
+    {{/if}}
     <div class="panel">
         {{#each employmentHistory in model}}
             <div class="panel__component panel__component--removable pad--sm--tn">

@@ -12,14 +12,11 @@
                 <div class="form__group">
                     <div class="select__wrap">
                         <div class="input__icon juicon juicon-down"></div>
-                        <select>
-                            <option>San Francisco, CA (Closest)</option>
-                            <option>Boston, MA</option>
-                            <option>London, GB, UK</option>
-                            <option>Remote</option>
-                            <option>Chicago, IL</option>
-                            <option>Vancouver, BC, CA</option>
-                        </select>
+                        {{view "select" 
+                                content=locations
+                                optionValuePath="content.Id"
+                                optionLabelPath="content.formattedLocationString"
+                                value=selectedLocation}}
                     </div>
                 </div>
             </div>
