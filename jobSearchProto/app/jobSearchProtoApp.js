@@ -29,7 +29,7 @@ function createLocationStrings(locations){
             otherLocationsString += ', ' + location;
         }
     });
-
+ 
     var obj = {
         firstLocationString: firstLocationString,
         otherLocationsString: otherLocationsString,
@@ -277,17 +277,19 @@ App.JobPostingController = Ember.ObjectController.extend({
         return savedJobsIds.indexOf(jobPostingId) != -1 ? true : false;
     }.property('Id', 'savedJobs'),
 
-    isJobApplied: function(){
-        var jobPostingId = this.get('Id');
+    isJobAppliedCompleted: function(){
+        //var jobPostingId = this.get('Id');
         var applications = this.get('applications');
 
-        var appliedJobsIds = [];
-        if (applications) {
-            appliedJobsIds = applications.getEach('jobPostingId');
-        };
-
-        return appliedJobsIds.indexOf(jobPostingId) != -1 ? true : false;
+        return applications.filterBy('jobPosting', this.get('Id')).isAny('statusText', 'Applied');
     }.property('Id', 'applications'),
+
+    isJobAppliedInProgress: function(){
+        var applications = this.get('applications');
+
+        return applications.filterBy('jobPosting', this.get('Id')).isAny('statusText', 'In Progress');
+    }.property('Id', 'applications'),
+
 
     jobPostingUrl: function() {
         return parent.urlPrefix + '/JobPosting?id=' + this.get('Id');
@@ -298,85 +300,80 @@ App.JobPostingController = Ember.ObjectController.extend({
             window.parent.location.href = this.get('jobPostingUrl');
             console.log(this.get('Id'));
         },
+        finishApplication: function(jobPosting){
+            var applications = this.get('applications');
+
+            // var applicationId;
+            // if (applications) {
+            //     applications.forEach(function(application){
+            //         if (application.jobPostingId == jobPosting.Id) {
+            //             applicationId = application.id;
+            //         };
+            //     });
+            // };
 
 
+            var applicationId = applications.filterBy('jobPostingId', this.get('Id'))[0].id;
 
-        trying: function(){
-            console.log('SAVEEEEEEEEEEEEEEE')
-            var self = this;
-            $('#pleaseLoginModal').modal({
-                show: true,
-                backdrop: 'static'
-            });
-
-            window.parent.scrollTo(0,0);
-
-            $('#modalOk').click(function() {
-                var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Login/';
-                window.parent.location.replace(url);
-                $('#modalOk').unbind('click');
-            });
+            var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/apply?id=' + applicationId;
+            window.parent.location.replace(url);            
         },
-
-
         saveJob: function(jobPosting){
             var self = this;
-            if (this.get('loggedInUser')) {
-                if(!self.get('isJobSaved')){
-                    self.set('isJobSaved', true);
+            console.log('JOB POSTING: ');
+            console.log(jobPosting);
 
+
+            if (this.get('loggedInUser').UserType !== 'Guest') {
+                if(!self.get('isJobSaved')){
                     var jsonString = {
                         jobPostingId: jobPosting.Id,
-                        isJobSaved: self.get('isJobSaved'),
                         jobName: jobPosting.Name,
                         candidateId: self.get('loggedInUser').Id,
                         expressedBy: 'Candidate', // Picklist
                         origReqId: jobPosting.Requisition__c,
                         positionId: jobPosting.Requisition__r.Position__c,
+                        locations: jobPosting.locations
                     };
-                    console.log('JSON STRING');
-                    console.log(jsonString);
 
                     cont.saveJob(JSON.stringify(jsonString), function(results, responseObj){
                         if (results) {
                             var parsedResult = parseResult(results);
-                            console.log('RESULTS 2: ');
-                            console.log(parsedResult.data.savedJobs);
+                            console.log('RESULTS: ');
+                            console.log(parsedResult);
+                            console.log(parsedResult.data.newJobId);
+                            
+                            // if (parsedResult.isSuccess) {
+                            // Check if new Interest was created
+                            if (parsedResult.data.newJobId) {
 
-                            var savedJobs = [];
+                                self.set('isJobSaved', true);
+                                var obj = createLocationStrings(jsonString.locations);
 
-                            if (!Ember.isEmpty(parsedResult.data.savedJobs)){
-                                parsedResult.data.savedJobs.forEach(function(savedJob) {
-                                    var firstLocationString = '';
-                                    var otherLocationsString;
-                                    var otherLocationsCount = 0;
+                                var newJob = {
+                                    jobTitle: jsonString.jobName,
+                                    firstLocationString: obj.firstLocationString,
+                                    otherLocationsString: obj.otherLocationsString,
+                                    otherLocationsCount: obj.otherLocationsCount,
+                                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + jsonString.jobPostingId
+                                };
 
-                                    var obj = createLocationStrings(savedJob.locations);
-
-                                    var jobObj = {
-                                        // jobPostingId: savedJob.Job_Posting__c,
-                                        jobTitle: savedJob.Name,
-                                        firstLocationString: obj.firstLocationString,
-                                        otherLocationsString: obj.otherLocationsString,
-                                        otherLocationsCount: obj.otherLocationsCount,
-                                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c
-                                    };
-
-                                    savedJobs.addObject(jobObj); 
-                                });
-                            }    
-
-                            self.set('savedJobs', savedJobs);
-
+                                var savedJobs = self.get('savedJobs');
+                                savedJobs.addObject(newJob);
+                                self.get('controllers.jobSearch').notifyPropertyChange('savedJobs');
+                            };
 
                         } else {
                                 // error handling
                         }
                     });
                 }
+               
+
             } else {
                 console.log('NOT LOGED IN')
                 var self = this;
+
                 $('#pleaseLoginModal').modal({
                     show: true,
                     backdrop: 'static'
@@ -399,6 +396,7 @@ App.JobSearchRoute = Ember.Route.extend( {
     model: function(params) {
         console.log('JOB SEARCH MAP');
         console.log(parsedJobSearchMap);
+
         var jobFamilies = ['All categories'];
 
         if (!Ember.isEmpty(parsedJobSearchMap.jobFamilies)) {
@@ -413,59 +411,72 @@ App.JobSearchRoute = Ember.Route.extend( {
                 var otherLocationsString;
                 var otherLocationsCount = 0;
 
-                app.locations.forEach(function(l, i) {
-                    var location = '';
+                var obj = createLocationStrings(app.locations);
 
-                    location = l.Location__r.City__c + ', ' + l.Location__r.State_Province__c;
-
-                    if (!Ember.isEmpty(l.Location__r.Country_Province__c) && l.Location__r.Country_Province__c !== 'United States') {
-                        location += ', ' + l.Location__r.Country_Province__c;
-                    }
-
-                    if (i === 0) {
-                        firstLocationString = location;
-                    } else if (i === 1) {
-                        otherLocationsCount++;
-                        otherLocationsString = location;
-                    } else {
-                        otherLocationsCount++;
-                        otherLocationsString += ', ' + location;
-                    }
-                });
-
-                var applicationObj = { 
-                    jobPostingId: app.Job_Posting__c,
-                    jobTitle: !Ember.isNone(app.Job_Posting__r) ? app.Job_Posting__r.Name : null,
-                    firstLocationString: firstLocationString,
-                    otherLocationsString: otherLocationsString,
-                    otherLocationsCount: otherLocationsCount,
-                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c
+                var applicationObj = {
+                    id: app.Id,
+                    jobPosting: app.Job_Posting__c,
+                    jobTitle: app.Job_Posting__r.Name,
+                    firstLocationString: obj.firstLocationString,
+                    otherLocationsString: obj.otherLocationsString,
+                    otherLocationsCount: obj.otherLocationsCount,
+                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + app.Job_Posting__c,
+                    isApplication: true,
+                    hasJobOffer: !Ember.isEmpty(app.Job_Offers__r),
+                    jobOfferStatus: !Ember.isEmpty(app.Job_Offers__r) ? app.Job_Offers__r.records[0].Status__c : null,
+                    statusText: app.Status__c === 'Completed' ? 'Applied' : 'In Progress',
+                    isRemoteAvailable: app.Requisition__r.Allow_Remote_Employees__c
                 };
+
+                if (!Ember.isEmpty(app.Job_Offers__r)) {
+                    if (['Accepted', 'Extended'].indexOf(app.Job_Offers__r.records[0].Status__c) !== -1) {
+                        applicationObj.jobLabelClass = 'label--success';
+                    } else {
+                        applicationObj.jobLabelClass = 'label--secondary';
+                    }
+                } else {
+                    if (app.Status__c === 'In Progress') {
+                        applicationObj.jobLabelClass = 'label--warning';
+                    } else {
+                        applicationObj.jobLabelClass = 'label--secondary';
+                    }
+                }
 
                 applications.addObject(applicationObj);
             });
         }
 
+        // parsedJobSearchMap.applications = applications;
+
+        // parsedJobSearchMap.isRemoteAvailable = parsedJobSearchMap.jobPosting.Requisition__r.Allow_Remote_Employees__c;
+
+        // if (!Ember.isEmpty(parsedJobSearchMap.jpLocations)) {
+        //     var parsedLocations = parsePostingLocations(parsedJobSearchMap.jpLocations, parsedJobSearchMap.isRemoteAvailable);
+        //     parsedJobSearchMap.locationString = parsedLocations.locationsString;
+        //     parsedJobSearchMap.locations = parsedLocations.locationObjs;
+        // }
+
         // saved jobs
         var savedJobs = [];
-        if (!Ember.isEmpty(parsedJobSearchMap.savedJobs)) {              
+        if (!Ember.isEmpty(parsedJobSearchMap.savedJobs)) {                
             parsedJobSearchMap.savedJobs.forEach(function(savedJob) {
-                var firstLocationString = '';
-                var otherLocationsString;
-                var otherLocationsCount = 0;
+                if (Ember.isNone(savedJob.Application__r) || 
+                        (!Ember.isNone(savedJob.Application__r) && savedJob.Application__r.Job_Posting__c !== savedJob.Job_Posting__c)) {
 
-                var obj = createLocationStrings(savedJob.locations);
+                    var obj = createLocationStrings(savedJob.locations);
 
-                var jobObj = {
-                    jobPostingId: savedJob.Job_Posting__c,
-                    jobTitle: savedJob.Name,
-                    firstLocationString: obj.firstLocationString,
-                    otherLocationsString: obj.otherLocationsString,
-                    otherLocationsCount: obj.otherLocationsCount,
-                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c
-                };
+                    var jobObj = {
+                        jobPostingId: savedJob.Job_Posting__c,
+                        jobTitle: savedJob.Name,
+                        firstLocationString: obj.firstLocationString,
+                        otherLocationsString: obj.otherLocationsString,
+                        otherLocationsCount: obj.otherLocationsCount,
+                        jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c,
+                        isSavedJob: true
+                    };
 
-                savedJobs.addObject(jobObj); 
+                    savedJobs.addObject(jobObj); 
+                }
             });
         }
 
