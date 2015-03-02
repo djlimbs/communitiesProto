@@ -266,8 +266,6 @@ App.JobPostingController = Ember.ObjectController.extend({
     isJobSaved: function(){
         var jobPostingId = this.get('Id');
         var savedJobs = this.get('savedJobs');
-        // var applications = this.get('applications');
-        // var allMyJobs = this.get('allMyJobs');
 
         var savedJobsIds = [];
         if (savedJobs) {
@@ -278,7 +276,6 @@ App.JobPostingController = Ember.ObjectController.extend({
     }.property('Id', 'savedJobs'),
 
     isJobAppliedCompleted: function(){
-        //var jobPostingId = this.get('Id');
         var applications = this.get('applications');
 
         return applications.filterBy('jobPosting', this.get('Id')).isAny('statusText', 'Applied');
