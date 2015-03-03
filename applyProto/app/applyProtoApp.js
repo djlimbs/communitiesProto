@@ -1133,7 +1133,7 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
             // check months
             var hasGap = false;
             if (applyModel.employmentHistoryYears !== 0) {
-                hasGap = checkforEmploymentHistoryGaps(employmentHistoryObjArray, applyModel.employmentHistoryYears);
+                hasGap = checkForEmploymentHistoryGaps(employmentHistoryObjArray, applyModel.employmentHistoryYears);
             }
 
             if (hasGap === false) {
