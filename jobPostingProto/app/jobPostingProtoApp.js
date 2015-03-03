@@ -790,11 +790,6 @@ App.JobPostingRoute = Ember.Route.extend( {
                     if (Ember.isNone(savedJob.Application__r) || 
                             (!Ember.isNone(savedJob.Application__r) && savedJob.Application__r.Job_Posting__c !== savedJob.Job_Posting__c)) {
 
-
-                        var firstLocationString = '';
-                        var otherLocationsString;
-                        var otherLocationsCount = 0;
-
                         var obj = createLocationStrings(savedJob.locations);
 
                         var jobObj = {
