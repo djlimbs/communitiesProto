@@ -140,17 +140,19 @@ function getEducationHistoryBlock(educationHistoryObj) {
     return newBlock;
 }
 
-function convertLinkedInToEduationHistoryObj(educations) {
+function convertLinkedInToEducationHistoryObj(educations) {
     return educations.map(function(e) {
         // Educations from linkedIn only have year in the startDate/endDate
 
         return {
             Education_Level__c: degreePicklistValues.indexOf(e.degree) !== -1 ? e.degree : 'Other',
-            Start_Date__c: !Ember.isNone(e.startDate) ? moment.utc(e.startDate.year, 'YYYY').format('YYYY-MM-DD') : null,
             Name: e.schoolName,
             Name__c: e.schoolName,
             Status__c: null,
-            End_Date__c: !Ember.isNone(e.endDate) ? moment.utc(e.endDate.year, 'YYYY').format('YYYY-MM-DD') : null
+            Start_Month__c: !Ember.isNone(e.startDate) ? String(e.startDate.month) : null,
+            Start_Year__c: !Ember.isNone(e.startDate) ? e.startDate.year : null,
+            End_Month__c: !Ember.isNone(e.endDate) ? String(e.endDate.month) : null,
+            End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null
         };
     });
 }
@@ -158,35 +160,15 @@ function convertLinkedInToEduationHistoryObj(educations) {
 function convertLinkedInToEmploymentHistoryObj(positions) {
     return positions.map(function(p) {
         // Positions from LinkedIn only have year and month in startDate/endDate
-        var startDate;
-        var endDate;
-
-        if (!Ember.isNone(p.startDate)) {
-            if (!Ember.isNone(p.startDate.month)) {
-                startDate = moment.utc(p.startDate.month + '/' + p.startDate.year, 'M/YYYY').format('YYYY-MM-DD');
-            } else {
-                startDate = moment.utc(p.startDate.year, 'YYYY').format('YYYY-MM-DD');
-            }
-        }
-
-        if (!Ember.isNone(p.endDate)) {
-            if (!Ember.isNone(p.endDate.month)) {
-                endDate = moment.utc(p.endDate.month + '/' + p.endDate.year, 'M/YYYY').format('YYYY-MM-DD');
-            } else {
-                endDate = moment.utc(p.endDate.year, 'YYYY').format('YYYY-MM-DD');
-            }
-        }
 
         return {
             Name: !Ember.isNone(p.company) ? p.company.name : null,
             Job_Title__c: p.title,
-            Start_Month__c: !Ember.isNone(p.startDate) ? p.startDate.month : null,
+            Start_Month__c: !Ember.isNone(p.startDate) ? String(p.startDate.month) : null,
             Start_Year__c: !Ember.isNone(p.startDate) ? p.startDate.year : null,
-            End_Month__c: !Ember.isNone(p.endDate) ? p.endDate.month : null,
+            End_Month__c: !Ember.isNone(p.endDate) ? String(p.endDate.month) : null,
             End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
-            Start_Date__c: startDate,
             Is_Current__c: p.isCurrent,
-            End_Date__c: endDate
         };
     });
 }
@@ -891,7 +873,7 @@ App.ApplyRoute = Ember.Route.extend( {
             // if we don't have data already but have logged in via linkedin
             if (Ember.isEmpty(applicationObj.educationHistoryArray) && !Ember.isNone(linkedInMap) 
                     && !Ember.isEmpty(linkedInMap.educations)) {
-                var educationHistoryObjs = convertLinkedInToEduationHistoryObj(linkedInMap.educations.values);
+                var educationHistoryObjs = convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
                 educationHistoryObjs.forEach(function(eh) {
                     applicationObj.educationHistoryArray.addObject(getEducationHistoryBlock(eh));
                 });

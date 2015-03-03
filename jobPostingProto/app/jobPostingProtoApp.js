@@ -341,8 +341,7 @@ App.JobPostingController = Ember.ObjectController.extend({
     applyWithLinkedInUrl: function() {
         var linkedInSsoUrl = this.get('linkedInSsoUrl');
         if (!Ember.isNone(linkedInSsoUrl)) {
-            return linkedInSsoUrl + '?community=https://' + parent.communityUrl + '&' +
-                    'startURL=' + parent.urlPrefix + '/JobPosting?id=' + this.get('jobPosting').Id + '%26applyWithLinkedIn=true';
+            return linkedInSsoUrl + '?community=https://' + parent.communityUrl + '&' + 'startURL=';
         } else {
             return null
         }
@@ -351,7 +350,7 @@ App.JobPostingController = Ember.ObjectController.extend({
     //    return parent.urlPrefix + '/Apply%20with%20LinkedIn?id=' + this.get('jobPosting').Id;
     //}.property('Id'),
     actions: {
-        clickApply: function() {
+        clickApply: function(withLinkedIn) {
             var self = this;
 
             if (self.get('locations').length === 1) {
@@ -364,8 +363,7 @@ App.JobPostingController = Ember.ObjectController.extend({
 
                 var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
 
-                console.log(applyUrl);
-                //window.open(applyUrl);
+                window.parent.location.href = applyUrl;
             } else {
                 var applyCallback = function(selectedLocation) {
                     $('#locationModal').modal({
@@ -466,6 +464,127 @@ App.JobPostingController = Ember.ObjectController.extend({
         clickApplyWithLinkedIn: function() {
             var self = this;
 
+            if (self.get('locations').length === 1) {
+                
+                var applyObj = {
+                    requisitionId: self.get('jobPosting').Requisition__c,
+                    jobPostingId: self.get('jobPosting').Id,
+                    location: self.get('locations')[0].Id
+                };
+
+                var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
+
+                if (!Ember.isNone(self.get('linkedInMap'))) {
+                    applyUrl += '&importLinkedIn=true';
+                    window.parent.location.href = applyUrl;
+                } else {
+                    window.parent.location.href = self.get('applyWithLinkedInUrl') + applyUrl.replace(/&/g, '%26');
+                }
+            } else {
+                var applyCallback = function(selectedLocation) {
+                    $('#locationModal').modal({
+                        show: true,
+                        backdrop: 'static'
+                    });
+
+                    window.parent.scrollTo(0,0);
+
+                    if (!Ember.isNone(selectedLocation)) {
+                        self.set('selectedLocation', selectedLocation.Id);
+                    }
+
+                    $('#modalOk').click(function() {
+                        $('#modalOk').unbind('click');
+
+                        var applyObj = {
+                            requisitionId: self.get('jobPosting').Requisition__c,
+                            jobPostingId: self.get('jobPosting').Id,
+                            location: self.get('selectedLocation')
+                        };
+
+                        if (self.get('selectedLocation') === 'Remote') {
+                            applyObj.location = self.get('locations').findBy('Primary__c', true).Id,
+                            applyObj.prefersRemote = true;    
+                        }
+
+                        var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
+
+                        if (applyObj.prefersRemote === true) {
+                            applyUrl += '&prefersRemote=true';
+                        }
+
+                        if (!Ember.isNone(self.get('linkedInMap'))) {
+                            applyUrl += '&importLinkedIn=true';
+                            window.parent.location.href = applyUrl;
+                        } else {
+                            window.parent.location.href = self.get('applyWithLinkedInUrl') + applyUrl.replace(/&/g, '%26');
+                        }
+                    });
+                };
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(position) {
+
+                        if (Ember.isNone(position)) {
+                            var primaryLocation = self.get('locations').findBy('Primary__c', true);
+
+                            applyCallback(primaryLocation);
+                        } else {
+                            var userGeo = {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            };
+
+                            var closestLocation;
+
+                            self.get('locations').forEach(function(l) {
+
+                                if (l.Id !== 'Remote') {
+                                    var locationGeo = {
+                                        latitude: l.Location__r.Geographical_Location__Latitude__s,
+                                        longitude: l.Location__r.Geographical_Location__Longitude__s
+                                    };
+
+                                    var distance = getGeolocationDistance(userGeo, locationGeo);
+
+                                    if (Ember.isNone(closestLocation) || distance < closestLocation.distance) {
+                                        closestLocation = l;
+                                        closestLocation.distance = distance;
+                                    }
+                                }
+                                
+                            });
+
+                            var locationString = closestLocation.formattedLocationString;
+
+                            if (locationString.indexOf('(Primary)') !== -1) {
+                                locationString = locationString.split('(Primary)')[0] + '(Primary, Closest)';
+                            } else {
+                                locationString += ' (Closest)';
+                            }
+
+                            closestLocation.set('formattedLocationString', locationString);
+                            console.log(closestLocation);
+
+                            applyCallback(closestLocation);
+                            // find closest location.
+                        }
+                        
+                    }, function(error) {
+                        var primaryLocation = self.get('locations').findBy('Primary__c', true);
+
+                        applyCallback(primaryLocation);
+                    });;
+                } else {
+                    var primaryLocation = self.get('locations').findBy('Primary__c', true);
+
+                    applyCallback(primaryLocation);
+                }
+            }
+
+            /*
+            var self = this;
+
             $('#locationModal').modal({
                 show: true,
                 backdrop: 'static'
@@ -498,8 +617,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                     });
                 } else {
                     window.parent.location.href = self.get('applyWithLinkedInUrl');
-                }      */      
-            });
+                }            
+            });*/
         },
         clickTweet: function() {
             var currentUrl = window.parent.location.href;
