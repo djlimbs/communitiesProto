@@ -473,9 +473,10 @@ App.JobPostingController = Ember.ObjectController.extend({
                 };
 
                 var applyUrl = '/' + parent.urlPrefix.split('/')[1] + '/apply?reqId=' + applyObj.requisitionId + '&jobPostingId=' + applyObj.jobPostingId + '&location=' + applyObj.location;
+                        
+                applyUrl += '&importLinkedIn=true';
 
                 if (!Ember.isNone(self.get('linkedInMap'))) {
-                    applyUrl += '&importLinkedIn=true';
                     window.parent.location.href = applyUrl;
                 } else {
                     window.parent.location.href = self.get('applyWithLinkedInUrl') + applyUrl.replace(/&/g, '%26');
@@ -512,9 +513,9 @@ App.JobPostingController = Ember.ObjectController.extend({
                         if (applyObj.prefersRemote === true) {
                             applyUrl += '&prefersRemote=true';
                         }
-
+                        applyUrl += '&importLinkedIn=true';
+                        
                         if (!Ember.isNone(self.get('linkedInMap'))) {
-                            applyUrl += '&importLinkedIn=true';
                             window.parent.location.href = applyUrl;
                         } else {
                             window.parent.location.href = self.get('applyWithLinkedInUrl') + applyUrl.replace(/&/g, '%26');
