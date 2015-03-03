@@ -16,6 +16,18 @@ var fieldTypeToPartialMap = {
     'DOUBLE' : 'telField'
 };
 
+var fieldApiNameToFieldNameMap = {
+    'First_Name__c' : 'firstname',
+    'Last_Name__c' : 'lastname',
+    'Email__c' : 'email',
+    'Mobile_Phone__c' : 'phone',
+    'Street_Address__c' : 'street',
+    'City__c' : 'city',
+    'State_Province__c' : 'state',
+    'Zip_Postal__c' : 'zip',
+    'Country__c' : 'country'
+};
+
 var appFieldsToLinkedInMap = {
     'First_Name__c' : 'firstName',
     'Last_Name__c' : 'lastName',
@@ -237,6 +249,96 @@ function generateRemoteActionCallback(self, successFunction, isPromise) {
     };
 
     return callback;
+}
+
+function checkEmployedDuring(month, ranges) {
+    return ranges.any(function(r) {
+        var monthMs = month.valueOf();
+        return monthMs >= r.startDateMs && monthMs <= r.endDateMs;
+    });
+}
+
+function checkForEmploymentHistoryGaps(employmentHistoryObjArray, employmentHistoryYears) {
+    var requiredHistoryLength = employmentHistoryYears * 12;
+    var employmentRanges = [];
+    var monthIterator = moment().startOf('month');
+    var requiredLengthIterator = 0;
+    var gaplessHistoryMonths = 0;
+    var hasGap = false;
+
+    employmentHistoryObjArray.forEach(function(eh) {
+        var startDate = moment(eh.Start_Month__c+'/1/'+eh.Start_Year__c, 'M/D/YYYY');
+        var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+'/1/'+eh.End_Year__c, 'M/D/YYYY');
+
+        var startDateMs = startDate.valueOf();
+        var endDateMs = endDate.valueOf();
+
+        employmentRanges.addObject({
+            startDate: startDate,
+            startDateMs: startDateMs,
+            endDate: endDate,
+            endDateMs: endDateMs
+        });
+    });
+
+    do {
+        if (checkEmployedDuring(monthIterator, employmentRanges) !== true) {
+            hasGap = true;
+        }
+
+        monthIterator.subtract(1, 'months');
+        requiredLengthIterator++;
+    } while (requiredLengthIterator <= requiredHistoryLength && hasGap === false)
+
+    return hasGap;
+}
+
+function checkForBlankEmploymentHistoryFields(currentHistory) {
+    var hasEmptyField = false;
+
+    currentHistory.getEach('fields').forEach(function(fieldArray) {
+        var isCurrentField = fieldArray.findBy('name', 'Is_Current__c');
+        var isCurrentChecked;
+        var endDateFields = ['End_Year__c', 'End_Month__c'];
+
+        if (!Ember.isNone(isCurrentField)) {
+            isCurrentChecked = isCurrentField.value;
+        }
+
+        fieldArray.forEach(function(field) {
+            if (endDateFields.indexOf(field.name) !== -1 && isCurrentChecked !== true && Ember.isEmpty(field.value)) {
+                hasEmptyField = true;
+            } else if (endDateFields.indexOf(field.name) === -1 && field.name !== 'Is_Current__c' && Ember.isEmpty(field.value)) {
+                hasEmptyField = true;
+            }
+        });
+    });
+
+    return hasEmptyField;
+}
+
+function checkForBlankEducationHistoryFields(currentHistory) {
+    var hasEmptyField = false;
+
+    currentHistory.getEach('fields').forEach(function(fieldArray) {
+        var statusField = fieldArray.findBy('name', 'Status__c');
+        var isCurrentlyEnrolled;
+        var endDateFields = ['End_Year__c', 'End_Month__c'];
+
+        if (!Ember.isNone(statusField)) {
+            isCurrentlyEnrolled = statusField.value === 'Currently Enrolled';
+        }
+
+        fieldArray.forEach(function(field) {
+            if (endDateFields.indexOf(field.name) !== -1 && isCurrentlyEnrolled !== true && Ember.isEmpty(field.value)) {
+                hasEmptyField = true;
+            } else if (endDateFields.indexOf(field.name) === -1 && Ember.isEmpty(field.value)) {
+                hasEmptyField = true;
+            }
+        });
+    });
+
+    return hasEmptyField;
 }
 
 App.RadioButtonComponent = Ember.Component.extend({  
@@ -475,25 +577,7 @@ App.EmploymentHistoryController = Ember.ArrayController.extend({
     employmentHistoryYearsBinding: 'controllers.apply.employmentHistoryYears',
     employmentHistoryDidChenge: function() {
         var currentHistory = this.get('[]');
-        var hasEmptyField = false;
-
-        currentHistory.getEach('fields').forEach(function(fieldArray) {
-            var isCurrentField = fieldArray.findBy('name', 'Is_Current__c');
-            var isCurrentChecked;
-            var endDateFields = ['End_Year__c', 'End_Month__c'];
-
-            if (!Ember.isNone(isCurrentField)) {
-                isCurrentChecked = isCurrentField.value;
-            }
-
-            fieldArray.forEach(function(field) {
-                if (endDateFields.indexOf(field.name) !== -1 && isCurrentChecked !== true && Ember.isEmpty(field.value)) {
-                    hasEmptyField = true;
-                } else if (endDateFields.indexOf(field.name) === -1 && field.name !== 'Is_Current__c' && Ember.isEmpty(field.value)) {
-                    hasEmptyField = true;
-                }
-            });
-        });
+        var hasEmptyField = checkForBlankEmploymentHistoryFields(currentHistory);
 
         this.get('controllers.apply').set('isEmploymentHistoryIncomplete', hasEmptyField);
     }.observes('[]', '[].@each.fields'),
@@ -515,29 +599,12 @@ App.HistoryFieldController = Ember.ObjectController.extend({
 });
 
 App.EducationHistoryController = Ember.ArrayController.extend({
+    needs: ['apply'],
     educationHistoryDidChenge: function() {
-     /*   var currentHistory = this.get('[]');
-        var hasEmptyField = false;
+        var currentHistory = this.get('[]');
+        var hasEmptyField = checkForBlankEducationHistoryFields(currentHistory);
 
-        currentHistory.getEach('fields').forEach(function(fieldArray) {
-            var statusField = fieldArray.findBy('name', 'Status__c');
-            var isCurrentlyEnrolled;
-            var endDateFields = ['End_Year__c', 'End_Month__c'];
-
-            if (!Ember.isNone(statusField)) {
-                isCurrentlyEnrolled = isCurrentlyEnrolled.value === 'Currently Enrolled';
-            }
-
-            fieldArray.forEach(function(field) {
-                if (endDateFields.indexOf(field.name) !== -1 && isCurrentChecked !== true && Ember.isEmpty(field.value)) {
-                    hasEmptyField = true;
-                } else if (endDateFields.indexOf(field.name) === -1 && Ember.isEmpty(field.value)) {
-                    hasEmptyField = true;
-                }
-            });
-        });
-
-        this.get('controllers.apply').set('isEducationHistoryIncomplete', hasEmptyField);*/
+        this.get('controllers.apply').set('isEducationHistoryIncomplete', hasEmptyField);
     }.observes('[]', '[].@each.fields'),
     actions: {
         clickAddEducationHistory: function() {
@@ -688,6 +755,7 @@ App.ApplyRoute = Ember.Route.extend( {
                 if (hiringModel.contactInfo[field.name] === true) {
                     field.partial = fieldTypeToPartialMap[field.type];
                     field.value = applicationObj.application[field.name];
+                    field.inputName = fieldApiNameToFieldNameMap[field.name];
 
                     // if value from application is blank, and user is applying via linked in, pull in that info.
                     if (Ember.isEmpty(field.value) && !Ember.isNone(linkedInMap) 
@@ -776,6 +844,11 @@ App.ApplyRoute = Ember.Route.extend( {
                 });
 
                 // Check completeness
+
+                var hasEmptyFields = checkForBlankEmploymentHistoryFields(applicationObj.employmentHistoryArray);
+                var hasGap = checkForEmploymentHistoryGaps(parsedApplyMap.employmentHistories, applicationObj.employmentHistoryYears);
+                applicationObj.isEmploymentHistoryIncomplete = hasGap || hasEmptyFields;
+
             }
 
             // if we don't have data already but have logged in via linkedin
@@ -798,7 +871,7 @@ App.ApplyRoute = Ember.Route.extend( {
         // Education History section
         if (hiringModel.educationHistory.isEnabled === true) {
             applicationObj.isEducationHistoryEnabled = true;
-            applicationObj.isEmploymentHistoryIncomplete = true;
+            applicationObj.isEducationHistoryIncomplete = true;
 
             applicationObj.sectionArray.addObject('educationHistory');
 
@@ -809,6 +882,10 @@ App.ApplyRoute = Ember.Route.extend( {
                 parsedApplyMap.educationHistories.forEach(function(eh) {
                     applicationObj.educationHistoryArray.addObject(getEducationHistoryBlock(eh));
                 });
+
+                var hasEmptyFields = checkForBlankEducationHistoryFields(applicationObj.educationHistoryArray);
+
+                applicationObj.isEducationHistoryIncomplete = hasEmptyFields;
             }
 
             // if we don't have data already but have logged in via linkedin
@@ -1023,7 +1100,6 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
             var employmentHistoryObjArray = [];
             var flattenedEmploymentHistory = '';
             var historyIsLongEnough = false;
-            var requiredHistoryLength = applyModel.employmentHistoryYears * 12; // required length in months
 
             this.controllerFor('employmentHistory').set('errorMessage', null);
 
@@ -1057,52 +1133,8 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
             // check months
             var hasGap = false;
             if (requiredHistoryLength !== 0) {
-                var employmentRanges = [];
-                var earliestStartDate;
-                var latestEndDate;
 
-                employmentHistoryObjArray.forEach(function(eh) {
-                    var startDate = moment(eh.Start_Month__c+'/1/'+eh.Start_Year__c, 'M/D/YYYY');
-                    var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+'/1/'+eh.End_Year__c, 'M/D/YYYY');
-
-                    var startDateMs = startDate.valueOf();
-                    var endDateMs = endDate.valueOf();
-
-                    employmentRanges.addObject({
-                        startDate: startDate,
-                        startDateMs: startDateMs,
-                        endDate: endDate,
-                        endDateMs: endDateMs
-                    });
-
-                    if (Ember.isNone(earliestStartDate) || earliestStartDate.valueOf() > startDateMs) {
-                        earliestStartDate = startDate;
-                    }
-
-                    if (Ember.isNone(latestEndDate) || latestEndDate.valueOf() < endDateMs) {
-                        latestEndDate = endDate;
-                    }
-                });
-
-                var monthIterator = moment().startOf('month');
-                var requiredLengthIterator = 0;
-                var gaplessHistoryMonths = 0;
-
-                function checkEmployedDuring(month, ranges) {
-                    return ranges.any(function(r) {
-                        var monthMs = month.valueOf();
-                        return monthMs >= r.startDateMs && monthMs <= r.endDateMs;
-                    });
-                }
-
-                do {
-                    if (checkEmployedDuring(monthIterator, employmentRanges) !== true) {
-                        hasGap = true;
-                    }
-
-                    monthIterator.subtract(1, 'months');
-                    requiredLengthIterator++;
-                } while (requiredLengthIterator <= requiredHistoryLength && hasGap === false)
+                hasGap = checkforEmploymentHistoryGaps(employmentHistoryObjArray, applyModel.employmentHistoryYears);
             }
 
 
@@ -1127,8 +1159,6 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
                 cont.saveEmploymentHistory(JSON.stringify(employmentHistoriesObj), generateRemoteActionCallback(self, successCallback, false));
             } else {
                 transition.abort();
-                var errorMessage = 'Please supply ' + applyModel.employmentHistoryYears + ' years of history, without gaps';
-                this.controllerFor('employmentHistory').set('errorMessage', errorMessage);
             }
         }
     }

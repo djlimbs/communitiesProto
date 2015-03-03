@@ -4,7 +4,7 @@
             <div class="panel__component panel__component--removable pad--sm--tn">
                 <button type="button" class="close" {{action "clickDeleteEducationHistory" educationHistory}}><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
                 <div class="row">
-                    {{#each field in educationHistory.fields}}
+                    {{#each field in educationHistory.fields itemController="historyField"}}
                         {{partial field.partial}}
                     {{/each}}
                 </div>

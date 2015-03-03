@@ -50,11 +50,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"column--md--4\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label data-qa-label=\"fieldName\">");
+  data.buffer.push("<div class=\"column--md--6\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label data-qa-label=\"fieldName\" class=\"required-field\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</label>\n        <div class=\"select__wrap\">\n            <div class=\"input__icon juicon juicon-down\"></div>\n            ");
+  data.buffer.push(" </label>\n        <div class=\"select__wrap\">\n            <div class=\"input__icon juicon juicon-down\"></div>\n            ");
   hashContexts = {'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0,'prompt': depth0,'data-qa-input': depth0};
   hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID",'prompt': "STRING",'data-qa-input': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
@@ -80,7 +80,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</label>\n        <div class=\"select__wrap\">\n            <div class=\"input__icon juicon juicon-down\"></div>\n            ");
+  data.buffer.push(" </label>\n        <div class=\"select__wrap\">\n            <div class=\"input__icon juicon juicon-down\"></div>\n            ");
   hashContexts = {'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0,'prompt': depth0,'data-qa-input': depth0};
   hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID",'prompt': "STRING",'data-qa-input': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
@@ -198,11 +198,12 @@ function program1(depth0,data) {
   stack1 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </label>\n        ");
-  hashContexts = {'type': depth0,'value': depth0};
-  hashTypes = {'type': "STRING",'value': "ID"};
+  hashContexts = {'type': depth0,'value': depth0,'name': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'name': "ID"};
   options = {hash:{
     'type': ("text"),
-    'value': ("field.value")
+    'value': ("field.value"),
+    'name': ("field.inputName")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n        <small class=\"input-error-content\">Error</small>\n    </div>\n</div>");
@@ -226,7 +227,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"column--md--2\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label for=\"firstName\" class=\"\">\n            ");
+  data.buffer.push("<div class=\"column--md--3\">\n    <div class=\"form__group mar--md--bn mar--md--tm\">\n        <label for=\"firstName\" class=\"required-field\">\n            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -666,9 +667,11 @@ function program1(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteEducationHistory", "educationHistory", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                <div class=\"row\">\n                    ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers.each.call(depth0, "field", "in", "educationHistory.fields", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  hashContexts = {'itemController': depth0};
+  hashTypes = {'itemController': "STRING"};
+  stack1 = helpers.each.call(depth0, "field", "in", "educationHistory.fields", {hash:{
+    'itemController': ("historyField")
+  },inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                </div>\n            </div>\n        ");
   return buffer;
@@ -702,20 +705,9 @@ function program2(depth0,data) {
 Ember.TEMPLATES["employmentHistory"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+  var buffer = '', stack1, hashTypes, hashContexts, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
-  
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n        <span class=\"required-field text-error pad--sm--bm block pad--sm--only--lm pad--sm--only--rm text-left-center\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "errorMessage", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" </span>\n    ");
-  return buffer;
-  }
-
-function program3(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
   data.buffer.push("\n            <div class=\"panel__component panel__component--removable pad--sm--tn\">\n                <button type=\"button\" class=\"close\" ");
@@ -727,12 +719,12 @@ function program3(depth0,data) {
   hashTypes = {'itemController': "STRING"};
   stack1 = helpers.each.call(depth0, "field", "in", "employmentHistory.fields", {hash:{
     'itemController': ("historyField")
-  },inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  },inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                </div>\n            </div>\n        ");
   return buffer;
   }
-function program4(depth0,data) {
+function program2(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n                        ");
@@ -744,15 +736,14 @@ function program4(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div id=\"empHistory\" class=\"wizardSection pad--sm--only--n active\">\n    <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\">Employment History</h1>\n    ");
+  data.buffer.push("<div id=\"empHistory\" class=\"wizardSection pad--sm--only--n active\">\n    <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\">Employment History</h1>\n    <span class=\"required-field text-error pad--sm--bm block pad--sm--only--lm pad--sm--only--rm text-left-center\">Please supply ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    <div class=\"panel\">\n        ");
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "employmentHistoryYears", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" years of history, without gaps </span>\n    <div class=\"panel\">\n        ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "employmentHistory", "in", "model", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "employmentHistory", "in", "model", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\" ");
   hashTypes = {};
