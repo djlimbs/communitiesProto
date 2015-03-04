@@ -9,7 +9,11 @@
                         <h4 class="mar--sm--n"><a href="{{unbound application.jobPostingUrl}}" target="_top">{{application.jobTitle}}</a></h4>
                         <h5 class="mar--sm--n text-faded">
                             {{application.firstLocationString}} 
-                            {{#if application.otherLocationsString}} &amp; <a href="#" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound application.otherLocationsString}}">{{application.otherLocationsCount}} others</a>
+                            {{#if application.otherLocationsString}} &amp;
+                                <a href="#" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound application.otherLocationsString}}">
+                                    {{application.otherLocationsCount}}
+                                    {{locationsCount application.otherLocationsCount}}
+                                </a>
                             {{/if}}
                             {{#if application.isRemoteAvailable}}
                                 <small>(remote available)</small>

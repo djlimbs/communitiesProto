@@ -170,7 +170,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                    <div class=\"card\">\n                        <div class=\"card__body\">\n\n                            ");
+  data.buffer.push("\n                    <div class=\"card\"> \n                        <div class=\"card__body\">\n\n                            ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "searchResult.isJobAppliedCompleted", {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -183,7 +183,7 @@ function program1(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "searchResult.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></h1>\n                                    <h2 class=\"page__subheading\">\n                                        ");
+  data.buffer.push("</a></h1>\n\n                                    <h2 class=\"page__subheading\">\n                                        ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "searchResult.firstLocationString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -195,7 +195,7 @@ function program1(depth0,data) {
   data.buffer.push("\n                                    </h2>\n                                </div>\n                            </div>\n                            <div class=\"card__text\">\n                                ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "field", "in", "searchResult.fieldsToDisplay", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "field", "in", "searchResult.fieldsToDisplay", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                            </div>\n                        </div>\n                    </div>\n                ");
   return buffer;
@@ -203,7 +203,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   
-  data.buffer.push("\n                                <button href=\"\" class=\"float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md\" disabled=\"disabled\">Applied</button>\n                            ");
+  data.buffer.push("\n                                <button href=\"#\" class=\"float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md\" disabled=\"disabled\">Applied</button>\n                            ");
   }
 
 function program4(depth0,data) {
@@ -220,7 +220,7 @@ function program4(depth0,data) {
 function program5(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                    <a href=\"\" class=\"float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md\" ");
+  data.buffer.push("\n                                    <a href=\"#\" class=\"float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "finishApplication", "searchResult", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -242,13 +242,13 @@ function program7(depth0,data) {
 function program8(depth0,data) {
   
   
-  data.buffer.push("\n                                        <a href=\"\" class=\"float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md\">Saved</a>\n                                    ");
+  data.buffer.push("\n                                        <button href=\"#\" class=\"float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md\">Saved</button> \n                                    ");
   }
 
 function program10(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                        <a href=\"\" class=\"float--right button button--primary  theme-bg-color mar--sm--only--rs mar--md--lxs show-brkpoint--md theme-bg-color\" ");
+  data.buffer.push("\n                                        <a href=\"#\" class=\"float--right button button--primary  theme-bg-color mar--sm--only--rs mar--md--lxs show-brkpoint--md theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveJob", "searchResult", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -258,35 +258,67 @@ function program10(depth0,data) {
 
 function program12(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push(" &amp; <a href=\"");
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push(" &amp;\n                                            ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "searchResult.jobPostingUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" target=\"_top\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
+  stack1 = helpers['if'].call(depth0, "isAndroid", {hash:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                        ");
+  return buffer;
+  }
+function program13(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                                <a data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "searchResult.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\">");
+  data.buffer.push("\">\n                                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "searchResult.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" others</a>\n                                        ");
+  data.buffer.push(" \n                                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.locationsCount || (depth0 && depth0.locationsCount)),stack1 ? stack1.call(depth0, "searchResult.otherLocationsCount", options) : helperMissing.call(depth0, "locationsCount", "searchResult.otherLocationsCount", options))));
+  data.buffer.push("\n                                                </a>\n                                            ");
   return buffer;
   }
 
-function program14(depth0,data) {
+function program15(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                                <a href=\"#\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "searchResult.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.locationsCount || (depth0 && depth0.locationsCount)),stack1 ? stack1.call(depth0, "searchResult.otherLocationsCount", options) : helperMissing.call(depth0, "locationsCount", "searchResult.otherLocationsCount", options))));
+  data.buffer.push("\n                                                </a>\n                                            ");
+  return buffer;
+  }
+
+function program17(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
   data.buffer.push("\n                                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "field.value", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "field.value", {hash:{},inverse:self.noop,fn:self.program(18, program18, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                                ");
   return buffer;
   }
-function program15(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
   data.buffer.push("\n                                        <div class=\"job-field\">\n                                            <h4 class=\"job-field-label\">");
@@ -301,7 +333,7 @@ function program15(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"scope-container brand__border-accent--top\" style=\"border-top-color: #cf5c60\">\n    <div class=\"content pad--md--txl pad--md--bl\">\n        <div class=\"row\">\n            <div class=\"column--md--8\">\n\n                <div class=\"alert alert--success mar--md--bm hide\">\n                    <button type=\"button\" class=\"close show-brkpoint--sm--only\" data-dismiss=\"alert\"><span class=\"alert-close-x\"></span><span class=\"sr-only\">Close</span></button>\n                    <button type=\"button\" class=\"close close-timeout show-brkpoint--md\">\n                        <svg class=\"close-progress\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\">\n                            <circle class=\"progress-track progress-track--success\" cx=\"20\" cy=\"20\" r=\"19\" opacity=\"0\" stroke=\"#000\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" fill=\"none\"></circle>\n                            <path d=\"M20 1c10.45 0 19 8.55 19 19s-8.55 19-19 19-19-8.55-19-19 8.55-19 19-19z\" class=\"progress progress--success\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" fill=\"none\"></path></svg>\n                        <span class=\"alert-close-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <strong>You've successfully applied for this job.</strong>\n                </div>\n\n                \n                ");
+  data.buffer.push("<div class=\"scope-container brand__border-accent--top\" style=\"border-top-color: #cf5c60\">\n    <div class=\"content pad--md--txl pad--md--bl\">\n        <div class=\"row\">\n            <div class=\"column--md--8\">\n\n                <div class=\"alert alert--success mar--md--bm hide\">\n                    <button type=\"button\" class=\"close show-brkpoint--sm--only\" data-dismiss=\"alert\"><span class=\"alert-close-x\"></span><span class=\"sr-only\">Close</span></button>\n                    <button type=\"button\" class=\"close close-timeout show-brkpoint--md\">\n                        <svg class=\"close-progress\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 40 40\" enable-background=\"new 0 0 40 40\">\n                            <circle class=\"progress-track progress-track--success\" cx=\"20\" cy=\"20\" r=\"19\" opacity=\"0\" stroke=\"#000\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" fill=\"none\"></circle>\n                            <path d=\"M20 1c10.45 0 19 8.55 19 19s-8.55 19-19 19-19-8.55-19-19 8.55-19 19-19z\" class=\"progress progress--success\" stroke-linecap=\"round\" stroke-miterlimit=\"10\" fill=\"none\"></path></svg>\n                        <span class=\"alert-close-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <strong>You've successfully applied for this job.</strong>\n                </div> \n\n                \n                ");
   hashContexts = {'itemController': depth0};
   hashTypes = {'itemController': "STRING"};
   stack1 = helpers.each.call(depth0, "searchResult", "in", "searchResults", {hash:{
@@ -369,16 +401,21 @@ function program2(depth0,data) {
   }
 function program3(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push(" &amp; <a href=\"#\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push(" &amp;\n                                <a href=\"#\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\">");
+  data.buffer.push("\">\n                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" others</a>\n                            ");
+  data.buffer.push("\n                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.locationsCount || (depth0 && depth0.locationsCount)),stack1 ? stack1.call(depth0, "application.otherLocationsCount", options) : helperMissing.call(depth0, "locationsCount", "application.otherLocationsCount", options))));
+  data.buffer.push("\n                                </a>\n                            ");
   return buffer;
   }
 

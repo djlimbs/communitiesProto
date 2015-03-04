@@ -12,23 +12,23 @@
                         <span class="alert-close-x"></span><span class="sr-only">Close</span>
                     </button>
                     <strong>You've successfully applied for this job.</strong>
-                </div>
+                </div> 
 
                 
                 {{#each searchResult in searchResults itemController="jobPosting"}}
-                    <div class="card">
+                    <div class="card"> 
                         <div class="card__body">
 
                             {{#if searchResult.isJobAppliedCompleted}}
-                                <button href="" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md" disabled="disabled">Applied</button>
+                                <button href="#" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md" disabled="disabled">Applied</button>
                             {{else}}
                                 {{#if searchResult.isJobAppliedInProgress}}
-                                    <a href="" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md" {{action "finishApplication" searchResult}}>Finish</a>
+                                    <a href="#" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md" {{action "finishApplication" searchResult}}>Finish</a>
                                 {{else}}
                                     {{#if searchResult.isJobSaved}}
-                                        <a href="" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md">Saved</a>
+                                        <button href="#" class="float--right button button--success mar--sm--only--rs mar--md--lxs show-brkpoint--md">Saved</button> 
                                     {{else}}
-                                        <a href="" class="float--right button button--primary  theme-bg-color mar--sm--only--rs mar--md--lxs show-brkpoint--md theme-bg-color" {{action "saveJob" searchResult}}>Save</a>
+                                        <a href="#" class="float--right button button--primary  theme-bg-color mar--sm--only--rs mar--md--lxs show-brkpoint--md theme-bg-color" {{action "saveJob" searchResult}}>Save</a>
                                     {{/if}}
                                 {{/if}}
                             {{/if}}
@@ -38,9 +38,21 @@
                             <div class="row">
                                 <div class="column--md--8">
                                     <h1 class="page__heading has-subheading"><a href="#" {{action "clickApply"}}>{{searchResult.Name}}</a></h1>
+
                                     <h2 class="page__subheading">
                                         {{searchResult.firstLocationString}} 
-                                        {{#if searchResult.otherLocationsString}} &amp; <a href="{{unbound searchResult.jobPostingUrl}}" target="_top" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound searchResult.otherLocationsString}}">{{searchResult.otherLocationsCount}} others</a>
+                                        {{#if searchResult.otherLocationsString}} &amp;
+                                            {{#if isAndroid}}
+                                                <a data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound searchResult.otherLocationsString}}">
+                                                    {{searchResult.otherLocationsCount}} 
+                                                    {{locationsCount searchResult.otherLocationsCount}}
+                                                </a>
+                                            {{else}}
+                                                <a href="#" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound application.otherLocationsString}}">
+                                                    {{searchResult.otherLocationsCount}}
+                                                    {{locationsCount searchResult.otherLocationsCount}}
+                                                </a>
+                                            {{/if}}
                                         {{/if}}
                                     </h2>
                                 </div>

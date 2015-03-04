@@ -58,13 +58,22 @@ Ember.View.reopen({
     }
 });
 
+// Helper to show otheR when there is one location or otherS when there are multiple locations
+Ember.Handlebars.helper('locationsCount', function(counter) {
+    if (parseInt(counter) == 1) {
+        return 'other';
+    } else {
+        return 'others';
+    }
+});
+
+
 App.PleaseLoginModalView = Ember.View.extend({
     templateName: 'pleaseLoginModal',
     didInsertElement: function() {
         
     }
 });
-
 
 
 App.JobSearchView = Ember.View.extend({
@@ -91,6 +100,16 @@ App.SalesforceTwitterComponent = Ember.Component.extend({
 
 
 App.JobSearchController = Ember.ObjectController.extend({
+    isAndroid: function(){
+        var ua = navigator.userAgent.toLowerCase();
+        var isAndroid = ua.indexOf("android") > -1;
+        if(isAndroid) {
+            return true;
+        } else {
+            return false
+        }
+    }.property(),
+
     allMyJobs: function(){
         var applications = this.get('applications');
         var savedJobs = this.get('savedJobs');
@@ -100,7 +119,7 @@ App.JobSearchController = Ember.ObjectController.extend({
         console.log('SAVE JOBS');
         console.log(savedJobs); 
 
-        var allMyJobsArray = applications.concat(savedJobs);
+        var allMyJobsArray = applications.concat(savedJobs).sortBy('CreatedDate').reverse();
 
         console.log('ALL MY JOBS'); 
         console.log(allMyJobsArray)
@@ -266,6 +285,8 @@ App.JobPostingController = Ember.ObjectController.extend({
     isJobSaved: function(){
         var jobPostingId = this.get('Id');
         var savedJobs = this.get('savedJobs');
+        // var applications = this.get('applications');
+        // var allMyJobs = this.get('allMyJobs');
 
         var savedJobsIds = [];
         if (savedJobs) {
@@ -276,6 +297,7 @@ App.JobPostingController = Ember.ObjectController.extend({
     }.property('Id', 'savedJobs'),
 
     isJobAppliedCompleted: function(){
+        //var jobPostingId = this.get('Id');
         var applications = this.get('applications');
 
         return applications.filterBy('jobPosting', this.get('Id')).isAny('statusText', 'Applied');
@@ -298,22 +320,12 @@ App.JobPostingController = Ember.ObjectController.extend({
             console.log(this.get('Id'));
         },
         finishApplication: function(jobPosting){
-            var applications = this.get('applications');
-
-            // var applicationId;
-            // if (applications) {
-            //     applications.forEach(function(application){
-            //         if (application.jobPostingId == jobPosting.Id) {
-            //             applicationId = application.id;
-            //         };
-            //     });
-            // };
-
-
-            var applicationId = applications.filterBy('jobPostingId', this.get('Id'))[0].id;
+            //var applications = this.get('applications');
+            var applicationId = this.get('applications').filterBy('jobPosting', this.get('Id'))[0].id;
 
             var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/apply?id=' + applicationId;
-            window.parent.location.replace(url);            
+            //window.parent.location.replace(url); 
+            window.parent.location.href = url;
         },
         saveJob: function(jobPosting){
             var self = this;
@@ -324,12 +336,12 @@ App.JobPostingController = Ember.ObjectController.extend({
             if (this.get('loggedInUser').UserType !== 'Guest') {
                 if(!self.get('isJobSaved')){
                     var jsonString = {
-                        jobPostingId: jobPosting.Id,
-                        jobName: jobPosting.Name,
-                        candidateId: self.get('loggedInUser').Id,
-                        expressedBy: 'Candidate', // Picklist
-                        origReqId: jobPosting.Requisition__c,
-                        positionId: jobPosting.Requisition__r.Position__c,
+                        Job_Posting__c: jobPosting.Id,
+                        Name: jobPosting.Name,
+                        Candidate__c: self.get('loggedInUser').Id,
+                        Expressed_By__c: 'Candidate', // Picklist
+                        Orig_Requisition__c: jobPosting.Requisition__c,
+                        Position__c: jobPosting.Requisition__r.Position__c,
                         locations: jobPosting.locations
                     };
 
@@ -348,11 +360,11 @@ App.JobPostingController = Ember.ObjectController.extend({
                                 var obj = createLocationStrings(jsonString.locations);
 
                                 var newJob = {
-                                    jobTitle: jsonString.jobName,
+                                    jobTitle: jsonString.Name,
                                     firstLocationString: obj.firstLocationString,
                                     otherLocationsString: obj.otherLocationsString,
                                     otherLocationsCount: obj.otherLocationsCount,
-                                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + jsonString.jobPostingId
+                                    jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + jsonString.Job_Posting__c
                                 };
 
                                 var savedJobs = self.get('savedJobs');
@@ -366,7 +378,6 @@ App.JobPostingController = Ember.ObjectController.extend({
                     });
                 }
                
-
             } else {
                 console.log('NOT LOGED IN')
                 var self = this;
@@ -380,7 +391,8 @@ App.JobPostingController = Ember.ObjectController.extend({
 
                 $('#modalOk').click(function() {
                     var url = 'https://victortestcommunity3-developer-edition.na16.force.com/dreamjob/s/Login/';
-                    window.parent.location.replace(url);
+                    //window.parent.location.replace(url);
+                    window.parent.location.href = url;
                     $('#modalOk').unbind('click');
                 });
             };      
@@ -404,10 +416,6 @@ App.JobSearchRoute = Ember.Route.extend( {
 
         if (!Ember.isEmpty(parsedJobSearchMap.applications)) {
             parsedJobSearchMap.applications.forEach(function(app) {
-                var firstLocationString = '';
-                var otherLocationsString;
-                var otherLocationsCount = 0;
-
                 var obj = createLocationStrings(app.locations);
 
                 var applicationObj = {
@@ -469,10 +477,10 @@ App.JobSearchRoute = Ember.Route.extend( {
                         otherLocationsString: obj.otherLocationsString,
                         otherLocationsCount: obj.otherLocationsCount,
                         jobPostingUrl: parent.urlPrefix + '/JobPosting?id=' + savedJob.Job_Posting__c,
-                        isSavedJob: true
+                        //isSavedJob: true
                     };
 
-                    savedJobs.addObject(jobObj); 
+                    savedJobs.addObject(jobObj);
                 }
             });
         }
