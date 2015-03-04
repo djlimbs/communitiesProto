@@ -269,35 +269,41 @@ function program12(depth0,data) {
   }
 function program13(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
+  var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n                                                <a data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "searchResult.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\">");
+  data.buffer.push("\">\n                                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "searchResult.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" others</a>\n                                            ");
+  data.buffer.push(" \n                                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.locationsCount || (depth0 && depth0.locationsCount)),stack1 ? stack1.call(depth0, "searchResult.otherLocationsCount", options) : helperMissing.call(depth0, "locationsCount", "searchResult.otherLocationsCount", options))));
+  data.buffer.push("\n                                                </a>\n                                            ");
   return buffer;
   }
 
 function program15(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                                <a href=\"");
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                                <a href=\"#\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "searchResult.jobPostingUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" target=\"_top\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "searchResult.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\">");
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "searchResult.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" others</a>\n                                            ");
+  data.buffer.push("\n                                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.locationsCount || (depth0 && depth0.locationsCount)),stack1 ? stack1.call(depth0, "searchResult.otherLocationsCount", options) : helperMissing.call(depth0, "locationsCount", "searchResult.otherLocationsCount", options))));
+  data.buffer.push("\n                                                </a>\n                                            ");
   return buffer;
   }
 
@@ -395,16 +401,21 @@ function program2(depth0,data) {
   }
 function program3(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
-  data.buffer.push(" &amp; <a href=\"#\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push(" &amp;\n                                <a href=\"#\" data-toggle=\"tooltip\" title=\"\" class=\"pointer text-primary text-underline\" data-original-title=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "application.otherLocationsString", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\">");
+  data.buffer.push("\">\n                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.otherLocationsCount", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" others</a>\n                            ");
+  data.buffer.push("\n                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.locationsCount || (depth0 && depth0.locationsCount)),stack1 ? stack1.call(depth0, "application.otherLocationsCount", options) : helperMissing.call(depth0, "locationsCount", "application.otherLocationsCount", options))));
+  data.buffer.push("\n                                </a>\n                            ");
   return buffer;
   }
 

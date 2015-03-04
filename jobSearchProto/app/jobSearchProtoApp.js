@@ -58,13 +58,22 @@ Ember.View.reopen({
     }
 });
 
+// Helper to show otheR when there is one location or otherS when there are multiple locations
+Ember.Handlebars.helper('locationsCount', function(counter) {
+    if (parseInt(counter) == 1) {
+        return 'other';
+    } else {
+        return 'others';
+    }
+});
+
+
 App.PleaseLoginModalView = Ember.View.extend({
     templateName: 'pleaseLoginModal',
     didInsertElement: function() {
         
     }
 });
-
 
 
 App.JobSearchView = Ember.View.extend({
@@ -407,10 +416,6 @@ App.JobSearchRoute = Ember.Route.extend( {
 
         if (!Ember.isEmpty(parsedJobSearchMap.applications)) {
             parsedJobSearchMap.applications.forEach(function(app) {
-                var firstLocationString = '';
-                var otherLocationsString;
-                var otherLocationsCount = 0;
-
                 var obj = createLocationStrings(app.locations);
 
                 var applicationObj = {

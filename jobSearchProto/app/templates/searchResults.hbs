@@ -43,9 +43,15 @@
                                         {{searchResult.firstLocationString}} 
                                         {{#if searchResult.otherLocationsString}} &amp;
                                             {{#if isAndroid}}
-                                                <a data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound searchResult.otherLocationsString}}">{{searchResult.otherLocationsCount}} others</a>
+                                                <a data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound searchResult.otherLocationsString}}">
+                                                    {{searchResult.otherLocationsCount}} 
+                                                    {{locationsCount searchResult.otherLocationsCount}}
+                                                </a>
                                             {{else}}
-                                                <a href="{{unbound searchResult.jobPostingUrl}}" target="_top" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound searchResult.otherLocationsString}}">{{searchResult.otherLocationsCount}} others</a>
+                                                <a href="#" data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound application.otherLocationsString}}">
+                                                    {{searchResult.otherLocationsCount}}
+                                                    {{locationsCount searchResult.otherLocationsCount}}
+                                                </a>
                                             {{/if}}
                                         {{/if}}
                                     </h2>
