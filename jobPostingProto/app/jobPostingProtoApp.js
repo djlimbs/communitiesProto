@@ -787,7 +787,7 @@ App.JobPostingController = Ember.ObjectController.extend({
                         }    
 
                         self.set('savedJobs', savedJobs);
-
+                        window.parent.scrollTo(0,0);
 
                     } else {
                             // error handling

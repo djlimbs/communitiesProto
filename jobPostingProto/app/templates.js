@@ -215,7 +215,7 @@ function program27(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "saveJob", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("> or save this job</a> if you're not ready</span>\n                    ");
+  data.buffer.push(">save this job</a> if you're not ready</span>\n                    ");
   return buffer;
   }
 
