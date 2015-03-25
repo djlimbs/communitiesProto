@@ -452,11 +452,7 @@ App.UploadFileView = Ember.TextField.extend({
         var file = input.files[0];
 
         reader.onload = function(e) {
-            var fileToUpload;
-            if (e.target && e.target.result) {
-                fileToUpload = e.target.result;
-            }
-            
+            var fileToUpload = e.srcElement.result;
             var base64String = fileToUpload.split('base64,')[1];
 
             self.set('resumeFileName', file.name);
