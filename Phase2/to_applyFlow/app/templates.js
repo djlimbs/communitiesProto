@@ -262,14 +262,13 @@ function program11(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "fe.Text__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                        </p>\n               \n                        <div class=\"form__group mar--sm--tm\">\n                            <label class=\"sr-only\"></label>\n                            ");
-  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'data-qa-input': depth0,'maxlength': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "ID",'data-qa-input': "STRING",'maxlength': "STRING"};
+  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'data-qa-input': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "ID",'data-qa-input': "STRING"};
   options = {hash:{
     'type': ("text"),
     'value': ("fe.value"),
     'placeholder': ("labels.typeAnAnswer"),
-    'data-qa-input': ("textField"),
-    'maxlength': ("255")
+    'data-qa-input': ("textField")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n                            <small class=\"input-error-content\"></small>\n                        </div>         \n                    ");
@@ -284,13 +283,12 @@ function program13(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "fe.Text__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                        </p>\n\n                        <div class=\"form__group mar--sm--tm\">\n                            <div class=\"form__group\">\n                                ");
-  hashContexts = {'value': depth0,'placeholder': depth0,'data-qa-input': depth0,'maxlength': depth0};
-  hashTypes = {'value': "ID",'placeholder': "ID",'data-qa-input': "STRING",'maxlength': "STRING"};
+  hashContexts = {'value': depth0,'placeholder': depth0,'data-qa-input': depth0};
+  hashTypes = {'value': "ID",'placeholder': "ID",'data-qa-input': "STRING"};
   options = {hash:{
     'value': ("fe.value"),
     'placeholder': ("labels.typeAnAnswer"),
-    'data-qa-input': ("textArea"),
-    'maxlength': ("255")
+    'data-qa-input': ("textArea")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                            </div>\n                        </div>\n                    ");
@@ -489,7 +487,7 @@ function program1(depth0,data) {
     'data-qa-input': ("tel")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n        <small class=\"input-error-content\"></small>\n    </div>\n</div>\n");
+  data.buffer.push("\n        <small class=\"input-error-content\">Error</small>\n    </div>\n</div>\n");
   return buffer;
   
 });
@@ -527,12 +525,11 @@ function program1(depth0,data) {
   stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </label>\n        ");
-  hashContexts = {'value': depth0,'data-qa-input': depth0,'maxlength': depth0};
-  hashTypes = {'value': "ID",'data-qa-input': "STRING",'maxlength': "ID"};
+  hashContexts = {'value': depth0,'data-qa-input': depth0};
+  hashTypes = {'value': "ID",'data-qa-input': "STRING"};
   options = {hash:{
     'value': ("field.value"),
-    'data-qa-input': ("textArea"),
-    'maxlength': ("field.maxLength")
+    'data-qa-input': ("textArea")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n    </div>\n</div>");
@@ -573,17 +570,16 @@ function program1(depth0,data) {
   stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </label>\n        ");
-  hashContexts = {'type': depth0,'value': depth0,'name': depth0,'data-qa-input': depth0,'maxlength': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'name': "ID",'data-qa-input': "STRING",'maxlength': "ID"};
+  hashContexts = {'type': depth0,'value': depth0,'name': depth0,'data-qa-input': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'name': "ID",'data-qa-input': "STRING"};
   options = {hash:{
     'type': ("text"),
     'value': ("field.value"),
     'name': ("field.inputName"),
-    'data-qa-input': ("textField"),
-    'maxlength': ("field.maxLength")
+    'data-qa-input': ("textField")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n        <small class=\"input-error-content\"></small>\n    </div>\n</div>");
+  data.buffer.push("\n        <small class=\"input-error-content\">Error</small>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -617,15 +613,14 @@ function program1(depth0,data) {
   stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </label>\n        ");
-  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'disabled': depth0,'data-qa-input': depth0,'maxlength': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "STRING",'disabled': "ID",'data-qa-input': "STRING",'maxlength': "STRING"};
+  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'disabled': depth0,'data-qa-input': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "STRING",'disabled': "ID",'data-qa-input': "STRING"};
   options = {hash:{
     'type': ("tel"),
     'value': ("field.value"),
     'placeholder': ("YYYY"),
     'disabled': ("field.shouldDisableEndDateFields"),
-    'data-qa-input': ("tel"),
-    'maxlength': ("5")
+    'data-qa-input': ("tel")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n    </div>\n</div>");
@@ -1500,22 +1495,22 @@ function program1(depth0,data) {
 function program3(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                    ");
+  data.buffer.push("\n                            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "resumeFileName", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                ");
+  data.buffer.push("\n                        ");
   return buffer;
   }
 
 function program5(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                    ");
+  data.buffer.push("\n                            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.noFileSelected", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                ");
+  data.buffer.push("\n                        ");
   return buffer;
   }
 
@@ -1539,7 +1534,7 @@ function program5(depth0,data) {
     'resumeFileName': ("resumeFileName"),
     'base64fileData': ("base64fileData")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                </div>\n            </p>\n            <div class=\"button-group inline-block float--left\">\n                <div class=\"button button--secondary\" data-toggle=\"dropdown\" data-qa-button=\"uploadDropdown\">");
+  data.buffer.push("\n                </div>\n            </p>\n            <div class=\"row\">\n                <div class=\"column--md--6\">\n                    <div class=\"button-group width--full inline-block\">\n                        <div class=\"button width--full button--secondary\" data-toggle=\"dropdown\" data-qa-button=\"uploadDropdown\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.upload", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1551,11 +1546,15 @@ function program5(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.resume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <span class=\"juicon juicon-upload\"></span></div>\n                <ul class=\"dropdown-menu\">\n                    <li class=\"dropdown-menu__list-item\" data-qa-button=\"fromDropbox\"><a href=\"#\"><span class=\"juicon juicon-dropbox\"></span> ");
+  data.buffer.push(" <span class=\"juicon juicon-upload\"></span></div>\n                        <ul class=\"dropdown-menu\">\n                            <li class=\"dropdown-menu__list-item\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUploadFromDropbox", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"fromDropbox\"><a href=\"#\"><span class=\"juicon juicon-dropbox\"></span> ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDropbox", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                    <li class=\"dropdown-menu__list-item\" ");
+  data.buffer.push("</a></li>\n                            <li class=\"dropdown-menu__list-item\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUploadFromDevice", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1563,12 +1562,12 @@ function program5(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDevice", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                </ul>\n            </div>\n            <span class=\"input-size inline-block float--left mar--sm--lm text-faded\" data-qa-label=\"fileName\">\n                ");
+  data.buffer.push("</a></li>\n                        </ul>\n                    </div>\n                </div>\n                <div class=\"column--md--6\">\n                    <div class=\"input-size text-faded dots\" data-qa-label=\"fileName\">\n                        ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "resumeFileName", {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n            </span>\n        </div>\n    </div>\n</div>");
+  data.buffer.push("\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
