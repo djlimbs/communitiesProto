@@ -40,14 +40,26 @@ App.FormBuilderMixin = Ember.Mixin.create({
                 .then(undefined, this.handleError);
         },
         clickSaveAndKeepWorking: function() {
+            var currentPath = this.get('currentPath');
             // Only perform save if we aren't already saving.
             // This occurs mostly in the configurator because a user can switch sections quickly.
             if (this.get('isSaving') !== true) {    
                 this.set('showSavingNotification', true);
 
-                this.saveFormElements()
-                    .then(this.updateObjectsAndKeepWorking)
-                    .then(undefined, this.handleError);
+                if (currentPath === 'formBuilder.formElements') { 
+                    this.saveFormElements()
+                        .then(this.updateObjectsAndKeepWorking)
+                        .then(undefined, this.handleError);
+                } else if (currentPath === 'formBuilder.applicationSection') {
+                    var hiringModel = App.Fixtures.get('currentHiringModel');
+                    console.log(hiringModel)
+                    this.send('saveHiringModelData', hiringModel);
+                } else if (currentPath === 'formBuilder.contactInfo') {
+                    var hiringModel = App.Fixtures.get('currentHiringModel');
+
+                    this.send('saveContactInfo', hiringModel);
+                }
+
             }   
         },
         clickSaveAndPreview: function() {

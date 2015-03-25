@@ -1,0 +1,9 @@
+<div id="skills" class="wizardSection pad--sm--only--n active" data-qa-container="skills">
+    <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="skills">{{labels.skills}}</h1>
+    {{#if errorMessage}}
+        {{partial "errorAlert"}}
+    {{/if}}
+    <div class="content__section">
+        {{select-2 value=selectedSkills data-qa-input="select2"}}
+    </div>
+</div>

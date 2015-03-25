@@ -1,0 +1,30 @@
+<div id="resume" class="wizardSection pad--sm--only--n active" data-qa-container="resume">
+    <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="resume">{{labels.resumeHeader}}</h1>
+    {{#if errorMessage}}
+        {{partial "errorAlert"}}
+    {{/if}}
+    <div class="panel">
+        <div class="panel__body">
+            <p class="mar--sm--tn" data-qa-label="uploadResume">
+                {{labels.pleaseUploadYourResume}}
+                <div style="display:none;">
+                    {{view "uploadFile" resumeFileName=resumeFileName base64fileData=base64fileData}}
+                </div>
+            </p>
+            <div class="button-group inline-block float--left">
+                <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-menu__list-item" data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
+                    <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
+                </ul>
+            </div>
+            <span class="input-size inline-block float--left mar--sm--lm text-faded" data-qa-label="fileName">
+                {{#if resumeFileName}}
+                    {{resumeFileName}}
+                {{else}}
+                    {{labels.noFileSelected}}
+                {{/if}}
+            </span>
+        </div>
+    </div>
+</div>

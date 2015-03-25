@@ -1,0 +1,19 @@
+<div class="column--md--6">
+    <div {{bind-attr class=":form__group isHistorySection:mar--sm--bm"}}>
+        <label data-qa-label="fieldName" class="required-field">{{field.label}}
+            {{#if field.helpText}}
+                <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle" data-qa-label="helpText"></span>
+            {{/if}}
+        </label>
+        <div class="select__wrap">
+            <div class="input__icon juicon juicon-down"></div>
+            {{view "select"
+                    content=field.picklistValues
+                    optionLabelPath="content.label"
+                    optionValuePath="content.value"
+                    value=field.value
+                    prompt="Please select..."
+                    data-qa-input="select"}}
+        </div>
+    </div>
+</div>
