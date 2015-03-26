@@ -1,0 +1,19 @@
+<div class="column--md--6">
+    <div {{bind-attr class=":form__group field.requiredError:has-error" data-qa-field-container="field.fieldPath"}}>
+        {{#if displayState}}
+            <label {{bind-attr id="field.labelId" for="field.fieldPath"}}>{{field.label}}</label>
+            <div class="input-size"> 
+                {{#if field.value}}
+                    {{{field.value}}}
+                {{/if}}
+            </div>
+        {{else}}
+            <label {{bind-attr id="field.labelId" for="field.fieldPath" class="fields.required:required-field" }}>{{field.label}} </label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" content=field.picklistValues componentId=field.componentId data-qa-input=field.fieldPath value=field.value prompt=labels.to_jobPosting_dropdown_default }}
+            </div>
+            <small class="input-error-content">{{field.requiredMessage}}</small>
+        {{/if}}
+    </div>
+</div>

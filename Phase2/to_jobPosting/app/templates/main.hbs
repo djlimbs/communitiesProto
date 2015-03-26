@@ -1,0 +1,960 @@
+<div class="scope-container">
+    <div class="content pad--md--tm pad--sm--only--n">
+        <nav id="newJobNav" class="nav-bar--sf1 mar--sm--bn">
+            {{#if displayState}}
+                {{#if button.draft}}
+                    {{#if isSelfPost}}
+                        <button {{action "sendClickWithoutPresave" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                            {{labels.to_jobPosting_button_post}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                        </button>
+                    {{else}}
+                        {{#if hasCareerSitePosting}}
+                            <button {{action "sendClick" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_post}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{else}}
+                            <button data-toggle="modal" data-target="#postModal" class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_post}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{/if}}
+                    {{/if}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls">
+                        <span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span>
+                    </button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs">
+                        <span class="show-brkpoint--md">{{labels.to_jobPosting_button_delete}}</span> <span class="juicon juicon-trash"></span>
+                    </button>
+                {{/if}}
+
+                {{#if button.pending}}
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs">
+                        <span class="show-brkpoint--md">{{labels.to_jobPosting_button_unpost}}</span> <span class="juicon juicon-trash"></span>
+                    </button>
+                {{/if}}
+
+                {{#if button.edited}}
+                    {{#if isSelfPost}}
+                        <button {{action "sendClickWithoutPresave" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                            {{labels.to_jobPosting_button_updatepost}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                        </button>
+                    {{else}}
+                        {{#if hasCareerSitePosting}}
+                            <button {{action "sendClick" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_updatepost}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{else}}
+                            <button data-toggle="modal" data-target="#postModal" class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_updatepost}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{/if}}
+                    {{/if}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls">
+                        <span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span>
+                    </button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs">
+                        <span class="show-brkpoint--md">
+                            {{#if data.jobPosting.Posting_Url__c}}
+                                {{labels.to_jobPosting_button_unpost}}
+                            {{else}}
+                                {{labels.to_jobPosting_button_delete}}
+                            {{/if}}
+                        </span> <span class="juicon juicon-trash"></span>
+                    </button>
+                {{/if}}
+
+
+                {{#if button.active}}
+                    {{#unless isSocial}}
+                        <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls">
+                            <span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span>
+                        </button>
+                        <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs">
+                            <span class="show-brkpoint--md">{{labels.to_jobPosting_button_unpost}}</span> <span class="juicon juicon-trash"></span>
+                        </button>
+                    {{/unless}}
+                {{/if}}
+
+                {{#if button.deleted}}
+                    <!-- No buttons shown -->
+                {{/if}}
+
+                {{#if button.error}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls">
+                        <span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span>
+                    </button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs">
+                        <span class="show-brkpoint--md">
+                            {{#if data.jobPosting.Posting_Url__c}}
+                                {{labels.to_jobPosting_button_unpost}}
+                            {{else}}
+                                {{labels.to_jobPosting_button_delete}}
+                            {{/if}}
+                        </span> <span class="juicon juicon-trash"></span>
+                    </button>
+                {{/if}}
+            {{else}}
+                <button {{action "saveClick" on="click"}} {{bind-attr disabled="channelButtonSelected" class="channelButtonSelected:disabled :saveButton :float--right :button :button--primary :mar--sm--only--rs :mar--md--lxs"}}>
+                    {{labels.to_jobPosting_button_save}}
+                </button>
+                <button {{action "cancelClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls">
+                    {{labels.to_jobPosting_button_cancel}}
+                </button>
+            {{/if}}
+
+            {{#if displayState}}
+                <h1 class="nav-bar--sf1__title has-subtitle page__heading">{{labels.to_jobPosting_header_view}}</h1>
+            {{else}}
+                {{#if isEdit}}
+                    <h1 class="nav-bar--sf1__title has-subtitle page__heading">{{labels.to_jobPosting_header_edit}}</h1>
+                {{else}}
+                    <h1 class="nav-bar--sf1__title has-subtitle page__heading">{{labels.to_jobPosting_header_new}}</h1>
+                {{/if}}
+            {{/if}}
+        </nav>
+        
+        <!-- Post Modal -->
+        <div class="modal fade" id="postModal" tabindex="-1" role="dialog" aria-labelledby="postModalLabel" aria-hidden="true">
+            <div class="modal__shell">
+                <div class="modal__content">
+                    <div class="modal__top">
+                        <button type="button" class="close" data-dismiss="modal" data-qa-button="close">
+                            <span class="close-modal-x"></span>
+                            <span class="sr-only" data-qa-label="close">{{labels.to_jobPosting_modal_close}}</span>
+                        </button>
+                        <h2 class="modal__heading" id="myModalLabel" data-qa-label="title">{{labels.to_jobPosting_post_modal_title}}</h2>
+                    </div>
+                    <div class="modal__body" data-qa-label="body">
+                        {{labels.to_jobPosting_post_modal_body}}
+                    </div>
+                    <div class="modal__footer">
+                        <button type="button" class="button button--secondary"  data-dismiss="modal" data-qa-button="cancel">{{labels.to_jobPosting_modal_button_cancel}}</button>
+                        <button {{action "sendClick" on="click"}} type="button" class="button button--primary" data-dismiss="modal" data-qa-button="ok">{{labels.to_jobPosting_modal_button_ok}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Delete Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal__shell">
+                <div class="modal__content">
+                    <div class="modal__top">
+                        <button type="button" class="close" data-dismiss="modal" data-qa-button="close">
+                            <span class="close-modal-x"></span>
+                            <span class="sr-only"data-qa-label="close">{{labels.to_jobPosting_modal_close}}</span>
+                        </button>
+                        <h2 class="modal__heading" id="myModalLabel" data-qa-label="title">{{labels.to_jobPosting_delete_modal_title}}</h2>
+                    </div>
+                    <div class="modal__body" data-qa-label="body">
+                        {{labels.to_jobPosting_delete_modal_body}}
+                    </div>
+                    <div class="modal__footer">
+                        <button type="button" class="button button--secondary"  data-dismiss="modal" data-qa-button="cancel">{{labels.to_jobPosting_modal_button_cancel}}</button>
+                        <button {{action "deleteClick" on="click"}} type="button" class="button button--error" data-dismiss="modal" data-qa-button="ok">{{labels.to_jobPosting_modal_button_ok}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="show-brkpoint--md">
+        {{#if postOk}}
+            <div class="alert alert--success mar--sm--bm">
+                {{labels.to_jobPosting_post_ok}} {{data.jobPosting.Channel__c}}
+            </div>
+        {{/if}}
+
+        {{#if errorMessage}}
+            <div class="alert alert--error mar--sm--bm">
+                {{{errorMessage}}}
+            </div>
+        {{/if}}
+        
+        {{#if data.jobPosting.Status_Message__c}}
+            <div class="alert alert--error mar--sm--bm">
+                {{{data.jobPosting.Status_Message__c}}}
+            </div>
+        {{/if}}
+        
+        {{#if connectionMessage}}
+            <div class="alert alert--error mar--sm--bm">
+                {{{connectionMessage}}}
+            </div>
+        {{/if}}
+        
+        {{#if warningMessage}}
+            <div class="alert alert--warning mar--sm--bm">
+                {{{warningMessage}}}
+            </div>
+        {{/if}}
+
+        {{#if spinnerIsUp}}
+            <div class="load-full">
+                <div class="load-full-icon"></div>
+            </div>
+        {{/if}}
+
+        <div class="content__section">
+            <div class="row">
+                <div class="column--md--6">
+                    <div class="forp">
+                        <label for="req">{{labels.to_jobPosting_label_req}}</label>
+                        <div id="req" class="input-size">
+                            <a href="/{{unbound data.requisition.Id}}">{{unbound data.requisition.Name}}</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        {{#if displayState}}
+                            <label for="type" >{{labels.to_jobPosting_label_typechannel}}</label>
+                            <div class="input-size" id="jobTitle" name="jobTitle">
+                                {{data.jobPosting.Type__c}} - {{data.jobPosting.Channel__c}}
+                            </div>
+                        {{else}}
+                            {{#if data.jobPosting.Id}}
+                                <label for="type" >{{labels.to_jobPosting_label_typechannel}} </label>
+                                <div class="input-size" id="jobTitle" name="jobTitle">
+                                    {{data.jobPosting.Type__c}} - {{data.jobPosting.Channel__c}}
+                                </div>
+                            {{else}}
+                                <label for="type" class="required-field">{{labels.to_jobPosting_label_typechannel}} </label>
+                                <div class="select__wrap">
+                                    <div class="input__icon juicon juicon-down"></div>
+                                    {{view "select" content=channelData optionLabelPath='content.name' optionGroupPath='type' optionValuePath='content.name' value=channelName prompt=labels.to_jobPosting_dropdown_default }}
+                                </div>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="jobTitle">{{labels.to_jobPosting_label_jobtitle}}</label>
+                        <div id="jobTitle" class="input-size">
+                            {{unbound data.requisition.Job_Posting_Title__c}} 
+                        </div>
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="jobStatus">{{labels.to_jobPosting_label_status}}</label>
+                        <div id="jobStatus" class="input-size">
+                            {{#if data.jobPosting.Posting_Url__c}}
+                                <a href="{{unbound data.jobPosting.Posting_Url__c}}" target="_blank">{{data.jobPosting.Status__c}}</a>
+                            {{else}}
+                                {{data.jobPosting.Status__c}}
+                            {{/if}}
+                            {{#if isStatusEdited}}
+                                <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs text-faded" data-original-title="{{unbound labels.to_jobPosting_label_status_tooltip}}"></span>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END SECTION -->
+        
+        {{#unless channelButtonSelected}}
+            {{#if blocks.jobInformation}}
+                <div {{bind-attr class="socialDisplayState:content--readable mar--sm--only--tm" }}>
+                    <div class="panel mar--md--bxl" data-qa-container="jobInformation">
+                        {{#if socialDisplayState}}
+                            <div class="panel__body clearfix pad--sm--bn">
+                                <span class="text-faded float--right">{{date}}</span>
+                                <div class="pad--sm--rxl">
+                                    <h3 class="mar--sm--n">{{socialAccountName}}</h3>
+                                    <p class="mar--sm--n">{{data.jobPosting.Message__c}}</p>
+                                </div>
+                            </div>
+                            <div class="panel__body">
+                                <div class="card mar--sm--n">
+                                    <div class="card__body">
+                                        <h4 class="card__heading">{{data.jobPosting.Job_Title__c}}</h4>
+                                        <p class="card__text mar--sm--bn mar--sm--ts">{{data.jobPosting.Summary__c}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {{else}}
+                            <div class="panel__top">
+                                <h2 class="panel__heading">{{labels.to_jobPosting_panel_heading_jobinfo}}</h2>
+                            </div>
+                            <div class="panel__body" data-qa-container="generalInformation">
+                                <div class="row">
+                                    {{#if fields.Job_Title__c}}
+                                        <div class="column--md--6">
+                                            <div {{bind-attr class=":form__group requiredErrors.Job_Title__c:has-error" }} data-qa-field-container="jobTitle">
+                                                {{#if displayState}}
+                                                    <label for="jobTitleInput" >{{labels.to_jobPosting_label_jobtitle}}</label>
+                                                    <div class="input-size" id="jobTitle" name="jobTitle">
+                                                        {{data.jobPosting.Job_Title__c}} 
+                                                    </div>
+                                                {{else}}
+                                                    <label for="jobTitleInput" {{bind-attr class="fields.Job_Title__c.isRequired:required-field" }} >{{labels.to_jobPosting_label_jobtitle}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound data.jobPosting.Job_Title__c}}"></span></label>
+                                                    {{#if isSocial}}
+                                                        <span>({{socialTitleLimit}})</span>
+                                                    {{/if}}
+                                                    {{input disabled=isTwitterWithCareerSitePosting data-qa-input='jobTitleInput' type="text" placeholder=labels.to_jobPosting_placeholder_jobtitle value=data.jobPosting.Job_Title__c maxlength=fields.Job_Title__c.maxLength}}
+                                                    <small class="input-error-content">{{requiredMessages.Job_Title__c}}</small>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if fields.Full_Part_Time__c}}
+                                        <div class="column--md--6">
+                                            <div {{bind-attr class=":form__group requiredErrors.Full_Part_Time__c:has-error" }} data-qa-field-container="fullPartTime">
+                                                {{#if displayState}}
+                                                    <label for="time" >{{labels.to_jobPosting_label_fullparttime}}</label>
+                                                    <div class="input-size">
+                                                        {{data.jobPosting.Full_Part_Time__c}}
+                                                    </div>
+                                                {{else}}
+                                                    <label for="time" {{bind-attr class="fields.Full_Part_Time__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_fullparttime}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound data.requisition.Full_Part_Time__c}}"></span></label>
+                                                    <div class="select__wrap">
+                                                        <div class="input__icon juicon juicon-down"></div>
+                                                        {{view "select" content=fields.Full_Part_Time__c.values value=data.jobPosting.Full_Part_Time__c prompt=labels.to_jobPosting_dropdown_default }}
+                                                    </div>
+                                                    {{#if fields.Full_Part_Time__c.isRequired}}
+                                                        <small class="input-error-content">{{requiredMessages.Full_Part_Time__c}}</small>
+                                                    {{/if}}
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                                
+                                {{#unless isSelfPost}}
+                                    {{#if fields.Summary__c}}
+                                        <div {{bind-attr class=":form__group requiredErrors.Summary__c:has-error" }} data-qa-field-container="summary">
+                                            {{#if displayState}}
+                                                <label id="summaryLabel" for="summary">{{labels.to_jobPosting_label_summary}}</label>
+                                                <div class="input-size">
+                                                    {{#if data.jobPosting.Summary__c}}
+                                                        {{{data.jobPosting.Summary__c}}}
+                                                    {{/if}}
+                                                </div>
+                                            {{else}}
+                                                <label id="summaryLabel" for="summary" {{bind-attr class="fields.Summary__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_summary}} </label>
+                                                {{#if isSocial}}
+                                                    <span>({{socialSummaryLimit}})</span>
+                                                {{/if}}
+                                                {{textarea disabled=isTwitterWithCareerSitePosting componentId=componentId data-qa-input='summaryTextArea' value=data.jobPosting.Summary__c maxlength=fields.Summary__c.maxLength placeholder=labels.to_jobPosting_placeholder_summary}}
+                                                <small class="input-error-content">{{requiredMessages.Summary__c}}</small>
+                                            {{/if}}
+                                        </div>
+                                    {{/if}}
+                                    {{#if fields.Job_Description__c}}
+                                        <div {{bind-attr class=":form__group requiredErrors.Job_Description__c:has-error" }} data-qa-field-container="jobDescription">
+                                            {{#if displayState}}
+                                                <label id="jobDescriptionLabel" for="jobDescription">{{labels.to_jobPosting_label_jobdescr}}</label>
+                                                <div class="input-size">
+                                                    {{#if data.jobPosting.Job_Description__c}}
+                                                        {{{data.jobPosting.Job_Description__c}}}
+                                                    {{/if}}
+                                                </div>
+                                            {{else}}
+                                                <label id="jobDescriptionLabel" for="jobDescription" {{bind-attr class="fields.Job_Description__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_jobdescr}} </label>
+                                                {{rich-text componentId=componentId data-qa-input='jobDescriptionTextArea' value=data.jobPosting.Job_Description__c bindingType="text" }}
+                                                <small class="input-error-content">{{requiredMessages.Job_Description__c}}</small>
+                                            {{/if}}
+                                        </div>
+                                    {{/if}}
+                            
+                                    {{#if fields.Message__c}}
+                                        <div {{bind-attr class=":form__group requiredErrors.Message__c:has-error" }} data-qa-field-container="message">
+                                            {{#if displayState}}
+                                                <label id="jobDescriptionLabel" for="message">{{labels.to_jobPosting_label_message}}</label>
+                                                <div class="input-size">
+                                                    {{#if data.jobPosting.Message__c}}
+                                                        {{{data.jobPosting.Message__c}}}
+                                                    {{/if}}
+                                                </div>
+                                            {{else}}
+                                                <label id="messageLabel" for="message" {{bind-attr class="fields.Message__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_message}} </label>
+                                                {{#if isSocial}}
+                                                    <span>({{socialMessageLimit}})</span>
+                                                {{/if}}
+                                                {{input componentId=componentId data-qa-input='messageTextArea' value=data.jobPosting.Message__c type="text" maxlength=fields.Message__c.maxLength placeholder=labels.to_jobPosting_placeholder_message}}
+                                                <small class="input-error-content">{{requiredMessages.Message__c}}</small>
+                                            {{/if}}
+                                        </div>
+                                    {{/if}}
+                                {{else}}
+                                    <div class="row">
+                                        {{#each field in data.jobPostingFields itemController="fieldSet"}}
+                                            {{partial field.partial}}
+                                        {{/each}}
+                                    </div>
+                                {{/unless}}
+
+                                <div class="row">
+                                    {{#if fields.Pay_Minimum__c}}
+                                        <div class="column--md--3">
+                                            <div class="form__group mar--md--bn" data-qa-field-container="payMin">
+                                                <label for="payMin">{{labels.to_jobPosting_label_paymin}}{{#unless displayState}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound data.requisition.Pay_Minimum__c}}"></span>{{/unless}}</label>
+                                                {{#if displayState}}
+                                                    <div class="input-size">
+                                                        {{data.jobPosting.Pay_Minimum__c}}
+                                                    </div>
+                                                {{else}}
+                                                    {{input data-qa-input='jobPayMinInput' type="text" placeholder=labels.to_jobPosting_placeholder_paymin value=payMinText}}
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if fields.Pay_Maximum__c}}
+                                        <div class="column--md--3">
+                                            <div class="form__group mar--md--bn" data-qa-field-container="payMax">
+                                                <label for="payMax">{{labels.to_jobPosting_label_paymax}} {{#unless displayState}}<span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound data.requisition.Pay_Maximum__c}}"></span>{{/unless}}</label>
+                                                {{#if displayState}}
+                                                    <div class="input-size">
+                                                        {{data.jobPosting.Pay_Maximum__c}}
+                                                    </div>
+                                                {{else}}
+                                                    {{input data-qa-input='jobPayMaxInput' type="text" placeholder=to_jobPosting_placeholder_paymax value=payMaxText}}
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if fields.Pay_Currency__c}}
+                                        <div class="column--md--3">
+                                            <div class="form__group mar--md--bn" data-qa-field-container="payCurrency">
+                                                <label for="payCur">{{labels.to_jobPosting_label_paycurrency}}</label>
+                                                {{#if displayState}}
+                                                    <div class="input-size">
+                                                        {{data.jobPosting.Pay_Currency__c}}
+                                                    </div>
+                                                {{else}}
+                                                    <div class="select__wrap">
+                                                        <div class="input__icon juicon juicon-down"></div>
+                                                        {{view "select" content=fields.Pay_Currency__c.values value=data.jobPosting.Pay_Currency__c prompt=labels.to_jobPosting_dropdown_default }}
+                                                    </div>
+                                                {{/if}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if fields.Pay_Type__c}}
+                                        <div class="column--md--3">
+                                            <div {{bind-attr class=":form__group :mar--md--bn requiredErrors.Pay_Type__c:has-error" }} data-qa-field-container="payType">
+                                                {{#if displayState}}
+                                                    <label for="payType">{{labels.to_jobPosting_label_paytype}}
+                                                    </label>
+                                                    <div class="input-size">
+                                                        {{data.jobPosting.Pay_Type__c}}
+                                                    </div>
+                                                {{else}}
+                                                    <label for="payType">{{labels.to_jobPosting_label_paytype}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound data.requisition.Pay_Type__c}}"></span></label>
+                                                    <div class="select__wrap">
+                                                        <div class="input__icon juicon juicon-down"></div>
+                                                        {{view "select" content=fields.Pay_Type__c.values value=data.jobPosting.Pay_Type__c prompt=labels.to_jobPosting_dropdown_default }}
+                                                    </div>
+                                                    <small class="input-error-content">{{requiredMessages.Pay_Type__c}}</small>
+                                                {{/if}}                            
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        {{/if}}
+                        {{#if blocks.locations}}
+                            <span data-qa-container="locationInformation">
+                                <div class="list-heading">
+                                    <h4 class="list-heading__title">{{labels.to_jobPosting_panel_heading_locations}}</h4>
+                                </div>
+
+                                {{#each location in locations }}
+                                    {{#if displayState}}
+                                        <div class="panel__component">
+                                            <div class="form__group mar--sm--bn"  data-qa-container="location" data-qa-field-container="location{{unbound location.tempId}}">
+                                                <label class="sr-only">{{labels.to_jobPosting_label_address}}</label>
+                                                <div class="input-size">
+                                                    {{location.address1}}
+                                                    {{#if location.address2}}
+                                                        <br/>
+                                                        {{location.address2}}
+                                                    {{/if}}
+                                                    <br/>
+                                                    {{location.city}}, {{location.state}} {{location.zip}}
+                                                    <br/>
+                                                    {{location.country}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{else}}
+                                        <div {{bind-attr class="locationSizeOk:panel__component--removable :panel__component "}}  data-qa-container="location{{unbound location.tempId}}">
+
+                                            {{#if ../locationSizeOk}}
+                                                <button type="button" class="close" {{action "removeLocation" location}} >
+                                                    <span class="component-remove-x"></span>
+                                                    <span class="sr-only">{{labels.to_jobPosting_location_close}}</span>
+                                                </button>
+                                            {{/if}}
+                                            <div {{bind-attr class=":form__group :mar--sm--bm location.countryError:has-error" }} data-qa-field-container="country{{unbound location.tempId}}">
+                                                 <label class="required-field" >{{labels.to_jobPosting_label_country}} </label>
+                                                 <div class="select__wrap">
+                                                     <div class="input__icon juicon juicon-down"></div>
+                                                {{view "select" content=allowableCountries value=location.selectedCountry prompt=labels.to_jobPosting_dropdown_default optionLabelPath='content' optionValuePath='content'}}
+                                                    </div>
+                                                <small class="input-error-content">Required</small>
+                                            </div>
+
+                                            <div {{bind-attr class=":form__group :mar--sm--bm location.address1Error:has-error" }} data-qa-field-container="address1{{unbound location.tempId}}">
+                                                <label class="required-field" >{{labels.to_jobPosting_label_street}} </label>
+                                                {{input type="text" placeholder=labels.to_jobPosting_placeholder_street1 value=location.address1}}
+                                                <small class="input-error-content">Required</small>
+                                            </div>
+                                                {{input type="text" data-qa-input="address2{{unbound location.tempId}}" placeholder=labels.to_jobPosting_placeholder_street2 value=location.address2 class="mar--sm--bm"}}
+
+                                            <div class="row">
+                                                <div class="column--md--4">
+                                                    <div {{bind-attr class=":form__group location.cityError:has-error" }} data-qa-field-container="city{{unbound location.tempId}}" >    
+                                                        <label class="required-field" >{{labels.to_jobPosting_label_city}} </label>
+                                                        {{input type="text" placeholder=labels.to_jobPosting_placeholder_city value=location.city}}
+                                                        <small class="input-error-content">Required</small>
+                                                    </div>
+                                                </div>
+                                                <div class="column--md--4">
+                                                    <div {{bind-attr class=":form__group location.stateError:has-error" }} data-qa-field-container="state{{unbound location.tempId}}">
+                                                        <label class="required-field" >{{labels.to_jobPosting_label_state}} </label>
+                                                        <div class="select__wrap">
+                                                            <div class="input__icon juicon juicon-down"></div>
+                                                            {{view "select" content=location.allowableStates value=location.state prompt=labels.to_jobPosting_dropdown_default optionLabelPath='content' optionValuePath='content'}}
+                                                        </div>
+                                                        <small class="input-error-content">Required</small>
+                                                    </div>
+                                                </div>
+                                                <div class="column--md--4">
+                                                    <div {{bind-attr class=":form__group location.zipError:has-error" }} data-qa-field-container="zip{{unbound location.tempId}}">
+                                                        <label class="required-field" >{{labels.to_jobPosting_label_zip}} </label>
+                                                        {{input type="text" placeholder=labels.to_jobPosting_placeholder_zip value=location.zip}}
+                                                        <small class="input-error-content">Required</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                {{/each}}
+                            </span>
+
+                            {{#unless displayState}}
+                                {{#if locationAddOk}}
+                                    <div class="panel__component">
+                                        <button type="button" class="button button--secondary" {{action "addLocation"}}>
+                                            {{labels.to_jobPosting_location_add}} <span class="juicon juicon-plus"></span>
+                                        </button>
+                                    </div>
+                                {{/if}}
+                            {{/unless}}
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#if blocks.postingInformation}}
+                <div class="panel mar--md--bxl" data-qa-container="postingInformation">
+                    <div class="panel__top">
+                        <h2 class="panel__heading">{{labels.to_jobPosting_panel_heading_postinginfo}}</h2>
+                    </div>
+                    <div class="panel__body">
+                        <div class="row">
+                            {{#if fields.Activation_Date__c}}
+                                <div class="column--md--3">
+                                    <div {{bind-attr class=":form__group requiredErrors.Activation_Date__c:has-error" }} data-qa-field-container="activationDate">
+                                        {{#if displayState}}
+                                            <label for="postActivationDate">{{labels.to_jobPosting_label_actdate}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Activation_Date__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="postActivationDate" class="required-field">{{labels.to_jobPosting_label_actdate}} </label>
+                                            {{date-picker value=data.jobPosting.Activation_Date__c includeToday=true disabled=isEdit }}
+                                            {{#if fields.Activation_Date__c.isRequired}}
+                                                <small class="input-error-content">{{requiredMessages.Activation_Date__c}}</small>    
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        
+                            {{#if fields.Posting_Duration__c}}
+                                <div class="column--md--3">
+                                    <div class="form__group" data-qa-field-container="postingDuration">
+                                        {{#if displayState}}
+                                            <label for="postDuration">{{labels.to_jobPosting_label_duration}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Posting_Duration__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="postDuration">{{labels.to_jobPosting_label_duration}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound labels.to_jobPosting_label_duration_tooltip}}"></span></label>
+
+                                            {{input data-qa-input='jobPostDuration' type="text" maxlength="3" value=postingDurationText disabled=hasPosted action="onDurationDefault" on="focus-out"}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+                    
+                        <div class="row">
+                            {{#if fields.Industry__c}}
+                                <div class="column--md--12">
+                                    <div {{bind-attr class=":form__group requiredErrors.Industry__c:has-error" }} data-qa-field-container="industry">
+
+                                        {{#if displayState}}
+                                            <label for="industry">{{labels.to_jobPosting_label_industry}}</label> 
+                                            <div class="input-size">
+                                                {{comma data.jobPosting.Industry__c}}
+                                            </div>
+                                        {{else}}
+                                                <label for="industry" {{bind-attr class="fields.Industry__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_industry}} </label>
+                                                {{select-2 multiple=true placeholder=labels.to_jobPosting_dropdown_default maximumSelectionSize=fields.Industry__c.maxSelections content=fields.Industry__c.values valueArray=industryArray }}
+                                                {{#if fields.Industry__c.isRequired}}
+                                                    <small class="input-error-content">{{requiredMessages.Industry__c}}</small>    
+                                                {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            {{#if fields.Category__c}}
+                                <div class="column--md--12">
+                                    <div {{bind-attr class=":form__group requiredErrors.Category__c:has-error" }} data-qa-field-container="category">                        
+                                        {{#if displayState}}
+                                            <label for="category" >{{labels.to_jobPosting_label_category}}</label>
+                                            <div class="input-size">
+                                                {{comma data.jobPosting.Category__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="category" class="required-field">{{labels.to_jobPosting_label_category}} </label>
+                                            {{#if isMap}}
+                                                <div class="select__wrap">
+                                                    {{view "select" content=categoryData value=categoryName prompt=labels.to_jobPosting_dropdown_default optionLabelPath='content' optionValuePath='content'}}
+                                                </div>
+                                                <small class="input-error-content">{{requiredMessages.Category__c}}</small>                                    
+                                            {{else}}
+                                                {{select-2 multiple=true placeholder=labels.to_jobPosting_dropdown_default maximumSelectionSize=fields.Category__c.maxSelections content=categoryData valueArray=categoryArray }}
+                                                <small class="input-error-content">{{requiredMessages.Category__c}}</small>
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            {{#if isMap}}
+                                {{#if fields.Occupation__c}}
+                                    <div class="column--md--12">
+                                        <div {{bind-attr class=":form__group requiredErrors.Occupation__c:has-error" }} data-qa-field-container="occupation">                        
+                                            {{#if displayState}}
+                                                <label for="category" >{{labels.to_jobPosting_label_occupation}}</label>
+                                                <div class="input-size">
+                                                    {{comma data.jobPosting.Occupation__c}}
+                                                </div>
+                                            {{else}}
+                                                <label for="category" class="required-field">{{labels.to_jobPosting_label_occupation}} </label>
+                                                {{select-2 multiple=true placeholder=labels.to_jobPosting_dropdown_default maximumSelectionSize=fields.Category__c.maxSelections content=occupationData optionLabelPath='content' optionValuePath='content' valueArray=occupationArray }}
+                                                <small class="input-error-content">{{requiredMessages.Occupation__c}}</small>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+            
+            {{#if blocks.contactInformation}}
+                <div class="panel mar--md--bxl" data-qa-container="contactInformation">
+                    <div class="panel__top">
+                        <h2 class="panel__heading">{{labels.to_jobPosting_panel_heading_contactinfo}}</h2>
+                    </div>
+                    <div class="panel__body">
+                        <div class="row">
+                            {{#if fields.Contact_Name__c}}
+                                <div class="column--md--6">
+                                    <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Name__c:has-error" }} data-qa-field-container="recruiterName">
+                                        {{#if displayState}}
+                                            <label for="recruiterName">{{labels.to_jobPosting_label_recname}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Contact_Name__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="recruiterEmail" {{bind-attr class="fields.Contact_Name__c.isRequired:required-field" }} >{{labels.to_jobPosting_label_recname}} </label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Name__c}}
+                                                    <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Name__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterNameInput' type="text" placeholder=labels.to_jobPosting_placeholder_recname value=data.contactPosting.Contact_Name__c maxlength=fields.Contact_Name__c.maxLength}}
+                                            </div>
+                                            {{#if fields.Contact_Name__c.isRequired}}
+                                                <small class="input-error-content">{{requiredMessages.Contact_Name__c}}</small>    
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            {{#if fields.Contact_Email__c}}
+                                <div class="column--md--6">
+                                    <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Email__c:has-error" }} data-qa-field-container="recruiterEmail">
+                                        {{#if displayState}}
+                                            <label for="recruiterEmail" >{{labels.to_jobPosting_label_recemail}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Contact_Email__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="recruiterEmail" {{bind-attr class="fields.Contact_Email__c.isRequired:required-field" }} >{{labels.to_jobPosting_label_recemail}} </label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Email__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Email__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterEmailInput' type="text" placeholder=labels.to_jobPosting_placeholder_recemail value=data.contactPosting.Contact_Email__c maxlength=fields.Contact_Email__c.maxLength}}
+                                                {{#if requiredErrors.Contact_Email__c}}
+                                                    <small class="input-error-content">{{requiredMessages.Contact_Email__c}}</small>    
+                                                {{/if}}
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            {{#if fields.Contact_Phone__c}}
+                                <div class="column--md--6">
+                                    <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Phone__c:has-error" }} data-qa-field-container="recruiterPhone">
+
+                                        {{#if displayState}}
+                                            <label for="recruiterPhone" >{{labels.to_jobPosting_label_recphone}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Contact_Phone__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="recruiterPhone" {{bind-attr class="fields.Contact_Phone__c.isRequired:required-field" }} >{{labels.to_jobPosting_label_recphone}} </label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Phone__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Phone__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterPhoneInput' type="text" placeholder=labels.to_jobPosting_placeholder_recphone value=data.contactPosting.Contact_Phone__c maxlength=fields.Contact_Phone__c.maxLength}}
+                                            </div>
+                                            {{#if requiredErrors.Contact_Phone__c}}
+                                                <small class="input-error-content">{{requiredMessages.Contact_Phone__c}}</small>    
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                            {{#if fields.Contact_Fax__c}}
+                                <div class="column--md--6">
+                                    <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Fax__c:has-error" }} data-qa-field-container="recruiterFax">
+                                        {{#if displayState}}
+                                            <label for="recruiterFax">{{labels.to_jobPosting_label_recfax}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Contact_Fax__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="recruiterFax" {{bind-attr class="fields.Contact_Fax__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_recfax}} </label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Fax__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Fax__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterFaxInput' type="text" placeholder=labels.to_jobPosting_placeholder_recfax value=data.contactPosting.Contact_Fax__c maxlength=fields.Contact_Fax__c.maxLength}}
+                                            </div>
+                                            {{#if requiredErrors.Contact_Fax__c}}
+                                                <small class="input-error-content">{{requiredMessages.Contact_Fax__c}}</small>    
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+
+                            {{#if displayState}}
+                                <div class="column--md--12" data-qa-field-container="recruiterAddressRO">
+                                    <label>{{labels.to_jobPosting_label_address}}</label>
+                                    <div class="input-size">
+                                        {{data.jobPosting.Contact_Street__c}}<br/>
+                                        {{data.jobPosting.Contact_City__c}}{{#if data.jobPosting.Contact_City__c }},{{/if}} {{data.jobPosting.Contact_State_Province__c}} {{data.jobPosting.Contact_Zip_Postal_Code__c}}
+                                        <br/>
+                                        {{data.jobPosting.Contact_Country__c}}
+                                    </div>
+                                </div>
+                            {{else}}
+                                {{#if fields.Contact_Country__c}}
+                                    <div class="column--md--12">
+                                        <div {bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Country__c:has-error" }} data-qa-field-container="recruiterCountry">
+                                            <label for="recruiterCountry">{{labels.to_jobPosting_label_country}}</label>
+                                            <div class="select__wrap">
+                                            <div class="input__icon juicon juicon-down"></div>
+                                                {{view "select" content=allowableCountries value=contactCountry prompt=labels.to_jobPosting_dropdown_default optionLabelPath='content' optionValuePath='content'}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if fields.Contact_Street__c}}
+                                    <div class="column--md--12">
+                                        <label>{{labels.to_jobPosting_label_street}}</label>
+                                        <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Street__c:has-error" }} data-qa-field-container="recruiterStreet1">                
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Street__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Street__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterStreet1Input' type="text" placeholder=labels.to_jobPosting_placeholder_street1 value=data.contactPosting.Contact_Street__c}}
+                                            </div>
+                                            <small class="input-error-content">Required</small>
+                                        </div>
+                                        <div class="form__group mar--sm--bm" data-qa-field-container="recruiterStreet2">
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Street_2__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Street_2__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterStreet2Input' type="text" placeholder=labels.to_jobPosting_placeholder_street2 value=data.contactPosting.Contact_Street_2__c}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if fields.Contact_City__c}}
+                                    <div class="column--md--4">
+                                        <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_City__c:has-error" }} data-qa-field-container="recruiterCity">
+                                            <label for="recruiterCity">{{labels.to_jobPosting_label_city}}</label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_City__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_City__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterCityInput' type="text" placeholder=labels.to_jobPosting_placeholder_city value=data.contactPosting.Contact_City__c}}
+                                            </div>
+                                            {{#if requiredErrors.Contact_City__c}}
+                                                <small class="input-error-content">{{requiredMessages.Contact_City__c}}</small>    
+                                            {{/if}}
+                            
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if fields.Contact_State_Province__c}}
+                                    <div class="column--md--4">
+                                        <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_State_Province_c:has-error" }} data-qa-field-container="recruiterState">
+                                            <label for="recruiterStateProv">{{labels.to_jobPosting_label_state}}</label>
+                                            <div class="select__wrap">
+                                            <div class="input__icon juicon juicon-down"></div>
+                                                {{view "select" content=contactAllowableStates value=data.contactPosting.Contact_State_Province__c prompt=labels.to_jobPosting_dropdown_default optionLabelPath='content' optionValuePath='content'}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {{/if}}
+                                {{#if fields.Contact_Zip_Postal_Code__c}}
+                                    <div class="column--md--4">
+                                        <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Zip_Postal_Code__c:has-error" }} data-qa-field-container="recruiterZip">
+                                            <label for="recruiterFax" {{bind-attr class="fields.Contact_Zip_Postal_Code__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_zip}} </label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Zip_Postal_Code__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Zip_Postal_Code__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterZipInput' type="text" placeholder=labels.to_jobPosting_placeholder_zip value=data.contactPosting.Contact_Zip_Postal_Code__c }}
+                                            </div>
+                                            {{#if fields.Contact_Zip_Postal_Code__c.isRequired}}
+                                                <small class="input-error-content">{{requiredMessages.Contact_Zip_Postal_Code__c}}</small>    
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/if}}
+                            {{/if}}
+                            {{#if fields.Contact_Company__c}}
+                                <div class="column--md--6">
+                                    <div {{bind-attr class=":form__group :mar--sm--bm requiredErrors.Contact_Company__c:has-error" }} data-qa-field-container="recruiterCompanyName">
+                                        {{#if displayState}}
+                                            <label for="recruiterName">{{labels.to_jobPosting_label_reccompany}}</label>
+                                            <div class="input-size">
+                                                {{data.jobPosting.Contact_Company__c}}
+                                            </div>
+                                        {{else}}
+                                            <label for="recruiterFax" {{bind-attr class="fields.Contact_Company__c.isRequired:required-field" }}>{{labels.to_jobPosting_label_reccompany}} </label>
+                                            <div class="input__wrap has-icon--right">
+                                                {{#if data.contactPosting.Contact_Company__c}}
+                                                <div class="input__icon juicon juicon-x component__icon" {{action "clearInput" "data.contactPosting.Contact_Company__c" }}></div>
+                                                {{/if}}
+                                                {{input data-qa-input='recruiterCompNameInput' type="text" placeholder=labels.to_jobPosting_placeholder_reccompany value=data.contactPosting.Contact_Company__c maxlength=fields.Contact_Company__c.maxLength}}
+                                            </div>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
+        {{/unless}}
+    </div>
+
+    <div class="content">
+        <hr class="show-brkpoint--md"/>
+
+        <nav id="newJobNav2" class="mar--sm--tm mar--sm--bm clearfix">
+            {{#if displayState}}
+                {{#if button.draft}}
+                    {{#if isSelfPost}}
+                        <button {{action "sendClickWithoutPresave" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                            {{labels.to_jobPosting_button_post}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                        </button>
+                    {{else}}
+                        {{#if hasCareerSitePosting}}
+                            <button {{action "sendClick" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_post}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{else}}
+                            <button data-toggle="modal" data-target="#postModal" class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_post}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{/if}}
+                    {{/if}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span></button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_delete}}</span> <span class="juicon juicon-trash"></span></button>
+                {{/if}}
+
+                {{#if button.pending}}
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_unpost}}</span> <span class="juicon juicon-trash"></span></button>
+                {{/if}}
+
+                {{#if button.edited}}
+                    {{#if isSelfPost}}
+                        <button {{action "sendClickWithoutPresave" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                            {{labels.to_jobPosting_button_updatepost}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                        </button>
+                    {{else}}
+                        {{#if hasCareerSitePosting}}
+                            <button {{action "sendClick" on="click"}} class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_updatepost}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{else}}
+                            <button data-toggle="modal" data-target="#postModal" class="postButton float--right button button--primary mar--sm--lxs mar--sm--only--rs">
+                                {{labels.to_jobPosting_button_updatepost}} <span class="juicon juicon-share show-brkpoint--md"></span>
+                            </button>
+                        {{/if}}
+                    {{/if}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span></button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">
+
+                    {{#if data.jobPosting.Posting_Url__c}}
+                        {{labels.to_jobPosting_button_unpost}}
+                    {{else}}
+                        {{labels.to_jobPosting_button_delete}}
+                    {{/if}}
+
+                    </span> <span class="juicon juicon-trash"></span></button>
+                {{/if}}
+
+                {{#if button.active}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span></button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_unpost}}</span> <span class="juicon juicon-trash"></span></button>
+                {{/if}}
+
+                {{#if button.deleted}}
+                    <!-- No buttons shown -->
+                {{/if}}
+
+                {{#if button.error}}
+                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span></button>
+                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">
+                    {{#if data.jobPosting.Posting_Url__c}}
+                        {{labels.to_jobPosting_button_unpost}}
+                    {{else}}
+                        {{labels.to_jobPosting_button_delete}}
+                    {{/if}}
+                    </span> <span class="juicon juicon-trash"></span></button>
+                {{/if}}
+            {{else}}
+                <button {{action "saveClick" on="click"}} {{bind-attr disabled="channelButtonSelected" class="channelButtonSelected:disabled :saveButton :float--right :button :button--primary :mar--sm--only--rs :mar--md--lxs"}}>{{labels.to_jobPosting_button_save}}</button>
+                <button {{action "cancelClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls">{{labels.to_jobPosting_button_cancel}}</button>
+            {{/if}}
+        </nav>
+    </div>
+</div>
