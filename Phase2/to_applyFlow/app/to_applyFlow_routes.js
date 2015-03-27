@@ -11,7 +11,7 @@ App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringMode
     ['name', 'contact', 'address'].forEach(function(contactSection) {
         parsedApplyMap[contactSection].forEach(function(field) {
             if (hiringModel.contactInfo[field.name] === true) {
-                field.partial = App.Fixtures.fieldTypeToPartialMap[field.type];
+                field.partial = field.name === 'Email__c' ? 'userEmail' : App.Fixtures.fieldTypeToPartialMap[field.type];
                 field.value = parsedApplyMap.application[field.name];
                 field.inputName = App.Fixtures.fieldApiNameToFieldNameMap[field.name];
 
@@ -274,6 +274,18 @@ App.setupLegallyRequiredSection = function(parsedApplyMap, applicationObj, hirin
     }
 };
 
+App.redirectAfterFinish = function(application) {
+    var redirectUrl;
+
+    if (isUserLoggedIn === true) {
+        redirectUrl = parent.urlPrefix + '/JobListing?id=' + application.Job_Posting__c;
+    } else {
+        redirectUrl = parent.urlPrefix + '/Thanks?source=application&appId=' + application.Id;
+    }
+
+    window.parent.location.href = redirectUrl;
+};
+
 App.ApplyRoute = Ember.Route.extend( {
     model: function(params) {
 
@@ -333,7 +345,7 @@ App.ContactInfoRoute = Ember.Route.extend({
 
         var successCallback = function(parsedResult) {
             if (completeApplication === true) {
-                window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                App.redirectAfterFinish(applyController.get('application'));
             } else {
                 transition.retry();
             }
@@ -357,7 +369,21 @@ App.ContactInfoRoute = Ember.Route.extend({
     },
     actions: {
         willTransition: function(transition) {
-            this.saveContactInfo(transition, false);
+            var nameValues = this.controllerFor('contactInfo').get('name');
+            var contactValues = this.controllerFor('contactInfo').get('contact');
+            var emailToSearch = contactValues.findBy('name', 'Email__c').value;
+            var firstName = nameValues.findBy('name', 'First_Name__c').value;
+            var lastName = nameValues.findBy('name', 'Last_Name__c').value;
+            var isVerifyingEmail = this.controllerFor('contactInfo').get('isVerifyingEmail');
+
+            this.controllerFor('contactInfo').set('transitionTarget', null);
+
+            if (isVerifyingEmail) {
+                this.controllerFor('contactInfo').set('transitionTarget', transition.targetName);
+                transition.abort();
+            } else {
+                this.saveContactInfo(transition, false);
+            }
         },
         clickDone: function() {
             this.saveContactInfo(null, true);
@@ -374,6 +400,32 @@ App.ResumeRoute = Ember.Route.extend({
         controller.notifyPropertyChange('resumeFileName');
     },
     uploadResume: function(transition, completeApplication) {
+
+        /* trying to post from apex
+        var applyModel = this.modelFor('apply');
+        var resume = this.modelFor('resume');
+        var base64String = resume.base64fileData;
+        var fileName = resume.resumeFileName;
+
+        if (!Ember.isNone(base64String)) {
+            console.log('upload');
+            
+            cont.uploadResume(base64String, fileName, appId, function(res, evt) {
+                if (res) {
+                    var parsedResult = parseResult(res);
+                    console.log(parsedResult);
+                    if (Ember.isEmpty(parsedResult.errorMessages)) {
+                        console.log(parsedResult.data);
+                    } else {
+                        console.log(parsedResult.errorMessages[0]);
+                    }
+                } else {
+                    console.log(evt);
+                    // error
+                }
+            });
+        }  */
+
         var self = this;
         var applyModel = this.modelFor('apply');
         var applyController = this.controllerFor('apply');
@@ -391,7 +443,7 @@ App.ResumeRoute = Ember.Route.extend({
 
             var successCallback = function(parsedResult) {
                 if (completeApplication === true) {
-                    window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                    App.redirectAfterFinish(applyController.get('application'));
                 } else {
                     transition.retry();
                 }
@@ -454,7 +506,7 @@ App.SkillsRoute = Ember.Route.extend({
             }
             var successCallback = function(parsedResult) {
                 if (completeApplication === true) {
-                    window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                    App.redirectAfterFinish(applyController.get('application'));
                 } else {
                     transition.retry();
                 }
@@ -592,7 +644,7 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
 
             var successCallback = function(parsedResult) {
                 if (completeApplication === true) {
-                    window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                    App.redirectAfterFinish(applyController.get('application'));
                 } else {
                     transition.retry();
 
@@ -737,7 +789,7 @@ App.EducationHistoryRoute = Ember.Route.extend({
 
             var successCallback = function(parsedResult) {
                 if (completeApplication === true) {
-                    window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                    App.redirectAfterFinish(applyController.get('application'));
                 } else {
                     transition.retry();
 
@@ -788,7 +840,7 @@ App.GeneralRoute = Ember.Route.extend({
                 
                 var callback = function(parsedResult) {
                     if (completeApplication === true) {
-                        window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                        App.redirectAfterFinish(applyController.get('application'));
                     } else {
                         transition.retry();
 
@@ -842,7 +894,7 @@ App.JobSpecificRoute = Ember.Route.extend({
 
             var callback = function(parsedResult) {
                 if (completeApplication === true) {
-                    window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                    App.redirectAfterFinish(applyController.get('application'));
                 } else {
                     transition.retry();
 
@@ -893,7 +945,7 @@ App.LegallyRequiredRoute = Ember.Route.extend({
 
             var callback = function(parsedResult) {
                 if (completeApplication === true) {
-                    window.parent.location.href = parent.urlPrefix + '/JobListing?id=' + applyController.get('application').Job_Posting__c;
+                    App.redirectAfterFinish(applyController.get('application'));
                 } else {
                     transition.retry();
 

@@ -1,0 +1,19 @@
+<div class="modal fade" id="verifyUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <h2 data-qa-label="locationTitle" class="modal__heading" id="myModalLabel">Good news!</h2>
+            </div>
+            <div class="modal__body">
+                <p data-qa-label="confirmLocation" class="mar--sm--tn">
+                    We can save you time and start with some information we already have. You'll need to login to continue, or you can fill out this form without help.
+                </p>
+                
+            </div>
+            <div class="modal__footer">
+                <button data-qa-button="cancel" type="button" class="button button--secondary" data-dismiss="modal" {{action "clickNo"}}>No thanks</button>
+                <button id="modalOk" data-qa-button="ok" type="button" class="button button--primary" data-dismiss="modal" {{action "clickLogin"}}>Yes, log in</button>
+            </div>
+        </div>
+    </div>
+</div>

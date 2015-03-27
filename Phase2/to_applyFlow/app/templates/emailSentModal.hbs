@@ -1,0 +1,19 @@
+<div class="modal fade" id="emailSentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <h2 data-qa-label="locationTitle" class="modal__heading" id="myModalLabel">Thank you!</h2>
+            </div>
+            <div class="modal__body">
+                <p data-qa-label="confirmLocation" class="mar--sm--tn">
+                    We sent a verification email to {{confirmObj.email}}. Check your inbox and click the link in the email to continue. If you don't see it, check your spam folder or resend the email.
+                </p>
+                
+            </div>
+            <div class="modal__footer">
+                <button data-qa-button="cancel" type="button" {{bind-attr class=":button :button--secondary isResendingEmail:load-this"}} {{action "clickResendEmail"}}>Resend email</button>
+                <button id="modalOk" data-qa-button="ok" type="button" class="button button--primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
