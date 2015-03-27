@@ -1,0 +1,20 @@
+<div class="column--md--6">
+    <div {{bind-attr class=":form__group field.requiredError:has-error" data-qa-field-container="field.fieldPath"}}>
+        {{#if displayState}}
+            <label {{bind-attr id="field.labelId" for="field.fieldPath"}}>{{field.label}}</label>
+            <div class="input-size"> 
+                {{#if field.value}}
+                    <span class="juicon juicon-check"></span>
+                {{else}}
+                    <span class="juicon juicon-ban"></span>
+                {{/if}}
+            </div>
+        {{else}}
+            <label {{bind-attr id="field.labelId" for="field.fieldPath" class="fields.required:required-field" }}>{{field.label}} </label>
+            <div class="input-size">
+                {{input type="checkbox" componentId=field.componentId data-qa-input=field.fieldPath checked=field.value}}
+            </div>
+            <small class="input-error-content">{{field.requiredMessage}}</small>
+        {{/if}}
+    </div>
+</div>

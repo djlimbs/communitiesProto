@@ -1,0 +1,68 @@
+<div class="scope-container">
+    <div class="modal fade" id="locationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal__shell">
+            <div class="modal__content">
+                <div class="modal__top">
+                    <!--<button type="button" class="close" data-dismiss="modal">-->
+                    <!--<span class="close-modal-x"></span><span class="sr-only">Close</span>-->
+                    <!--</button>-->
+                    <h2 class="modal__heading" id="myModalLabel">Before you begin...</h2>
+                </div>
+                <div class="modal__body">
+                    <p class="mar--sm--tn">Please confirm the location where you'd prefer to work.</p>
+                    <div class="form__group">
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            <select>
+                                <option>Chicago, IL (Closest)</option>
+                                <option>Boston, MA</option>
+                                <option>London, GB, UK</option>
+                                <option>Remote</option>
+                                <option>San Francisco, CA (Primary)</option>
+                                <option>Vancouver, BC, CA</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal__footer">
+                    <button type="button" class="button button--primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header class="content pad--md--ts">
+        <div class="content__section show-brkpoint--md">
+            <img class="mar--sm--bxl theme-logo" src="../css/img/logo-tagline-company.png"/>
+        </div>
+    </header>
+    <section class="content content--small pad--sm--m">
+        <div class="alert alert--success pad--sm--m mar--sm--bl">
+            <span class="part__left--fixed"><span class="juicon juicon-check-circle"></span></span><span class="part__body">Done! Thank you for applying.</span>
+        </div>
+        <div class="alert alert--error pad--sm--m mar--sm--bl hide">
+            <span class="part__left--fixed"><span class="juicon juicon-exclamation-circle"></span></span><span class="part__body">Please supply a password.</span>
+        </div>
+        <h3 class="mar--sm--bn">
+            Want to make it easier to accept a job offer?
+        </h3>
+        <p class="mar--sm--tn">Specify a password now so we can create an account.</p>
+        <div class="form__group">
+            <label for="password">Password</label>
+            <input id="password" type="text"/>
+        </div>
+        <div class="form__group">
+            <span class="part__left pad--sm--n"><input type="checkbox" name="showPass" id="showPass" checked/></span>
+            <span class="part__body"><label for="showPass"> Show password</label></span>
+        </div>
+        <button type="button" class="button button--primary">Create my account</button>
+        <span>Or just <a href="" class="text-underline">go back to the job</a>.</span>
+    </section>
+    <footer class="mar--sm--bxl content">
+        <img class="mar--sm--txl theme-logo" src="../css/img/logo-tagline-company.png"/>
+        <ul class="inline-list text-left pad--sm--tm fss">
+            <li class="inline-list__item">&copy; 2015</li>
+            <li class="inline-list__item"><a href="#">Privacy</a></li>
+            <li class="inline-list__item"><a href="#">Terms</a></li>
+        </ul>
+    </footer>
+</div>
