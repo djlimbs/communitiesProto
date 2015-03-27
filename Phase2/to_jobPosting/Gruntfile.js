@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      'build/to_creds.pck.js': 'app/to_creds_compiler.js'
+      'build/to_jobPosting.pck.js': 'app/to_jobPosting_compiler.js'
     },
 
     /*

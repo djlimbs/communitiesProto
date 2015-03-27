@@ -3568,7 +3568,29 @@ function program249(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "displayState", {hash:{},inverse:self.program(35, program35, data),fn:self.program(33, program33, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        </nav>\n        \n        <!-- Post Modal -->\n        <div class=\"modal fade\" id=\"postModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"postModalLabel\" aria-hidden=\"true\">\n            <div class=\"modal__shell\">\n                <div class=\"modal__content\">\n                    <div class=\"modal__top\">\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" data-qa-button=\"close\">\n                            <span class=\"close-modal-x\"></span>\n                            <span class=\"sr-only\" data-qa-label=\"close\">");
+  data.buffer.push("\n        </nav>\n        \n        <!-- Credentials Modal -->\n        <div class=\"modal fade\" id=\"credsModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"credsModalLabel\" aria-hidden=\"true\">\n            <div class=\"modal__shell\">\n                <div class=\"modal__content\">\n                    <div class=\"modal__top\">\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" data-qa-button=\"close\">\n                            <span class=\"close-modal-x\"></span>\n                            <span class=\"sr-only\" data-qa-label=\"close\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.to_jobPosting_modal_close", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n                        </button>\n                        <h2 class=\"modal__heading\" id=\"myModalLabel\" data-qa-label=\"title\">Please connect to ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "channelName", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n                    </div>\n                    <div class=\"modal__body\" data-qa-label=\"body\">\n                        You'll need to connect to ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "channelName", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" to continue. Would you like to do so now?\n                    </div>\n                    <div class=\"modal__footer\">\n                        <button type=\"button\" class=\"button button--secondary\"  data-dismiss=\"modal\" data-qa-button=\"cancel\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.to_jobPosting_modal_button_cancel", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n                        <button ");
+  hashContexts = {'on': depth0};
+  hashTypes = {'on': "STRING"};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "goCreds", {hash:{
+    'on': ("click")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" type=\"button\" class=\"button button--primary\" data-dismiss=\"modal\" data-qa-button=\"ok\">Connect Now</button>\n                    </div>\n                </div>\n            </div>\n        </div>\n        \n        <!-- Post Modal -->\n        <div class=\"modal fade\" id=\"postModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"postModalLabel\" aria-hidden=\"true\">\n            <div class=\"modal__shell\">\n                <div class=\"modal__content\">\n                    <div class=\"modal__top\">\n                        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" data-qa-button=\"close\">\n                            <span class=\"close-modal-x\"></span>\n                            <span class=\"sr-only\" data-qa-label=\"close\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.to_jobPosting_modal_close", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

@@ -417,9 +417,6 @@ App.MainRoute = Ember.Route.extend({
             
             // Process Channel Data to make it easier to find and separate from actual page data.
             pageData.isSystemPage = isSystemPage;
-            pageData.isJPNoConfig = function() {
-                return !(pageData.isSystemPage || pageData.isHubConnected);
-            };
 
             var channelData = JSON.parse(pageData.data.channelData);
             pageData.data.channelData = ''; // Clear it out after we get it. (Keep it from submitting to the back-end)
@@ -494,6 +491,9 @@ App.MainRoute = Ember.Route.extend({
             });
         });
     },
+    isJPNoConfig: function() {
+        return !(this.isSystemPage || this.isHubConnected);
+    }.observes('isHubConnected', 'isSystemPage'),
     afterModel: function(model, transition, queryParams) {
         if (model.isSuccess) {
             var integrationHub = model.channelData.findBy('name', 'Integration Hub');

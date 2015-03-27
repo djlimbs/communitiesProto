@@ -109,8 +109,7 @@ App.LocationController = Ember.Object.extend({
 
 App.MainRoute = Ember.Route.extend({
     model: function () {
-        pageData = JSON.parse(rawPageData);
-        
+        var pageData = JSON.parse(rawPageData);
         // Check for error conditions
         if (!pageData.isSuccess) {
             
@@ -163,25 +162,21 @@ App.MainRoute = Ember.Route.extend({
         pageData.channelData = [];
         // Process Channel Data to make it easier to find and separate from actual page data.
         if (!Ember.isEmpty(pageData.data.channelData)) {
-            
+
             var channelData = JSON.parse(pageData.data.channelData);
             pageData.data.channelData = ''; // Clear it out after we get it. (Keep it from submitting to the back-end)            
-            
+
             if (pageData.isEdit) {
                 pageData.channelData = channelData._embedded.channels;
                 
             } else {
+                pageData.channelData = Ember.A();
 
-                if (!Ember.isEmpty(pageData.data.channelCreds)) {
-                    pageData.channelData = Ember.A();
-
-                    channelData._embedded.channels.forEach(function(channel) {
-                        if (channel.type == 'Job Board' ||  channel.type == SOCIAL_CHANNEL_TYPE) {
-                            pageData.channelData.push(channel);
-                          }
-                    });
-                } 
-                
+                channelData._embedded.channels.forEach(function(channel) {
+                    if ((channel.type == 'Job Board' && channel.isEnabled) ||  channel.type == SOCIAL_CHANNEL_TYPE) {
+                        pageData.channelData.push(channel);
+                      }
+                });
             }
             
             pageData.channelData.sort(function(a, b) {
@@ -565,6 +560,12 @@ App.MainController = Ember.ObjectController.extend({
     }.observes('contactCountry'),
     observeChannel: function() {
         if (!Ember.isNone(this.get('channelName'))) {
+            // no creds?
+            if (this.get('data.channelCreds').indexOf(this.get('channelName')) == -1) {
+                $("#credsModal").modal();
+                return;
+            }
+            
             var specificChannelData = this.get('channelData').findBy('name', this.get('channelName')); // Create local Var.
             this.set('data.jobPosting.Channel__c', this.get('channelName')); // Set the channel
             this.set('channelButtonSelected', false);
@@ -932,7 +933,6 @@ App.MainController = Ember.ObjectController.extend({
                 cont.postToBoard(self.get('model.data.jobPosting.Id'), function(res, resObj) { 
                     if (res) {
                         var parsedResult = parseResult(res);
-                        console.log(parsedResult);
                         if (!Ember.isEmpty(parsedResult.errorMessages)) {
                             self.set('error', parsedResult.errorMessages[0]);
                             reject(self);
@@ -1245,7 +1245,6 @@ App.MainController = Ember.ObjectController.extend({
                 self.set('data.jobPosting.Occupation__c', '');
             }
 
-
             // consolidate the addresses and write them to the JobPosting object.
 //            this.set('data.jobPosting.Locations__c', JSON.stringify(this.get('locations')));
             
@@ -1277,6 +1276,9 @@ App.MainController = Ember.ObjectController.extend({
                 .then(self.gotoObject)
                 .then(undefined, self.handleError);
             
+        },
+        goCreds: function(self) {
+            window.location.href = '/apex/to_creds_jobPosting?name=' + self.model.channelName;
         },
         cancelClick: function () {
             if(isSF1) {
