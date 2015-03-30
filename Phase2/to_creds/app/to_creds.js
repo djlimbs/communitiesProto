@@ -133,6 +133,9 @@ App.IntegrationController = Ember.ObjectController.extend({
     clientSecretBinding: 'controllers.main.clientSecret',
     isHubConnectedBinding: 'controllers.main.isHubConnected',
     iHSettingUserEmailBinding: 'controllers.main.iHSettingUserEmail',
+    returnUrl: function() {
+        return returnUrl;
+    }.property(),
     isIntegrationHubAndIsConnected: function() {
         return this.get('isIntegrationHub') === true && this.get('isHubConnected') === true;
     }.property('isIntegrationHub', 'isHubConnected'),
@@ -509,7 +512,6 @@ App.IntegrationRoute = Ember.Route.extend({
         return new Ember.RSVP.Promise(function(resolve, reject) {
 
             var integration = self.modelFor('main').channelData.findBy('id', params.id);
-            integration.returnUrl = returnUrl;
 
             if (errorParam === 'access_denied') {
                 // If coming back from connected app oauth with an error

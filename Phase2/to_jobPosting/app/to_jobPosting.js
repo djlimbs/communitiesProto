@@ -374,6 +374,11 @@ App.MainRoute = Ember.Route.extend({
         });
         
         return pageData; // This is the object.
+    },
+    afterModel: function(model) {
+        if (model.isSuccess && channelNameParam) {
+              model.channelName = channelNameParam;
+        }
     }
 });
 
@@ -1278,7 +1283,7 @@ App.MainController = Ember.ObjectController.extend({
         },
         goCreds: function() {
             var self = this;
-            window.location.href = '/apex/to_creds_jobPosting?name=' + self.get('model').channelName + "&returnUrl=" + encodeURIComponent(window.location.href);
+            window.location.href = '/apex/to_creds_jobPosting?name=' + self.get('model').channelName + "&returnUrl=" + encodeURIComponent(window.location.href + '&channelName=' + self.get('model').channelName);
         },
         cancelClick: function () {
             if(isSF1) {
