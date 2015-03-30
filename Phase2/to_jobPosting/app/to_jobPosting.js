@@ -250,7 +250,7 @@ App.MainRoute = Ember.Route.extend({
                         
             var selectedChannelData = pageData.channelData.findBy('name', pageData.channelName);
             
-            if (selectedChannelData.fields.Category__c) {
+            if (selectedChannelData && selectedChannelData.fields && selectedChannelData.fields.Category__c) {
                 pageData.isMap = (selectedChannelData.fields.Category__c.dataType == 'map');
 
                 if (pageData.isMap) {
@@ -563,7 +563,6 @@ App.MainController = Ember.ObjectController.extend({
             // no creds?
             if (this.get('data.channelCreds').indexOf(this.get('channelName')) == -1) {
                 $("#credsModal").modal();
-                return;
             }
             
             var specificChannelData = this.get('channelData').findBy('name', this.get('channelName')); // Create local Var.
