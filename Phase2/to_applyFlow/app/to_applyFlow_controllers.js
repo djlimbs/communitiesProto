@@ -135,11 +135,50 @@ App.ContactInfoController = Ember.ObjectController.extend({
             });
         },
         clickLogin: function() {
+            var self = this;
             var confirmObj = this.get('confirmObj');
             var applyController = this.get('controllers.apply');
-            var loginUrl = parent.urlPrefix + '/Login?startURL=' + parent.urlPrefix + '/Apply?id%3D' + applyController.get('application').Id + '%26contactId%3D' + confirmObj.contactId;
+            var loginUrl = parent.urlPrefix + '/Login?startURL=' + parent.urlPrefix;
+            var contactInfoObj = {
+                Id: appId
+            };
 
-            window.parent.location.href = parent.urlPrefix + '/Login?startURL=' + parent.urlPrefix + '/Apply?id%3D' + applyController.get('application').Id + '%26contactId%3D' + confirmObj.contactId;
+            if (confirmObj.hasAppliedAlready === true) {
+                loginUrl += '/JobListing?id%3D' + applyController.get('application').Job_Posting__c;
+                window.parent.location.href = loginUrl;
+
+            } else {
+                loginUrl += '/Apply?id%3D' + applyController.get('application').Id + '%26contactId%3D' + confirmObj.contactId;
+
+                ['name', 'contact', 'address'].forEach(function(section) {
+                    self.get(section).forEach(function(f) {
+                        contactInfoObj[f.name] = f.value;
+                    });
+                });
+
+                cont.saveContactInfo(JSON.stringify(contactInfoObj), false, function(res, evt) {
+                    if (res) {
+                        var parsedResult = parseResult(res);
+
+                        if (Ember.isEmpty(parsedResult.errorMessages)) {
+                            self.set('errorMessage', null);
+                            
+                            window.parent.location.href = loginUrl;
+                        } else {
+                            self.setProperties({
+                                errorMessage: parsedResult.errorMessages[0],
+                            });
+                        }
+                    } else {
+                        self.setProperties({
+                            errorMessage: evt.message,
+                        });
+                    }
+                });
+            }
+
+            
+
         },
         clickResendEmail: function() {
             this.set('isResendingEmail', true);
@@ -161,7 +200,7 @@ App.ResumeController = Ember.ObjectController.extend({
     }.observes('resumeFileName'),
     actions: {
         clickUploadFromDevice: function() {
-            var fileInput = $('input[type="file"]');
+            var fileInput = $('input.123');
             fileInput.click();
         },
         clickUploadFromDropbox: function(){

@@ -401,7 +401,7 @@ App.ResumeRoute = Ember.Route.extend({
     },
     uploadResume: function(transition, completeApplication) {
 
-        /* trying to post from apex
+        // trying to post from apex
         var applyModel = this.modelFor('apply');
         var resume = this.modelFor('resume');
         var base64String = resume.base64fileData;
@@ -410,7 +410,13 @@ App.ResumeRoute = Ember.Route.extend({
         if (!Ember.isNone(base64String)) {
             console.log('upload');
             
-            cont.uploadResume(base64String, fileName, appId, function(res, evt) {
+            af_submitFile(base64String);
+
+            $(window).on('uploadComplete', function(e) {
+                console.log('uploaded');
+            });
+
+            /*cont.uploadResume(base64String, fileName, appId, function(res, evt) {
                 if (res) {
                     var parsedResult = parseResult(res);
                     console.log(parsedResult);
@@ -423,9 +429,10 @@ App.ResumeRoute = Ember.Route.extend({
                     console.log(evt);
                     // error
                 }
-            });
-        }  */
+            });*/
+        }  
 
+        /*
         var self = this;
         var applyModel = this.modelFor('apply');
         var applyController = this.controllerFor('apply');
@@ -472,7 +479,7 @@ App.ResumeRoute = Ember.Route.extend({
             }
 
             sforce.connection.create([feedItem],{onSuccess : success, onFailure : failed});
-        }
+        }*/
     },
     actions: {
         willTransition: function(transition) {

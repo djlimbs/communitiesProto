@@ -479,13 +479,14 @@ App.ContactInfoView = Ember.View.extend({
             var emailToSearch = e.target.value;
             var firstName = nameValues.findBy('name', 'First_Name__c').value;
             var lastName = nameValues.findBy('name', 'Last_Name__c').value;
+            var jobPostingId = contactController.get('controllers.apply').get('application').Job_Posting__c;
 
             if (canVerifyNewEmail === true 
                     && !Ember.isEmpty(emailToSearch)
                     && !Ember.isEmpty(firstName)
                     && !Ember.isEmpty(lastName)) {
 
-                cont.findUserByEmail(emailToSearch, firstName, lastName, function(res, evt) {
+                cont.findUserByEmail(emailToSearch, firstName, lastName, jobPostingId, function(res, evt) {
                     if (res) {
                         var parsedResult = parseResult(res);
                         var confirmObj = {
@@ -505,6 +506,7 @@ App.ContactInfoView = Ember.View.extend({
 
                             confirmObj.userId = parsedResult.data.userId;
                             confirmObj.contactId = parsedResult.data.contactId;
+                            confirmObj.hasAppliedAlready = parsedResult.data.hasAppliedAlready;
                         } else if (!Ember.isEmpty(parsedResult.data.contactId)) {
                             $('#verifyContactModal').modal();
                             confirmObj.contactId = parsedResult.data.contactId;
