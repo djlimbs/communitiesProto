@@ -109,7 +109,46 @@ App.ContactInfoController = Ember.ObjectController.extend({
         } else {
             updateApplyController(false);
         }
-    }.observes('name.@each.value', 'address.@each.value', 'contact.@each.value')
+    }.observes('name.@each.value', 'address.@each.value', 'contact.@each.value'),
+    actions: {
+        clickVerifyEmail: function() {
+            var self = this;
+            var confirmObj = this.get('confirmObj');
+
+            cont.sendVerifyEmail(confirmObj.contactId, confirmObj.newContactId, confirmObj.appId, function(res, evt) {
+                if (res) {
+                    var parsedResult = parseResult(res);
+                    
+                    if (parsedResult.isSuccess === true) {
+
+                        if (self.get('isResendingEmail') === true) {
+                            self.set('isResendingEmail', false);
+                        } else {
+                            $('#emailSentModal').modal();
+                        }
+                    }
+                    console.log(parsedResult);
+                    
+                } else {
+                    console.log(evt);
+                }
+            });
+        },
+        clickLogin: function() {
+            var confirmObj = this.get('confirmObj');
+            var applyController = this.get('controllers.apply');
+            var loginUrl = parent.urlPrefix + '/Login?startURL=' + parent.urlPrefix + '/Apply?id%3D' + applyController.get('application').Id + '%26contactId%3D' + confirmObj.contactId;
+
+            window.parent.location.href = parent.urlPrefix + '/Login?startURL=' + parent.urlPrefix + '/Apply?id%3D' + applyController.get('application').Id + '%26contactId%3D' + confirmObj.contactId;
+        },
+        clickResendEmail: function() {
+            this.set('isResendingEmail', true);
+            this.send('clickVerifyEmail');
+        },
+        clickNo: function() {
+            canVerifyNewEmail = false;
+        }
+    }
 });
 
 App.ResumeController = Ember.ObjectController.extend({

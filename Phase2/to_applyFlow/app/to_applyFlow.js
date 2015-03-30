@@ -468,8 +468,77 @@ App.UploadFileView = Ember.TextField.extend({
     }
 });
 
-// Controllers
+App.ContactInfoView = Ember.View.extend({
+    afterRenderEvent: function() {
+        var self = this;
+        var contactController = this.get('controller');
+        var nameValues = contactController.get('name');
 
+        this.$().find('[data-dev="userEmail"]').on('blur', function(e) {
+            contactController.set('isVerifyingEmail', true);
+            var emailToSearch = e.target.value;
+            var firstName = nameValues.findBy('name', 'First_Name__c').value;
+            var lastName = nameValues.findBy('name', 'Last_Name__c').value;
+
+            if (canVerifyNewEmail === true 
+                    && !Ember.isEmpty(emailToSearch)
+                    && !Ember.isEmpty(firstName)
+                    && !Ember.isEmpty(lastName)) {
+
+                cont.findUserByEmail(emailToSearch, firstName, lastName, function(res, evt) {
+                    if (res) {
+                        var parsedResult = parseResult(res);
+                        var confirmObj = {
+                            email: emailToSearch,
+                            appId: appId
+                        };
+
+                        contactController.set('isVerifyingEmail', false);
+
+                        if (!Ember.isEmpty(parsedResult.data.userId)) {
+
+                            if (parsedResult.data.isLinkedInUser === true) {
+                                $('#verifyLinkedInUserModal').modal();
+                            } else {
+                                $('#verifyUserModal').modal();
+                            }
+
+                            confirmObj.userId = parsedResult.data.userId;
+                            confirmObj.contactId = parsedResult.data.contactId;
+                        } else if (!Ember.isEmpty(parsedResult.data.contactId)) {
+                            $('#verifyContactModal').modal();
+                            confirmObj.contactId = parsedResult.data.contactId;
+                            confirmObj.newContactId = parsedResult.data.newContactId;
+                        } else { // No matches found
+                            if (!Ember.isEmpty(contactController.get('transitionTarget'))) {
+                                contactController.transitionToRoute(contactController.get('transitionTarget'));
+                            }
+                        }
+
+                        contactController.set('confirmObj', confirmObj);
+
+                        console.log(parsedResult);
+                        
+                    } else {
+                        console.log(evt);
+                    }
+                });
+            }
+        });
+    }
+});
+
+App.VerifyContactModalView = Ember.View.extend({
+    templateName: 'verifyContactModal'
+});
+
+App.VerifyUserModalView = Ember.View.extend({
+    templateName: 'verifyUserModal'
+});
+
+App.EmailSentModalView = Ember.View.extend({
+    templateName: 'emailSentModal'
+});
 
 // Router
 App.Router.map(function() {
