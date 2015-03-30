@@ -136,7 +136,7 @@ App.MainRoute = Ember.Route.extend({
 
         pageData.icSettings = JSON.parse(icSettings);
 
-        pageData.displayState = isView; // are we in new/edit or view mode?
+        pageData.displayState = isView; // are we in new/edit or view mode? 
         pageData.isSelfPost = true;
         pageData.csjpId = pageData.data.csjpId;
         pageData.hasCareerSitePosting = (pageData.csjpId != null);
@@ -173,7 +173,7 @@ App.MainRoute = Ember.Route.extend({
                 pageData.channelData = Ember.A();
 
                 channelData._embedded.channels.forEach(function(channel) {
-                    if ((channel.type == 'Job Board' && channel.isEnabled) ||  channel.type == SOCIAL_CHANNEL_TYPE) {
+                    if ((channel.type == 'Job Board' && pageData.data.channelCreds.indexOf(channel.name) !== -1) ||  channel.type == SOCIAL_CHANNEL_TYPE) {
                         pageData.channelData.push(channel);
                       }
                 });
@@ -1277,8 +1277,9 @@ App.MainController = Ember.ObjectController.extend({
                 .then(undefined, self.handleError);
             
         },
-        goCreds: function(self) {
-            window.location.href = '/apex/to_creds_jobPosting?name=' + self.model.channelName;
+        goCreds: function() {
+            var self = this;
+            window.location.href = '/apex/to_creds_jobPosting?name=' + self.get('model').channelName + "&returnUrl=" + encodeURIComponent(window.location.href);
         },
         cancelClick: function () {
             if(isSF1) {

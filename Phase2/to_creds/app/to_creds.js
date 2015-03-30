@@ -367,7 +367,7 @@ App.IntegrationController = Ember.ObjectController.extend({
     performOauth: function(self) {
         var redirectUri, url = routeUri + 'connect/' + self.get('name').toLowerCase();
         
-        redirectUri = window.location.href = window.location.href.split('?')[0] + '?name=' + self.get('name');
+        redirectUri = window.location.href = window.location.href.split('?')[0] + '?name=' + self.get('name') + '&returnUrl=' + encodeURIComponent(this.returnUrl);
         
         $form = $('<form action="' + url + '" method="post"></form>');
         $form.append('<input name="url" type="text" value="' + redirectUri + '" />');
@@ -415,9 +415,10 @@ App.MainRoute = Ember.Route.extend({
                 resolve(pageData); // This is the object.
             }
             
-            // Process Channel Data to make it easier to find and separate from actual page data.
             pageData.isSystemPage = isSystemPage;
-
+            pageData.returnUrl = returnUrl;
+            
+            // Process Channel Data to make it easier to find and separate from actual page data.
             var channelData = JSON.parse(pageData.data.channelData);
             pageData.data.channelData = ''; // Clear it out after we get it. (Keep it from submitting to the back-end)
 
@@ -508,6 +509,7 @@ App.IntegrationRoute = Ember.Route.extend({
         return new Ember.RSVP.Promise(function(resolve, reject) {
 
             var integration = self.modelFor('main').channelData.findBy('id', params.id);
+            integration.returnUrl = returnUrl;
 
             if (errorParam === 'access_denied') {
                 // If coming back from connected app oauth with an error
@@ -559,7 +561,7 @@ App.IntegrationRoute = Ember.Route.extend({
                                 };
 
                                 cont.verifyAndSave(JSON.stringify(saveMap), false, function(saveRes, saveResObj) {
-                                    window.location.href = window.location.href.split('?')[0] + '?name=' + nameParam;
+                                    window.location.href = window.location.href.split('?')[0] + '?name=' + nameParam + '&returnUrl=' + encodeURIComponent(self.modelFor('main').returnUrl);
                                 });
                             } else {
                                 integration.errorMessage = parsedResult.errorMessages[0];

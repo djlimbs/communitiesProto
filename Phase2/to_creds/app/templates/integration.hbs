@@ -3,13 +3,13 @@
         {{#unless successfulSaveMessage}}
             {{#if canVerify}}
                 <div {{bind-attr class=":alert isConnected:alert--success:alert--warning :mar--sm--bm"}} data-qa-alert="connectionStatus">
-                    <strong>{{connectionStatus}}</strong>
+                    <strong>{{connectionStatus}}</strong>{{#if isConnected}}{{#if returnURL}} You can <a href="{{returnURL}}">return to the job posting and continue.</a>{{/if}}{{/if}}
                 </div>
             {{/if}}
         {{/unless}}
         {{#if successfulSaveMessage}}
             <div class="alert alert--success mar--sm--bm" data-qa-alert="saveStatus">
-                <strong>{{successfulSaveMessage}}</strong>
+                <strong>{{successfulSaveMessage}}</strong>{{#if isConnected}}{{#if returnURL}} You can <a href="{{returnURL}}">return to the job posting and continue.</a>{{/if}}{{/if}}
             </div>
         {{/if}}
     {{/unless}}
