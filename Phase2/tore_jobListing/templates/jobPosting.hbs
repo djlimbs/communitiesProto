@@ -1,0 +1,116 @@
+<div class="scope-container brand__border-accent--top" style="border-top-color: #cf5c60">
+    <div {{bind-attr class=":load-full showLoadingState::hide"}}>
+        <div class="load-full-icon"></div>
+    </div>
+    {{view "locationModal"}}
+    <div class="content pad--sm--tm">
+        <div class="row">
+            <div class="column--md--8">
+                {{#if jobIsSaved}}
+                    {{#if recentSave}}
+                        <div class="alert alert--success mar--sm--bm saveAlert">
+                            <strong data-qa-label="savedJobPreviously">{{labels.yourJobHasBeenSaved}}</strong>
+                        </div>
+                    {{else}}
+                        <div class="alert alert--info mar--sm--bm saveAlert">
+                            <strong data-qa-label="savedJobToday">{{labels.youSavedThisJobOn}} {{formatDate savedJob.CreatedDate}}.</strong>
+                        </div>
+                    {{/if}}
+                {{/if}}
+                {{#if appliedMessage}}
+                    <div {{bind-attr class=":alert appliedAlertClass :mar--sm--bm"}}>
+                        <strong data-qa-label="applied">{{{appliedMessage}}}</strong>
+                    </div>
+                {{/if}}
+                <nav id="jobNav" class="relative">
+                    <div class="button-group float--right show-brkpoint--md">
+                        <a  data-qa-button="actionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}} target="_top">{{{actionButtonText}}}</a>
+                        <ul class="dropdown-menu">
+                            <li data-qa-button="applyEmail"class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}}</a></li>
+                            <li data-qa-button="applyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}}</a></li>
+                        </ul>
+                    </div>
+                    <h1 data-qa-label="postName" class="has-subheading page__heading">{{jobPosting.Name}}</h1>
+                    <h2 data-qa-label="locations" class="page__subheading wsn">{{locationString}}{{#if isRemoteAvailable}} | <small>{{labels.remoteAvailable}}</small>{{/if}}</h2>
+                </nav>
+                {{#each field in jpFields}}
+                    <h4 data-qa-label="fieldSetLabel" class="job-field-label">{{field.label}}</h4>
+                    <p data-qa-label="fieldSetValue">{{{field.value}}}</p>
+                {{/each}}
+                <hr class="mar--sm--txl mar--sm--bxl">
+                {{#unless hasJobOffer}}
+                    <div class="button-group inline-block vam width--full--sm--only">
+                        <a data-qa-button="bottomActionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color :width--full--sm--only disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}}>{{{actionButtonText}}}</a>
+                        <ul class="dropdown-menu dropdown-menu--up">
+                            <li data-qa-button="bottomApplyEmail" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}}</a></li>
+                            <li data-qa-button="bottomApplyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}}</a></li>
+                        </ul>
+                    </div>
+                {{/unless}}
+                {{#unless application}}
+                    {{#if jobIsSaved}}
+                        <span data-qa-label="removeJob" class="mar--sm--lm dontSaveJobText"><a data-qa-link="removeJob" href="#" class="text-underline dontSaveJobLink text-error" {{action "toggleSaveJob"}}>{{labels.iAmNotInterestedInThisJob}}</a></span>
+                    {{else}}
+                        <span data-qa-label="saveJob" class="mar--sm--lm">{{labels.or}} <a data-qa-link="saveJob" href="#" class="text-underline saveJobLink" {{action "toggleSaveJob"}}>{{labels.saveThisJob}}</a> {{labels.ifYouAreNotReady}}</span>
+                    {{/if}}
+                {{/unless}}
+            </div>
+            <div class="column--md--4 mar--sm--only--txl">
+                <div class="button-group width--full inline-block vam width--full--sm--only">
+                    <button class="button button--secondary width--full theme-border-color theme-link-color" data-toggle="dropdown">{{labels.shareJob}} <span class="juicon juicon-share"></span></button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-menu__list-item"><a href="#" {{action "clickTweet"}}><span class="juicon juicon-twitter"></span> {{labels.twitter}}</a></li>
+                        <li class="dropdown-menu__list-item"><a href="#" {{action "clickLinkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.linkedIn}}</a></li>
+                    </ul>
+                </div>
+                {{#if allMyJobs}}
+                    <hr/>
+
+                    <div class="content__section mar--md--bxl">
+                        <h3 data-qa-label="myJobs" class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-bookmark text-faded"></span> My jobs</h3>
+                        <ul class="list-style-type-none mar--sm--n">
+                            {{#each application in allMyJobs}} 
+                                <li class="mar--sm--bm mar--sm--tm">
+                                    <h4 data-qa-label="jobTitle" class="mar--sm--n"><a data-qa-link="jobListing" href="{{unbound application.jobPostingUrl}}" target="_top">{{application.jobTitle}}</a></h4>
+                                    <h5 class="mar--sm--n text-faded" data-qa-lable="primaryLocation">
+                                        {{application.primaryLocation}} 
+                                        {{#if application.otherLocationsString}} &amp; <a data-qa-link="locationJobListing" data-qa-label="otherLocations"data-toggle="tooltip" title="" class="text-primary" data-original-title="{{unbound application.otherLocationsString}}">{{application.otherLocationsCount}} {{application.otherText}}</a>
+                                        {{/if}}
+                                        {{#if application.isRemoteAvailable}}
+                                            <small data-qa-label="remote">{{labels.remoteAvailable}}</small>
+                                        {{/if}}
+                                    </h5>
+                                    {{#if application.isApplication}}
+                                        {{#if application.hasJobOffer}}
+                                            <small data-qa-label="offerStatus" {{bind-attr class=":label application.jobLabelClass"}}>Offer {{application.jobOfferStatus}}</small>
+                                        {{else}}
+                                            <small data-qa-label="applicationStatus" {{bind-attr class=":label application.jobLabelClass"}}>{{application.statusText}}</small>
+                                        {{/if}}
+                                    {{/if}}
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    <hr class="show-brkpoint--md">
+                {{/if}}
+            </div>
+
+            {{!-- <div class="column--md--4 mar--sm--only--txl">
+                <hr>
+                <h3 class="mar--sm--tn mar--sm--bn"><span class="juicon juicon-twitter text-faded"></span> Recent tweets <a href="#">@Salesforce</a></h3>
+                <ul class="list-style-type-none">
+                    <li class="card">
+                        <div class="card__body">
+                            <span>"</span><a href="#" class="text-faded">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>"</span>
+                        </div>
+                    </li>
+                    <li class="card">
+                        <div class="card__body">
+                            <span>"</span><a href="#" class="text-faded">As a software developer, you will be part of Salesforce's Data Science Team.</a><span>"</span>
+                        </div>
+                    </li>
+                </ul>
+            </div> --}}
+        </div>
+    </div>
+</div>

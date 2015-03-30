@@ -68,25 +68,19 @@ var sourceClasses = {
 
 App.CreateUserRoute = Ember.Route.extend({
     model: function (){
-        console.log('wtf 3');
-        test = {
-            source : source,
-            state : source,
-            app : parsedJSON.app,
-            tokenVerified : parsedJSON.tokenVerified,
-            baseUrl : parsedJSON.baseUrl
-        }
-
-        if(source == 'applyEmail'){
+        console.log('wtf 6');
+        parsedJSON.state = parsedJSON.source;
+        
+        if(parsedJSON.source == 'applyEmail'){
             sourceClasses.applyEmail.alertText += ' ' + moment(parsedJSON.app.CreatedDate).format('MMM DD, YYYY');
         }
 
         if(!parsedJSON.tokenVerified){
             sourceClasses.error.alertText = 'Your token is invalid';   
-            test.state = 'error';
+            parsedJSON.state = 'error';
         }
 
-        return test;
+        return parsedJSON;
     }
 });
 
@@ -118,6 +112,9 @@ App.CreateUserController = Ember.ObjectController.extend({
     inputType : function(){
         return this.get('showPass') ? 'text' : 'password'
     }.property('showPass'),
+    showBody : function(){
+        return this.get('tokenVerified') && !this.get('loggedIn')
+    }.property(),
     resize : true,
     showPass : true,
     actions : {
