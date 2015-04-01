@@ -443,17 +443,18 @@ App.UploadFileView = Ember.TextField.extend({
     attributeBindings: ['resumeFileName', 'base64fileData'],
     afterRenderEvent: function() {
         var self = this;
-        console.log('render');
-        $('.123').one('change', function(evt) {
+        var $iframe = $('iframe#theIframe').contents();
+        $iframe.find('.123').on('change', function(evt) {
 
             var fileName = $(this).val().split('fakepath\\')[1];
             if (fileName !== self.get('resumeFileName')) {
                 self.setProperties({
                     resumeFileName: fileName,
-                    alreadyUploaded: false
+                    alreadyUploaded: false,
+                    isFromDropbox: false
                 });
 
-                $('.fileName').val(fileName);
+                $iframe.find('.fileName').val(fileName);
             } else {
                 self.set('alreadyUploaded', true);
             }

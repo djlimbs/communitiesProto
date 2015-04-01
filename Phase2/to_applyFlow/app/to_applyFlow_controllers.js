@@ -204,15 +204,16 @@ App.ResumeController = Ember.ObjectController.extend({
     }.observes('resumeFileName'),
     actions: {
         clickUploadFromDevice: function() {
-            var fileInput = $('input.123');
+            var fileInput = $('iframe#theIframe').contents().find('input.123');
             fileInput.click();
         },
         clickUploadFromDropbox: function(){
             var self = this;
+            var currentFileName = this.get('resumeFileName');
             Dropbox.choose({
                 success: function(file){
                     self.set('resumeFileName', file[0].link);
-                    self.set('base64String', null);
+                    self.set('isFromDropbox', true);
                 },
                 linktype : 'preview',
                 multiselect : false,

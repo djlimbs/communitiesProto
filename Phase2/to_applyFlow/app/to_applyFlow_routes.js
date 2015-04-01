@@ -488,6 +488,8 @@ App.ResumeRoute = Ember.Route.extend({
         var resume = this.modelFor('resume');
         var fileName = resume.resumeFileName;
         var alreadyUploaded = resume.alreadyUploaded;
+        var $iframe = $('iframe#theIframe').contents();
+        var uriEncodedFilename = encodeURIComponent(fileName);
 
         self.controllerFor(currentPath).set('errorMessage', null);
 
@@ -506,16 +508,37 @@ App.ResumeRoute = Ember.Route.extend({
 
             applyController.set('showSavingNotification', true); 
 
-            $('.saveFile').click();
+            if (resume.isFromDropbox === true) {
+                cont.createLinkAttachment(fileName, appId, function(res, evt) {
+                    if (res) {
+                        var parsedResult = parseResult(res);
 
-            $('iframe#theIframe').load(function() {
-                //var hasFile = $('iframe#theIframe').contents().find('#hasFile').text() === 'true';
-                
-                cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                        if (Ember.isEmpty(parsedResult.errorMessages)) {
+                            $iframe.find('.123').off('change');
+                            cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                        } else {
+                            self.setProperties({
+                                errorMessage: parsedResult.errorMessages[0],
+                            });
+                            applyController.set('showSavingNotification', false);
+                        }
+                    } else {
+                        self.setProperties({
+                            errorMessage: evt.message,
+                        });
+                        applyController.set('showSavingNotification', false);
+                    }
+                });
+            } else {
+                $iframe.find('.saveFile').click();
 
-                console.log($('iframe#theIframe').contents().find('#hasFile').text());
-                //console.log(hasFile);
-            });
+                $('iframe#theIframe').load(function() {
+                    $iframe.find('.123').off('change');            
+                    cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                });
+            }
+
+            
         }
     },
     actions: {
