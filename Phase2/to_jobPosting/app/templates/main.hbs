@@ -955,8 +955,10 @@
                 {{/if}}
 
                 {{#if button.active}}
-                    <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span></button>
-                    <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_unpost}}</span> <span class="juicon juicon-trash"></span></button>
+                    {{#unless isSocial}}
+                        <button {{action "editClick" on="click"}} class="cancelButton float--right-left button button--secondary mar--sm--only--ls"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_edit}}</span> <span class="juicon juicon-pencil"></span></button>
+                        <button data-toggle="modal" data-target="#deleteModal" id="delete-this" type="button" class="button button--secondary float--right-left mar--sm--rxs"><span class="show-brkpoint--md">{{labels.to_jobPosting_button_unpost}}</span> <span class="juicon juicon-trash"></span></button>
+                    {{/unless}}
                 {{/if}}
 
                 {{#if button.deleted}}

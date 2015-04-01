@@ -918,6 +918,30 @@ App.MainController = Ember.ObjectController.extend({
             });  
         });        
     },
+    preSend: function(myself) {
+        var self = myself;
+        
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            if (self.model.isSelfPost) {
+                resolve(self);
+            } else {
+                cont.verify(self.get('model.data.jobPosting.channelName'), function(res, resObj) {
+                    if (res) {
+                        var parsedResult = parseResult(res);
+                        if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                            $("#credsModal").modal();
+                            reject(self);
+                        } else { // This was successful.
+                            resolve(self);
+                        }
+                    } else {
+                        $("#credsModal").modal();
+                        reject(self);
+                    }
+                });
+            }
+        });
+    },
     sendData: function(myself) {
         var self = myself;
         
@@ -939,16 +963,18 @@ App.MainController = Ember.ObjectController.extend({
                         var parsedResult = parseResult(res);
                         if (!Ember.isEmpty(parsedResult.errorMessages)) {
                             self.set('error', parsedResult.errorMessages[0]);
+                            $("#credsModal").modal();
                             reject(self);
                         } else { // This was successful.
                             // grab the data from the response.
                             var data = parseResult(parsedResult.data.response);
                             self.setStatus(data);
-                            
+                        
                             resolve(self);
                         }
                     } else {
                         self.set('error', resObj.message);
+                        $("#credsModal").modal();
                         reject(self);
                     }
                 });
@@ -1187,6 +1213,7 @@ App.MainController = Ember.ObjectController.extend({
             this.checkHealthPromise()
                 .then(this.spinnerUp)
                 .then(this.presave)
+                .then(this.preSend)
                 .then(this.sendData)
                 .then(this.save)
                 .then(this.postOkMessage)

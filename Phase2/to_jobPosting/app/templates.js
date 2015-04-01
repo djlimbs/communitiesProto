@@ -3390,7 +3390,7 @@ function program235(depth0,data) {
   data.buffer.push("\n\n                ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "button.error", {hash:{},inverse:self.noop,fn:self.program(247, program247, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "button.error", {hash:{},inverse:self.noop,fn:self.program(248, program248, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n            ");
   return buffer;
@@ -3482,8 +3482,19 @@ function program243(depth0,data) {
 
 function program245(depth0,data) {
   
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "isSocial", {hash:{},inverse:self.noop,fn:self.program(246, program246, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                ");
+  return buffer;
+  }
+function program246(depth0,data) {
+  
   var buffer = '', hashContexts, hashTypes;
-  data.buffer.push("\n                    <button ");
+  data.buffer.push("\n                        <button ");
   hashContexts = {'on': depth0};
   hashTypes = {'on': "STRING"};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "editClick", {hash:{
@@ -3493,15 +3504,15 @@ function program245(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.to_jobPosting_button_edit", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span> <span class=\"juicon juicon-pencil\"></span></button>\n                    <button data-toggle=\"modal\" data-target=\"#deleteModal\" id=\"delete-this\" type=\"button\" class=\"button button--secondary float--right-left mar--sm--rxs\"><span class=\"show-brkpoint--md\">");
+  data.buffer.push("</span> <span class=\"juicon juicon-pencil\"></span></button>\n                        <button data-toggle=\"modal\" data-target=\"#deleteModal\" id=\"delete-this\" type=\"button\" class=\"button button--secondary float--right-left mar--sm--rxs\"><span class=\"show-brkpoint--md\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.to_jobPosting_button_unpost", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span> <span class=\"juicon juicon-trash\"></span></button>\n                ");
+  data.buffer.push("</span> <span class=\"juicon juicon-trash\"></span></button>\n                    ");
   return buffer;
   }
 
-function program247(depth0,data) {
+function program248(depth0,data) {
   
   var buffer = '', stack1, hashContexts, hashTypes;
   data.buffer.push("\n                    <button ");
@@ -3523,7 +3534,7 @@ function program247(depth0,data) {
   return buffer;
   }
 
-function program249(depth0,data) {
+function program250(depth0,data) {
   
   var buffer = '', stack1, hashContexts, hashTypes, options;
   data.buffer.push("\n                <button ");
@@ -3719,7 +3730,7 @@ function program249(depth0,data) {
   data.buffer.push("\n    </div>\n\n    <div class=\"content\">\n        <hr class=\"show-brkpoint--md\"/>\n\n        <nav id=\"newJobNav2\" class=\"mar--sm--tm mar--sm--bm clearfix\">\n            ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "displayState", {hash:{},inverse:self.program(249, program249, data),fn:self.program(235, program235, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "displayState", {hash:{},inverse:self.program(250, program250, data),fn:self.program(235, program235, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </nav>\n    </div>\n</div>\n");
   return buffer;

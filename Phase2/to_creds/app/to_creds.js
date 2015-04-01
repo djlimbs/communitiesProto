@@ -136,6 +136,9 @@ App.IntegrationController = Ember.ObjectController.extend({
     returnUrl: function() {
         return returnUrl;
     }.property(),
+    isMyLink: function() {
+        return nameParam == this.get('name');
+    }.property('name'),
     isIntegrationHubAndIsConnected: function() {
         return this.get('isIntegrationHub') === true && this.get('isHubConnected') === true;
     }.property('isIntegrationHub', 'isHubConnected'),
@@ -431,6 +434,7 @@ App.MainRoute = Ember.Route.extend({
             var channelDataIntegrationHubSetting = pageData.channelData.findBy('type', 'Default');
             var integrationHubSettingName = !Ember.isEmpty(channelDataIntegrationHubSetting) ? channelDataIntegrationHubSetting.name : null;
 
+            pageData.isJPNoConfig = !(pageData.isSystemPage || false);
             cont.getIntegrationHubSetting(integrationHubSettingName, function(res, resObj) {
                 if (res) {
                     var parsedResult = parseResult(res);
@@ -446,6 +450,7 @@ App.MainRoute = Ember.Route.extend({
                             pageData.iHSettingUserEmail = parsedResult.data.iHSettingObj.userEmail;
 
                             currentICSettings.addObject(integrationHubSetting);
+                            pageData.isJPNoConfig = !(pageData.isSystemPage || true);
                         } else {
                             //pageData.isHubConnected = false;
                         }
@@ -495,9 +500,6 @@ App.MainRoute = Ember.Route.extend({
             });
         });
     },
-    isJPNoConfig: function() {
-        return !(this.isSystemPage || this.isHubConnected);
-    }.observes('isHubConnected', 'isSystemPage'),
     afterModel: function(model, transition, queryParams) {
         if (model.isSuccess) {
             var integrationHub = model.channelData.findBy('name', 'Integration Hub');
