@@ -17,41 +17,45 @@ App.ApplyController = Ember.ObjectController.extend({
     disableNext: function() {
         var currentPath = this.get('currentPath');
         var incompleteProperty = ('is ' + currentPath + ' incomplete').camelize();
-        return this.get(incompleteProperty);
+        return this.get(incompleteProperty) || this.get('showSavingNotification') === true;
     }.property('currentPath', 'isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
-                    'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete'),
+                    'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
+                    'showSavingNotification'),
+    disablePrevious: Ember.computed.equal('showSavingNotification', true),
     disableResume: function() {
         return this.get('isContactInfoIncomplete');
     }.property('isContactInfoIncomplete'),
     disableSkills: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete'),
+    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'showSavingNotification'),
     disableEmploymentHistory: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('isSkillsIncomplete');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete'),
+    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'showSavingNotification'),
     disableEducationHistory: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete'),
+    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
+                'showSavingNotification'),
     disableGeneral: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
                        || this.get('isEducationHistoryIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
-                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete'),
+                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'showSavingNotification'),
     disableJobSpecific: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
                         || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
-                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'isGeneralIncomplete'),
+                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'isGeneralIncomplete', 
+                            'showSavingNotification'),
     disableLegallyRequired: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
                         || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') || this.get('isJobSpecificIncomplete');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 
-                            'isGeneralIncomplete', 'isJobSpecificIncomplete'),
+                            'isGeneralIncomplete', 'isJobSpecificIncomplete', 'showSavingNotification'),
     actions: {
         clickNext: function() {
             var currentPath = this.get('currentPath');

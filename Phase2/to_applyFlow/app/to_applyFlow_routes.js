@@ -402,6 +402,7 @@ App.ResumeRoute = Ember.Route.extend({
     uploadResume: function(transition, completeApplication) {
 
         // trying to post from apex
+        /*
         var applyModel = this.modelFor('apply');
         var resume = this.modelFor('resume');
         var base64String = resume.base64fileData;
@@ -412,11 +413,11 @@ App.ResumeRoute = Ember.Route.extend({
             
             af_submitFile(base64String);
 
-            $(window).on('uploadComplete', function(e) {
+            $(window).one('uploadComplete', function(e) {
                 console.log('uploaded');
             });
 
-            /*cont.uploadResume(base64String, fileName, appId, function(res, evt) {
+            cont.uploadResume(base64String, fileName, appId, function(res, evt) {
                 if (res) {
                     var parsedResult = parseResult(res);
                     console.log(parsedResult);
@@ -429,10 +430,10 @@ App.ResumeRoute = Ember.Route.extend({
                     console.log(evt);
                     // error
                 }
-            });*/
-        }  
+            });
+        }  */
 
-        /*
+        /*   
         var self = this;
         var applyModel = this.modelFor('apply');
         var applyController = this.controllerFor('apply');
@@ -443,7 +444,7 @@ App.ResumeRoute = Ember.Route.extend({
 
         self.controllerFor(currentPath).set('errorMessage', null);
 
-        if (!Ember.isNone(base64String) && applyController.get('showSavingNotification') !== true) {    
+        if (!Ember.isNone(fileName) && applyController.get('showSavingNotification') !== true) {    
             if (completeApplication !== true) {
                 transition.abort();
             }
@@ -480,6 +481,42 @@ App.ResumeRoute = Ember.Route.extend({
 
             sforce.connection.create([feedItem],{onSuccess : success, onFailure : failed});
         }*/
+        var self = this;
+        var applyModel = this.modelFor('apply');
+        var applyController = this.controllerFor('apply');
+        var currentPath = applyController.get('currentPath');
+        var resume = this.modelFor('resume');
+        var fileName = resume.resumeFileName;
+        var alreadyUploaded = resume.alreadyUploaded;
+
+        self.controllerFor(currentPath).set('errorMessage', null);
+
+        if (!Ember.isNone(fileName) && alreadyUploaded !== true && applyController.get('showSavingNotification') !== true) {    
+            if (completeApplication !== true) {
+                transition.abort();
+            }
+
+            var successCallback = function(parsedResult) {
+                if (completeApplication === true) {
+                    App.redirectAfterFinish(applyController.get('application'));
+                } else {
+                    transition.retry();
+                }
+            };
+
+            applyController.set('showSavingNotification', true); 
+
+            $('.saveFile').click();
+
+            $('iframe#theIframe').load(function() {
+                //var hasFile = $('iframe#theIframe').contents().find('#hasFile').text() === 'true';
+                
+                cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+
+                console.log($('iframe#theIframe').contents().find('#hasFile').text());
+                //console.log(hasFile);
+            });
+        }
     },
     actions: {
         willTransition: function(transition) {

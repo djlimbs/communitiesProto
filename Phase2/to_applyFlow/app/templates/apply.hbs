@@ -37,7 +37,7 @@
                 <div class="content mar--md--tm pad--md--n mar--md--bm show-brkpoint--sm--only" data-qa-container="mobileButtons">
                     <hr class="show-brkpoint--md"/>
                     {{#unless isContactInfo}}
-                        <button class="button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev" style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="mobilePrevious"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
+                        <button {{bind-attr class=":button :button--secondary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--ls :float--left :prev disablePrevious:disabled" disabled="disablePrevious"}} style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="mobilePrevious"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
                     {{/unless}}
 
                     {{#if isLastSection}}
@@ -54,7 +54,7 @@
                     <div class="content mar--sm--txl pad--md--n mar--sm--bm" data-qa-container="desktopButtons">
                         <hr class="show-brkpoint--md"/>
                         {{#unless isContactInfo}}
-                            <button class="button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev" style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="previous"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
+                            <button {{bind-attr class=":button :button--secondary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--ls :float--left :prev disablePrevious:disabled" disabled="disablePrevious"}} style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="previous"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
                         {{/unless}}
 
                         {{#if isLastSection}}

@@ -1,10 +1,12 @@
-<div class="column--md--2">
-    <div {{bind-attr class=":form__group field.hasError:has-error"}}>
-        <label for="firstName" class="required-field">
-            {{#if field.helpText}}
-                <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle" data-qa-label="helpText"></span>
-            {{/if}}
-        </label>
-        {{input type="tel" value=field.value placeholder="YYYY" disabled=field.shouldDisableEndDateFields data-qa-input="tel"}}
+{{#unless field.shouldDisableEndDateFields}}
+    <div class="column--md--2">
+        <div {{bind-attr class=":form__group field.hasError:has-error"}}>
+            <label for="firstName" class="required-field">
+                {{#if field.helpText}}
+                    <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle" data-qa-label="helpText"></span>
+                {{/if}}
+            </label>
+            {{input type="tel" value=field.value placeholder="YYYY" disabled=field.shouldDisableEndDateFields data-qa-input="tel"}}
+        </div>
     </div>
-</div>
+{{/unless}}

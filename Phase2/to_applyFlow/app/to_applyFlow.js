@@ -441,7 +441,25 @@ App.Select2Component = Ember.TextField.extend({
 App.UploadFileView = Ember.TextField.extend({
     type: 'file',
     attributeBindings: ['resumeFileName', 'base64fileData'],
-    change: function(evt) {
+    afterRenderEvent: function() {
+        var self = this;
+        console.log('render');
+        $('.123').one('change', function(evt) {
+
+            var fileName = $(this).val().split('fakepath\\')[1];
+            if (fileName !== self.get('resumeFileName')) {
+                self.setProperties({
+                    resumeFileName: fileName,
+                    alreadyUploaded: false
+                });
+
+                $('.fileName').val(fileName);
+            } else {
+                self.set('alreadyUploaded', true);
+            }
+        });
+    },
+    /*change: function(evt) {
       var self = this;
       var input = evt.target;
 
@@ -465,7 +483,7 @@ App.UploadFileView = Ember.TextField.extend({
             this.set('base64fileData', null);
         }
       }
-    }
+    }*/
 });
 
 App.ContactInfoView = Ember.View.extend({

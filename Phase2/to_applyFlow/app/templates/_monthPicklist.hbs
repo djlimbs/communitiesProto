@@ -1,16 +1,18 @@
-<div class="column--md--4">
-    <div class="form__group mar--sm--bm">
-        <label data-qa-label="fieldName" class="required-field">{{field.label}} </label>
-        <div class="select__wrap">
-            <div class="input__icon juicon juicon-down"></div>
-            {{view "select"
-                    content=field.picklistValues
-                    optionLabelPath="content.label"
-                    optionValuePath="content.value"
-                    value=field.value
-                    prompt="Please select..."
-                    data-qa-input="select"
-                    disabled=field.shouldDisableEndDateFields}}
+{{#unless field.shouldDisableEndDateFields}}
+    <div class="column--md--4">
+        <div class="form__group mar--sm--bm">
+            <label data-qa-label="fieldName" class="required-field">{{field.label}} </label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select"
+                        content=field.picklistValues
+                        optionLabelPath="content.label"
+                        optionValuePath="content.value"
+                        value=field.value
+                        prompt="Please select..."
+                        data-qa-input="select"
+                        disabled=field.shouldDisableEndDateFields}}
+            </div>
         </div>
     </div>
-</div>
+{{/unless}}
