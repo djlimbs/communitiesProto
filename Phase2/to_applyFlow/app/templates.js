@@ -88,6 +88,32 @@ function program1(depth0,data) {
   
 });
 
+Ember.TEMPLATES["_emailSentModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+
+
+  data.buffer.push("<div class=\"modal fade\" id=\"emailSentModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Thank you!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We sent a verification email to ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "confirmObj.email", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(". Check your inbox and click the link in the email to continue. If you don't see it, check your spam folder or resend the email.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"resendEmail\" type=\"button\" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary isResendingEmail:load-this")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickResendEmail", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Resend email</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["_errorAlert"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -649,17 +675,55 @@ function program1(depth0,data) {
   
 });
 
+Ember.TEMPLATES["_verifyContactModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"modal fade\" id=\"verifyContactModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to verify your email address to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"yesVerifyMe\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickVerifyEmail", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Yes, verify me</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["_verifyLinkedInUserModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"modal fade\" id=\"verifyLinkedInUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"locationTitle\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"confirmLocation\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to login via linkedin to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"cancel\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
+  data.buffer.push("<div class=\"modal fade\" id=\"verifyLinkedInUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to login via linkedin to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary\" data-dismiss=\"modal\" ");
+  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"yesLogIn\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLogin", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Yes, log in</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["_verifyUserModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"modal fade\" id=\"verifyUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to login to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"yesLogIn\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLogin", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1081,11 +1145,12 @@ function program34(depth0,data) {
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "savingNotification", options) : helperMissing.call(depth0, "partial", "savingNotification", options))));
   data.buffer.push("\n\n        <div class=\"row mar--sm--only--n\">\n            <div class=\"column--md--3 pad--sm--only--n\" data-qa-container=\"nav\">\n                <ul class=\"list-group wizardNav show-brkpoint--md mar--md--tn\">\n                    ");
-  hashContexts = {'tagName': depth0,'class': depth0,'data-qa-link': depth0};
-  hashTypes = {'tagName': "STRING",'class': "STRING",'data-qa-link': "STRING"};
+  hashContexts = {'tagName': depth0,'class': depth0,'disabledWhen': depth0,'data-qa-link': depth0};
+  hashTypes = {'tagName': "STRING",'class': "STRING",'disabledWhen': "STRING",'data-qa-link': "STRING"};
   options = {hash:{
     'tagName': ("li"),
     'class': ("list-group__item"),
+    'disabledWhen': ("disableContactInfo"),
     'data-qa-link': ("contactInfo")
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "contactInfo", options) : helperMissing.call(depth0, "link-to", "contactInfo", options));
@@ -1261,15 +1326,18 @@ function program8(depth0,data) {
 
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "verifyContactModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "verifyContactModal", options) : helperMissing.call(depth0, "partial", "verifyContactModal", options))));
   data.buffer.push("\n");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "verifyUserModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "verifyUserModal", options) : helperMissing.call(depth0, "partial", "verifyUserModal", options))));
   data.buffer.push("\n");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "emailSentModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "emailSentModal", options) : helperMissing.call(depth0, "partial", "emailSentModal", options))));
   data.buffer.push("\n");
   hashTypes = {};
   hashContexts = {};
@@ -1379,32 +1447,6 @@ function program4(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.addEducationHistory", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" <span class=\"juicon juicon-plus\"></span></button>\n        </div>\n    </div>\n</div>");
-  return buffer;
-  
-});
-
-Ember.TEMPLATES["emailSentModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
-
-
-  data.buffer.push("<div class=\"modal fade\" id=\"emailSentModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"locationTitle\" class=\"modal__heading\" id=\"myModalLabel\">Thank you!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"confirmLocation\" class=\"mar--sm--tn\">\n                    We sent a verification email to ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "confirmObj.email", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(". Check your inbox and click the link in the email to continue. If you don't see it, check your spam folder or resend the email.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"cancel\" type=\"button\" ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
-  options = {hash:{
-    'class': (":button :button--secondary isResendingEmail:load-this")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickResendEmail", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Resend email</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary\" data-dismiss=\"modal\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -1679,11 +1721,13 @@ function program5(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.pleaseUploadYourResume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                <div style=\"display:none;\">\n                    ");
-  hashContexts = {'resumeFileName': depth0,'base64fileData': depth0};
-  hashTypes = {'resumeFileName': "ID",'base64fileData': "ID"};
+  hashContexts = {'resumeFileName': depth0,'base64fileData': depth0,'alreadyUploaded': depth0,'isFromDropbox': depth0};
+  hashTypes = {'resumeFileName': "ID",'base64fileData': "ID",'alreadyUploaded': "ID",'isFromDropbox': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "uploadFile", {hash:{
     'resumeFileName': ("resumeFileName"),
-    'base64fileData': ("base64fileData")
+    'base64fileData': ("base64fileData"),
+    'alreadyUploaded': ("alreadyUploaded"),
+    'isFromDropbox': ("isFromDropbox")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                </div>\n            </p>\n            <div class=\"row\">\n                <div class=\"column--md--6\">\n                    <div class=\"button-group width--full inline-block\">\n                        <div class=\"button width--full button--secondary\" data-toggle=\"dropdown\" data-qa-button=\"uploadDropdown\">");
   hashTypes = {};
@@ -1758,44 +1802,6 @@ function program1(depth0,data) {
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['select-2'] || (depth0 && depth0['select-2'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "select-2", options))));
   data.buffer.push("\n    </div>\n</div>");
-  return buffer;
-  
-});
-
-Ember.TEMPLATES["verifyContactModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
-
-
-  data.buffer.push("<div class=\"modal fade\" id=\"verifyContactModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"locationTitle\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"confirmLocation\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to verify your email address to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"cancel\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary\" data-dismiss=\"modal\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickVerifyEmail", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Yes, verify me</button>\n            </div>\n        </div>\n    </div>\n</div>");
-  return buffer;
-  
-});
-
-Ember.TEMPLATES["verifyUserModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
-
-
-  data.buffer.push("<div class=\"modal fade\" id=\"verifyUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"locationTitle\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"confirmLocation\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to login to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"cancel\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary\" data-dismiss=\"modal\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLogin", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Yes, log in</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });

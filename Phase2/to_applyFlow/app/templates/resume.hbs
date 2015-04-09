@@ -8,7 +8,7 @@
             <p class="mar--sm--tn" data-qa-label="uploadResume">
                 {{labels.pleaseUploadYourResume}}
                 <div style="display:none;">
-                    {{view "uploadFile" resumeFileName=resumeFileName base64fileData=base64fileData}}
+                    {{view "uploadFile" resumeFileName=resumeFileName base64fileData=base64fileData alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
                 </div>
             </p>
             <div class="row">

@@ -3,6 +3,8 @@ App = Ember.Application.create({
     rootElement: '#application'
 });
 
+console.log('a');
+
 App.EID = 0;
 
 App.Fixtures = {
@@ -438,11 +440,24 @@ App.Select2Component = Ember.TextField.extend({
     }
 });
 
+App.ApplyView = Ember.View.extend({
+    afterRenderEvent: function() {
+        if (parent && parent.toggleFooter) {
+            parent.toggleFooter();
+        }
+    }
+});
+
 App.UploadFileView = Ember.TextField.extend({
     type: 'file',
-    attributeBindings: ['resumeFileName', 'base64fileData'],
+    attributeBindings: ['resumeFileName', 'base64fileData', 'alreadyUploaded', 'isFromDropbox'],
     afterRenderEvent: function() {
         var self = this;
+
+        $('iframe#theIframe').one('load', function() {
+            self.rerender();
+        });
+
         var $iframe = $('iframe#theIframe').contents();
         $iframe.find('.123').on('change', function(evt) {
 
@@ -494,7 +509,6 @@ App.ContactInfoView = Ember.View.extend({
         var nameValues = contactController.get('name');
 
         this.$().find('[data-dev="userEmail"]').on('blur', function(e) {
-            contactController.set('isVerifyingEmail', true);
             var emailToSearch = e.target.value;
             var firstName = nameValues.findBy('name', 'First_Name__c').value;
             var lastName = nameValues.findBy('name', 'Last_Name__c').value;
@@ -504,8 +518,9 @@ App.ContactInfoView = Ember.View.extend({
                     && !Ember.isEmpty(emailToSearch)
                     && !Ember.isEmpty(firstName)
                     && !Ember.isEmpty(lastName)) {
-
-                cont.findUserByEmail(emailToSearch, firstName, lastName, jobPostingId, function(res, evt) {
+                contactController.set('isVerifyingEmail', true);
+                
+                cont.findUserByEmail(emailToSearch, firstName, lastName, jobPostingId, appId, function(res, evt) {
                     if (res) {
                         var parsedResult = parseResult(res);
                         var confirmObj = {

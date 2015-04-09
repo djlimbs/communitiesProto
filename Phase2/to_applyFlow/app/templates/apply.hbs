@@ -9,7 +9,7 @@
         <div class="row mar--sm--only--n">
             <div class="column--md--3 pad--sm--only--n" data-qa-container="nav">
                 <ul class="list-group wizardNav show-brkpoint--md mar--md--tn">
-                    {{#link-to "contactInfo" tagName="li" class="list-group__item" data-qa-link="contactInfo"}}<a>{{labels.contactInfo}}</a>{{/link-to}}
+                    {{#link-to "contactInfo" tagName="li" class="list-group__item" disabledWhen="disableContactInfo" data-qa-link="contactInfo"}}<a>{{labels.contactInfo}}</a>{{/link-to}}
                     {{#if isResumeEnabled}}
                         {{#link-to "resume" tagName="li" class="list-group__item" disabledWhen="disableResume" data-qa-link="resume"}}<a>{{labels.resumeHeader}}</a>{{/link-to}}
                     {{/if}}

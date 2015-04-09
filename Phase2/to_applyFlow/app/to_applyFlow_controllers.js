@@ -22,37 +22,44 @@ App.ApplyController = Ember.ObjectController.extend({
                     'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
                     'showSavingNotification'),
     disablePrevious: Ember.computed.equal('showSavingNotification', true),
+    disableContactInfo: function() {
+        return this.get('showSavingNotification');
+    }.property('showSavingNotification'),
     disableResume: function() {
-        return this.get('isContactInfoIncomplete');
-    }.property('isContactInfoIncomplete'),
+        return this.get('isContactInfoIncomplete') || this.get('showSavingNotification');
+    }.property('isContactInfoIncomplete', 'showSavingNotification'),
     disableSkills: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'showSavingNotification'),
     disableEmploymentHistory: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('isSkillsIncomplete');
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('isSkillsIncomplete')
+                    || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'showSavingNotification'),
     disableEducationHistory: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete');
+                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
+                        || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
                 'showSavingNotification'),
     disableGeneral: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-                       || this.get('isEducationHistoryIncomplete');
+                       || this.get('isEducationHistoryIncomplete') || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'showSavingNotification'),
     disableJobSpecific: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete');
+                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete')
+                        || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'isGeneralIncomplete', 
                             'showSavingNotification'),
     disableLegallyRequired: function() {
         return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') || this.get('isJobSpecificIncomplete');
+                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') 
+                        || this.get('isJobSpecificIncomplete') || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
                             'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 
                             'isGeneralIncomplete', 'isJobSpecificIncomplete', 'showSavingNotification'),
@@ -118,25 +125,55 @@ App.ContactInfoController = Ember.ObjectController.extend({
         clickVerifyEmail: function() {
             var self = this;
             var confirmObj = this.get('confirmObj');
+            var contactInfoObj = {
+                Id: appId,
+                Contact__c: confirmObj.newContactId
+            };
 
-            cont.sendVerifyEmail(confirmObj.contactId, confirmObj.newContactId, confirmObj.appId, function(res, evt) {
+            ['name', 'contact', 'address'].forEach(function(section) {
+                self.get(section).forEach(function(f) {
+                    contactInfoObj[f.name] = f.value;
+                });
+            });
+
+            cont.saveContactInfo(JSON.stringify(contactInfoObj), false, function(res, evt) {
                 if (res) {
                     var parsedResult = parseResult(res);
-                    
-                    if (parsedResult.isSuccess === true) {
 
-                        if (self.get('isResendingEmail') === true) {
-                            self.set('isResendingEmail', false);
-                        } else {
-                            $('#emailSentModal').modal();
-                        }
+                    if (Ember.isEmpty(parsedResult.errorMessages)) {
+                        self.set('errorMessage', null);
+                        
+                        cont.sendVerifyEmail(confirmObj.contactId, confirmObj.appId, function(res, evt) {
+                            if (res) {
+                                var parsedResult = parseResult(res);
+                                
+                                if (parsedResult.isSuccess === true) {
+
+                                    if (self.get('isResendingEmail') === true) {
+                                        self.set('isResendingEmail', false);
+                                    } else {
+                                        $('#emailSentModal').modal();
+                                    }
+                                }
+                                
+                            } else {
+                                self.setProperties({
+                                    errorMessage: evt.message,
+                                });
+                            }
+                        });
+                    } else {
+                        self.setProperties({
+                            errorMessage: parsedResult.errorMessages[0],
+                        });
                     }
-                    console.log(parsedResult);
-                    
                 } else {
-                    console.log(evt);
+                    self.setProperties({
+                        errorMessage: evt.message,
+                    });
                 }
             });
+
         },
         clickLogin: function() {
             var self = this;
@@ -144,7 +181,8 @@ App.ContactInfoController = Ember.ObjectController.extend({
             var applyController = this.get('controllers.apply');
             var loginUrl = parent.urlPrefix + '/Login?startURL=' + parent.urlPrefix;
             var contactInfoObj = {
-                Id: appId
+                Id: appId,
+                Contact__c: confirmObj.contactId
             };
 
             if (confirmObj.hasAppliedAlready === true) {
@@ -190,6 +228,7 @@ App.ContactInfoController = Ember.ObjectController.extend({
         },
         clickNo: function() {
             canVerifyNewEmail = false;
+            this.set('isVerifyingEmail', false);
         }
     }
 });
@@ -214,6 +253,7 @@ App.ResumeController = Ember.ObjectController.extend({
                 success: function(file){
                     self.set('resumeFileName', file[0].link);
                     self.set('isFromDropbox', true);
+                    self.set('alreadyUploaded', false);
                 },
                 linktype : 'preview',
                 multiselect : false,
