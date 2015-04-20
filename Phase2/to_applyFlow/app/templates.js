@@ -94,11 +94,23 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
-  data.buffer.push("<div class=\"modal fade\" id=\"emailSentModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Thank you!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We sent a verification email to ");
+  data.buffer.push("<div class=\"modal fade\" id=\"emailSentModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.thankYou", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.weSentAVerificationEmailTo", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "confirmObj.email", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(". Check your inbox and click the link in the email to continue. If you don't see it, check your spam folder or resend the email.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"resendEmail\" type=\"button\" ");
+  data.buffer.push(". ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.checkYourInboxAndClickLink", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"resendEmail\" type=\"button\" ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
@@ -109,7 +121,15 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickResendEmail", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Resend email</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.resendEmail", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n                <button id=\"modalOk\" data-qa-button=\"ok\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.ok", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -288,13 +308,14 @@ function program11(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "fe.Text__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                        </p>\n               \n                        <div class=\"form__group mar--sm--tm\">\n                            <label class=\"sr-only\"></label>\n                            ");
-  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'data-qa-input': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "ID",'data-qa-input': "STRING"};
+  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'data-qa-input': depth0,'maxlength': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "ID",'data-qa-input': "STRING",'maxlength': "STRING"};
   options = {hash:{
     'type': ("text"),
     'value': ("fe.value"),
     'placeholder': ("labels.typeAnAnswer"),
-    'data-qa-input': ("textField")
+    'data-qa-input': ("textField"),
+    'maxlength': ("255")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n                            <small class=\"input-error-content\"></small>\n                        </div>         \n                    ");
@@ -309,12 +330,13 @@ function program13(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "fe.Text__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                        </p>\n\n                        <div class=\"form__group mar--sm--tm\">\n                            <div class=\"form__group\">\n                                ");
-  hashContexts = {'value': depth0,'placeholder': depth0,'data-qa-input': depth0};
-  hashTypes = {'value': "ID",'placeholder': "ID",'data-qa-input': "STRING"};
+  hashContexts = {'value': depth0,'placeholder': depth0,'data-qa-input': depth0,'maxlength': depth0};
+  hashTypes = {'value': "ID",'placeholder': "ID",'data-qa-input': "STRING",'maxlength': "STRING"};
   options = {hash:{
     'value': ("fe.value"),
     'placeholder': ("labels.typeAnAnswer"),
-    'data-qa-input': ("textArea")
+    'data-qa-input': ("textArea"),
+    'maxlength': ("255")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                            </div>\n                        </div>\n                    ");
@@ -389,13 +411,13 @@ function program1(depth0,data) {
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" </label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
   hashContexts = {'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0,'prompt': depth0,'data-qa-input': depth0,'disabled': depth0};
-  hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID",'prompt': "STRING",'data-qa-input': "STRING",'disabled': "ID"};
+  hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID",'prompt': "ID",'data-qa-input': "STRING",'disabled': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
     'content': ("field.picklistValues"),
     'optionLabelPath': ("content.label"),
     'optionValuePath': ("content.value"),
     'value': ("field.value"),
-    'prompt': ("Please select..."),
+    'prompt': ("labels.pleaseSelect"),
     'data-qa-input': ("select"),
     'disabled': ("field.shouldDisableEndDateFields")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -445,13 +467,13 @@ function program1(depth0,data) {
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </label>\n        <div class=\"select__wrap\">\n            <div class=\"input__icon juicon juicon-down\"></div>\n            ");
   hashContexts = {'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0,'prompt': depth0,'data-qa-input': depth0};
-  hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID",'prompt': "STRING",'data-qa-input': "STRING"};
+  hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID",'prompt': "ID",'data-qa-input': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
     'content': ("field.picklistValues"),
     'optionLabelPath': ("content.label"),
     'optionValuePath': ("content.value"),
     'value': ("field.value"),
-    'prompt': ("Please select..."),
+    'prompt': ("labels.pleaseSelect"),
     'data-qa-input': ("select")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n        </div>\n    </div>\n</div>");
@@ -522,7 +544,7 @@ function program1(depth0,data) {
     'data-qa-input': ("tel")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n        <small class=\"input-error-content\">Error</small>\n    </div>\n</div>\n");
+  data.buffer.push("\n        <small class=\"input-error-content\"></small>\n    </div>\n</div>\n");
   return buffer;
   
 });
@@ -560,11 +582,12 @@ function program1(depth0,data) {
   stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </label>\n        ");
-  hashContexts = {'value': depth0,'data-qa-input': depth0};
-  hashTypes = {'value': "ID",'data-qa-input': "STRING"};
+  hashContexts = {'value': depth0,'data-qa-input': depth0,'maxlength': depth0};
+  hashTypes = {'value': "ID",'data-qa-input': "STRING",'maxlength': "ID"};
   options = {hash:{
     'value': ("field.value"),
-    'data-qa-input': ("textArea")
+    'data-qa-input': ("textArea"),
+    'maxlength': ("field.maxLength")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n    </div>\n</div>");
@@ -595,11 +618,7 @@ function program1(depth0,data) {
     'class': (":form__group isHistorySection:mar--sm--bm")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\n        <label for=\"");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "field.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" class=\"required-field\">\n            ");
+  data.buffer.push(">\n        <label for=\"firstName\" class=\"required-field\">\n            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "field.label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -609,16 +628,17 @@ function program1(depth0,data) {
   stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        </label>\n        ");
-  hashContexts = {'type': depth0,'value': depth0,'name': depth0,'data-qa-input': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'name': "ID",'data-qa-input': "STRING"};
+  hashContexts = {'type': depth0,'value': depth0,'name': depth0,'data-qa-input': depth0,'maxlength': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'name': "ID",'data-qa-input': "STRING",'maxlength': "ID"};
   options = {hash:{
     'type': ("text"),
     'value': ("field.value"),
     'name': ("field.inputName"),
-    'data-qa-input': ("textField")
+    'data-qa-input': ("textField"),
+    'maxlength': ("field.maxLength")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n        <small class=\"input-error-content\">Error</small>\n    </div>\n</div>");
+  data.buffer.push("\n        <small class=\"input-error-content\"></small>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -681,15 +701,31 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"modal fade\" id=\"verifyContactModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to verify your email address to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
+  data.buffer.push("<div class=\"modal fade\" id=\"verifyContactModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.goodNews", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.verifyEmailBody", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"yesVerifyMe\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.noThanks", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n                <button id=\"modalOk\" data-qa-button=\"yesVerifyMe\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickVerifyEmail", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Yes, verify me</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.yesVerifyMe", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -700,15 +736,31 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"modal fade\" id=\"verifyLinkedInUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to login via linkedin to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
+  data.buffer.push("<div class=\"modal fade\" id=\"verifyLinkedInUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.goodNews", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.loginLinkedInBody", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"yesLogIn\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.noThanks", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n                <button id=\"modalOk\" data-qa-button=\"yesLogIn\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLogin", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Yes, log in</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.yesLogIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -719,15 +771,31 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div class=\"modal fade\" id=\"verifyUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">Good news!</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    We can save you time and start with some information we already have. You'll need to login to continue, or you can fill out this form without help.\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
+  data.buffer.push("<div class=\"modal fade\" id=\"verifyUserModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <h2 data-qa-label=\"modalHeader\" class=\"modal__heading\" id=\"myModalLabel\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.goodNews", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p data-qa-label=\"modalBody\" class=\"mar--sm--tn\">\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.loginUserBody", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                </p>\n                \n            </div>\n            <div class=\"modal__footer\">\n                <button data-qa-button=\"noThanks\" type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickNo", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">No thanks</button>\n                <button id=\"modalOk\" data-qa-button=\"yesLogIn\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.noThanks", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n                <button id=\"modalOk\" data-qa-button=\"yesLogIn\" type=\"button\" class=\"button button--primary theme-bg-color\" data-dismiss=\"modal\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLogin", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Yes, log in</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.yesLogIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -740,40 +808,41 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
-  data.buffer.push("\n    <div class=\"column--md--2\">\n        <div ");
+  data.buffer.push("\n	<div class=\"column--md--2\">\n	    <div ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
     'class': (":form__group field.hasError:has-error")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\n            <label for=\"firstName\" class=\"required-field\">\n                ");
+  data.buffer.push(">\n	        <label for=\"firstName\" class=\"required-field\">\n	            ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "field.helpText", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n            </label>\n            ");
-  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'disabled': depth0,'data-qa-input': depth0};
-  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "STRING",'disabled': "ID",'data-qa-input': "STRING"};
+  data.buffer.push("\n	        </label>\n	        ");
+  hashContexts = {'type': depth0,'value': depth0,'placeholder': depth0,'disabled': depth0,'data-qa-input': depth0,'maxlength': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'placeholder': "STRING",'disabled': "ID",'data-qa-input': "STRING",'maxlength': "STRING"};
   options = {hash:{
     'type': ("tel"),
     'value': ("field.value"),
     'placeholder': ("YYYY"),
     'disabled': ("field.shouldDisableEndDateFields"),
-    'data-qa-input': ("tel")
+    'data-qa-input': ("tel"),
+    'maxlength': ("5")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n        </div>\n    </div>\n");
+  data.buffer.push("\n	    </div>\n	</div>\n");
   return buffer;
   }
 function program2(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                    <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"");
+  data.buffer.push("\n	                <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "field.helpText", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" class=\"has-tooltip juicon juicon-info-circle\" data-qa-label=\"helpText\"></span>\n                ");
+  data.buffer.push("\" class=\"has-tooltip juicon juicon-info-circle\" data-qa-label=\"helpText\"></span>\n	            ");
   return buffer;
   }
 
@@ -999,16 +1068,8 @@ function program22(depth0,data) {
 
 function program24(depth0,data) {
   
-  var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n                        <button ");
-  hashContexts = {'class': depth0,'disabled': depth0};
-  hashTypes = {'class': "STRING",'disabled': "STRING"};
-  options = {hash:{
-    'class': (":button :button--secondary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--ls :float--left :prev disablePrevious:disabled"),
-    'disabled': ("disablePrevious")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" style=\"top:0;left:0;\" ");
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                        <button class=\"button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev theme-bg-color\" style=\"top:0;left:0;\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickPrevious", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1027,7 +1088,7 @@ function program26(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled"),
+    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled"),
     'disabled': ("disableNext")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
@@ -1050,7 +1111,7 @@ function program28(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled"),
+    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled"),
     'disabled': ("disableNext")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
@@ -1068,16 +1129,8 @@ function program28(depth0,data) {
 
 function program30(depth0,data) {
   
-  var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n                            <button ");
-  hashContexts = {'class': depth0,'disabled': depth0};
-  hashTypes = {'class': "STRING",'disabled': "STRING"};
-  options = {hash:{
-    'class': (":button :button--secondary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--ls :float--left :prev disablePrevious:disabled"),
-    'disabled': ("disablePrevious")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" style=\"top:0;left:0;\" ");
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                            <button class=\"button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev\" style=\"top:0;left:0;\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickPrevious", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1096,7 +1149,7 @@ function program32(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled"),
+    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled"),
     'disabled': ("disableNext")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
@@ -1119,7 +1172,7 @@ function program34(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled"),
+    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled"),
     'disabled': ("disableNext")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
@@ -1139,7 +1192,7 @@ function program34(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "companyLogoUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" style=\"height: 40px; width: 58px\"/>\n        </div>\n\n        ");
+  data.buffer.push("\" style=\"max-height: 40px;\"/>\n        </div>\n\n        ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -1226,7 +1279,7 @@ function program34(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "companyLogoUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" style=\"height: 40px; width: 58px\"/>\n            </div>\n        </footer>\n    </div>\n</div>");
+  data.buffer.push("\" style=\"max-height: 40px;\"/>\n            </div>\n        </footer>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -1438,7 +1491,7 @@ function program4(depth0,data) {
     'itemController': ("historyBlock")
   },inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\" ");
+  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddEducationHistory", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1547,7 +1600,7 @@ function program7(depth0,data) {
     'itemController': ("historyBlock")
   },inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only\" ");
+  data.buffer.push("\n        <div class=\"panel__component\">\n            <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddEmploymentHistory", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1668,6 +1721,16 @@ function program1(depth0,data) {
   
 });
 
+Ember.TEMPLATES["loading"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  
+
+
+  data.buffer.push("<div class=\"scope-container\">\n    <div class=\"content pad--md--ts pad--sm--only--n pad--sm--tm\">\n        <div class=\"content__section\">\n            <div class=\"load-block\">\n                <div class=\"load-block-icon\"></div>\n            </div>\n        </div>\n    </div>\n</div>");
+  
+});
+
 Ember.TEMPLATES["resume"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -1721,11 +1784,10 @@ function program5(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.pleaseUploadYourResume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                <div style=\"display:none;\">\n                    ");
-  hashContexts = {'resumeFileName': depth0,'base64fileData': depth0,'alreadyUploaded': depth0,'isFromDropbox': depth0};
-  hashTypes = {'resumeFileName': "ID",'base64fileData': "ID",'alreadyUploaded': "ID",'isFromDropbox': "ID"};
+  hashContexts = {'resumeFileName': depth0,'alreadyUploaded': depth0,'isFromDropbox': depth0};
+  hashTypes = {'resumeFileName': "ID",'alreadyUploaded': "ID",'isFromDropbox': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "uploadFile", {hash:{
     'resumeFileName': ("resumeFileName"),
-    'base64fileData': ("base64fileData"),
     'alreadyUploaded': ("alreadyUploaded"),
     'isFromDropbox': ("isFromDropbox")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

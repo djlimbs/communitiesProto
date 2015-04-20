@@ -3,7 +3,9 @@ App = Ember.Application.create({
     rootElement: '#application'
 });
 
-console.log('a');
+Ember.LinkView.reopen({
+    activeClass: 'active theme-bg-color'
+});
 
 App.EID = 0;
 
@@ -392,6 +394,16 @@ App.checkForBlankEducationHistoryFields = function(currentHistory) {
     return hasEmptyField;
 }
 
+var scrollToTop = function() {
+    Ember.run.scheduleOnce('afterRender', this, function() {
+        var $scrollWindow = typeof parent !== "undefined" ? $(parent.window) : $(window);
+
+        if ($scrollWindow.scrollTop() !== 0) {
+            $scrollWindow.scrollTop(0);
+        }
+    });
+};
+
 var updateHeight = function() {
     Ember.run.scheduleOnce('afterRender', this, function() {
         parent.resizeIframe();
@@ -452,7 +464,7 @@ App.ApplyView = Ember.View.extend({
 
 App.UploadFileView = Ember.TextField.extend({
     type: 'file',
-    attributeBindings: ['resumeFileName', 'base64fileData', 'alreadyUploaded', 'isFromDropbox'],
+    attributeBindings: ['resumeFileName', 'alreadyUploaded', 'isFromDropbox'],
     afterRenderEvent: function() {
         var self = this;
 
@@ -463,52 +475,32 @@ App.UploadFileView = Ember.TextField.extend({
         });
 
         var $iframe = $('iframe#theIframe').contents();
-        $iframe.find('.123').on('change', function(evt) {
+        $iframe.find('.fileInput').on('change', function(evt) {
+            var inputVal = $(this).val();
 
-            var fileName = $(this).val().split('fakepath\\')[1];
-            if (fileName !== self.get('resumeFileName')) {
-                self.setProperties({
-                    resumeFileName: fileName,
-                    alreadyUploaded: false,
-                    isFromDropbox: false
-                });
+            if (inputVal !== '') {
+                var fileName = $(this).val().split('fakepath\\')[1];
+                if (fileName !== self.get('resumeFileName')) {
+                    self.setProperties({
+                        resumeFileName: fileName,
+                        alreadyUploaded: false,
+                        isFromDropbox: false
+                    });
 
-                $iframe.find('.fileName').val(fileName);
-            } else {
-                self.set('alreadyUploaded', true);
+                    $iframe.find('.fileName').val(fileName);
+                } else {
+                    self.set('alreadyUploaded', true);
+                }
             }
         });
-    },
-    /*change: function(evt) {
-      var self = this;
-      var input = evt.target;
-
-      if (input.files && input.files[0]) {
-
-        var reader = new FileReader();
-        var that = this;
-        var file = input.files[0];
-
-        reader.onload = function(e) {
-            var fileToUpload = e.srcElement.result;
-            var base64String = fileToUpload.split('base64,')[1];
-
-            self.set('resumeFileName', file.name);
-            self.set('base64fileData', base64String);
-        };
-
-        if (file.name !== this.get('resumeFileName')) {
-            reader.readAsDataURL(input.files[0]);
-        } else {
-            this.set('base64fileData', null);
-        }
-      }
-    }*/
+    }
 });
 
 App.ContactInfoView = Ember.View.extend({
     afterRenderEvent: function() {
-        /*var self = this;
+        scrollToTop();
+
+        var self = this;
         var contactController = this.get('controller');
         var nameValues = contactController.get('name');
 
@@ -516,15 +508,33 @@ App.ContactInfoView = Ember.View.extend({
             var emailToSearch = e.target.value;
             var firstName = nameValues.findBy('name', 'First_Name__c').value;
             var lastName = nameValues.findBy('name', 'Last_Name__c').value;
-            var jobPostingId = contactController.get('controllers.apply').get('application').Job_Posting__c;
+            var lastSearchedEmail = contactController.get('lastSearchedEmail');
+            
+            // Check if the newly typed email matches what the user last typed. If different, verify.
+            if (lastSearchedEmail !== emailToSearch) {
+                canVerifyNewEmail = true;
+                contactController.set('lastSearchedEmail', emailToSearch);
+            } else {
+                canVerifyNewEmail = false;
+            }
 
-            if (canVerifyNewEmail === true 
-                    && !Ember.isEmpty(emailToSearch)
+            if (isUserLoggedIn !== true
+                    && canVerifyNewEmail === true 
+                    && !Ember.isEmpty(e.target.value)
                     && !Ember.isEmpty(firstName)
                     && !Ember.isEmpty(lastName)) {
+
                 contactController.set('isVerifyingEmail', true);
-                
-                cont.findUserByEmail(emailToSearch, firstName, lastName, jobPostingId, appId, function(res, evt) {
+
+                var userInfoObj = {
+                    emailToSearch:  emailToSearch,
+                    firstName: firstName,
+                    lastName: lastName,
+                    jobPostingId: contactController.get('controllers.apply').get('application').Job_Posting__c,
+                    appId: appId
+                };
+
+                cont.findUserByEmail(JSON.stringify(userInfoObj), function(res, evt) {
                     if (res) {
                         var parsedResult = parseResult(res);
                         var confirmObj = {
@@ -564,20 +574,50 @@ App.ContactInfoView = Ember.View.extend({
                     }
                 });
             }
-        });*/
+        });
     }
 });
 
-App.VerifyContactModalView = Ember.View.extend({
-    templateName: 'verifyContactModal'
+App.ResumeView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
 });
 
-App.VerifyUserModalView = Ember.View.extend({
-    templateName: 'verifyUserModal'
+App.SkillsView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
 });
 
-App.EmailSentModalView = Ember.View.extend({
-    templateName: 'emailSentModal'
+App.EmploymentHistoryView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.EducationHistoryView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.GeneralView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.JobSpecificView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.LegallyRequiredView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
 });
 
 // Router

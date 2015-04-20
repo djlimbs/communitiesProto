@@ -114,7 +114,7 @@ App.setupEmploymentHistorySection = function(parsedApplyMap, applicationObj, hir
 
         // if we don't have data already but have logged in via linkedin
         if (Ember.isEmpty(applicationObj.employmentHistoryArray) && !Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.positions)) {
+                && !Ember.isEmpty(linkedInMap.positions) && !Ember.isEmpty(linkedInMap.positions.values)) {
             var employmentHistoryObjs = App.convertLinkedInToEmploymentHistoryObj(linkedInMap.positions.values);
             employmentHistoryObjs.forEach(function(eh) {
                 applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock(eh));
@@ -152,7 +152,7 @@ App.setupEducationHistorySection = function(parsedApplyMap, applicationObj, hiri
 
         // if we don't have data already but have logged in via linkedin
         if (Ember.isEmpty(applicationObj.educationHistoryArray) && !Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.educations)) {
+                && !Ember.isEmpty(linkedInMap.educations) && !Ember.isEmpty(linkedInMap.educations.values)) {
             var educationHistoryObjs = App.convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
             educationHistoryObjs.forEach(function(eh) {
                 applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
@@ -287,39 +287,43 @@ App.redirectAfterFinish = function(application) {
 App.ApplyRoute = Ember.Route.extend( {
     model: function(params) {
 
-        if (Ember.isEmpty(applicationRedirectUrl)) {
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            if (Ember.isEmpty(applicationRedirectUrl)) {
+                var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
 
-            var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
+                var applicationObj = {
+                    resume: {
+                        resumeFileName: null,
+                        base64fileData: null
+                    },
+                    companyLogoUrl: companyLogoUrl,
+                    sectionArray: ['contactInfo']
+                };
 
-            var applicationObj = {
-                resume: {
-                    resumeFileName: null
-                },
-                companyLogoUrl: companyLogoUrl,
-                sectionArray: ['contactInfo']
-            };
+                applicationObj.application = parsedApplyMap.application;
 
-            applicationObj.application = parsedApplyMap.application;
+                var linkedInMap = parsedApplyMap.linkedInMap;
 
-            var linkedInMap = parsedApplyMap.linkedInMap;
+                App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel);
+                App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
+                App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                App.setupGeneralSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                App.setupJobSpecificSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                App.setupLegallyRequiredSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                
+                applicationObj.numSections = applicationObj.sectionArray.length;
 
-            App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-            App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel);
-            App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
-            App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-            App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-            App.setupGeneralSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-            App.setupJobSpecificSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-            App.setupLegallyRequiredSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-            
-            applicationObj.numSections = applicationObj.sectionArray.length;
-
-            console.log('***MODEL');
-            console.log(applicationObj);
-            return applicationObj;
-        }
+                console.log('***MODEL');
+                console.log(applicationObj);
+                
+                resolve(applicationObj);
+            }
+        });
+        
     },
-    beforeModel: function(transition) {
+    afterModel: function(transition) {
         this.transitionTo('contactInfo');
     }
 });
@@ -369,11 +373,6 @@ App.ContactInfoRoute = Ember.Route.extend({
     },
     actions: {
         willTransition: function(transition) {
-            var nameValues = this.controllerFor('contactInfo').get('name');
-            var contactValues = this.controllerFor('contactInfo').get('contact');
-            var emailToSearch = contactValues.findBy('name', 'Email__c').value;
-            var firstName = nameValues.findBy('name', 'First_Name__c').value;
-            var lastName = nameValues.findBy('name', 'Last_Name__c').value;
             var isVerifyingEmail = this.controllerFor('contactInfo').get('isVerifyingEmail');
 
             this.controllerFor('contactInfo').set('transitionTarget', null);
@@ -435,7 +434,7 @@ App.ResumeRoute = Ember.Route.extend({
                         var parsedResult = parseResult(res);
 
                         if (Ember.isEmpty(parsedResult.errorMessages)) {
-                            $iframe.find('.123').off('change');
+                            $iframe.find('.fileInput').off('change');
                             cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                         } else {
                             self.setProperties({
@@ -451,22 +450,21 @@ App.ResumeRoute = Ember.Route.extend({
                     }
                 });
             } else {
-                $iframe.find('.123').off('change');
+                $iframe.find('.fileInput').off('change');            
                 $iframe.find('.saveFile').click();
 
                 $('iframe#theIframe').one('load', function() {
-                   if ($('iframe#theIframe').contents().find('.message').length > 0) {
-                       var errorMessage = $('iframe#theIframe').contents().find('.message').find('li:first').text();
-                       resumeController.set('errorMessage', errorMessage);
-                       applyController.set('showSavingNotification', false);
+                    if ($('iframe#theIframe').contents().find('.message').length > 0) {
+                        var errorMessage = $('iframe#theIframe').contents().find('.message').find('li:first').text();
+                        resumeController.set('errorMessage', errorMessage);
+                        applyController.set('showSavingNotification', false);
                     } else {
-                        //$iframe.find('.123').off('change');            
                         cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                     }
                 });
-            } 
+            }            
         } else {
-            $iframe.find('.123').off('change');
+            $iframe.find('.fileInput').off('change');
         }
     },
     actions: {

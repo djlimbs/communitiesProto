@@ -219,15 +219,13 @@ App.ContactInfoController = Ember.ObjectController.extend({
                 });
             }
 
-            
-
         },
         clickResendEmail: function() {
             this.set('isResendingEmail', true);
             this.send('clickVerifyEmail');
         },
         clickNo: function() {
-            canVerifyNewEmail = false;
+            //canVerifyNewEmail = false;
             this.set('isVerifyingEmail', false);
         }
     }
@@ -243,7 +241,7 @@ App.ResumeController = Ember.ObjectController.extend({
     }.observes('resumeFileName'),
     actions: {
         clickUploadFromDevice: function() {
-            var fileInput = $('iframe#theIframe').contents().find('input.123');
+            var fileInput = $('iframe#theIframe').contents().find('input.fileInput');
             fileInput.click();
         },
         clickUploadFromDropbox: function(){
@@ -251,6 +249,7 @@ App.ResumeController = Ember.ObjectController.extend({
             var currentFileName = this.get('resumeFileName');
             Dropbox.choose({
                 success: function(file){
+                    $('iframe#theIframe').contents().find('.fileInput').val('');
                     self.set('resumeFileName', file[0].link);
                     self.set('isFromDropbox', true);
                     self.set('alreadyUploaded', false);

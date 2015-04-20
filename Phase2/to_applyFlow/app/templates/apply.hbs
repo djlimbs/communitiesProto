@@ -1,7 +1,7 @@
 <div class="scope-container">
     <div class="content pad--md--ts pad--sm--only--n pad--sm--tm">
         <div class="content__section show-brkpoint--md">
-            <img class="mar--sm--bxl theme-logo" data-qa-image="logoHeader" src="{{unbound companyLogoUrl}}" style="height: 40px; width: 58px"/>
+            <img class="mar--sm--bxl theme-logo" data-qa-image="logoHeader" src="{{unbound companyLogoUrl}}" style="max-height: 40px;"/>
         </div>
 
         {{partial "savingNotification"}}
@@ -37,13 +37,13 @@
                 <div class="content mar--md--tm pad--md--n mar--md--bm show-brkpoint--sm--only" data-qa-container="mobileButtons">
                     <hr class="show-brkpoint--md"/>
                     {{#unless isContactInfo}}
-                        <button {{bind-attr class=":button :button--secondary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--ls :float--left :prev disablePrevious:disabled" disabled="disablePrevious"}} style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="mobilePrevious"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
+                        <button class="button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev theme-bg-color" style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="mobilePrevious"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
                     {{/unless}}
 
                     {{#if isLastSection}}
-                        <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickDone"}} data-qa-button="mobileDone"><span class="show-brkpoint--md">{{labels.done}}</span> <span class="juicon juicon-forward"></span> </button>
+                        <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickDone"}} data-qa-button="mobileDone"><span class="show-brkpoint--md">{{labels.done}}</span> <span class="juicon juicon-forward"></span> </button>
                     {{else}}
-                        <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickNext"}} data-qa-button="mobileNext"><span class="show-brkpoint--md">{{labels.next}}</span> <span class="juicon juicon-forward"></span> </button>
+                        <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickNext"}} data-qa-button="mobileNext"><span class="show-brkpoint--md">{{labels.next}}</span> <span class="juicon juicon-forward"></span> </button>
                     {{/if}}
                     <div class="pad--sm--lxxl pad--sm--rxxl text-center pad--sm--tm text-faded">
                         <span data-qa-label="currentSectionNum">{{currentSectionNum}}</span>/<span data-qa-label="numSections">{{numSections}}</span>
@@ -54,13 +54,13 @@
                     <div class="content mar--sm--txl pad--md--n mar--sm--bm" data-qa-container="desktopButtons">
                         <hr class="show-brkpoint--md"/>
                         {{#unless isContactInfo}}
-                            <button {{bind-attr class=":button :button--secondary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--ls :float--left :prev disablePrevious:disabled" disabled="disablePrevious"}} style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="previous"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
+                            <button class="button button--secondary button--sf1-nav mar--sm--only--ls mar--sm--only--ts mar--sm--only--ls float--left prev" style="top:0;left:0;" {{action "clickPrevious"}} data-qa-button="previous"><span class="juicon juicon-backward"></span> <span class="show-brkpoint--md">{{labels.previous}}</span></button>
                         {{/unless}}
 
                         {{#if isLastSection}}
-                            <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickDone"}} data-qa-button="done"><span class="show-brkpoint--md">{{labels.done}}</span> <span class="juicon juicon-forward"></span> </button>
+                            <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickDone"}} data-qa-button="done"><span class="show-brkpoint--md">{{labels.done}}</span> <span class="juicon juicon-forward"></span> </button>
                         {{else}}
-                            <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickNext"}} data-qa-button="next"><span class="show-brkpoint--md">{{labels.next}}</span> <span class="juicon juicon-forward"></span> </button>
+                            <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled" disabled="disableNext"}} style="top:0;right:0;" {{action "clickNext"}} data-qa-button="next"><span class="show-brkpoint--md">{{labels.next}}</span> <span class="juicon juicon-forward"></span> </button>
                         {{/if}}
                     </div>
                 </div>
@@ -68,7 +68,7 @@
         </div>
         <footer>
             <div class="content__section">
-                <img class="mar--sm--txl theme-logo" data-qa-image="logoFooter" src="{{unbound companyLogoUrl}}" style="height: 40px; width: 58px"/>
+                <img class="mar--sm--txl theme-logo" data-qa-image="logoFooter" src="{{unbound companyLogoUrl}}" style="max-height: 40px;"/>
             </div>
         </footer>
     </div>

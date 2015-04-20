@@ -2,17 +2,17 @@
     <div class="modal__shell">
         <div class="modal__content">
             <div class="modal__top">
-                <h2 data-qa-label="modalHeader" class="modal__heading" id="myModalLabel">Good news!</h2>
+                <h2 data-qa-label="modalHeader" class="modal__heading" id="myModalLabel">{{labels.goodNews}}</h2>
             </div>
             <div class="modal__body">
                 <p data-qa-label="modalBody" class="mar--sm--tn">
-                    We can save you time and start with some information we already have. You'll need to login via linkedin to continue, or you can fill out this form without help.
+                    {{labels.loginLinkedInBody}}
                 </p>
                 
             </div>
             <div class="modal__footer">
-                <button data-qa-button="noThanks" type="button" class="button button--secondary" data-dismiss="modal" {{action "clickNo"}}>No thanks</button>
-                <button id="modalOk" data-qa-button="yesLogIn" type="button" class="button button--primary theme-bg-color" data-dismiss="modal" {{action "clickLogin"}}>Yes, log in</button>
+                <button data-qa-button="noThanks" type="button" class="button button--secondary" data-dismiss="modal" {{action "clickNo"}}>{{labels.noThanks}}</button>
+                <button id="modalOk" data-qa-button="yesLogIn" type="button" class="button button--primary theme-bg-color" data-dismiss="modal" {{action "clickLogin"}}>{{labels.yesLogIn}}</button>
             </div>
         </div>
     </div>
