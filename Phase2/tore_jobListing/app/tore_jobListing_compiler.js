@@ -1,4 +1,4 @@
-require('../app/js/emberBase');
-require('../app/tore_jobListing/templates');
-require('../app/tore_jobListing/tore_jobListing');
-require('../app/js/emberComponents');
+require('../../js/emberBase');
+require('../app/templates');
+require('../app/tore_jobListing');
+require('../../js/emberComponents');
