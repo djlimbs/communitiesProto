@@ -198,8 +198,7 @@ App.setupGeneralSection = function(parsedApplyMap, applicationObj, hiringModel, 
 
         });
 
-        // Using greater than or equal because checkbox questions may have more than one response.
-        if (parsedApplyMap.generalApplicantResponses.length >= applicationObj.generalFormElements.length) {
+        if (!applicationObj.generalFormElements.filterBy('Element_Type__c', 'Question').isAny('applicantResponseId', undefined)) {
             applicationObj.isGeneralIncomplete = false;
         }
     }
@@ -232,8 +231,7 @@ App.setupJobSpecificSection = function(parsedApplyMap, applicationObj, hiringMod
             }
         });
 
-        // Using greater than or equal because checkbox questions may have more than one response.
-        if (parsedApplyMap.jobSpecificApplicantResponses.length >= applicationObj.jobSpecificFormElements.length) {
+        if (!applicationObj.jobSpecificFormElements.filterBy('Element_Type__c', 'Question').isAny('applicantResponseId', undefined)) {
             applicationObj.isJobSpecificIncomplete = false;
         }
     }
@@ -268,8 +266,7 @@ App.setupLegallyRequiredSection = function(parsedApplyMap, applicationObj, hirin
             }
         });
 
-        // Using greater than or equal because checkbox questions may have more than one response.
-        if (parsedApplyMap.legalApplicantRequiredData.length >= applicationObj.legalFormElements.length) {
+        if (!applicationObj.legalFormElements.filterBy('Element_Type__c', 'Question').isAny('applicantRequiredDataId', undefined)) {
             applicationObj.isLegallyRequiredIncomplete = false;
         }
     }
@@ -290,34 +287,37 @@ App.redirectAfterFinish = function(application) {
 App.ApplyRoute = Ember.Route.extend( {
     model: function(params) {
 
-        var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
+        if (Ember.isEmpty(applicationRedirectUrl)) {
 
-        var applicationObj = {
-            resume: {
-                resumeFileName: null
-            },
-            companyLogoUrl: companyLogoUrl,
-            sectionArray: ['contactInfo']
-        };
+            var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
 
-        applicationObj.application = parsedApplyMap.application;
+            var applicationObj = {
+                resume: {
+                    resumeFileName: null
+                },
+                companyLogoUrl: companyLogoUrl,
+                sectionArray: ['contactInfo']
+            };
 
-        var linkedInMap = parsedApplyMap.linkedInMap;
+            applicationObj.application = parsedApplyMap.application;
 
-        App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-        App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel);
-        App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
-        App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-        App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-        App.setupGeneralSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-        App.setupJobSpecificSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-        App.setupLegallyRequiredSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-        
-        applicationObj.numSections = applicationObj.sectionArray.length;
+            var linkedInMap = parsedApplyMap.linkedInMap;
 
-        console.log('***MODEL');
-        console.log(applicationObj);
-        return applicationObj
+            App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+            App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel);
+            App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
+            App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+            App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+            App.setupGeneralSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+            App.setupJobSpecificSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+            App.setupLegallyRequiredSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+            
+            applicationObj.numSections = applicationObj.sectionArray.length;
+
+            console.log('***MODEL');
+            console.log(applicationObj);
+            return applicationObj;
+        }
     },
     beforeModel: function(transition) {
         this.transitionTo('contactInfo');
@@ -451,15 +451,16 @@ App.ResumeRoute = Ember.Route.extend({
                     }
                 });
             } else {
+                $iframe.find('.123').off('change');
                 $iframe.find('.saveFile').click();
 
-                $('iframe#theIframe').load(function() {
-                    if ($('iframe#theIframe').contents().find('.message').length > 0) {
-                        var errorMessage = $('iframe#theIframe').contents().find('.message').find('li:first').text();
-                        resumeController.set('errorMessage', errorMessage);
-                        applyController.set('showSavingNotification', false);
+                $('iframe#theIframe').one('load', function() {
+                   if ($('iframe#theIframe').contents().find('.message').length > 0) {
+                       var errorMessage = $('iframe#theIframe').contents().find('.message').find('li:first').text();
+                       resumeController.set('errorMessage', errorMessage);
+                       applyController.set('showSavingNotification', false);
                     } else {
-                        $iframe.find('.123').off('change');            
+                        //$iframe.find('.123').off('change');            
                         cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                     }
                 });

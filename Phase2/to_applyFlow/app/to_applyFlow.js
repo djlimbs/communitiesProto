@@ -443,7 +443,9 @@ App.Select2Component = Ember.TextField.extend({
 App.ApplyView = Ember.View.extend({
     afterRenderEvent: function() {
         if (parent && parent.toggleFooter) {
-            parent.toggleFooter();
+            Ember.run.later(this, function() { 
+                parent.toggleFooter();
+            }, 200);
         }
     }
 });
@@ -455,7 +457,9 @@ App.UploadFileView = Ember.TextField.extend({
         var self = this;
 
         $('iframe#theIframe').one('load', function() {
-            self.rerender();
+            if (self.get('isDestroying') !== true && self.get('isDestroyed') !== true) {
+                self.rerender();
+            }
         });
 
         var $iframe = $('iframe#theIframe').contents();
@@ -504,7 +508,7 @@ App.UploadFileView = Ember.TextField.extend({
 
 App.ContactInfoView = Ember.View.extend({
     afterRenderEvent: function() {
-        var self = this;
+        /*var self = this;
         var contactController = this.get('controller');
         var nameValues = contactController.get('name');
 
@@ -560,7 +564,7 @@ App.ContactInfoView = Ember.View.extend({
                     }
                 });
             }
-        });
+        });*/
     }
 });
 
