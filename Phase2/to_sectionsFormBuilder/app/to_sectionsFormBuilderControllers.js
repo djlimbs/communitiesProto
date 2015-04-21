@@ -8,7 +8,7 @@ App.FormBuilderController = Ember.ObjectController.extend(App.FormBuilderMixin, 
     currentPathBinding: 'controllers.application.currentPath',
     sectionBinding: 'controllers.applicationSection.section',
     currentSection: 'General',
-    isInGeneral: function() {
+    isInGeneral: function() { 
         return App.Fixtures.get('currentSection') === 'General';
     }.property('App.Fixtures.currentSection'),
     isInLegal: function() {

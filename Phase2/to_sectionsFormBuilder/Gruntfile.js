@@ -93,7 +93,7 @@ module.exports = function(grunt) {
         }
       },
       //'dependencies/compiled/templates.js': ["app/templates/**/*.hbs"]
-      'app/templates.js': ["app/templates/**/*.hbs"]
+      '../to_formBuilderCommon/templates.js': ["../to_formBuilderCommon/**/*.hbs"]
     },
 
     /*
