@@ -15,30 +15,30 @@ App.DatePickerComponent = Ember.Component.extend({
             , $input = $element.find('input')
             , locale = typeof localeString === 'undefined' ? 'YYYY-MM-DD' : localeString;
 
-            $datepicker.datepicker({
-                    format: locale.toLowerCase(),
-                    onRender: function(date) {
-                        if (disabled === true) {
-                            return 'disabled';
+        $datepicker.datepicker({
+                format: locale.toLowerCase(),
+                onRender: function(date) {
+                    if (disabled === true) {
+                        return 'disabled';
 
-                        } else {
-                            if (includeToday === true) 
-                                return date.valueOf() < moment(currentDate).subtract('days', 1).valueOf() ? 'disabled' : '';
-                        }
+                    } else {
+                        if (includeToday === true) 
+                            return date.valueOf() < moment(currentDate).subtract('days', 1).valueOf() ? 'disabled' : '';
                     }
-                })
-                .on('changeDate', function(event) {
-                    self.set('value', moment(event.date).format('YYYY-MM-DD'));
-                    $input.val(moment(event.date).format(locale));
-                   
-                    $datepicker.datepicker('hide');
-                })
-                // .datepicker('setValue', moment(dateValue).toDate());
+                }
+            })
+            .on('changeDate', function(event) {
+                self.set('value', moment(event.date).format('YYYY-MM-DD'));
+                $input.val(moment(event.date).format(locale));
+               
+                $datepicker.datepicker('hide');
+            });
+            // .datepicker('setValue', moment(dateValue).toDate());
 
-            if (!Ember.isNone(dateValue)) {
-                $input.val(moment(dateValue).format(locale));
-                $datepicker.datepicker('setValue', moment(dateValue).toDate());
-            }
+        if (!Ember.isNone(dateValue)) {
+            $input.val(moment(dateValue).format(locale));
+            $datepicker.datepicker('setValue', moment(dateValue).toDate());
+        }
     }
 });
 
