@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      'build/tore_jobListing.pck.js': 'app/tore_jobListing_compiler.js'
+      'build/to_sectionsFormBuilder.pck.js': 'app/to_sectionsFormBuilder_compiler.js'
     },
 
     /*
@@ -46,7 +46,7 @@ module.exports = function(grunt) {
      //   tasks: ['ember_templates', 'neuter']
      // }
      handlebars_templates: {
-        files: ['app/**/*.hbs'],
+        files: ['../to_formBuilderCommon/**/*.hbs'],
         tasks: ['ember_templates']
      }
     },
