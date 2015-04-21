@@ -89,7 +89,7 @@ module.exports = function(grunt) {
     ember_templates: {
       options: {
         templateName: function(sourceFile) {
-          return sourceFile.replace(/app\/templates\//, '');
+          return sourceFile.replace(/..\/to_formBuilderCommon\/templates\//, '');
         }
       },
       //'dependencies/compiled/templates.js': ["app/templates/**/*.hbs"]
