@@ -1,0 +1,108 @@
+<div class="scope-container">
+    <div {{bind-attr class=":content :pad--md--tm isOnJobSpecific:pad--md--bl:pad--md--bn :pad--sm--only--n :pad--sm--tm"}}>
+        <nav id="formBuildNav" class="nav-bar--sf1 mar--sm--bn">
+            {{#if isOnJobSpecific}}
+                <div class="button-group float--right mar--sm--only--rs mar--md--lxs">
+                    <button {{bind-attr class=":button :button--primary disableSave:disabled"}} {{bind-attr disabled=disableSave}} {{action "clickSaveAndClose"}} data-qa-button="saveAndClose">{{labels.save}} <span class="show-brkpoint--md">{{labels.andClose}}</span></button>
+                    <button {{bind-attr class=":button :button--primary :button--split :show-brkpoint--md disableSave:disabled"}} data-toggle="dropdown" {{bind-attr disabled=disableSave}}><span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu--right">
+                        <li class="dropdown-menu__list-item" {{action "clickSaveAndKeepWorking"}} data-qa-button="saveAndWork"><a>{{labels.saveAndKeepWorking}}</a></li>
+                    </ul>
+                </div>
+                <button {{bind-attr class=":float--right-left :button :button--secondary :mar--sm--only--ls disableCancel:disabled"}} {{bind-attr disabled=disableCancel}} {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+                <h1 class="nav-bar--sf1__title has-subtitle has-subheading page__heading" data-qa-label="title">{{labels.formBuilder}}</h1>
+                <h2 class="nav-bar--sf1__subtitle page__subheading" data-qa-label="subtitle">{{jobTitle}}</h2>
+            {{else}}
+                <button {{bind-attr class=":float--right :button :button--primary :mar--sm--only--ls :mar--md--lxs disableSave:disabled"}} {{bind-attr disabled=disableSave}} {{action "clickSaveAndKeepWorking"}} data-qa-button="save">{{labels.save}}</button>
+                <h1 class="nav-bar--sf1__title page__heading" data-qa-label="title">{{labels.formBuilder}}</h1>
+            {{/if}}
+        </nav>
+        <hr class="show-brkpoint--md"/>
+        {{#if errorMessage}}
+            <div class="alert alert--error">
+                {{{errorMessage}}}
+            </div>
+        {{/if}}
+    </div>
+
+    <div {{bind-attr class="isOnJobSpecific:content--readable:content :pad--sm--tm :pad--sm--only--lxl :content--gutter--right"}}>
+
+        {{partial "savingNotification"}}
+
+        {{#if isOnJobSpecific}}
+            {{render "formElements" sectionFormElements}}
+        {{else}}
+            <div class="row">
+                <div class="column--md--3">
+                    <ul id="contentNav" class="list-group list-group--bordered mar--sm--tn">
+                        {{#link-to "contactInfo" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="contactInfo"}}
+                            <a>{{labels.contactInfo}}</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "resume" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="resume"}}
+                            <a>{{labels.resume}}</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "skills" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="skills"}}
+                            <a>{{labels.skills}}</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "employmentHistory" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="employmentHistory"}}
+                            <a>{{labels.employmentHistory}}</a>
+                        {{/link-to}} 
+                        {{#link-to "applicationSection" "educationHistory" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="educationHistory"}}
+                            <a>{{labels.educationHistory}}</a>
+                        {{/link-to}} 
+                        {{#link-to "formElements" "General" selectedHiringModel class="list-group__item"  tagName="li" disabledWhen=disableCancel data-qa-link="general"}}
+                            <a>{{labels.general}}</a>
+                        {{/link-to}}
+                        {{#link-to "formElements" "Legal" selectedGeography class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="legal"}}
+                            <a>{{labels.legal}}</a>
+                        {{/link-to}}
+                    </ul>
+                </div>
+                <div class="column--md--9 pad--md--lxl">
+                    {{#if isInLegal}}
+                        <label class="mar--sm--rs" data-qa-label="geography">{{labels.geography}}</label>
+                        <span class="select__wrap inline-block">
+                            <span class="input__icon juicon juicon-down"></span>
+                            {{view "select" 
+                                content=geographies
+                                optionValuePath="content.Id"
+                                optionLabelPath="content.Name" 
+                                value=selectedGeography
+                                data-qa-input="geography"
+                                disabled=disableCancel}}
+                        </span>
+                    {{else}}
+                        <label class="mar--sm--rs" data-qa-label="hiringModel">{{labels.hiringModel}}</label>
+                        <span class="select__wrap inline-block">
+                            <span class="input__icon juicon juicon-down"></span>
+                            {{view "select" 
+                                content=hiringModelPicklistValues
+                                value=selectedHiringModel
+                                data-qa-input="hiringModel"
+                                disabled=disableCancel}}
+                        </span>
+                    {{/if}}
+                    <hr class="hr-alt">
+                    {{outlet}}
+                </div>
+            </div>
+        {{/if}}
+    </div>
+    
+    <div class="content pad--md--tm pad--md--bl pad--sm--only--n pad--sm--tm">
+        <nav id="formBuildNav" class="nav-bar--sf1 mar--sm--bn">
+            {{#if isOnJobSpecific}}
+                <div class="button-group float--right mar--sm--only--rs mar--md--lxs">
+                    <button {{bind-attr class=":button :button--primary disableSave:disabled"}} {{bind-attr disabled=disableSave}} {{action "clickSaveAndClose"}} data-qa-button="saveAndClose">{{labels.save}} <span class="show-brkpoint--md">{{labels.andClose}}</span></button>
+                    <button {{bind-attr class=":button :button--primary :button--split :show-brkpoint--md disableSave:disabled"}} data-toggle="dropdown" {{bind-attr disabled=disableSave}}><span class="caret"></span></button>
+                    <ul class="dropdown-menu dropdown-menu--right">
+                        <li class="dropdown-menu__list-item" {{action "clickSaveAndKeepWorking"}} data-qa-button="saveAndWork"><a>{{labels.saveAndKeepWorking}}</a></li>
+                    </ul>
+                </div>
+                <button {{bind-attr class=":float--right-left :button :button--secondary :mar--sm--only--ls disableCancel:disabled"}} {{bind-attr disabled=disableCancel}} {{action "clickCancel"}}>{{labels.cancel}}</button>
+            {{else}}
+                <button {{bind-attr class=":float--right :button :button--primary :mar--sm--only--ls :mar--md--lxs disableSave:disabled"}} {{bind-attr disabled=disableSave}} {{action "clickSaveAndKeepWorking"}} data-qa-button="save">{{labels.save}}</button>
+            {{/if}}
+        </nav>
+    </div>
+</div>

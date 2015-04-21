@@ -1,0 +1,9 @@
+<div class="list-heading">
+    <h4 class="list-heading__title" data-qa-label="richText">{{labels.richText}}</h4>
+</div>
+<div class="panel__body">
+    <div {{bind-attr class=":form__group :mar--sm--bn errorMessage:has-error"}}>
+        {{rich-text class="elementInput" componentId=componentId value=model.Rich_Text_Content__c bindingType="text" autofocus=true}}
+        <small class="input-error-content">{{errorMessage}}</small>
+    </div>
+</div>

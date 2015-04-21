@@ -1,0 +1,24 @@
+<div class="panel__component">
+    <ul class="list-style-type-none inline-block input-size mar--sm--n text-right float--right">
+        {{#unless isInLegal}}
+            <li data-toggle="tooltip" data-placement="left" title="{{unbound labels.upvote}}" {{bind-attr class=":inline-block :upVote isThumbsUp:active"}} {{action "clickVote" "upVote"}} data-qa-icon="upVote">
+                <span class="juicon juicon-like pad--sm--ls component__icon text-faded"></span>
+            </li>
+            <li data-toggle="tooltip" data-placement="left" title="{{unbound labels.downvote}}" {{bind-attr class=":inline-block :downVote isThumbsDown:active"}} {{action "clickVote" "downVote"}} data-qa-icon="thumbsDown">
+                <span class="juicon juicon-dislike pad--sm--ls component__icon text-faded"></span>
+            </li>
+            <li data-toggle="tooltip" data-placement="left" title="{{unbound labels.disqualify}}" {{bind-attr class=":inline-block :disqualify isDisqualify:active"}} {{action "clickVote" "disqualify"}} data-qa-icon="disqualify">
+                <span class="juicon juicon-ban pad--sm--ls component__icon text-faded"></span>
+            </li>
+        {{/unless}}
+        <li data-toggle="tooltip" data-placement="left" title="{{unbound labels.deleteThisChoice}}" class="inline-block scoreOption relative" {{action "clickDelete"}} data-qa-icon="delete">
+            <span class="juicon juicon-trash component__icon text-faded pad--sm--ls" data-toggle="dropdown"></span>
+        </li>
+    </ul>
+    <div class="" style="padding-right: 120px;">
+        <div class="form__group">
+            {{input class="answerInput" type="text" placeholder=labels.typeAnAnswer value=model.Value__c action="clickAddAnswer" maxlength="255" data-qa-input="answerChoice"}}
+            <small class="input-error-content"></small>
+        </div>
+    </div>
+</div>

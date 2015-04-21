@@ -392,7 +392,7 @@ function program28(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.shareJob", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                    <ul class=\"dropdown-menu\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                     <ul class=\"dropdown-menu\">\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickTweet", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -408,11 +408,11 @@ function program28(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.linkedIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n\n\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                        <li class=\"dropdown-menu__list-item\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLinkedIn", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("><span class=\"juicon juicon-linkedin\"></span> Facebook </a></li>\n\n\n\n                    </ul>\n                </div>\n                ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickFacebook", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><span class=\"juicon juicon-facebook\"></span> Facebook </a></li>\n                    </ul>\n\n                    \n\n\n                </div>\n                ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "allMyJobs", {hash:{},inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});

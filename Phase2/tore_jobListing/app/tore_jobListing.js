@@ -445,23 +445,23 @@ App.JobPostingController = Ember.ObjectController.extend({
             }
         },
         clickTweet: function() {
-            var currentUrl = window.parent.location.href;
-            var tweetString = 'Check out this #dreamjob ' + currentUrl;
+            var url = window.location.href;
+            var tweetString = 'Check out this #dreamjob ' + url;
             var width = 626;
             var height = 436;
             var left = (screen.width / 2) - (width / 2);
             var top = (screen.height / 2) - (height / 2);
 
-            window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweetString),
-                        'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
-                        'menubar=no, toolbar=no, resizable=yes, scrollbars=yes'
-                );
+            window.open('http://www.twitter.com/share?text=' + encodeURIComponent(tweetString),
+                        'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
+                        'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
+
+            return false;
         },
+
         clickLinkedIn: function (){
             var url = window.location.href;
-            var title = 'Title';
             var source = 'https://www.appiphony.com'; // This does not show up anywhere except on url
-            var summary = 'Summary';
             var docTitle = document.title; // This is the document where the Share Button is
             var width = 626;
             var height = 436;
@@ -469,13 +469,16 @@ App.JobPostingController = Ember.ObjectController.extend({
             var top = (screen.height / 2) - (height / 2);
 
             window.open('http://www.linkedin.com/shareArticle?mini=true&url='+ 
-                        encodeURIComponent(url) + '&title=' + encodeURIComponent(title) + 
-                        '&source=' + encodeURIComponent(source) + '&summary=' + encodeURIComponent(summary) + '&t=' + encodeURIComponent(docTitle),
+                        encodeURIComponent(url) + 
+                        '&source=' + encodeURIComponent(source),
                         'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
                         'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
 
             return false;
         },
+
+
+
         clickFacebook: function (){
             var url = window.location.href;
             var docTitle = document.title; // This is the document where the Share Button is
@@ -484,13 +487,42 @@ App.JobPostingController = Ember.ObjectController.extend({
             var left = (screen.width / 2) - (width / 2);
             var top = (screen.height / 2) - (height / 2);
 
+
+            console.log('URLLL: ');
+            console.log(encodeURIComponent(url));
+            console.log('DOCTITLE: ');
+            console.log(window.location.title);
+
             window.open('http://www.facebook.com/sharer.php?u='+ 
                         encodeURIComponent(url)+ '&t=' + encodeURIComponent(docTitle),
                         'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
                         'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
-
+ 
             return false;
         },
+
+
+        // clickFacebook2: function (){
+        //     FB.ui({
+        //         method: 'feed',
+        //         name: 'Facebook Dialogs',
+        //         link: 'https://developers.facebook.com/docs/dialogs/',
+        //         picture: 'http://fbrell.com/f8.jpg',
+        //         caption: 'Reference Documentation',
+        //         description: 'Dialogs provide a simple, consistent interface for applications to interface with users.'
+        //     });
+
+            
+        //     FB.ui({
+        //         method: 'share',
+        //         href: 'https://developers.facebook.com/docs/',
+        //     }, function(response){});
+
+        //     return false;
+        // },
+
+
+
         toggleSaveJob: function (){
             if(this.get('isSaving')){
                 return;
