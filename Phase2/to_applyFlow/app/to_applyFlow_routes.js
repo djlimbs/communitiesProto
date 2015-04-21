@@ -284,9 +284,8 @@ App.redirectAfterFinish = function(application) {
     window.parent.location.href = redirectUrl;
 };
 
-App.ApplyRoute = Ember.Route.extend( {
+App.ApplicationRoute = Ember.Route.extend({
     model: function(params) {
-
         return new Ember.RSVP.Promise(function(resolve, reject) {
             if (Ember.isEmpty(applicationRedirectUrl)) {
                 var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
@@ -321,10 +320,35 @@ App.ApplyRoute = Ember.Route.extend( {
                 resolve(applicationObj);
             }
         });
-        
+    },
+    afterModel: function(model, transition) {
+        if (isOnePage === true) {
+            this.transitionTo('onePage');
+        } else {
+            this.transitionTo('apply');
+        }
+    }
+});
+
+App.ApplyRoute = Ember.Route.extend( {
+    model: function(params) {
+        return this.modelFor('application');
     },
     afterModel: function(transition) {
         this.transitionTo('contactInfo');
+    }
+});
+
+App.OnePageRoute = Ember.Route.extend({
+    model: function(params){
+        return this.modelFor('application');
+    },
+    setupController: function(controller, model) {
+        controller.set('model', model);
+        this.controllerFor('apply').set('model', model);
+        this.controllerFor('apply').set('isOnePage', true);
+        //this.controllerFor('contactInfo').set('model', model.contactFields);
+        console.log(model);
     }
 });
 

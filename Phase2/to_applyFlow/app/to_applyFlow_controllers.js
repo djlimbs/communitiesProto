@@ -91,6 +91,7 @@ App.ApplyController = Ember.ObjectController.extend({
 
 App.ContactInfoController = Ember.ObjectController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     fieldValuesDidChange: function() {
         var nameFields = this.get('name');
         var addressFields = this.get('address');
@@ -233,6 +234,7 @@ App.ContactInfoController = Ember.ObjectController.extend({
 
 App.ResumeController = Ember.ObjectController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     errorMessageBinding: 'controllers.apply.errorMessage',
     fileToUploadDidChange: function() {
         var resumeFileName = this.get('resumeFileName');
@@ -262,10 +264,14 @@ App.ResumeController = Ember.ObjectController.extend({
     }
 });
 
-App.SkillsController = Ember.ObjectController.extend({});
+App.SkillsController = Ember.ObjectController.extend({
+    needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage'
+});
 
 App.EmploymentHistoryController = Ember.ArrayController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     employmentHistoryYearsBinding: 'controllers.apply.employmentHistoryYears',
     deletedEmploymentHistories: [],
     doesNotRequireGaplessYears: Ember.computed.equal('employmentHistoryYears', 0),
@@ -312,6 +318,7 @@ App.HistoryBlockController = Ember.ObjectController.extend({
 
 App.EducationHistoryController = Ember.ArrayController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     deletedEducationHistories: [],
     isHistorySection: true,
     educationHistoryDidChenge: function() {
@@ -336,6 +343,7 @@ App.EducationHistoryController = Ember.ArrayController.extend({
 
 App.GeneralController = Ember.ArrayController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     didAnswerChange: function() {
         var isGeneralIncomplete = false;
 
@@ -354,6 +362,7 @@ App.GeneralController = Ember.ArrayController.extend({
 
 App.JobSpecificController = Ember.ArrayController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     didAnswerChange: function() {
         var isJobSpecificIncomplete = false;
 
@@ -372,6 +381,7 @@ App.JobSpecificController = Ember.ArrayController.extend({
 
 App.LegallyRequiredController = Ember.ArrayController.extend({
     needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
     didAnswerChange: function() {
         var isLegallyRequiredIncomplete = false;
 
