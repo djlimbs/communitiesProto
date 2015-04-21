@@ -3,47 +3,93 @@
 {{partial "emailSentModal"}}
 {{partial "verifyLinkedInUserModal"}}
 
-<div class="wizardSection pad--sm--only--n active" data-qa-container="contactInfo">
-    <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="contactInfo">{{labels.contactInfo}}</h1>
-    {{#if errorMessage}}
-        {{partial "errorAlert"}}
-    {{/if}}
-    <div class="panel" data-qa-container="fields">
-        <div class="list-heading">
-            <h4 class="list-heading__title has-radius-top" data-qa-label="nameFields">{{nameFieldsLabel}}</h4>
-        </div>
-        <div class="panel__body pad--sm--bn">
-            <div class="row">
-                {{#each field in name}}
-                    {{partial field.partial}}
-                {{/each}}
+{{#if isOnePage}}
+    <div class="wizardSection pad--sm--only--n active" data-qa-container="contactInfoOnePage">
+        <div class="panel" data-qa-container="fields">
+            <div class="panel__top">
+                <h2 class="panel__heading" data-qa-header="contactInfo">
+                    {{labels.contactInfo}}
+                </h2>
             </div>
-        </div>
-
-        {{#if contact}}
             <div class="list-heading">
-                <h4 class="list-heading__title" data-qa-label="contactFields">{{contactFieldsLabel}}</h4>
+                <h4 class="list-heading__title has-radius-top" data-qa-label="nameFields">{{nameFieldsLabel}}</h4>
             </div>
             <div class="panel__body pad--sm--bn">
                 <div class="row">
-                    {{#each field in contact}}
+                    {{#each field in name}}
                         {{partial field.partial}}
                     {{/each}}
                 </div>
             </div>
-        {{/if}}
-        
-        {{#if address}}
-            <div class="list-heading">
-                <h4 class="list-heading__title" data-qa-label="addressFields">{{addressFieldsLabel}}</h4>
-            </div>
-            <div class="panel__body pad--sm--bn">
-                <div class="row">
-                    {{#each field in address}}
-                        {{partial field.partial}}
-                    {{/each}}
+            {{#if contact}}
+                <div class="list-heading">
+                    <h4 class="list-heading__title" data-qa-label="contactFields">{{contactFieldsLabel}}</h4>
                 </div>
-            </div>
-        {{/if}}
+                <div class="panel__body pad--sm--bn">
+                    <div class="row">
+                        {{#each field in contact}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+            {{#if address}}
+                <div class="list-heading">
+                    <h4 class="list-heading__title" data-qa-label="addressFields">{{addressFieldsLabel}}</h4>
+                </div>
+                <div class="panel__body pad--md--bn">
+                    <div class="row">
+                        {{#each field in address}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+        </div>
     </div>
-</div>
+{{else}}
+    <div class="wizardSection pad--sm--only--n active" data-qa-container="contactInfo">
+        <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="contactInfo">{{labels.contactInfo}}</h1>
+        {{#if errorMessage}}
+            {{partial "errorAlert"}}
+        {{/if}}
+        <div class="panel" data-qa-container="fields">
+            <div class="list-heading">
+                <h4 class="list-heading__title has-radius-top" data-qa-label="nameFields">{{nameFieldsLabel}}</h4>
+            </div>
+            <div class="panel__body pad--sm--bn">
+                <div class="row">
+                    {{#each field in name}}
+                        {{partial field.partial}}
+                    {{/each}}
+                </div>
+            </div>
+
+            {{#if contact}}
+                <div class="list-heading">
+                    <h4 class="list-heading__title" data-qa-label="contactFields">{{contactFieldsLabel}}</h4>
+                </div>
+                <div class="panel__body pad--sm--bn">
+                    <div class="row">
+                        {{#each field in contact}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+            
+            {{#if address}}
+                <div class="list-heading">
+                    <h4 class="list-heading__title" data-qa-label="addressFields">{{addressFieldsLabel}}</h4>
+                </div>
+                <div class="panel__body pad--sm--bn">
+                    <div class="row">
+                        {{#each field in address}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+{{/if}}

@@ -622,16 +622,17 @@ App.LegallyRequiredView = Ember.View.extend({
 
 // Router
 App.Router.map(function() {
-    this.resource('apply', { path: '/' }, function() {
-        this.resource('contactInfo', { path: '/contactInfo' });
-        this.resource('resume', { path: '/resume' });
-        this.resource('skills', { path: '/skills' });
-        this.resource('employmentHistory', { path: '/employmentHistory' });
-        this.resource('educationHistory', { path: '/educationHistory' });
-        this.resource('general', { path: '/general' });
-        this.resource('jobSpecific', { path: '/jobSpecific' });
-        this.resource('legallyRequired', { path: '/legallyRequired' });
-        this.resource('submit', { path: '/submit' });
+    this.resource('onePage');
+    this.resource('apply', function() {
+        this.resource('contactInfo');
+        this.resource('resume');
+        this.resource('skills');
+        this.resource('employmentHistory');
+        this.resource('educationHistory');
+        this.resource('general');
+        this.resource('jobSpecific');
+        this.resource('legallyRequired');
+        this.resource('submit');
     });
 });
 

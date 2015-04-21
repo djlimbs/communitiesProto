@@ -1,27 +1,55 @@
-<div class="wizardSection pad--sm--only--n active" data-qa-container="employmentHistory">
-    <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="employmentHistory">{{labels.employmentHistory}}</h1>
-    {{#if errorMessage}}
-        {{partial "errorAlert"}}
-    {{else}}
-        {{#unless doesNotRequireGaplessYears}}
-            <div class="alert alert--warning mar--md--bm" data-qa-alert="gaplessReq">
-                <strong data-qa-label="gaplessMessage">{{labels.pleaseSupply}} {{employmentHistoryYears}} {{labels.yearsOfHistoryWithoutGaps}} </strong>
+{{#if isOnePage}}
+    <div class="wizardSection pad--sm--only--n mar--md--txl" data-qa-container="employmentHistoryOnePage">
+        <div class="panel">
+            <div class="panel__top">
+                <h2 class="panel__heading has-subheading" data-qa-header="employmentHistory">
+                   {{labels.employmentHistory}}
+                </h2>
+                {{#unless doesNotRequireGaplessYears}}
+                    <h3 class="panel__subheading required-field text-error pad--sm--bm block pad--sm--only--lm pad--sm--only--rm text-left-center" data-qa-label="gaplessMessage">{{labels.pleaseSupply}} {{employmentHistoryYears}} {{labels.yearsOfHistoryWithoutGaps}} </h3>
+                {{/unless}}
             </div>
-        {{/unless}}
-    {{/if}}
-    <div class="panel">
-        {{#each employmentHistory in model itemController="historyBlock"}}
-            <div class="panel__component panel__component--removable pad--sm--bn" data-qa-container="empHistoryBlock">
-                <button type="button" class="close" {{action "clickDeleteEmploymentHistory" employmentHistory}} data-qa-button="deleteEmpHistory"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
-                <div class="row">
-                    {{#each field in employmentHistory.fields itemController="historyField"}}
-                        {{partial field.partial}}
-                    {{/each}}
+            {{#each employmentHistory in model itemController="historyBlock"}}
+                <div class="panel__component panel__component--removable" data-qa-container="empHistoryBlock">
+                    <button type="button" class="close"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+                    <div class="row">
+                        {{#each field in employmentHistory.fields itemController="historyField"}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>
                 </div>
+            {{/each}}
+            <div class="panel__component">
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddEmploymentHistory"}} data-qa-button="addEmpHistory">{{labels.addEmploymentHistory}} <span class="juicon juicon-plus"></span></button>
             </div>
-        {{/each}}
-        <div class="panel__component">
-            <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddEmploymentHistory"}} data-qa-button="addEmpHistory">{{labels.addEmploymentHistory}} <span class="juicon juicon-plus"></span></button>
         </div>
     </div>
-</div>
+{{else}}
+    <div class="wizardSection pad--sm--only--n active" data-qa-container="employmentHistory">
+        <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="employmentHistory">{{labels.employmentHistory}}</h1>
+        {{#if errorMessage}}
+            {{partial "errorAlert"}}
+        {{else}}
+            {{#unless doesNotRequireGaplessYears}}
+                <div class="alert alert--warning mar--md--bm" data-qa-alert="gaplessReq">
+                    <strong data-qa-label="gaplessMessage">{{labels.pleaseSupply}} {{employmentHistoryYears}} {{labels.yearsOfHistoryWithoutGaps}} </strong>
+                </div>
+            {{/unless}}
+        {{/if}}
+        <div class="panel">
+            {{#each employmentHistory in model itemController="historyBlock"}}
+                <div class="panel__component panel__component--removable pad--sm--bn" data-qa-container="empHistoryBlock">
+                    <button type="button" class="close" {{action "clickDeleteEmploymentHistory" employmentHistory}} data-qa-button="deleteEmpHistory"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <div class="row">
+                        {{#each field in employmentHistory.fields itemController="historyField"}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>
+                </div>
+            {{/each}}
+            <div class="panel__component">
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddEmploymentHistory"}} data-qa-button="addEmpHistory">{{labels.addEmploymentHistory}} <span class="juicon juicon-plus"></span></button>
+            </div>
+        </div>
+    </div>
+{{/if}}
