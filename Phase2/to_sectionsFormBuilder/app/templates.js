@@ -1644,11 +1644,15 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'data-qa-input': ("enabled")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n    </span>\n    <span class=\"table-group__object--large\" data-qa-label=\"enabled\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.enabled", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" HER </span>\n</label>");
+  data.buffer.push("\n    </span>\n    <span class=\"table-group__object--large\" data-qa-label=\"enabled\">Resume</span>\n</label>\n\n<label class=\"table-group mar--sm--bs\">\n	<span class=\"table-group__object--small\">\n		");
+  hashContexts = {'type': depth0,'checked': depth0};
+  hashTypes = {'type': "STRING",'checked': "ID"};
+  options = {hash:{
+    'type': ("checkbox"),
+    'checked': ("personalStatement")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n	</span>\n	<span class=\"table-group__object--large\">Personal Statement</span>\n</label>");
   return buffer;
   
 });
