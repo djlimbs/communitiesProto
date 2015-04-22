@@ -272,6 +272,143 @@ App.setupLegallyRequiredSection = function(parsedApplyMap, applicationObj, hirin
     }
 };
 
+App.buildContactSaveObj = function(application) {
+    var contactInfoObj = {
+        Id: appId
+    };
+
+    ['name', 'contact', 'address'].forEach(function(section) {
+        application.contactFields[section].forEach(function(f) {
+            contactInfoObj[f.name] = f.value;
+        });
+    });    
+
+    return contactInfoObj;
+};
+
+App.buildSkillsSaveObj = function(application) {
+    var selectedSkillsString = application.skills.selectedSkillsString;
+    var selectedSkills = [];
+
+    if (!Ember.isEmpty(selectedSkillsString)) {
+        selectedSkills = selectedSkillsString.split(',');
+    }
+
+    var skillsObj = {
+        applicationId: appId,
+        skills: selectedSkills,
+        flattenedSkills: selectedSkillsString.replace(/,/g, ', ')
+    };
+
+    return skillsObj;
+};
+
+App.buildEmploymentHistorySaveObj = function(application, errorMessage) {
+    var employmentHistoryObjArray = [];
+    var flattenedEmploymentHistory = '';
+    var historyIsLongEnough = false;
+    var isValid = true;
+    var sectionArray = application.sectionArray;
+
+    application.employmentHistoryArray.forEach(function(eh) {
+        var employmentHistoryObj = {
+            Id: eh.Id,
+            eId: eh.eId,
+            Application__c: appId
+        };
+
+        var isCurrentField = eh.fields.findBy('name', 'Is_Current__c');
+        var isCurrentChecked;
+
+        if (!Ember.isNone(isCurrentField)) {
+            isCurrentChecked = isCurrentField.value;
+        }
+
+        eh.fields.forEach(function(field) {
+
+            if (field.name === 'Start_Year__c' || (field.name === 'End_Year__c' && isCurrentChecked === false)) {
+                field.set('hasError', false);
+
+                if (isNaN(field.value)) {
+                    field.set('hasError', true);
+                    isValid = false;
+                } else {
+                    var intValue = parseInt(field.value);
+                    var highestYear = parseInt(moment().format('YYYY'));
+
+                    if (intValue < 1900 || intValue > highestYear) {
+                        field.set('hasError', true);
+                        isValid = false;
+                    } else {
+                        employmentHistoryObj[field.name] = field.value;
+                    }
+                }
+
+                if (isValid === false) {
+                    errorMessage = labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
+                                    + labels.and + ' ' + moment().format('YYYY');
+                }
+            } else {
+                employmentHistoryObj[field.name] = field.value;
+            }
+        });
+
+        // add employment history to flattened string
+        flattenedEmploymentHistory += employmentHistoryObj.Name + '\n'
+                    + employmentHistoryObj.Job_Title__c + '\n'
+                    + App.Fixtures.numberToMonthMap[employmentHistoryObj.Start_Month__c] + ' ' + employmentHistoryObj.Start_Year__c + ' - ';
+
+        if (employmentHistoryObj.Is_Current__c == true) {
+            employmentHistoryObj.End_Month__c = null;
+            employmentHistoryObj.End_Year__c = null;
+            flattenedEmploymentHistory += labels.present;
+        } else if (!Ember.isNone(employmentHistoryObj.End_Month__c) && !Ember.isNone(employmentHistoryObj.End_Year__c)) {
+            flattenedEmploymentHistory += App.Fixtures.numberToMonthMap[employmentHistoryObj.End_Month__c] + ' ' + employmentHistoryObj.End_Year__c;
+        }
+
+        flattenedEmploymentHistory += '\n\n';
+
+        employmentHistoryObjArray.addObject(employmentHistoryObj);
+    });
+    
+    // check months
+    var hasGap = false;
+    if (application.employmentHistoryYears !== 0) {
+        hasGap = App.checkForEmploymentHistoryGaps(employmentHistoryObjArray, application.employmentHistoryYears);
+    }
+
+    isValid = isValid && !hasGap;
+
+    if (isValid) {
+
+        var employmentHistoriesObj = {
+            employmentHistories: employmentHistoryObjArray,
+            deletedEmploymentHistories: this.controllerFor('employmentHistory').get('deletedEmploymentHistories'),
+            appId: appId,
+            flattenedEmploymentHistory: flattenedEmploymentHistory
+        };
+
+        return employmentHistoriesObj;
+
+    } else if (!isValid) {
+        
+        if (hasGap) {
+            var currentMonthString = App.Fixtures.numberToMonthMap[moment().format('M')] + ' ' + moment().format('YYYY');
+            var earliestMonth = moment().subtract(application.employmentHistoryYears, 'years');
+            var earliestMonthString = App.Fixtures.numberToMonthMap[earliestMonth.format('M')] + ' ' + earliestMonth.format('YYYY');
+
+            if (errorMessage !== '') {
+                errorMessage += '</br>';
+            }
+
+            errorMessage += labels.pleaseAccountForEveryMonthBetween + ' ' 
+                                + currentMonthString + ' ' + labels.and + ' ' + earliestMonthString + ' ' + labels.inclusive + '.';
+        }
+
+        return null;
+    }
+};
+
 App.redirectAfterFinish = function(application) {
     var redirectUrl;
 
@@ -365,9 +502,6 @@ App.ContactInfoRoute = Ember.Route.extend({
         var apply = this.modelFor('apply');
         var applyController = this.controllerFor('apply');
         var currentPath = applyController.get('currentPath');
-        var contactInfoObj = {
-            Id: appId
-        };
 
         applyController.set('errorMessage', null);
 
@@ -386,11 +520,7 @@ App.ContactInfoRoute = Ember.Route.extend({
 
             applyController.set('showSavingNotification', true);
 
-            ['name', 'contact', 'address'].forEach(function(section) {
-                apply.contactFields[section].forEach(function(f) {
-                    contactInfoObj[f.name] = f.value;
-                });
-            });
+            var contactInfoObj = App.buildContactSaveObj(apply);
 
             cont.saveContactInfo(JSON.stringify(contactInfoObj), completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
         } 
@@ -510,14 +640,10 @@ App.SkillsRoute = Ember.Route.extend({
     },
     saveSkills: function(transition, completeApplication) {
         var self = this;
-        var applyModel = this.modelFor('apply');
-        var applyController = this.controllerFor('apply');
+        var apply = this.controllerFor('apply');
         var currentPath = applyController.get('currentPath');
-        var skillsModel = this.modelFor('skills');
-        var selectedSkillsString = skillsModel.selectedSkills;
-        var selectedSkills = [];
         
-        if (applyController.get('showSavingNotification') !== true) {
+        if (apply.get('showSavingNotification') !== true) {
             if (completeApplication !== true) {
                 transition.abort();
             }
@@ -529,17 +655,13 @@ App.SkillsRoute = Ember.Route.extend({
                 }
             };
 
-            applyController.set('showSavingNotification', true);
+            apply.set('showSavingNotification', true);
 
             if (!Ember.isEmpty(selectedSkillsString)) {
                 selectedSkills = selectedSkillsString.split(',');
             }
 
-            var saveObj = {
-                applicationId: appId,
-                skills: selectedSkills,
-                flattenedSkills: selectedSkillsString.replace(/,/g, ', ')
-            };
+            var saveObj = App.buildSkillsSaveObj(apply);
 
             cont.saveSkills(JSON.stringify(saveObj), completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
         }  

@@ -2113,12 +2113,8 @@ function program13(depth0,data) {
   data.buffer.push(" style=\"top:0;right:0;\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDone", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"done\"><span class=\"show-brkpoint--md\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.done", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span> <span class=\"juicon juicon-forward\"></span> </button>\n            </div>\n        </div>\n\n        <footer>\n            <div class=\"content__section\">\n                <img class=\"mar--sm--txl theme-logo\" data-qa-image=\"logoFooter\" src=\"");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickFinish", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"done\"><span class=\"show-brkpoint--md\">Finish</span> <span class=\"juicon juicon-check\"></span> </button>\n            </div>\n        </div>\n\n        <footer>\n            <div class=\"content__section\">\n                <img class=\"mar--sm--txl theme-logo\" data-qa-image=\"logoFooter\" src=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "companyLogoUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

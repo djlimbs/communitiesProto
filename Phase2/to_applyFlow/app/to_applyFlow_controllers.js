@@ -1,6 +1,62 @@
 // Defining application controller as it automatically comes w/ currentPath which we need for navigation.
 App.ApplicationController = Ember.Controller.extend({});
 
+App.OnePageController = Ember.ObjectController.extend({
+    actions: {
+        clickFinish: function() {
+            var application = this.get('model');
+            var errorMessage = '';
+            var saveObj = {};
+
+            this.set('errorMessage', null);
+
+            saveObj.contactInfo = App.buildContactSaveObj(apply);
+
+            if (application.isSkillsEnabled) {
+                saveObj.skillsObj = App.buildSkillsSaveObj(apply);
+            }
+            
+            if (application.isEmploymentHistoryEnabled) {
+                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(apply, errorMessage);
+
+                if (employmentHistoryObj !== null) {
+                    saveObj.employmentHistoryObj = employmentHistoryObj;
+                }
+            }
+
+            if (application.isEducationHistoryEnabled) {
+                var educationHistoryObj = App.buildEducationHistorySaveObj(apply, errorMessage);
+
+                if (educationHistoryObj !== null) {
+                    saveObj.educationHistoryObj = educationHistoryObj;
+                }
+            }
+
+            if (application.isGeneralEmpty !== true) {  
+                saveObj.generalApplicantResponsesObj = {
+                    applicantResponses: App.createApplicantResponseObj(apply.generalFormElements),
+                    applicationId: appId
+                };
+            }
+
+            if (application.isJobSpecificEmpty !== true) {
+                saveObj.jobSpecificApplicantResponsesObj = {
+                    applicantResponses: App.createApplicantResponseObj(apply.jobSpecificFormElements),
+                    applicationId: appId
+                };
+            }
+
+            if (application.isLegalEmpty !== true) {
+                saveObj.legalApplicantRequiredDataObj = {
+                    applicantRequiredDatas: App.createApplicantRequiredDataObj(apply.legalFormElements),
+                    applicationId: appId
+                }
+            }
+
+        }
+    }
+});
+
 App.ApplyController = Ember.ObjectController.extend({
     needs: ['application', 'contactInfo', 'resume', 'skills', 'employmentHistory', 'educationHistory', 'general', 'jobSpecific', 'legallyRequired'],
     currentPath: function() {  
