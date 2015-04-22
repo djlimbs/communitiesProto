@@ -287,7 +287,7 @@ App.buildContactSaveObj = function(application) {
 };
 
 App.buildSkillsSaveObj = function(application) {
-    var selectedSkillsString = application.skills.selectedSkillsString;
+    var selectedSkillsString = application.skills.selectedSkills;
     var selectedSkills = [];
 
     if (!Ember.isEmpty(selectedSkillsString)) {
@@ -303,12 +303,11 @@ App.buildSkillsSaveObj = function(application) {
     return skillsObj;
 };
 
-App.buildEmploymentHistorySaveObj = function(application, errorMessage) {
+App.buildEmploymentHistorySaveObj = function(application, employmentHistoryController, errorMessage) {
     var employmentHistoryObjArray = [];
     var flattenedEmploymentHistory = '';
     var historyIsLongEnough = false;
     var isValid = true;
-    var sectionArray = application.sectionArray;
 
     application.employmentHistoryArray.forEach(function(eh) {
         var employmentHistoryObj = {
@@ -383,7 +382,7 @@ App.buildEmploymentHistorySaveObj = function(application, errorMessage) {
 
         var employmentHistoriesObj = {
             employmentHistories: employmentHistoryObjArray,
-            deletedEmploymentHistories: this.controllerFor('employmentHistory').get('deletedEmploymentHistories'),
+            deletedEmploymentHistories: employmentHistoryController.get('deletedEmploymentHistories'),
             appId: appId,
             flattenedEmploymentHistory: flattenedEmploymentHistory
         };
@@ -404,6 +403,78 @@ App.buildEmploymentHistorySaveObj = function(application, errorMessage) {
             errorMessage += labels.pleaseAccountForEveryMonthBetween + ' ' 
                                 + currentMonthString + ' ' + labels.and + ' ' + earliestMonthString + ' ' + labels.inclusive + '.';
         }
+
+        return null;
+    }
+};
+
+App.buildEducationHistorySaveObj = function(application, educationHistoryController, errorMessage) {
+    var educationHistoryObjArray = [];
+    var flattenedEducationHistory = '';
+    var isValid = true;
+
+    application.educationHistoryArray.forEach(function(eh) {
+        var educationHistoryObj = {
+            eId: eh.eId,
+            Id: eh.Id,
+            Application__c: appId
+        };
+
+        eh.fields.forEach(function(field) {
+            if (field.name === 'Start_Year__c' || field.name === 'End_Year__c') {
+                field.set('hasError', false);
+
+                if (isNaN(field.value)) {
+                    field.set('hasError', true);
+                    isValid = false;
+                } else {
+                    var intValue = parseInt(field.value);
+                    var highestYear = parseInt(moment().format('YYYY')) + 10;
+
+                    if (intValue < 1900 || intValue > highestYear) {
+                        field.set('hasError', true);
+                        isValid = false;
+                    } else {
+                        educationHistoryObj[field.name] = Ember.isEmpty(field.value) ? null : field.value;
+                    }
+                }
+
+                if (isValid === false) {
+                    errorMessage = labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
+                                    + labels.and + ' ' + moment().add(10, 'years').format('YYYY');
+                }
+            } else {
+                educationHistoryObj[field.name] = field.value;
+            }
+        });
+
+        // add education history to flattened string
+        flattenedEducationHistory += educationHistoryObj.Name + '\n'
+                    + educationHistoryObj.Education_Level__c;
+
+        if (!Ember.isNone(educationHistoryObj.Status__c)) {
+            flattenedEducationHistory += ' (' + educationHistoryObj.Status__c + ')';
+        } 
+        
+        flattenedEducationHistory += '\n' 
+                                  + App.Fixtures.numberToMonthMap[educationHistoryObj.Start_Month__c] + ' ' + educationHistoryObj.Start_Year__c + ' - '
+                                  + App.Fixtures.numberToMonthMap[educationHistoryObj.End_Month__c] + ' ' + educationHistoryObj.End_Year__c
+                                  + '\n\n';
+
+        educationHistoryObjArray.addObject(educationHistoryObj);
+    });
+
+    if (isValid) {
+        var educationHistoriesObj = {
+            educationHistories: educationHistoryObjArray,
+            deletedEducationHistories: educationHistoryController.get('deletedEducationHistories'),
+            appId: appId,
+            flattenedEducationHistory: flattenedEducationHistory
+        };
+
+        return educationHistoryObj;
+    } else if (!isValid) {
+        errorMessage += errorMessage;
 
         return null;
     }

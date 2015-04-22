@@ -1671,8 +1671,12 @@ function program2(depth0,data) {
 
 function program4(depth0,data) {
   
-  var buffer = '', stack1, hashContexts, hashTypes;
-  data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"empHistoryBlock\">\n                    <button type=\"button\" class=\"close\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                    <div class=\"row\">\n                        ");
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"empHistoryBlock\">\n                    <button type=\"button\" class=\"close\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteEmploymentHistory", "employmentHistory", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"deleteEmpHistory\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span></button>\n                    <div class=\"row\">\n                        ");
   hashContexts = {'itemController': depth0};
   hashTypes = {'itemController': "STRING"};
   stack1 = helpers.each.call(depth0, "field", "in", "employmentHistory.fields", {hash:{

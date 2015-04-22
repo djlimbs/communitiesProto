@@ -2,22 +2,25 @@
 App.ApplicationController = Ember.Controller.extend({});
 
 App.OnePageController = Ember.ObjectController.extend({
+    needs: ['employmentHistory', 'educationHistory'],
     actions: {
         clickFinish: function() {
             var application = this.get('model');
             var errorMessage = '';
             var saveObj = {};
+            var employmentHistoryController = this.get('controllers.employmentHistory');
+            var educationHistoryController = this.get('controllers.educationHistory');
 
             this.set('errorMessage', null);
 
-            saveObj.contactInfo = App.buildContactSaveObj(apply);
+            saveObj.contactInfo = App.buildContactSaveObj(application);
 
             if (application.isSkillsEnabled) {
-                saveObj.skillsObj = App.buildSkillsSaveObj(apply);
+                saveObj.skillsObj = App.buildSkillsSaveObj(application);
             }
             
             if (application.isEmploymentHistoryEnabled) {
-                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(apply, errorMessage);
+                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(application, employmentHistoryController, errorMessage);
 
                 if (employmentHistoryObj !== null) {
                     saveObj.employmentHistoryObj = employmentHistoryObj;
@@ -25,7 +28,7 @@ App.OnePageController = Ember.ObjectController.extend({
             }
 
             if (application.isEducationHistoryEnabled) {
-                var educationHistoryObj = App.buildEducationHistorySaveObj(apply, errorMessage);
+                var educationHistoryObj = App.buildEducationHistorySaveObj(application, educationHistoryController, errorMessage);
 
                 if (educationHistoryObj !== null) {
                     saveObj.educationHistoryObj = educationHistoryObj;
@@ -34,24 +37,26 @@ App.OnePageController = Ember.ObjectController.extend({
 
             if (application.isGeneralEmpty !== true) {  
                 saveObj.generalApplicantResponsesObj = {
-                    applicantResponses: App.createApplicantResponseObj(apply.generalFormElements),
+                    applicantResponses: App.createApplicantResponseObj(application.generalFormElements),
                     applicationId: appId
                 };
             }
 
             if (application.isJobSpecificEmpty !== true) {
                 saveObj.jobSpecificApplicantResponsesObj = {
-                    applicantResponses: App.createApplicantResponseObj(apply.jobSpecificFormElements),
+                    applicantResponses: App.createApplicantResponseObj(application.jobSpecificFormElements),
                     applicationId: appId
                 };
             }
 
             if (application.isLegalEmpty !== true) {
                 saveObj.legalApplicantRequiredDataObj = {
-                    applicantRequiredDatas: App.createApplicantRequiredDataObj(apply.legalFormElements),
+                    applicantRequiredDatas: App.createApplicantRequiredDataObj(application.legalFormElements),
                     applicationId: appId
                 }
             }
+
+            console.log(saveObj);
 
         }
     }
@@ -344,6 +349,7 @@ App.EmploymentHistoryController = Ember.ArrayController.extend({
             this.get('[]').addObject(employmentHistoryBlock);
         },
         clickDeleteEmploymentHistory: function(employmentHistoryToDelete) {
+            console.log('clicked');
             if (!Ember.isNone(employmentHistoryToDelete.Id)) {
                 this.get('deletedEmploymentHistories').addObject(employmentHistoryToDelete.Id);
             }

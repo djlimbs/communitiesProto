@@ -11,7 +11,7 @@
             </div>
             {{#each employmentHistory in model itemController="historyBlock"}}
                 <div class="panel__component panel__component--removable" data-qa-container="empHistoryBlock">
-                    <button type="button" class="close"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
+                    <button type="button" class="close" {{action "clickDeleteEmploymentHistory" employmentHistory}} data-qa-button="deleteEmpHistory"><span class="component-remove-x"></span><span class="sr-only">Close</span></button>
                     <div class="row">
                         {{#each field in employmentHistory.fields itemController="historyField"}}
                             {{partial field.partial}}
