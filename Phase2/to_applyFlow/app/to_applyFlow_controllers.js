@@ -321,7 +321,10 @@ App.ResumeController = Ember.ObjectController.extend({
                 multiselect : false,
                 extensions : ['.pdf', '.doc', '.docx']
             });
-        } 
+        },
+        clearPersonalStatement: function(){
+            this.set('personalStatement', '');
+        }
     }
 });
 

@@ -45,34 +45,47 @@
             {{partial "errorAlert"}}
         {{/if}}
         <div class="panel">
-            <div class="panel__body">
-                <p class="mar--sm--tn" data-qa-label="uploadResume">
-                    {{labels.pleaseUploadYourResume}}
-                    <div style="display:none;">
-                        {{view "uploadFile" resumeFileName=resumeFileName alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
-                    </div>
-                </p>
-                <div class="row">
-                    <div class="column--md--6">
-                        <div class="button-group width--full inline-block">
-                            <div class="button width--full button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
-                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
-                            </ul>
+            {{#if isAddResumeEnabled}}
+                <div class="panel__body">
+                    <p class="mar--sm--tn" data-qa-label="uploadResume">
+                        {{labels.pleaseUploadYourResume}}
+                        <div style="display:none;">
+                            {{view "uploadFile" resumeFileName=resumeFileName alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
                         </div>
-                    </div>
-                    <div class="column--md--6">
-                        <div class="input-size text-faded dots" data-qa-label="fileName">
-                            {{#if resumeFileName}}
-                                {{resumeFileName}}
-                            {{else}}
-                                {{labels.noFileSelected}}
-                            {{/if}}
+                    </p>
+                    <div class="row">
+                        <div class="column--md--6">
+                            <div class="button-group width--full inline-block">
+                                <div class="button width--full button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
+                                    <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="column--md--6">
+                            <div class="input-size text-faded dots" data-qa-label="fileName">
+                                {{#if resumeFileName}}
+                                    {{resumeFileName}}
+                                {{else}}
+                                    {{labels.noFileSelected}}
+                                {{/if}}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {{/if}}
+
+            {{#if isPersonalStatementEnabled}}
+                <div class="panel__body pad--sm--bn">
+                    <div class="form__group">
+                        <a href="#" class="text-error float--right text-underline" {{action "clearPersonalStatement"}}><small>Clear</small></a>
+                        <label for="textareaSomething" class="">{{labels.personalStatement}}</label>
+                        {{textarea name="something" placeholder="" id="textareaSomething" value=personalStatement}}
+                        <small class="input-error-content">Required field</small>
+                    </div>
+                </div>
+            {{/if}}
         </div>
     </div>
 {{/if}}
