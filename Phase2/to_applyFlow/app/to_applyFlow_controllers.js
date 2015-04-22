@@ -10,48 +10,50 @@ App.OnePageController = Ember.ObjectController.extend({
 
             this.set('errorMessage', null);
 
-            saveObj.contactInfo = App.buildContactSaveObj(apply);
+            saveObj.contactInfo = App.buildContactSaveObj(application);
 
             if (application.isSkillsEnabled) {
-                saveObj.skillsObj = App.buildSkillsSaveObj(apply);
+                saveObj.skillsObj = App.buildSkillsSaveObj(application);
             }
             
             if (application.isEmploymentHistoryEnabled) {
-                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(apply, errorMessage);
+                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(application, errorMessage);
 
                 if (employmentHistoryObj !== null) {
                     saveObj.employmentHistoryObj = employmentHistoryObj;
                 }
             }
 
-            if (application.isEducationHistoryEnabled) {
-                var educationHistoryObj = App.buildEducationHistorySaveObj(apply, errorMessage);
+        /*    if (application.isEducationHistoryEnabled) {
+                var educationHistoryObj = App.buildEducationHistorySaveObj(application, errorMessage);
 
                 if (educationHistoryObj !== null) {
                     saveObj.educationHistoryObj = educationHistoryObj;
                 }
-            }
+            }*/
 
             if (application.isGeneralEmpty !== true) {  
                 saveObj.generalApplicantResponsesObj = {
-                    applicantResponses: App.createApplicantResponseObj(apply.generalFormElements),
+                    applicantResponses: App.createApplicantResponseObj(application.generalFormElements),
                     applicationId: appId
                 };
             }
 
             if (application.isJobSpecificEmpty !== true) {
                 saveObj.jobSpecificApplicantResponsesObj = {
-                    applicantResponses: App.createApplicantResponseObj(apply.jobSpecificFormElements),
+                    applicantResponses: App.createApplicantResponseObj(application.jobSpecificFormElements),
                     applicationId: appId
                 };
             }
 
             if (application.isLegalEmpty !== true) {
                 saveObj.legalApplicantRequiredDataObj = {
-                    applicantRequiredDatas: App.createApplicantRequiredDataObj(apply.legalFormElements),
+                    applicantRequiredDatas: App.createApplicantRequiredDataObj(application.legalFormElements),
                     applicationId: appId
                 }
             }
+
+            console.log(saveObj);
 
         }
     }

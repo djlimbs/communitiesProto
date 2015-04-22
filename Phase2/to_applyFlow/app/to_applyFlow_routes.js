@@ -287,7 +287,7 @@ App.buildContactSaveObj = function(application) {
 };
 
 App.buildSkillsSaveObj = function(application) {
-    var selectedSkillsString = application.skills.selectedSkillsString;
+    var selectedSkillsString = application.skills.selectedSkills;
     var selectedSkills = [];
 
     if (!Ember.isEmpty(selectedSkillsString)) {
@@ -383,7 +383,7 @@ App.buildEmploymentHistorySaveObj = function(application, errorMessage) {
 
         var employmentHistoriesObj = {
             employmentHistories: employmentHistoryObjArray,
-            deletedEmploymentHistories: this.controllerFor('employmentHistory').get('deletedEmploymentHistories'),
+            //deletedEmploymentHistories: this.controllerFor('employmentHistory').get('deletedEmploymentHistories'),
             appId: appId,
             flattenedEmploymentHistory: flattenedEmploymentHistory
         };
