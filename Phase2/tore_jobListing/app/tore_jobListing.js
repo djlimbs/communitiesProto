@@ -446,13 +446,14 @@ App.JobPostingController = Ember.ObjectController.extend({
         },
         clickTweet: function() {
             var url = window.location.href;
-            var tweetString = 'Check out this #dreamjob ' + url;
+            var jobTitle = this.get('jobPosting').Job_Title__c;
+            var tweetString = 'Check out this job: ' + jobTitle; 
             var width = 626;
             var height = 436;
             var left = (screen.width / 2) - (width / 2);
             var top = (screen.height / 2) - (height / 2);
 
-            window.open('http://www.twitter.com/share?text=' + encodeURIComponent(tweetString),
+            window.open('http://www.twitter.com/share?text=' + encodeURIComponent(tweetString) + '&url=' + encodeURIComponent(url),
                         'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
                         'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
 
@@ -461,7 +462,8 @@ App.JobPostingController = Ember.ObjectController.extend({
 
         clickLinkedIn: function (){
             var url = window.location.href;
-            var source = 'https://www.appiphony.com'; // This does not show up anywhere except on url
+            //var source = 'https://www.appiphony.com'; // This does not show up anywhere except on url
+            var source = ''; // This does not show up anywhere except on url
             var docTitle = document.title; // This is the document where the Share Button is
             var width = 626;
             var height = 436;
@@ -487,14 +489,8 @@ App.JobPostingController = Ember.ObjectController.extend({
             var left = (screen.width / 2) - (width / 2);
             var top = (screen.height / 2) - (height / 2);
 
-
-            console.log('URLLL: ');
-            console.log(encodeURIComponent(url));
-            console.log('DOCTITLE: ');
-            console.log(window.location.title);
-
             window.open('http://www.facebook.com/sharer.php?u='+ 
-                        encodeURIComponent(url)+ '&t=' + encodeURIComponent(docTitle),
+                        encodeURIComponent(url) + '&t=' + encodeURIComponent(docTitle),
                         'sharer', 'toolbar=0, status=0, width=' + width + ',height=' + height + ',top=' + top + ',left=' + left +
                         'menubar=no, toolbar=no, resizable=yes, scrollbars=yes');
  
