@@ -1,0 +1,15 @@
+{{#if isOnJobSpecific}}
+    {{#each formElement in arrangedContent}}
+        {{render "formElement" formElement}}
+    {{/each}}
+{{else}}
+    {{#each formElement in formElementsToDisplay}}
+        {{render "formElement" formElement}}
+    {{/each}}
+{{/if}}
+
+{{#unless hasFormElements}}
+    <p class="text-faded text-center mar--sm--txxl mar--sm--bxxl">
+        {{labels.useThe}} <span class="label label--secondary label--round"><span class="juicon juicon-plus text-faded"></span></span> {{labels.buttonsToThe}} <span class="show-brkpoint--md">{{labels.left}}</span><span class="show-brkpoint--sm--only">{{labels.right}}</span> {{labels.toAddQuestionsOrContent}}
+    </p>
+{{/unless}}

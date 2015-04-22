@@ -1,0 +1,51 @@
+<div class="building-block has-hidden-items edit-this">
+    <div class="building-block__edit">
+        <div class="panel">
+            <div class="panel__top">
+                <button {{bind-attr class=":button :button--primary :float--right mar--sm--only--ts doesNotHaveEnoughInfo:disabled"}} {{bind-attr disabled=doesNotHaveEnoughInfo}} {{action "clickDone"}} data-qa-button="done">{{labels.done}} <span class="juicon juicon-check"></span></button>
+                <button class="button button--secondary float--left mar--md--rxs mar--sm--only--ts" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+            </div>
+            <div class="list-heading">
+                <h4 class="list-heading__title" data-qa-label="options">
+                    {{labels.options}}
+                </h4>
+            </div>
+            <div class="panel__body pad--sm--bn">
+                <div class="form__group">
+                    <label class="" data-qa-label="elementType">{{labels.elementType}}</label>
+                    <div class="select__wrap">
+                        <div class="input__icon juicon juicon-down"></div>
+                        {{view "select" 
+                            content=elementTypes 
+                            value=model.Element_Type__c
+                            data-qa-select="elementType"}}
+                    </div>
+                </div>
+                {{#if isQuestionType}}
+                    <div class="form__group answerType">
+                        <label class="" data-qa-label="answerType">{{labels.answerType}}</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" 
+                                content=answerTypes 
+                                value=model.Answer_Type__c
+                                data-qa-input="answerType"}}
+                        </div>
+                    </div>
+                {{/if}}
+            </div>
+            {{partial editTemplate}}
+        </div>
+        {{#if shouldConfirmDelete}}
+            <p class="text-center mar--sm--tm">
+                {{labels.areYouSureYouWantToDelete}} <a href="" class="text-underline mar--sm--lm" {{action "clickCancelDelete"}}>{{labels.noDontDelete}}</a><a href="" class="text-error text-underline mar--sm--lm" {{action "clickConfirmDelete"}}>{{labels.yesDelete}}</a>
+            </p>
+        {{else}}
+            {{#unless isNew}}
+                 <p class="text-center text-error mar--sm--tm">
+                    <a href="" class="deleteBlock" {{action "clickDelete"}}><span class="juicon juicon-trash text-error"></span> <span class="text-error">{{labels.delete}}</span></a>
+                </p>
+            {{/unless}}
+        {{/if}}
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<!--Name stuff-->
+<div class="row">
+    {{#each nameField in name}}
+        <div class="column--md--6" data-qa-container="nameField">
+            <label class="table-group mar--sm--bs">
+                <span class="table-group__object--large" data-qa-label="nameField">{{nameField.label}}</span>
+                <span class="table-group__object--small">
+                    {{#if nameField.isRequired}}
+                        <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                    {{else}}
+                        {{input type="checkbox" checked=nameField.isEnabled data-qa-input="required"}}
+                    {{/if}}
+                </span>
+            </label>
+        </div>
+    {{/each}}
+</div>
+<hr class="hr-alt">
+<!--Communication stuff-->
+<div class="row">
+    {{#each contactField in contact}}
+        <div class="column--md--6" data-qa-container="contactField">
+            <label class="table-group mar--sm--bs">
+                <span class="table-group__object--large" data-qa-label="contactField">{{contactField.label}}</span>
+                <span class="table-group__object--small">
+                    {{#if contactField.isRequired}}
+                        <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                    {{else}}
+                        {{input type="checkbox" checked=contactField.isEnabled data-qa-input="required"}}
+                    {{/if}}
+                </span>
+            </label>
+        </div>
+    {{/each}}
+</div>
+<hr class="hr-alt">
+<!--Address stuff-->
+<div class="row">
+    {{#each addressField in address}}
+        <div class="column--md--6" data-qa-container="addressField">
+            <label class="table-group mar--sm--bs">
+                <span class="table-group__object--large" data-qa-label="addressField">{{addressField.label}}</span>
+                <span class="table-group__object--small">
+                    {{#if addressField.isRequired}}
+                        <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                    {{else}}
+                        {{input type="checkbox" checked=addressField.isEnabled data-qa-input="required"}}
+                    {{/if}}
+                </span>
+            </label>
+        </div>
+    {{/each}}
+</div>

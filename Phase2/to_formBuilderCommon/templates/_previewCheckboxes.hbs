@@ -1,0 +1,10 @@
+<p class="break-word" data-qa-label="question">
+    {{model.Text__c}}
+</p>
+<div class="form__group" data-qa-checkbox="checkbox">
+    {{#each answer in answers}}
+        <div class="form__group mar--sm--tm">
+            <input type="checkbox" {{bind-attr disabled="isInEditMode"}}/><label> {{answer.Value__c}}</label>
+        </div>
+    {{/each}}
+</div>

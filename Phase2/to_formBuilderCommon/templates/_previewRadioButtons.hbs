@@ -1,0 +1,14 @@
+<p class="mar--sm--bm break-word" data-qa-label="question">
+    {{model.Text__c}}
+</p>
+<form role="form" class="form">
+    <ul class="form__group list-style-type-none" data-qa-checkbox="radioButtons">
+        {{#each answer in answers}}
+            <li class="form__group mar--sm--tm">
+                <label><span class="part__left--fixed pad--sm--rn"><input type="radio" name="answers" {{bind-attr disabled="isInEditMode"}}></span><span class="part__body">{{answer.Value__c}}</span></label>
+            </li>
+        {{/each}}
+    </ul>
+        
+    <small class="input-error-content"></small>
+</form>
