@@ -302,6 +302,16 @@ App.ResumeController = Ember.ObjectController.extend({
         
         this.get('controllers.apply').set('isResumeIncomplete', Ember.isEmpty(resumeFileName) ? true : false);
     }.observes('resumeFileName'),
+    textAreaLimit: 15,
+    limitTextArea: function(){
+        var personalStatement = this.get('personalStatement');
+        var textAreaLimit = this.get('textAreaLimit');
+
+        if (personalStatement && personalStatement.length > textAreaLimit) {
+            this.set('personalStatement', personalStatement.substr(0, textAreaLimit));
+            console.log(personalStatement.length);
+        };
+    }.observes('personalStatement', 'textAreaLimit'),
     actions: {
         clickUploadFromDevice: function() {
             var fileInput = $('iframe#theIframe').contents().find('input.fileInput');

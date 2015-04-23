@@ -38,7 +38,7 @@ App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringMode
     });
 };
 
-App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel) {
+App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.resume.isEnabled === true) {
         applicationObj.resume.isAddResumeEnabled = true;
         applicationObj.resume.isResumeIncomplete = true;
@@ -56,7 +56,12 @@ App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel) {
 
     if (hiringModel.resume.personalStatement === true) {
         applicationObj.resume.isPersonalStatementEnabled = true;
-        applicationObj.resume.personalStatement = parsedApplyMap.application.namespace_Personal_Statement__c;
+
+        if (!Ember.isEmpty(linkedInMap)) {
+            applicationObj.resume.personalStatement = linkedInMap.summary;
+        } else {
+            applicationObj.resume.personalStatement = parsedApplyMap.application.namespace_Personal_Statement__c;
+        };
     } else {
         applicationObj.resume.isPersonalStatementEnabled = false;
     }
@@ -522,7 +527,7 @@ App.ApplicationRoute = Ember.Route.extend({
                 var linkedInMap = parsedApplyMap.linkedInMap;
 
                 App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel);
+                App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
                 App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
                 App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
                 App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
@@ -638,18 +643,20 @@ App.ResumeRoute = Ember.Route.extend({
         var resume = this.modelFor('resume');
         var resumeController = this.controllerFor('resume');
         var personalStatement = resumeController.get('personalStatement');
+        
+        if (Ember.isEmpty(personalStatement)) {
+            personalStatement = '';
+        }
 
-        if (personalStatement) {
-            cont.savePersonalStatement(appId, personalStatement, function(res, evt) {
-                if (res) {
-                    var parsedResult = parseResult(res);
-                    console.log('PARESED RESULTS: ');
-                    console.log(parsedResult);
-                } else {
-                    console.log('NOTHING');
-                }
-            });
-        };
+        cont.savePersonalStatement(appId, personalStatement, function(res, evt) {
+            if (res) {
+                var parsedResult = parseResult(res);
+                console.log('PARESED RESULTS: ');
+                console.log(parsedResult);
+            } else {
+                console.log('NOTHING');
+            }
+        });
     },
     uploadResume: function(transition, completeApplication) {
         var self = this;
