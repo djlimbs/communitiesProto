@@ -81,7 +81,7 @@
                     <div class="form__group">
                         <a href="#" class="text-error float--right text-underline" {{action "clearPersonalStatement"}}><small>Clear</small></a>
                         <label for="textareaSomething" class="">{{labels.personalStatement}}</label>
-                        {{textarea name="something" placeholder="" id="textareaSomething" value=personalStatement}}
+                        {{textarea name="something" placeholder="" id="textareaSomething" value=personalStatement maxlength="15"}}
                         <small class="input-error-content">Required field</small>
                     </div>
                 </div>

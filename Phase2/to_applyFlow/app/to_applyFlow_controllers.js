@@ -299,19 +299,9 @@ App.ResumeController = Ember.ObjectController.extend({
     errorMessageBinding: 'controllers.apply.errorMessage',
     fileToUploadDidChange: function() {
         var resumeFileName = this.get('resumeFileName');
-        
-        this.get('controllers.apply').set('isResumeIncomplete', Ember.isEmpty(resumeFileName) ? true : false);
-    }.observes('resumeFileName'),
-    textAreaLimit: 15,
-    limitTextArea: function(){
         var personalStatement = this.get('personalStatement');
-        var textAreaLimit = this.get('textAreaLimit');
-
-        if (personalStatement && personalStatement.length > textAreaLimit) {
-            this.set('personalStatement', personalStatement.substr(0, textAreaLimit));
-            console.log(personalStatement.length);
-        };
-    }.observes('personalStatement', 'textAreaLimit'),
+        this.get('controllers.apply').set('isResumeIncomplete', Ember.isEmpty(resumeFileName) || Ember.isEmpty(personalStatement) ? true : false);
+    }.observes('resumeFileName', 'personalStatement'),
     actions: {
         clickUploadFromDevice: function() {
             var fileInput = $('iframe#theIframe').contents().find('input.fileInput');

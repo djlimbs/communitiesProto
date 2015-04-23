@@ -2323,13 +2323,14 @@ function program14(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</label>\n                        ");
-  hashContexts = {'name': depth0,'placeholder': depth0,'id': depth0,'value': depth0};
-  hashTypes = {'name': "STRING",'placeholder': "STRING",'id': "STRING",'value': "ID"};
+  hashContexts = {'name': depth0,'placeholder': depth0,'id': depth0,'value': depth0,'maxlength': depth0};
+  hashTypes = {'name': "STRING",'placeholder': "STRING",'id': "STRING",'value': "ID",'maxlength': "STRING"};
   options = {hash:{
     'name': ("something"),
     'placeholder': (""),
     'id': ("textareaSomething"),
-    'value': ("personalStatement")
+    'value': ("personalStatement"),
+    'maxlength': ("15")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                        <small class=\"input-error-content\">Required field</small>\n                    </div>\n                </div>\n            ");

@@ -41,7 +41,7 @@ App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringMode
 App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.resume.isEnabled === true) {
         applicationObj.resume.isAddResumeEnabled = true;
-        applicationObj.resume.isResumeIncomplete = true;
+        applicationObj.isResumeIncomplete = true;
         applicationObj.sectionArray.addObject('resume');
 
         if (!Ember.isEmpty(parsedApplyMap.resumeFileName)) {
@@ -62,6 +62,10 @@ App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, l
         } else {
             applicationObj.resume.personalStatement = parsedApplyMap.application.namespace_Personal_Statement__c;
         };
+
+        if (Ember.isEmpty(applicationObj.resume.personalStatement)) {
+            applicationObj.isResumeIncomplete = true;
+        }
     } else {
         applicationObj.resume.isPersonalStatementEnabled = false;
     }
