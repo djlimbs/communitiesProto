@@ -14,6 +14,10 @@ App.FormBuilderController = Ember.ObjectController.extend(App.FormBuilderMixin, 
     isInLegal: function() {
         return App.Fixtures.get('currentSection') === 'Legal';
     }.property('App.Fixtures.currentSection'),
+    isInOnePage: function() {
+        console.log(this.get('currentPath'));
+        return this.get('currentPath') === 'formBuilder.onePage';
+    }.property('currentPath'),
     formElements: function() {
         return this.get('general').concat(this.get('legal'));
     }.property('general', 'legal'),
@@ -101,4 +105,26 @@ App.FieldController = Ember.ObjectController.extend({
         console.log(this.get('isFieldSetRequired'));
         return this.get('isDBRequired') === true || this.get('isFieldSetRequired') === true;
     }.property('isDBRequired', 'isFieldSetRequired')
+});
+
+App.OnePageController = Ember.ObjectController.extend({
+    hiringModels: function() {
+        var hiringModelData = this.get('model');
+        var hiringModels = [];
+
+        Object.keys(hiringModelData).forEach(function(hm) {
+            hiringModels.addObject({
+                name: hm,
+                isOnePage: hiringModelData[hm].data.isOnePage
+            });
+        });
+
+        return hiringModels;
+    }.property(),
+    isOnePageDidChange: function() {
+        var model = this.get('model');
+        this.get('hiringModels').forEach(function(hm){
+            model[hm.name].data.isOnePage = hm.isOnePage;
+        });
+    }.observes('hiringModels.@each.isOnePage')
 });

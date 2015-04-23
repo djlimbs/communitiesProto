@@ -1,0 +1,7 @@
+<p>
+    Which hiring models will be rendered on a single page?
+</p>
+
+{{#each hm in hiringModels}}
+    <label class="table-group mar--sm--bs"><span class="table-group__object--small">{{input type="checkbox" checked=hm.isOnePage}}</span><span class="table-group__object--large">{{hm.name}}</span></label>
+{{/each}}

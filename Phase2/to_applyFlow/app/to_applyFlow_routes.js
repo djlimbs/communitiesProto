@@ -660,7 +660,7 @@ App.ResumeRoute = Ember.Route.extend({
 
                         if (Ember.isEmpty(parsedResult.errorMessages)) {
                             $iframe.find('.fileInput').off('change');
-                            cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                            cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                         } else {
                             self.setProperties({
                                 errorMessage: parsedResult.errorMessages[0],
@@ -684,7 +684,7 @@ App.ResumeRoute = Ember.Route.extend({
                         resumeController.set('errorMessage', errorMessage);
                         applyController.set('showSavingNotification', false);
                     } else {
-                        cont.createFeedItem(parsedApplyMap.baseUrl, appId, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                        cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                     }
                 });
             }            

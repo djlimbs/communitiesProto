@@ -56,32 +56,37 @@
                         {{#link-to "formElements" "Legal" selectedGeography class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="legal"}}
                             <a>{{labels.legal}}</a>
                         {{/link-to}}
+                        {{#link-to "onePage" class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="onePage"}}
+                            <a>Single Page</a>
+                        {{/link-to}}
                     </ul>
                 </div>
                 <div class="column--md--9 pad--md--lxl">
-                    {{#if isInLegal}}
-                        <label class="mar--sm--rs" data-qa-label="geography">{{labels.geography}}</label>
-                        <span class="select__wrap inline-block">
-                            <span class="input__icon juicon juicon-down"></span>
-                            {{view "select" 
-                                content=geographies
-                                optionValuePath="content.Id"
-                                optionLabelPath="content.Name" 
-                                value=selectedGeography
-                                data-qa-input="geography"
-                                disabled=disableCancel}}
-                        </span>
-                    {{else}}
-                        <label class="mar--sm--rs" data-qa-label="hiringModel">{{labels.hiringModel}}</label>
-                        <span class="select__wrap inline-block">
-                            <span class="input__icon juicon juicon-down"></span>
-                            {{view "select" 
-                                content=hiringModelPicklistValues
-                                value=selectedHiringModel
-                                data-qa-input="hiringModel"
-                                disabled=disableCancel}}
-                        </span>
-                    {{/if}}
+                    {{#unless isInOnePage}}
+                        {{#if isInLegal}}
+                            <label class="mar--sm--rs" data-qa-label="geography">{{labels.geography}}</label>
+                            <span class="select__wrap inline-block">
+                                <span class="input__icon juicon juicon-down"></span>
+                                {{view "select" 
+                                    content=geographies
+                                    optionValuePath="content.Id"
+                                    optionLabelPath="content.Name" 
+                                    value=selectedGeography
+                                    data-qa-input="geography"
+                                    disabled=disableCancel}}
+                            </span>
+                        {{else}}
+                            <label class="mar--sm--rs" data-qa-label="hiringModel">{{labels.hiringModel}}</label>
+                            <span class="select__wrap inline-block">
+                                <span class="input__icon juicon juicon-down"></span>
+                                {{view "select" 
+                                    content=hiringModelPicklistValues
+                                    value=selectedHiringModel
+                                    data-qa-input="hiringModel"
+                                    disabled=disableCancel}}
+                            </span>
+                        {{/if}}
+                    {{/unless}}
                     <hr class="hr-alt">
                     {{outlet}}
                 </div>

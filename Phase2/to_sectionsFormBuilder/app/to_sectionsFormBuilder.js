@@ -180,39 +180,74 @@ App.FormBuilderRoute = Ember.Route.extend( {
         }*/
     },
     actions: {
-        saveHiringModelData: function(modelName) {
+        saveHiringModelData: function(modelName, saveAll) {
             var formBuilderController = this.controllerFor('formBuilder');
 
             if (formBuilderController.get('isSaving') !== true) {  
                 formBuilderController.set('isSaving', true);
-
-                var hiringModelDataToSave = this.modelFor('formBuilder').get('hiringModelData')[modelName];
-                
-                var hiringModelSaveObj = {
-                    Id: hiringModelDataToSave.Id,
-                    Name: modelName,
-                    Configuration_Json__c: JSON.stringify(hiringModelDataToSave.data)
-                };
-
                 formBuilderController.set('showSavingNotification', true);
 
-                cont.saveHiringModel(JSON.stringify(hiringModelSaveObj), function(res, evt) {
-                    if (res) {
-                        var parsedResult = parseResult(res);
+                if (saveAll !== true) {
+                    var hiringModelDataToSave = this.modelFor('formBuilder').get('hiringModelData')[modelName];
+                
+                    var hiringModelSaveObj = {
+                        Id: hiringModelDataToSave.Id,
+                        Name: modelName,
+                        Configuration_Json__c: JSON.stringify(hiringModelDataToSave.data)
+                    };
 
-                        if (!Ember.isEmpty(parsedResult.errorMessages)) {
-                            // Error handling
+                    cont.saveHiringModel(JSON.stringify(hiringModelSaveObj), function(res, evt) {
+                        if (res) {
+                            var parsedResult = parseResult(res);
+
+                            if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                                // Error handling
+                            } else {
+                                hiringModelDataToSave.Id = parsedResult.data.id;
+                                Ember.run.later(this, function() {
+                                    formBuilderController.set('isSaving', false);
+                                    formBuilderController.set('showSavingNotification', false);
+                                }, 1500);
+                            }
                         } else {
-                            hiringModelDataToSave.Id = parsedResult.data.id;
-                            Ember.run.later(this, function() {
-                                formBuilderController.set('isSaving', false);
-                                formBuilderController.set('showSavingNotification', false);
-                            }, 1500);
+                            // Error handling
                         }
-                    } else {
-                        // Error handling
-                    }
-                });
+                    });     
+                } else {
+                    var hiringModelData = this.modelFor('formBuilder').get('hiringModelData');
+                    var hiringModelsToSave = [];
+
+                    Object.keys(hiringModelData).forEach(function(hm) {
+                        var hiringModelDataToSave = hiringModelData[hm];
+                        hiringModelsToSave.addObject({
+                            Id: hiringModelDataToSave.Id,
+                            Name: hm,
+                            Configuration_Json__c: JSON.stringify(hiringModelDataToSave.data)
+                        });
+                    });
+
+                    var saveObj = {
+                        hiringModelsToSave: hiringModelsToSave
+                    };
+
+                    cont.saveAllHiringModels(JSON.stringify(saveObj), function(res, evt) {
+                        if (res) {
+                            var parsedResult = parseResult(res);
+
+                            if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                                // Error handling
+                            } else {
+                                //hiringModelDataToSave.Id = parsedResult.data.id;
+                                Ember.run.later(this, function() {
+                                    formBuilderController.set('isSaving', false);
+                                    formBuilderController.set('showSavingNotification', false);
+                                }, 1500);
+                            }
+                        } else {
+
+                        }
+                    });
+                }
             }
         }
     }
@@ -334,6 +369,24 @@ App.ApplicationSectionRoute = Ember.Route.extend({
     }
 });
 
+App.OnePageRoute = Ember.Route.extend({
+    model: function(params) {
+        var hiringModelData = this.modelFor('formBuilder').get('hiringModelData');
+
+        return hiringModelData;
+    },
+    actions: {
+        willTransition: function(transition) {
+            var hiringModels = this.controllerFor('onePage').get('hiringModels');
+            var hiringModelData = this.modelFor('onePage');
+
+            this.send('saveHiringModelData', null, true);
+
+            console.log(this.modelFor('onePage'));
+        }
+    }
+});
+
 // Router
 App.Router.map(function() {
     this.resource('formBuilder', { path: '/' }, function() {
@@ -342,6 +395,7 @@ App.Router.map(function() {
         this.resource('contactInfo', { path: 'contactInfo/:hiringModel' });
         this.resource('employmentHistory', { path: '/employmentHistory' });
         this.resource('educationHistory', { path: '/educationHistory' });
+        this.resource('onePage', { path: '/onePage' });
     });
 });
 
