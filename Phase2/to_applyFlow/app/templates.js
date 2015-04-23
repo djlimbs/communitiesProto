@@ -2213,52 +2213,17 @@ function program6(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n        <div class=\"panel\">\n            <div class=\"panel__body\">\n                <p class=\"mar--sm--tn\" data-qa-label=\"uploadResume\">\n                    ");
+  data.buffer.push("\n        <div class=\"panel\">\n            ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.pleaseUploadYourResume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    <div style=\"display:none;\">\n                        ");
-  hashContexts = {'resumeFileName': depth0,'alreadyUploaded': depth0,'isFromDropbox': depth0};
-  hashTypes = {'resumeFileName': "ID",'alreadyUploaded': "ID",'isFromDropbox': "ID"};
-  data.buffer.push(escapeExpression(helpers.view.call(depth0, "uploadFile", {hash:{
-    'resumeFileName': ("resumeFileName"),
-    'alreadyUploaded': ("alreadyUploaded"),
-    'isFromDropbox': ("isFromDropbox")
-  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    </div>\n                </p>\n                <div class=\"row\">\n                    <div class=\"column--md--6\">\n                        <div class=\"button-group width--full inline-block\">\n                            <div class=\"button width--full button--secondary\" data-toggle=\"dropdown\" data-qa-button=\"uploadDropdown\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.upload", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <span class=\"show-brkpoint--md\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.your", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.resume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <span class=\"juicon juicon-upload\"></span></div>\n                            <ul class=\"dropdown-menu\">\n                                <li class=\"dropdown-menu__list-item\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUploadFromDropbox", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"fromDropbox\"><a href=\"#\"><span class=\"juicon juicon-dropbox\"></span> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDropbox", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                                <li class=\"dropdown-menu__list-item\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUploadFromDevice", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"fromDevice\"><a href=\"#\"><span class=\"juicon juicon-upload\"></span> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDevice", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                            </ul>\n                        </div>\n                    </div>\n                    <div class=\"column--md--6\">\n                        <div class=\"input-size text-faded dots\" data-qa-label=\"fileName\">\n                            ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "resumeFileName", {hash:{},inverse:self.program(11, program11, data),fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "isAddResumeEnabled", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n");
+  data.buffer.push("\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "isPersonalStatementEnabled", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        </div>\n    </div>\n");
   return buffer;
   }
 function program7(depth0,data) {
@@ -2275,23 +2240,99 @@ function program7(depth0,data) {
 
 function program9(depth0,data) {
   
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                <div class=\"panel__body\">\n                    <p class=\"mar--sm--tn\" data-qa-label=\"uploadResume\">\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.pleaseUploadYourResume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                        <div style=\"display:none;\">\n                            ");
+  hashContexts = {'resumeFileName': depth0,'alreadyUploaded': depth0,'isFromDropbox': depth0};
+  hashTypes = {'resumeFileName': "ID",'alreadyUploaded': "ID",'isFromDropbox': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "uploadFile", {hash:{
+    'resumeFileName': ("resumeFileName"),
+    'alreadyUploaded': ("alreadyUploaded"),
+    'isFromDropbox': ("isFromDropbox")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                        </div>\n                    </p>\n                    <div class=\"row\">\n                        <div class=\"column--md--6\">\n                            <div class=\"button-group width--full inline-block\">\n                                <div class=\"button width--full button--secondary\" data-toggle=\"dropdown\" data-qa-button=\"uploadDropdown\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.upload", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" <span class=\"show-brkpoint--md\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.your", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span> ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.resume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" <span class=\"juicon juicon-upload\"></span></div>\n                                <ul class=\"dropdown-menu\">\n                                    <li class=\"dropdown-menu__list-item\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUploadFromDropbox", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"fromDropbox\"><a href=\"#\"><span class=\"juicon juicon-dropbox\"></span> ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDropbox", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></li>\n                                    <li class=\"dropdown-menu__list-item\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUploadFromDevice", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"fromDevice\"><a href=\"#\"><span class=\"juicon juicon-upload\"></span> ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDevice", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></li>\n                                </ul>\n                            </div>\n                        </div>\n                        <div class=\"column--md--6\">\n                            <div class=\"input-size text-faded dots\" data-qa-label=\"fileName\">\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "resumeFileName", {hash:{},inverse:self.program(12, program12, data),fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            ");
+  return buffer;
+  }
+function program10(depth0,data) {
+  
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                ");
+  data.buffer.push("\n                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "resumeFileName", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                            ");
+  data.buffer.push("\n                                ");
   return buffer;
   }
 
-function program11(depth0,data) {
+function program12(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                ");
+  data.buffer.push("\n                                    ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.noFileSelected", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                            ");
+  data.buffer.push("\n                                ");
+  return buffer;
+  }
+
+function program14(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                <div class=\"panel__body pad--sm--bn\">\n                    <div class=\"form__group\">\n                        <a href=\"#\" class=\"text-error float--right text-underline\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clearPersonalStatement", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><small>Clear</small></a>\n                        <label for=\"textareaSomething\" class=\"\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label>\n                        ");
+  hashContexts = {'name': depth0,'placeholder': depth0,'id': depth0,'value': depth0};
+  hashTypes = {'name': "STRING",'placeholder': "STRING",'id': "STRING",'value': "ID"};
+  options = {hash:{
+    'name': ("something"),
+    'placeholder': (""),
+    'id': ("textareaSomething"),
+    'value': ("personalStatement")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n                        <small class=\"input-error-content\">Required field</small>\n                    </div>\n                </div>\n            ");
   return buffer;
   }
 

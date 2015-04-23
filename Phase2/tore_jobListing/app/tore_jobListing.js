@@ -444,7 +444,7 @@ App.JobPostingController = Ember.ObjectController.extend({
                 findClosestLocation(self, applyCallback);
             }
         },
-        clickTweet: function() {
+        shareOnTwitter: function() {
             var url = window.location.href;
             var jobTitle = this.get('jobPosting').Job_Title__c;
             var tweetString = 'Check out this job: ' + jobTitle; 
@@ -460,7 +460,7 @@ App.JobPostingController = Ember.ObjectController.extend({
             return false;
         },
 
-        clickLinkedIn: function (){
+        shareOnLinkedIn: function (){
             var url = window.location.href;
             //var source = 'https://www.appiphony.com'; // This does not show up anywhere except on url
             var source = ''; // This does not show up anywhere except on url
@@ -481,7 +481,7 @@ App.JobPostingController = Ember.ObjectController.extend({
 
 
 
-        clickFacebook: function (){
+        shareOnFacebook: function (){
             var url = window.location.href;
             var docTitle = document.title; // This is the document where the Share Button is
             var width = 626;

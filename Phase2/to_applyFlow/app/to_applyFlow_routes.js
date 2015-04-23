@@ -38,10 +38,10 @@ App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringMode
     });
 };
 
-App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel) {
+App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.resume.isEnabled === true) {
-        applicationObj.isResumeEnabled = true;
-        applicationObj.isResumeIncomplete = true;
+        applicationObj.resume.isAddResumeEnabled = true;
+        applicationObj.resume.isResumeIncomplete = true;
         applicationObj.sectionArray.addObject('resume');
 
         if (!Ember.isEmpty(parsedApplyMap.resumeFileName)) {
@@ -50,9 +50,23 @@ App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel) {
             applicationObj.isResumeIncomplete = false;
         }
     } else {
-        applicationObj.isResumeEnabled = false;
+        applicationObj.isAddResumeEnabled = false;
         applicationObj.isResumeIncomplete = false;
     }
+
+    if (hiringModel.resume.personalStatement === true) {
+        applicationObj.resume.isPersonalStatementEnabled = true;
+
+        if (!Ember.isEmpty(linkedInMap)) {
+            applicationObj.resume.personalStatement = linkedInMap.summary;
+        } else {
+            applicationObj.resume.personalStatement = parsedApplyMap.application.namespace_Personal_Statement__c;
+        };
+    } else {
+        applicationObj.resume.isPersonalStatementEnabled = false;
+    }
+
+    applicationObj.isResumeEnabled = applicationObj.resume.isAddResumeEnabled || applicationObj.resume.isPersonalStatementEnabled;
 };
 
 App.setupSkillsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
@@ -504,7 +518,8 @@ App.ApplicationRoute = Ember.Route.extend({
                         base64fileData: null
                     },
                     companyLogoUrl: companyLogoUrl,
-                    sectionArray: ['contactInfo']
+                    sectionArray: ['contactInfo'],
+
                 };
 
                 applicationObj.application = parsedApplyMap.application;
@@ -512,7 +527,7 @@ App.ApplicationRoute = Ember.Route.extend({
                 var linkedInMap = parsedApplyMap.linkedInMap;
 
                 App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel);
+                App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
                 App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
                 App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
                 App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
@@ -623,6 +638,26 @@ App.ResumeRoute = Ember.Route.extend({
         controller.set('model', model);
         controller.notifyPropertyChange('resumeFileName');
     },
+    savePersonalStatement: function(){
+        var self = this;
+        var resume = this.modelFor('resume');
+        var resumeController = this.controllerFor('resume');
+        var personalStatement = resumeController.get('personalStatement');
+        
+        if (Ember.isEmpty(personalStatement)) {
+            personalStatement = '';
+        }
+
+        cont.savePersonalStatement(appId, personalStatement, function(res, evt) {
+            if (res) {
+                var parsedResult = parseResult(res);
+                console.log('PARESED RESULTS: ');
+                console.log(parsedResult);
+            } else {
+                console.log('NOTHING');
+            }
+        });
+    },
     uploadResume: function(transition, completeApplication) {
         var self = this;
         var applyModel = this.modelFor('apply');
@@ -694,7 +729,8 @@ App.ResumeRoute = Ember.Route.extend({
     },
     actions: {
         willTransition: function(transition) {
-            this.uploadResume(transition, false);
+            // this.uploadResume(transition, false);
+            this.savePersonalStatement();
         },
         clickDone: function() {
             this.uploadResume(null, true);
