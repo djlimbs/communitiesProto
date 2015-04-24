@@ -5,60 +5,162 @@ App.OnePageController = Ember.ObjectController.extend({
     needs: ['employmentHistory', 'educationHistory'],
     actions: {
         clickFinish: function() {
-            var application = this.get('model');
-            var errorMessage = '';
-            var saveObj = {};
-            var employmentHistoryController = this.get('controllers.employmentHistory');
-            var educationHistoryController = this.get('controllers.educationHistory');
-
-            this.set('errorMessage', null);
-
-            saveObj.contactInfo = App.buildContactSaveObj(application);
-
-            if (application.isSkillsEnabled) {
-                saveObj.skillsObj = App.buildSkillsSaveObj(application);
-            }
-            
-            if (application.isEmploymentHistoryEnabled) {
-                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(application, employmentHistoryController, errorMessage);
-
-                if (employmentHistoryObj !== null) {
-                    saveObj.employmentHistoryObj = employmentHistoryObj;
-                }
-            }
-
-            if (application.isEducationHistoryEnabled) {
-                var educationHistoryObj = App.buildEducationHistorySaveObj(application, educationHistoryController, errorMessage);
-
-                if (educationHistoryObj !== null) {
-                    saveObj.educationHistoryObj = educationHistoryObj;
-                }
-            }
-
-            if (application.isGeneralEmpty !== true) {  
-                saveObj.generalApplicantResponsesObj = {
-                    applicantResponses: App.createApplicantResponseObj(application.generalFormElements),
-                    applicationId: appId
-                };
-            }
-
-            if (application.isJobSpecificEmpty !== true) {
-                saveObj.jobSpecificApplicantResponsesObj = {
-                    applicantResponses: App.createApplicantResponseObj(application.jobSpecificFormElements),
-                    applicationId: appId
-                };
-            }
-
-            if (application.isLegalEmpty !== true) {
-                saveObj.legalApplicantRequiredDataObj = {
-                    applicantRequiredDatas: App.createApplicantRequiredDataObj(application.legalFormElements),
-                    applicationId: appId
-                }
-            }
-
-            console.log(saveObj);
+            this.saveAppSectionsExceptResume()
+                .then(this.saveResumeSection)
+                .then(App.redirectAfterFinish)
+                .then(this.handleError);
 
         }
+    },
+    saveResumeSection: function(self) {
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            var model = self.get('model');
+
+            if (model.isResumeEnabled !== true) {
+                resolve(model.application);
+            } else {
+                var fileName = model.resume.resumeFileName;
+
+                if (model.resume.isPersonalStatementEnabled) {
+                    personalStatement = model.resume.personalStatement;
+                }
+
+                if (model.resume.isAddResumeEnabled === true) {
+                    resumeBaseUrl = parsedApplyMap.baseUrl;
+                }
+
+                if (model.resume.isFromDropbox === true) {
+                    cont.createLinkAttachment(fileName, appId, function(res, evt) {
+                        if (res) {
+                            var parsedResult = parseResult(res);
+
+                            if (Ember.isEmpty(parsedResult.errorMessages)) {
+                                $iframe.find('.fileInput').off('change');
+                                cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
+                                    if (resumeRes) {
+                                        var parsedResumeResult = parseResult(resumeRes);
+
+                                        if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
+                                            resolve(model.application);
+                                        } else {
+                                            reject(parsedResumeResult.errorMessages[0]);
+                                        }
+                                    }
+                                });
+                            } else {
+                                reject(parsedResult.errorMessages[0]);
+                                //applyController.set('showSavingNotification', false);
+                            }
+                        } else {
+                            self.setProperties({
+                                errorMessage: evt.message,
+                            });
+                            //applyController.set('showSavingNotification', false);
+                        }
+                    });
+                } else if (resume.isAddResumeEnabled === true) {
+                    $iframe.find('.fileInput').off('change');            
+                    $iframe.find('.saveFile').click();
+
+                    $('iframe#theIframe').one('load', function() {
+                        if ($('iframe#theIframe').contents().find('.message').length > 0) {
+                            var errorMessage = $('iframe#theIframe').contents().find('.message').find('li:first').text();
+                            reject(errorMessage);
+                            //applyController.set('showSavingNotification', false);
+                        } else {
+                            cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
+                                if (resumeRes) {
+                                    var parsedResumeResult = parseResult(resumeRes);
+
+                                    if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
+                                        resolve(model.application);
+                                    } else {
+                                        reject(parsedResumeResult.errorMessages[0]);
+                                    }
+                                }
+                            });
+                        }
+                    });
+                }
+            }            
+        });
+    },
+    saveAppSectionsExceptResume: function() {
+        var self = this;
+
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            var model = self.get('model');
+            var errorMessage = '';
+            var saveObj = {};
+            var employmentHistoryController = self.get('controllers.employmentHistory');
+            var educationHistoryController = self.get('controllers.educationHistory');
+
+            self.set('errorMessage', null);
+
+            saveObj.contactInfo = JSON.stringify(App.buildContactSaveObj(model));
+
+            if (model.isSkillsEnabled) {
+                saveObj.skills = App.buildSkillsSaveObj(model);
+            }
+            
+            if (model.isEmploymentHistoryEnabled) {
+                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(model, employmentHistoryController, errorMessage);
+
+                if (employmentHistoryObj !== null) {
+                    saveObj.employmentHistory = employmentHistoryObj;
+                }
+            }
+
+            if (model.isEducationHistoryEnabled) {
+                var educationHistoryObj = App.buildEducationHistorySaveObj(model, educationHistoryController, errorMessage);
+
+                if (educationHistoryObj !== null) {
+                    saveObj.educationHistory = educationHistoryObj;
+                }
+            }
+
+            if (model.isGeneralEmpty !== true) {  
+                saveObj.generalApplicantResponses = JSON.stringify({
+                    applicantResponses: App.createApplicantResponseObj(model.generalFormElements),
+                    applicationId: appId
+                });
+            }
+
+            if (model.isJobSpecificEmpty !== true) {
+                saveObj.jobSpecificApplicantResponses = JSON.stringify({
+                    applicantResponses: App.createApplicantResponseObj(model.jobSpecificFormElements),
+                    applicationId: appId
+                });
+            }
+
+            if (model.isLegalEmpty !== true) {
+                saveObj.legalApplicantRequiredData = JSON.stringify({
+                    applicantRequiredDatas: App.createApplicantRequiredDataObj(model.legalFormElements),
+                    applicationId: appId
+                });
+            }
+
+            if (!Ember.isEmpty(errorMessage)) {
+                reject(errorMessage);
+            } else {
+                cont.saveAppSectionsExceptResume(JSON.stringify(saveObj), function(res, evt) {
+                    if (res) {
+                        var parsedResult = parseResult(res);
+
+                        if (Ember.isEmpty(parsedResult.errorMessages)) {
+                            resolve(self);
+                        } else {
+                            reject(parsedResult.errorMessages)
+                        }
+                    } else {
+
+                    }
+                });
+            } 
+        });
+    },
+    handleError: function(errorMessage) {
+        console.log(errorMessage);
     }
 });
 
