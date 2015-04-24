@@ -36,9 +36,9 @@
             {{#if isPersonalStatementEnabled}}
                 <div class="panel__body pad--sm--tn pad--sm--bn">
                     <div class="form__group">
-                        <a href="#" class="text-error float--right text-underline"><small>Clear</small></a>
-                        <label for="textareaSomething" class="">{{labels.personalStatement}}</label>
-                        {{textarea placeholder="" value=personalStatement maxlength="1500"}}
+                        <a href="#" {{action "clearPersonalStatement"}} class="text-error float--right text-underline" data-qa-link="clear"><small>Clear</small></a>
+                        <label for="textareaSomething" class="" data-qa-label="personalStatement">{{labels.personalStatement}}</label>
+                        {{textarea placeholder="" value=personalStatement maxlength="1500" data-qa-input="personalStatement"}}
                         <small class="input-error-content">Required field</small>
                     </div>
                 </div>
@@ -83,13 +83,13 @@
                     </div>
                 </div>
             {{/if}}
-
+ 
             {{#if isPersonalStatementEnabled}}
                 <div class="panel__body pad--sm--bn">
                     <div class="form__group">
-                        <a href="#" class="text-error float--right text-underline" {{action "clearPersonalStatement"}}><small>Clear</small></a>
-                        <label for="textareaSomething" class="">{{labels.personalStatement}}</label>
-                        {{textarea placeholder="" value=personalStatement maxlength="1500"}}
+                        <a href="#" {{action "clearPersonalStatement"}} class="text-error float--right text-underline" data-qa-link="clear"><small>Clear</small></a>
+                        <label for="textareaSomething" class="" data-qa-label="personalStatement">{{labels.personalStatement}}</label>
+                        {{textarea placeholder="" value=personalStatement maxlength="1500" data-qa-input="personalStatement"}}
                         <small class="input-error-content">Required field</small>
                     </div>
                 </div>
