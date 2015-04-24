@@ -300,7 +300,12 @@ App.ResumeController = Ember.ObjectController.extend({
     fileToUploadDidChange: function() {
         var resumeFileName = this.get('resumeFileName');
         var personalStatement = this.get('personalStatement');
-        this.get('controllers.apply').set('isResumeIncomplete', Ember.isEmpty(resumeFileName) || Ember.isEmpty(personalStatement) ? true : false);
+        var isAddResumeEnabled = this.get('isAddResumeEnabled');
+        var isPersonalStatementEnabled = this.get('isPersonalStatementEnabled');
+
+        var isResumeIncomplete = (isAddResumeEnabled === true && Ember.isEmpty(resumeFileName)) || (isPersonalStatementEnabled && Ember.isEmpty(personalStatement));
+
+        this.get('controllers.apply').set('isResumeIncomplete', isResumeIncomplete);
     }.observes('resumeFileName', 'personalStatement'),
     actions: {
         clickUploadFromDevice: function() {

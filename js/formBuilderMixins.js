@@ -58,6 +58,8 @@ App.FormBuilderMixin = Ember.Mixin.create({
                     var hiringModel = App.Fixtures.get('currentHiringModel');
 
                     this.send('saveContactInfo', hiringModel);
+                } else if (currentPath === 'formBuilder.onePage') {
+                    this.send('saveHiringModelData', null, true);
                 }
 
             }   

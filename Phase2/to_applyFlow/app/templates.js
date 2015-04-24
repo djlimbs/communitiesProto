@@ -2134,7 +2134,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 function program1(depth0,data) {
   
-  var buffer = '', stack1, hashTypes, hashContexts;
+  var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n    <div class=\"wizardSection pad--sm--only--n active mar--md--txl\" data-qa-container=\"resumeOnePage\">\n        <div class=\"panel\">\n            <div class=\"panel__top\">\n                <h2 class=\"panel__heading\" data-qa-header=\"resume\">\n                    ");
   hashTypes = {};
   hashContexts = {};
@@ -2176,7 +2176,20 @@ function program1(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "resumeFileName", {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                    </span>\n                </div>\n            </div>\n            <div class=\"panel__body pad--sm--tn pad--sm--bn\">\n                <div class=\"form__group\">\n                    <a href=\"#\" class=\"text-error float--right text-underline\"><small>Clear</small></a>\n                    <label for=\"textareaSomething\" class=\"\">Personal Statement</label>\n                    <textarea name=\"something\" placeholder=\"\" id=\"textareaSomething\"></textarea>\n                    <small class=\"input-error-content\">Required field</small>\n                </div>\n            </div>\n\n        </div>\n    </div>\n");
+  data.buffer.push("\n                    </span>\n                </div>\n            </div>\n            <div class=\"panel__body pad--sm--tn pad--sm--bn\">\n                <div class=\"form__group\">\n                    <a href=\"#\" class=\"text-error float--right text-underline\"><small>Clear</small></a>\n                    <label for=\"textareaSomething\" class=\"\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label>\n                    ");
+  hashContexts = {'placeholder': depth0,'value': depth0,'maxlength': depth0};
+  hashTypes = {'placeholder': "STRING",'value': "ID",'maxlength': "STRING"};
+  options = {hash:{
+    'placeholder': (""),
+    'value': ("personalStatement"),
+    'maxlength': ("1500")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n                    <small class=\"input-error-content\">Required field</small>\n                </div>\n            </div>\n\n        </div>\n    </div>\n");
   return buffer;
   }
 function program2(depth0,data) {
@@ -2323,14 +2336,12 @@ function program14(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</label>\n                        ");
-  hashContexts = {'name': depth0,'placeholder': depth0,'id': depth0,'value': depth0,'maxlength': depth0};
-  hashTypes = {'name': "STRING",'placeholder': "STRING",'id': "STRING",'value': "ID",'maxlength': "STRING"};
+  hashContexts = {'placeholder': depth0,'value': depth0,'maxlength': depth0};
+  hashTypes = {'placeholder': "STRING",'value': "ID",'maxlength': "STRING"};
   options = {hash:{
-    'name': ("something"),
     'placeholder': (""),
-    'id': ("textareaSomething"),
     'value': ("personalStatement"),
-    'maxlength': ("15")
+    'maxlength': ("1500")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                        <small class=\"input-error-content\">Required field</small>\n                    </div>\n                </div>\n            ");

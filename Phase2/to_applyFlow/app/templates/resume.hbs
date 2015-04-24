@@ -30,8 +30,8 @@
             <div class="panel__body pad--sm--tn pad--sm--bn">
                 <div class="form__group">
                     <a href="#" class="text-error float--right text-underline"><small>Clear</small></a>
-                    <label for="textareaSomething" class="">Personal Statement</label>
-                    <textarea name="something" placeholder="" id="textareaSomething"></textarea>
+                    <label for="textareaSomething" class="">{{labels.personalStatement}}</label>
+                    {{textarea placeholder="" value=personalStatement maxlength="1500"}}
                     <small class="input-error-content">Required field</small>
                 </div>
             </div>
@@ -81,7 +81,7 @@
                     <div class="form__group">
                         <a href="#" class="text-error float--right text-underline" {{action "clearPersonalStatement"}}><small>Clear</small></a>
                         <label for="textareaSomething" class="">{{labels.personalStatement}}</label>
-                        {{textarea name="something" placeholder="" id="textareaSomething" value=personalStatement maxlength="15"}}
+                        {{textarea placeholder="" value=personalStatement maxlength="1500"}}
                         <small class="input-error-content">Required field</small>
                     </div>
                 </div>

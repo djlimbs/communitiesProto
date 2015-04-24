@@ -50,15 +50,16 @@ App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, l
             applicationObj.isResumeIncomplete = false;
         }
     } else {
-        applicationObj.isAddResumeEnabled = false;
+        applicationObj.resume.isAddResumeEnabled = false;
         applicationObj.isResumeIncomplete = false;
     }
 
     if (hiringModel.resume.personalStatement === true) {
+        applicationObj.sectionArray.addObject('resume');
         applicationObj.resume.isPersonalStatementEnabled = true;
 
         if (!Ember.isEmpty(linkedInMap)) {
-            applicationObj.resume.personalStatement = linkedInMap.summary;
+            applicationObj.resume.personalStatement = linkedInMap.summary.substr(0, 1500);
         } else {
             applicationObj.resume.personalStatement = parsedApplyMap.application.namespace_Personal_Statement__c;
         };
@@ -516,6 +517,8 @@ App.ApplicationRoute = Ember.Route.extend({
             if (Ember.isEmpty(applicationRedirectUrl)) {
                 var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
 
+                isOnePage = hiringModel.isOnePage;
+
                 var applicationObj = {
                     resume: {
                         resumeFileName: null,
@@ -673,10 +676,12 @@ App.ResumeRoute = Ember.Route.extend({
         var alreadyUploaded = resume.alreadyUploaded;
         var $iframe = $('iframe#theIframe').contents();
         var uriEncodedFilename = encodeURIComponent(fileName);
+        var resumeBaseUrl = null;
+        var personalStatement = null;
 
         self.controllerFor(currentPath).set('errorMessage', null);
 
-        if (!Ember.isNone(fileName) && alreadyUploaded !== true && applyController.get('showSavingNotification') !== true) {    
+        if ((!Ember.isNone(fileName) || resume.isPersonalStatementEnabled === true) && alreadyUploaded !== true && applyController.get('showSavingNotification') !== true) {    
             if (completeApplication !== true) {
                 transition.abort();
             }
@@ -692,6 +697,14 @@ App.ResumeRoute = Ember.Route.extend({
 
             applyController.set('showSavingNotification', true); 
 
+            if (resume.isPersonalStatementEnabled === true) {
+                personalStatement = resumeController.get('personalStatement');
+            }
+
+            if (resume.isAddResumeEnabled === true) {
+                resumeBaseUrl = parsedApplyMap.baseUrl;
+            }
+
             if (resume.isFromDropbox === true) {
                 cont.createLinkAttachment(fileName, appId, function(res, evt) {
                     if (res) {
@@ -699,7 +712,8 @@ App.ResumeRoute = Ember.Route.extend({
 
                         if (Ember.isEmpty(parsedResult.errorMessages)) {
                             $iframe.find('.fileInput').off('change');
-                            cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                            cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                            //cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                         } else {
                             self.setProperties({
                                 errorMessage: parsedResult.errorMessages[0],
@@ -713,7 +727,7 @@ App.ResumeRoute = Ember.Route.extend({
                         applyController.set('showSavingNotification', false);
                     }
                 });
-            } else {
+            } else if (resume.isAddResumeEnabled === true) {
                 $iframe.find('.fileInput').off('change');            
                 $iframe.find('.saveFile').click();
 
@@ -723,18 +737,28 @@ App.ResumeRoute = Ember.Route.extend({
                         resumeController.set('errorMessage', errorMessage);
                         applyController.set('showSavingNotification', false);
                     } else {
-                        cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                        cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+                        //cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                     }
                 });
-            }            
+            } else {
+                cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
+            }           
         } else {
             $iframe.find('.fileInput').off('change');
         }
     },
     actions: {
         willTransition: function(transition) {
-            // this.uploadResume(transition, false);
-            this.savePersonalStatement();
+            this.uploadResume(transition, false);
+            //this.savePersonalStatement();
+
+            /*
+            this.savePersonalStatement()
+                .then(uploadResume)
+                .then(transitionOrCompleteApp)
+                .then(undefined, handleError);
+            */
         },
         clickDone: function() {
             this.uploadResume(null, true);

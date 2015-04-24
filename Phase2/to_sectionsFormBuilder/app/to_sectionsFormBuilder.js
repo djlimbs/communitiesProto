@@ -237,6 +237,10 @@ App.FormBuilderRoute = Ember.Route.extend( {
                             if (!Ember.isEmpty(parsedResult.errorMessages)) {
                                 // Error handling
                             } else {
+                                Object.keys(parsedResult.data.nameToHms).forEach(function(hm) {
+                                    hiringModelData[hm].Id = parsedResult.data.nameToHms[hm].Id;
+                                });
+
                                 //hiringModelDataToSave.Id = parsedResult.data.id;
                                 Ember.run.later(this, function() {
                                     formBuilderController.set('isSaving', false);
@@ -377,12 +381,7 @@ App.OnePageRoute = Ember.Route.extend({
     },
     actions: {
         willTransition: function(transition) {
-            var hiringModels = this.controllerFor('onePage').get('hiringModels');
-            var hiringModelData = this.modelFor('onePage');
-
             this.send('saveHiringModelData', null, true);
-
-            console.log(this.modelFor('onePage'));
         }
     }
 });
