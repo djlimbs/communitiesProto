@@ -5,6 +5,7 @@ App.OnePageController = Ember.ObjectController.extend({
     needs: ['employmentHistory', 'educationHistory'],
     actions: {
         clickFinish: function() {
+            this.set('showSavingNotification', true);
             this.saveAppSectionsExceptResume()
                 .then(this.saveResumeSection)
                 .then(App.redirectAfterFinish)
@@ -20,6 +21,8 @@ App.OnePageController = Ember.ObjectController.extend({
                 resolve(model.application);
             } else {
                 var fileName = model.resume.resumeFileName;
+                var alreadyUploaded = model.resume.alreadyUploaded;
+                var $iframe = $('iframe#theIframe').contents();
 
                 if (model.resume.isPersonalStatementEnabled) {
                     personalStatement = model.resume.personalStatement;
@@ -58,7 +61,7 @@ App.OnePageController = Ember.ObjectController.extend({
                             //applyController.set('showSavingNotification', false);
                         }
                     });
-                } else if (resume.isAddResumeEnabled === true) {
+                } else if (model.resume.isAddResumeEnabled === true && alreadyUploaded !== true) {
                     $iframe.find('.fileInput').off('change');            
                     $iframe.find('.saveFile').click();
 
@@ -79,6 +82,18 @@ App.OnePageController = Ember.ObjectController.extend({
                                     }
                                 }
                             });
+                        }
+                    });
+                } else if (model.resume.isPersonalStatementEnabled === true) {
+                    cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
+                        if (resumeRes) {
+                            var parsedResumeResult = parseResult(resumeRes);
+
+                            if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
+                                resolve(model.application);
+                            } else {
+                                reject(parsedResumeResult.errorMessages[0]);
+                            }
                         }
                     });
                 }
