@@ -444,9 +444,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                 findClosestLocation(self, applyCallback);
             }
         },
-        shareOnTwitter: function() {
-            var utmParams = '&utm_campaign=JobBoard&utm_medium=Social&utm_source=MyTwitter555';
-            var url = parent.window.location.href + utmParams;
+        shareOnTwitter: function() { 
+            var url = parent.window.location.href; 
             var jobTitle = this.get('jobPosting').Job_Title__c;
             var tweetString = 'Check out this job: ' + jobTitle; 
             var width = 626;
@@ -462,7 +461,7 @@ App.JobPostingController = Ember.ObjectController.extend({
         },
         shareOnLinkedIn: function (){
             // LinkedIn does not add utm params to URLs, so we have to do it manually
-            var utmParams = '&utm_campaign=JobBoard&utm_medium=Social&utm_source=LinkedIn';
+            var utmParams = '&utm_campaign=Share On Social Media&utm_medium=Social&utm_source=LinkedIn';
             var url = parent.window.location.href + utmParams;
             var source = ''; // This does not show up anywhere except on url
             var width = 626;
