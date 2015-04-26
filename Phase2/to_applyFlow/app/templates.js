@@ -2110,8 +2110,8 @@ function program13(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableNext:disabled"),
-    'disabled': ("disableNext")
+    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableFinish:disabled"),
+    'disabled': ("disableFinish")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
   data.buffer.push(" style=\"top:0;right:0;\" ");

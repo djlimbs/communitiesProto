@@ -5,30 +5,42 @@ App.OnePageController = Ember.ObjectController.extend({
     needs: ['employmentHistory', 'educationHistory'],
     actions: {
         clickFinish: function() {
-            this.set('showSavingNotification', true);
-            this.saveAppSectionsExceptResume()
-                .then(this.saveResumeSection)
-                .then(App.redirectAfterFinish)
+            parent.window.scrollTo(0,0);
+            this.setProperties({
+                showSavingNotification: true,
+                disableFinish: true
+            });
+
+            this.saveResumeSection(this)
+                .then(this.saveAppSectionsExceptResume)
+                .then(this.redirectAfterFinish)
                 .then(this.handleError);
 
         }
+    },
+    redirectAfterFinish: function(self) {
+        var model = self.get('model');
+
+        App.redirectAfterFinish(model.application);
     },
     saveResumeSection: function(self) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
             var model = self.get('model');
 
             if (model.isResumeEnabled !== true) {
-                resolve(model.application);
+                resolve(self);
             } else {
                 var fileName = model.resume.resumeFileName;
                 var alreadyUploaded = model.resume.alreadyUploaded;
                 var $iframe = $('iframe#theIframe').contents();
+                var personalStatement = null;
+                var resumeBaseUrl = null;
 
                 if (model.resume.isPersonalStatementEnabled) {
                     personalStatement = model.resume.personalStatement;
                 }
 
-                if (model.resume.isAddResumeEnabled === true) {
+                if (model.resume.isAddResumeEnabled === true && alreadyUploaded !== true) {
                     resumeBaseUrl = parsedApplyMap.baseUrl;
                 }
 
@@ -44,7 +56,7 @@ App.OnePageController = Ember.ObjectController.extend({
                                         var parsedResumeResult = parseResult(resumeRes);
 
                                         if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
-                                            resolve(model.application);
+                                            resolve(self);
                                         } else {
                                             reject(parsedResumeResult.errorMessages[0]);
                                         }
@@ -76,7 +88,7 @@ App.OnePageController = Ember.ObjectController.extend({
                                     var parsedResumeResult = parseResult(resumeRes);
 
                                     if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
-                                        resolve(model.application);
+                                        resolve(self);
                                     } else {
                                         reject(parsedResumeResult.errorMessages[0]);
                                     }
@@ -90,7 +102,7 @@ App.OnePageController = Ember.ObjectController.extend({
                             var parsedResumeResult = parseResult(resumeRes);
 
                             if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
-                                resolve(model.application);
+                                resolve(self);
                             } else {
                                 reject(parsedResumeResult.errorMessages[0]);
                             }
@@ -100,9 +112,7 @@ App.OnePageController = Ember.ObjectController.extend({
             }            
         });
     },
-    saveAppSectionsExceptResume: function() {
-        var self = this;
-
+    saveAppSectionsExceptResume: function(self) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
             var model = self.get('model');
             var errorMessage = '';
@@ -175,6 +185,10 @@ App.OnePageController = Ember.ObjectController.extend({
         });
     },
     handleError: function(errorMessage) {
+        this.setProperties({
+            showSavingNotification: true,
+            disableFinish: true
+        });
         console.log(errorMessage);
     }
 });
