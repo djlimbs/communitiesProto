@@ -444,8 +444,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                 findClosestLocation(self, applyCallback);
             }
         },
-        shareOnTwitter: function() {
-            var url = window.location.href;
+        shareOnTwitter: function() { 
+            var url = parent.window.location.href; 
             var jobTitle = this.get('jobPosting').Job_Title__c;
             var tweetString = 'Check out this job: ' + jobTitle; 
             var width = 626;
@@ -459,12 +459,11 @@ App.JobPostingController = Ember.ObjectController.extend({
 
             return false;
         },
-
         shareOnLinkedIn: function (){
-            var url = window.location.href;
-            //var source = 'https://www.appiphony.com'; // This does not show up anywhere except on url
+            // LinkedIn does not add utm params to URLs, so we have to do it manually
+            var utmParams = '&utm_campaign=Share On Social Media&utm_medium=Social&utm_source=LinkedIn';
+            var url = parent.window.location.href + utmParams;
             var source = ''; // This does not show up anywhere except on url
-            var docTitle = document.title; // This is the document where the Share Button is
             var width = 626;
             var height = 436;
             var left = (screen.width / 2) - (width / 2);
@@ -478,12 +477,9 @@ App.JobPostingController = Ember.ObjectController.extend({
 
             return false;
         },
-
-
-
         shareOnFacebook: function (){
-            var url = window.location.href;
-            var docTitle = document.title; // This is the document where the Share Button is
+            var url = parent.window.location.href;
+            var docTitle = parent.document.title; // This is the document where the Share Button is
             var width = 626;
             var height = 436;
             var left = (screen.width / 2) - (width / 2);
@@ -496,29 +492,6 @@ App.JobPostingController = Ember.ObjectController.extend({
  
             return false;
         },
-
-
-        // clickFacebook2: function (){
-        //     FB.ui({
-        //         method: 'feed',
-        //         name: 'Facebook Dialogs',
-        //         link: 'https://developers.facebook.com/docs/dialogs/',
-        //         picture: 'http://fbrell.com/f8.jpg',
-        //         caption: 'Reference Documentation',
-        //         description: 'Dialogs provide a simple, consistent interface for applications to interface with users.'
-        //     });
-
-            
-        //     FB.ui({
-        //         method: 'share',
-        //         href: 'https://developers.facebook.com/docs/',
-        //     }, function(response){});
-
-        //     return false;
-        // },
-
-
-
         toggleSaveJob: function (){
             if(this.get('isSaving')){
                 return;

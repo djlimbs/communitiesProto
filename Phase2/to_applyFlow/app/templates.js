@@ -2228,17 +2228,22 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
-  data.buffer.push("\n                <div class=\"panel__body pad--sm--tn pad--sm--bn\">\n                    <div class=\"form__group\">\n                        <a href=\"#\" class=\"text-error float--right text-underline\"><small>Clear</small></a>\n                        <label for=\"textareaSomething\" class=\"\">");
+  data.buffer.push("\n                <div class=\"panel__body pad--sm--tn pad--sm--bn\">\n                    <div class=\"form__group\">\n                        <a href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clearPersonalStatement", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" class=\"text-error float--right text-underline\" data-qa-link=\"clear\"><small>Clear</small></a>\n                        <label for=\"textareaSomething\" class=\"\" data-qa-label=\"personalStatement\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</label>\n                        ");
-  hashContexts = {'placeholder': depth0,'value': depth0,'maxlength': depth0};
-  hashTypes = {'placeholder': "STRING",'value': "ID",'maxlength': "STRING"};
+  hashContexts = {'placeholder': depth0,'value': depth0,'maxlength': depth0,'data-qa-input': depth0};
+  hashTypes = {'placeholder': "STRING",'value': "ID",'maxlength': "STRING",'data-qa-input': "STRING"};
   options = {hash:{
     'placeholder': (""),
     'value': ("personalStatement"),
-    'maxlength': ("1500")
+    'maxlength': ("1500"),
+    'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                        <small class=\"input-error-content\">Required field</small>\n                    </div>\n                </div>\n            ");
@@ -2262,7 +2267,7 @@ function program9(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "isAddResumeEnabled", {hash:{},inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n            ");
+  data.buffer.push("\n \n            ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "isPersonalStatementEnabled", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -2358,21 +2363,22 @@ function program15(depth0,data) {
 function program17(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
-  data.buffer.push("\n                <div class=\"panel__body pad--sm--bn\">\n                    <div class=\"form__group\">\n                        <a href=\"#\" class=\"text-error float--right text-underline\" ");
+  data.buffer.push("\n                <div class=\"panel__body pad--sm--bn\">\n                    <div class=\"form__group\">\n                        <a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clearPersonalStatement", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("><small>Clear</small></a>\n                        <label for=\"textareaSomething\" class=\"\">");
+  data.buffer.push(" class=\"text-error float--right text-underline\" data-qa-link=\"clear\"><small>Clear</small></a>\n                        <label for=\"textareaSomething\" class=\"\" data-qa-label=\"personalStatement\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</label>\n                        ");
-  hashContexts = {'placeholder': depth0,'value': depth0,'maxlength': depth0};
-  hashTypes = {'placeholder': "STRING",'value': "ID",'maxlength': "STRING"};
+  hashContexts = {'placeholder': depth0,'value': depth0,'maxlength': depth0,'data-qa-input': depth0};
+  hashTypes = {'placeholder': "STRING",'value': "ID",'maxlength': "STRING",'data-qa-input': "STRING"};
   options = {hash:{
     'placeholder': (""),
     'value': ("personalStatement"),
-    'maxlength': ("1500")
+    'maxlength': ("1500"),
+    'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                        <small class=\"input-error-content\">Required field</small>\n                    </div>\n                </div>\n            ");
