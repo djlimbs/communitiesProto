@@ -434,6 +434,7 @@ App.RadioButtonComponent = Ember.Component.extend({
     }.property('value', 'name'),
     click: function () {
         this.set('name', this.get('value'));
+        this.notifyPropertyChange('name');
     }
 });
 

@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      'build/to_applyFlow.pck.js': 'app/to_applyFlow_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle1_Phase3/to_applyFlow.pck.js': 'app/to_applyFlow_compiler.js'
     },
 
     /*
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
     watch: {
       application_code: {
         files: ['app/*.js'],
-        tasks: ['neuter', 'gh-pages']
+        tasks: ['neuter']
       },
 
      // handlebars_templates: {
