@@ -2251,12 +2251,12 @@ function program2(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.fromDevice", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                        </ul>\n                    </div>\n                    <div class=\"column--md--6\">\n                        <span class=\"input-size inline-block float--left mar--sm--lm text-faded dots\" data-qa-label=\"fileName\">\n                            ");
+  data.buffer.push("</a></li>\n                        </ul>\n                    </div>\n                    <div class=\"column--md--6\">\n                        <div class=\"input-size text-faded dots\" data-qa-label=\"fileName\">\n                            ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "resumeFileName", {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                        </span>\n                    </div>\n                </div>\n            ");
+  data.buffer.push("\n                        </div>\n                    </div>\n                </div>\n            ");
   return buffer;
   }
 function program3(depth0,data) {
@@ -2298,7 +2298,7 @@ function program7(depth0,data) {
   options = {hash:{
     'placeholder': (""),
     'value': ("personalStatement"),
-    'maxlength': ("2000"),
+    'maxlength': ("1500"),
     'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
@@ -2433,7 +2433,7 @@ function program17(depth0,data) {
   options = {hash:{
     'placeholder': (""),
     'value': ("personalStatement"),
-    'maxlength': ("2000"),
+    'maxlength': ("1500"),
     'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
