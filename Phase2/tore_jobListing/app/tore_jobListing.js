@@ -444,12 +444,13 @@ App.JobPostingController = Ember.ObjectController.extend({
                 findClosestLocation(self, applyCallback);
             }
         },
-        shareOnTwitter: function() { 
-            var url = parent.window.location.href; 
+        shareOnTwitter: function() {
+            var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=Twitter';
+            var url = parent.window.location.href + utmParams;
             var jobTitle = this.get('jobPosting').Job_Title__c;
             var tweetString = 'Check out this job: ' + jobTitle; 
             var width = 626;
-            var height = 436;
+            var height = 436; 
             var left = (screen.width / 2) - (width / 2);
             var top = (screen.height / 2) - (height / 2);
 
@@ -460,8 +461,7 @@ App.JobPostingController = Ember.ObjectController.extend({
             return false;
         },
         shareOnLinkedIn: function (){
-            // LinkedIn does not add utm params to URLs, so we have to do it manually
-            var utmParams = '&utm_campaign=Share On Social Media&utm_medium=Social&utm_source=LinkedIn';
+            var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=LinkedIn';
             var url = parent.window.location.href + utmParams;
             var source = ''; // This does not show up anywhere except on url
             var width = 626;
@@ -478,7 +478,8 @@ App.JobPostingController = Ember.ObjectController.extend({
             return false;
         },
         shareOnFacebook: function (){
-            var url = parent.window.location.href;
+            var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=Facebook';
+            var url = parent.window.location.href + utmParams;
             var docTitle = parent.document.title; // This is the document where the Share Button is
             var width = 626;
             var height = 436;
