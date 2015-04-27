@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      'build/tore_jobListing.pck.js': 'app/tore_jobListing_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle1_Phase3/tore_jobListing.pck.js': 'app/tore_jobListing_compiler.js'
     },
 
     /*

@@ -444,6 +444,9 @@ App.JobPostingController = Ember.ObjectController.extend({
                 findClosestLocation(self, applyCallback);
             }
         },
+        shareJob: function(){
+            
+        },
         shareOnTwitter: function() {
             var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=Twitter';
             var url = parent.window.location.href + utmParams;
