@@ -578,7 +578,7 @@ App.GeneralController = Ember.ArrayController.extend({
             
         this.get('controllers.apply').set('isGeneralIncomplete', isGeneralIncomplete); 
 
-    }.observes('[].@each.value')
+    }.observes('[].@each.value').on('init')
 });
 
 App.JobSpecificController = Ember.ArrayController.extend({
@@ -594,10 +594,9 @@ App.JobSpecificController = Ember.ArrayController.extend({
                 isJobSpecificIncomplete = true;
             }
         });
-
         this.get('controllers.apply').set('isJobSpecificIncomplete', isJobSpecificIncomplete); 
 
-    }.observes('[].@each.value')
+    }.observes('[].@each.value').on('init')
 });
 
 App.LegallyRequiredController = Ember.ArrayController.extend({
@@ -615,9 +614,7 @@ App.LegallyRequiredController = Ember.ArrayController.extend({
         });
 
         this.get('controllers.apply').set('isLegallyRequiredIncomplete', isLegallyRequiredIncomplete); 
-
-
-    }.observes('[].@each.value')
+    }.observes('[].@each.value').on('init')
 });
 
 App.FormElementController = Ember.ObjectController.extend({

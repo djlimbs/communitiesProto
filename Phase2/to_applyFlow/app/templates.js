@@ -1883,7 +1883,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
-  data.buffer.push("\n    <div id=\"jobSpecific\" class=\"wizardSection pad--sm--only--n\" data-qa-container=\"jobSpecificOnePage\">\n        <h3 class=\"pad--sm--only--lm pad--sm--only--rm mar--md--bn mar--md--txl\" data-qa-header=\"jobSpecific\">");
+  data.buffer.push("\n    <div class=\"wizardSection pad--sm--only--n\" data-qa-container=\"jobSpecificOnePage\">\n        <h3 class=\"pad--sm--only--lm pad--sm--only--rm mar--md--bn mar--md--txl\" data-qa-header=\"jobSpecific\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.jobSpecific", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1939,36 +1939,61 @@ function program4(depth0,data) {
 Ember.TEMPLATES["legallyRequired"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
+  var stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
 
 function program1(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
-  data.buffer.push("\n        ");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "errorAlert", options) : helperMissing.call(depth0, "partial", "errorAlert", options))));
-  data.buffer.push("\n    ");
-  return buffer;
-  }
-
-  data.buffer.push("<div id=\"legallyRequired\" class=\"wizardSection pad--sm--only--n\">\n    <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\">");
+  data.buffer.push("\n    <div class=\"wizardSection pad--sm--only--n\" data-qa-container=\"legallyRequiredOnePage\">\n        <h3 class=\"pad--sm--only--lm pad--sm--only--rm mar--md--bn mar--md--txl\" data-qa-header=\"legallyRequired\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.legallyRequired", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</h1>\n    ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n    ");
+  data.buffer.push("</h3>\n        ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "formElements", options) : helperMissing.call(depth0, "partial", "formElements", options))));
-  data.buffer.push("\n</div>");
+  data.buffer.push("\n    </div>\n");
   return buffer;
+  }
+
+function program3(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n    <div class=\"wizardSection pad--sm--only--n\" data-qa-container=\"legallyRequired\">\n        <h1 class=\"text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm\" data-qa-header=\"legallyRequired\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.legallyRequired", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h1>\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "errorMessage", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "formElements", options) : helperMissing.call(depth0, "partial", "formElements", options))));
+  data.buffer.push("\n    </div>\n");
+  return buffer;
+  }
+function program4(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "errorAlert", options) : helperMissing.call(depth0, "partial", "errorAlert", options))));
+  data.buffer.push("\n        ");
+  return buffer;
+  }
+
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "isOnePage", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  else { data.buffer.push(''); }
   
 });
 
