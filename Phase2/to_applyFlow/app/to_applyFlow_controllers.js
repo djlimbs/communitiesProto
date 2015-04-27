@@ -2,19 +2,36 @@
 App.ApplicationController = Ember.Controller.extend({});
 
 App.OnePageController = Ember.ObjectController.extend({
-    needs: ['employmentHistory', 'educationHistory'],
+    needs: ['apply', 'employmentHistory', 'educationHistory'],
+    isContactInfoIncompleteBinding: 'controllers.apply.isContactInfoIncomplete', 
+    isResumeIncompleteBinding: 'controllers.apply.isResumeIncomplete', 
+    isSkillsIncompleteBinding: 'controllers.apply.isSkillsIncomplete', 
+    isEmploymentHistoryIncompleteBinding: 'controllers.apply.isEmploymentHistoryIncomplete', 
+    isEducationHistoryIncompleteBinding: 'controllers.apply.isEducationHistoryIncomplete', 
+    isGeneralIncompleteBinding: 'controllers.apply.isGeneralIncomplete', 
+    isJobSpecificIncompleteBinding: 'controllers.apply.isJobSpecificIncomplete', 
+    isLegallyRequiredIncompleteBinding: 'controllers.apply.isLegallyRequiredIncomplete',
+    disableFinish: function() {
+        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
+                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
+                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') 
+                        || this.get('isJobSpecificIncomplete') || this.get('isLegallyRequiredIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
+                    'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
+                    'showSavingNotification'),
     actions: {
         clickFinish: function() {
             parent.window.scrollTo(0,0);
             this.setProperties({
                 showSavingNotification: true,
-                disableFinish: true
+                //disableFinish: true
             });
 
             this.saveResumeSection(this)
                 .then(this.saveAppSectionsExceptResume)
                 .then(this.redirectAfterFinish)
-                .then(this.handleError);
+                .then(undefined, this.handleError);
 
         }
     },
@@ -63,14 +80,12 @@ App.OnePageController = Ember.ObjectController.extend({
                                     }
                                 });
                             } else {
-                                reject(parsedResult.errorMessages[0]);
-                                //applyController.set('showSavingNotification', false);
+                                self.set('errorMessage', parsedResult.errorMessages[0])
+                                reject(self);
                             }
                         } else {
-                            self.setProperties({
-                                errorMessage: evt.message,
-                            });
-                            //applyController.set('showSavingNotification', false);
+                            self.set('errorMessage', evt.message);
+                            reject(self);
                         }
                     });
                 } else if (model.resume.isAddResumeEnabled === true && alreadyUploaded !== true) {
@@ -80,8 +95,8 @@ App.OnePageController = Ember.ObjectController.extend({
                     $('iframe#theIframe').one('load', function() {
                         if ($('iframe#theIframe').contents().find('.message').length > 0) {
                             var errorMessage = $('iframe#theIframe').contents().find('.message').find('li:first').text();
-                            reject(errorMessage);
-                            //applyController.set('showSavingNotification', false);
+                            self.set('errorMessage', errorMessage);
+                            reject(self);
                         } else {
                             cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
                                 if (resumeRes) {
@@ -90,7 +105,8 @@ App.OnePageController = Ember.ObjectController.extend({
                                     if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
                                         resolve(self);
                                     } else {
-                                        reject(parsedResumeResult.errorMessages[0]);
+                                        self.set('errorMessage', parsedResumeResult.errorMessages[0])
+                                        reject(self);
                                     }
                                 }
                             });
@@ -104,7 +120,8 @@ App.OnePageController = Ember.ObjectController.extend({
                             if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
                                 resolve(self);
                             } else {
-                                reject(parsedResumeResult.errorMessages[0]);
+                                self.set('errorMessage', parsedResumeResult.errorMessages[0])
+                                reject(self);
                             }
                         }
                     });
@@ -115,7 +132,9 @@ App.OnePageController = Ember.ObjectController.extend({
     saveAppSectionsExceptResume: function(self) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
             var model = self.get('model');
-            var errorMessage = '';
+            var errorObj = {
+                message: ''
+            };
             var saveObj = {};
             var employmentHistoryController = self.get('controllers.employmentHistory');
             var educationHistoryController = self.get('controllers.educationHistory');
@@ -129,7 +148,7 @@ App.OnePageController = Ember.ObjectController.extend({
             }
             
             if (model.isEmploymentHistoryEnabled) {
-                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(model, employmentHistoryController, errorMessage);
+                var employmentHistoryObj = App.buildEmploymentHistorySaveObj(model, employmentHistoryController, errorObj);
 
                 if (employmentHistoryObj !== null) {
                     saveObj.employmentHistory = employmentHistoryObj;
@@ -137,7 +156,7 @@ App.OnePageController = Ember.ObjectController.extend({
             }
 
             if (model.isEducationHistoryEnabled) {
-                var educationHistoryObj = App.buildEducationHistorySaveObj(model, educationHistoryController, errorMessage);
+                var educationHistoryObj = App.buildEducationHistorySaveObj(model, educationHistoryController, errorObj);
 
                 if (educationHistoryObj !== null) {
                     saveObj.educationHistory = educationHistoryObj;
@@ -165,8 +184,9 @@ App.OnePageController = Ember.ObjectController.extend({
                 });
             }
 
-            if (!Ember.isEmpty(errorMessage)) {
-                reject(errorMessage);
+            if (!Ember.isEmpty(errorObj.message)) {
+                self.set('errorMessage', 'There are some problems with your information: <br/><br/>' + errorObj.message);
+                reject(self);
             } else {
                 cont.saveAppSectionsExceptResume(JSON.stringify(saveObj), function(res, evt) {
                     if (res) {
@@ -175,7 +195,8 @@ App.OnePageController = Ember.ObjectController.extend({
                         if (Ember.isEmpty(parsedResult.errorMessages)) {
                             resolve(self);
                         } else {
-                            reject(parsedResult.errorMessages)
+                            self.set('errorMessage', parsedResult.errorMessages[0]);
+                            reject(self);
                         }
                     } else {
 
@@ -184,12 +205,11 @@ App.OnePageController = Ember.ObjectController.extend({
             } 
         });
     },
-    handleError: function(errorMessage) {
-        this.setProperties({
-            showSavingNotification: true,
-            disableFinish: true
+    handleError: function(self) {
+        self.setProperties({
+            showSavingNotification: false,
+            //disableFinish: false
         });
-        console.log(errorMessage);
     }
 });
 

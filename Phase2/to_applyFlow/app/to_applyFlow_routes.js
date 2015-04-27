@@ -322,7 +322,7 @@ App.buildSkillsSaveObj = function(application) {
     return skillsObj;
 };
 
-App.buildEmploymentHistorySaveObj = function(application, employmentHistoryController, errorMessage) {
+App.buildEmploymentHistorySaveObj = function(application, employmentHistoryController, errorObj) {
     var employmentHistoryObjArray = [];
     var flattenedEmploymentHistory = '';
     var historyIsLongEnough = false;
@@ -344,7 +344,7 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
 
         eh.fields.forEach(function(field) {
 
-            if (field.name === 'Start_Year__c' || (field.name === 'End_Year__c' && isCurrentChecked === false)) {
+            if (field.name === 'Start_Year__c' || (field.name === 'End_Year__c' && isCurrentChecked !== true)) {
                 field.set('hasError', false);
 
                 if (isNaN(field.value)) {
@@ -363,7 +363,8 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
                 }
 
                 if (isValid === false) {
-                    errorMessage = labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
+                    errorObj.message = 'Emplyoment History: <br/>'
+                                    + labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
                                     + labels.and + ' ' + moment().format('YYYY');
                 }
             } else {
@@ -415,11 +416,11 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
             var earliestMonth = moment().subtract(application.employmentHistoryYears, 'years');
             var earliestMonthString = App.Fixtures.numberToMonthMap[earliestMonth.format('M')] + ' ' + earliestMonth.format('YYYY');
 
-            if (errorMessage !== '') {
-                errorMessage += '</br>';
+            if (errorObj.message !== '') {
+                errorObj.message += '</br>';
             }
 
-            errorMessage += labels.pleaseAccountForEveryMonthBetween + ' ' 
+            errorObj.message += labels.pleaseAccountForEveryMonthBetween + ' ' 
                                 + currentMonthString + ' ' + labels.and + ' ' + earliestMonthString + ' ' + labels.inclusive + '.';
         }
 
@@ -427,7 +428,7 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
     }
 };
 
-App.buildEducationHistorySaveObj = function(application, educationHistoryController, errorMessage) {
+App.buildEducationHistorySaveObj = function(application, educationHistoryController, errorObj) {
     var educationHistoryObjArray = [];
     var flattenedEducationHistory = '';
     var isValid = true;
@@ -458,8 +459,12 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
                     }
                 }
 
-                if (isValid === false) {
-                    errorMessage = labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
+                if (isValid === false && errorObj.message.indexOf('Education History') === -1) { // Only add error message once.
+                    if (!Ember.isEmpty(errorObj.message)) {
+                        errorObj.message += '<br/>'
+                                         + 'Education History: <br/>';
+                    }
+                    errorObj.message += labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
                                     + labels.and + ' ' + moment().add(10, 'years').format('YYYY');
                 }
             } else {
@@ -493,7 +498,6 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
 
         return educationHistoryObj;
     } else if (!isValid) {
-        errorMessage += errorMessage;
 
         return null;
     }
@@ -849,7 +853,7 @@ App.EmploymentHistoryRoute = Ember.Route.extend({
 
             eh.fields.forEach(function(field) {
 
-                if (field.name === 'Start_Year__c' || (field.name === 'End_Year__c' && isCurrentChecked === false)) {
+                if (field.name === 'Start_Year__c' || (field.name === 'End_Year__c' && isCurrentChecked !== true)) {
                     field.set('hasError', false);
 
                     if (isNaN(field.value)) {

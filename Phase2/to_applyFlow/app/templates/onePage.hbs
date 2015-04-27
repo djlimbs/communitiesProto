@@ -8,6 +8,9 @@
 
 
         <div class="wizardContent">
+            {{#if errorMessage}}
+                {{partial "errorAlert"}}
+            {{/if}}
             {{render "contactInfo" contactFields}}
             {{#if isResumeEnabled}}
                 {{render "resume" resume}}
