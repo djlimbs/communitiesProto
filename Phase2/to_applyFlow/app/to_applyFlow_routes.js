@@ -649,26 +649,6 @@ App.ResumeRoute = Ember.Route.extend({
         controller.set('model', model);
         controller.notifyPropertyChange('resumeFileName');
     },
-    savePersonalStatement: function(){
-        var self = this;
-        var resume = this.modelFor('resume');
-        var resumeController = this.controllerFor('resume');
-        var personalStatement = resumeController.get('personalStatement');
-        
-        if (Ember.isEmpty(personalStatement)) {
-            personalStatement = '';
-        }
-
-        cont.savePersonalStatement(appId, personalStatement, function(res, evt) {
-            if (res) {
-                var parsedResult = parseResult(res);
-                console.log('PARESED RESULTS: ');
-                console.log(parsedResult);
-            } else {
-                console.log('NOTHING');
-            }
-        });
-    },
     uploadResume: function(transition, completeApplication) {
         var self = this;
         var applyModel = this.modelFor('apply');
@@ -717,7 +697,6 @@ App.ResumeRoute = Ember.Route.extend({
                         if (Ember.isEmpty(parsedResult.errorMessages)) {
                             $iframe.find('.fileInput').off('change');
                             cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
-                            //cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                         } else {
                             self.setProperties({
                                 errorMessage: parsedResult.errorMessages[0],
@@ -742,7 +721,6 @@ App.ResumeRoute = Ember.Route.extend({
                         applyController.set('showSavingNotification', false);
                     } else {
                         cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
-                        //cont.createFeedItem(parsedApplyMap.baseUrl, appId, completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
                     }
                 });
             } else {
@@ -755,14 +733,6 @@ App.ResumeRoute = Ember.Route.extend({
     actions: {
         willTransition: function(transition) {
             this.uploadResume(transition, false);
-            //this.savePersonalStatement();
-
-            /*
-            this.savePersonalStatement()
-                .then(uploadResume)
-                .then(transitionOrCompleteApp)
-                .then(undefined, handleError);
-            */
         },
         clickDone: function() {
             this.uploadResume(null, true);

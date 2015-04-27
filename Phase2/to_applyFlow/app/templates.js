@@ -2298,7 +2298,7 @@ function program7(depth0,data) {
   options = {hash:{
     'placeholder': (""),
     'value': ("personalStatement"),
-    'maxlength': ("1500"),
+    'maxlength': ("2000"),
     'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
@@ -2433,7 +2433,7 @@ function program17(depth0,data) {
   options = {hash:{
     'placeholder': (""),
     'value': ("personalStatement"),
-    'maxlength': ("1500"),
+    'maxlength': ("2000"),
     'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));

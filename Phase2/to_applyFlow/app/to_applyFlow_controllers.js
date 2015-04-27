@@ -68,7 +68,7 @@ App.OnePageController = Ember.ObjectController.extend({
 
                             if (Ember.isEmpty(parsedResult.errorMessages)) {
                                 $iframe.find('.fileInput').off('change');
-                                cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
+                                cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, false, function(resumeRes, resumeEvt) {
                                     if (resumeRes) {
                                         var parsedResumeResult = parseResult(resumeRes);
 
@@ -98,7 +98,7 @@ App.OnePageController = Ember.ObjectController.extend({
                             self.set('errorMessage', errorMessage);
                             reject(self);
                         } else {
-                            cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
+                            cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, false, function(resumeRes, resumeEvt) {
                                 if (resumeRes) {
                                     var parsedResumeResult = parseResult(resumeRes);
 
@@ -113,7 +113,7 @@ App.OnePageController = Ember.ObjectController.extend({
                         }
                     });
                 } else if (model.resume.isPersonalStatementEnabled === true) {
-                    cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, true, function(resumeRes, resumeEvt) {
+                    cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, false, function(resumeRes, resumeEvt) {
                         if (resumeRes) {
                             var parsedResumeResult = parseResult(resumeRes);
 

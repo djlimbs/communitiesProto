@@ -206,19 +206,28 @@ App.createApplicantRequiredDataObj = function(legalFormElements) {
                     Application__c: appId,
                     Form_Element__c: fe.Id,
                     Question__c: fe.Text__c,
-                    Value__c: ac.Value__c
+                    Value__c: ac.Value__c,
+                    namespace_Answer_Choice__c: ac.Id
                 };
 
                 applicantRequiredData.addObject(applicantRequiredDataObj);
             });
         } else if (!Ember.isEmpty(fe.value)) {
-            applicantRequiredData.addObject({
+            var applicantRequiredDataObj = {
                 Id: fe.applicantRequiredDataId,
                 Application__c: appId,
                 Form_Element__c: fe.Id,
                 Question__c: fe.Text__c,
                 Value__c: fe.value
-            });
+            };
+
+            if (!Ember.isNone(fe.Answer_Choices__r)) { 
+                var answerChoice = fe.Answer_Choices__r.records.findBy('Value__c', fe.value);
+
+                applicantRequiredDataObj.namespace_Answer_Choice__c = answerChoice.Id;
+            }
+
+            applicantRequiredData.addObject(applicantRequiredDataObj);
         }
     });
 
