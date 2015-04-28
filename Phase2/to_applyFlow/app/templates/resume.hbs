@@ -14,21 +14,23 @@
                             {{view "uploadFile" resumeFileName=resumeFileName alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
                         </div>
                     </p>
-                    <div class="button-group inline-block float--left">
-                        <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
-                            <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
-                        </ul>
-                    </div>
-                    <div class="column--md--6">
-                        <span class="input-size inline-block float--left mar--sm--lm text-faded dots" data-qa-label="fileName">
-                            {{#if resumeFileName}}
-                                {{resumeFileName}}
-                            {{else}}
-                                {{labels.noFileSelected}}
-                            {{/if}}
-                        </span>
+                    <div class="row">
+                        <div class="column--md--4">
+                            <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
+                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="column--md--8">
+                            <div class="input-size text-faded dots" data-qa-label="fileName">
+                                {{#if resumeFileName}}
+                                    {{resumeFileName}}
+                                {{else}}
+                                    {{labels.noFileSelected}}
+                                {{/if}}
+                            </div>
+                        </div>
                     </div>
                 </div>
             {{/if}}
@@ -38,7 +40,7 @@
                     <div class="form__group">
                         <a href="#" {{action "clearPersonalStatement"}} class="text-error float--right text-underline" data-qa-link="clear"><small>Clear</small></a>
                         <label for="textareaSomething" class="" data-qa-label="personalStatement">{{labels.personalStatement}}</label>
-                        {{textarea placeholder="" value=personalStatement maxlength="2000" data-qa-input="personalStatement"}}
+                        {{textarea placeholder="" value=personalStatement maxlength="1500" data-qa-input="personalStatement"}}
                         <small class="input-error-content">Required field</small>
                     </div>
                 </div>
@@ -89,7 +91,7 @@
                     <div class="form__group">
                         <a href="#" {{action "clearPersonalStatement"}} class="text-error float--right text-underline" data-qa-link="clear"><small>Clear</small></a>
                         <label for="textareaSomething" class="" data-qa-label="personalStatement">{{labels.personalStatement}}</label>
-                        {{textarea placeholder="" value=personalStatement maxlength="2000" data-qa-input="personalStatement"}}
+                        {{textarea placeholder="" value=personalStatement maxlength="1500" data-qa-input="personalStatement"}}
                         <small class="input-error-content">Required field</small>
                     </div>
                 </div>
