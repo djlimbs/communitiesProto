@@ -56,7 +56,7 @@ App.Fixtures = {
 
 // Pull in degree picklist values
 
-if (!Ember.isEmpty(parsedApplyMap.educationHistoryFields) 
+if (!Ember.isEmpty(parsedApplyMap) && !Ember.isEmpty(parsedApplyMap.educationHistoryFields) 
                         && !Ember.isNone(parsedApplyMap.educationHistoryFields.findBy('name', 'Education_Level__c'))) {
     App.Fixtures.degreePicklistValues = parsedApplyMap.educationHistoryFields.findBy('name', 'Education_Level__c').picklistValues.getEach('value');
 }
