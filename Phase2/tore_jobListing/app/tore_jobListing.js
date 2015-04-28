@@ -1,3 +1,26 @@
+$(window).load(function() {
+    console.log('READY: ');
+
+            var iframe = $('#iframe').contents().find('.column--md--4.mar--sm--only--txl').find('.button');
+            if (iframe) {
+                console.log('PO');
+            } else {
+                console.log('JO');
+            };
+
+    $('iframe').contents().find('.column--md--4.mar--sm--only--txl').find('.button').click(function() {
+        console.log('CLICKED: ');
+
+        $("body").animate({
+            scrollTop: 100
+        }, 1000);
+    });
+});
+
+
+
+
+
 // Kick off Ember
 App = Ember.Application.create({
     rootElement: '#application'
@@ -445,7 +468,7 @@ App.JobPostingController = Ember.ObjectController.extend({
             }
         },
         shareJob: function(){
-            
+
         },
         shareOnTwitter: function() {
             var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=Twitter';

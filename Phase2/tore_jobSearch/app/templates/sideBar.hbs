@@ -1,0 +1,36 @@
+<div class="column--md--4" data-qa-container="myJobs">
+
+    {{#if allMyJobs}}
+        <div class="content__section mar--md--bxl">
+            <h3 class="mar--sm--tn mar--sm--bn" data-qa-label="myJobs"><span class="juicon juicon-bookmark text-faded" data-qa="icon"></span> {{labels.myJobs}}</h3>
+            <ul class="list-style-type-none mar--sm--n">
+                {{#each job in allMyJobs}} 
+                    <li class="mar--sm--bm mar--sm--tm">
+                        <h4 class="mar--sm--n"><a href="{{unbound job.jobPostingUrl}}" target="_top" data-qa="link">{{job.jobTitle}}</a></h4>
+                        <h5 class="mar--sm--n text-faded" data-qa-label="location">
+                            {{job.firstLocationString}} 
+                            {{#if job.otherLocationsString}} &amp;
+                                <a data-toggle="tooltip" title="" class="pointer text-primary text-underline" data-original-title="{{unbound job.otherLocationsString}}" data-qa="tooltip">
+                                    {{job.otherLocationsCount}}
+                                    {{locationsCount job.otherLocationsCount}}
+                                </a>
+                            {{/if}}
+                            {{#if job.isRemoteAvailable}}
+                                <small data-qa-label="remoteAvailable">({{labels.remoteAvailable}})</small>
+                            {{/if}}
+                        </h5>
+                        {{#if job.isApplication}}
+                            {{#if job.hasJobOffer}}
+                                <small {{bind-attr class=":label job.jobLabelClass"}}>{{labels.offer}} {{job.jobOfferStatus}}</small>
+                            {{else}}
+                                <small {{bind-attr class=":label job.jobLabelClass"}}>{{job.statusText}}</small>
+                            {{/if}}
+                        {{/if}}
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{!-- <hr class="show-brkpoint--md" data-qa="hr"> --}}
+    {{/if}}
+
+</div>

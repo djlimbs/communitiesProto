@@ -14,20 +14,22 @@
                             {{view "uploadFile" resumeFileName=resumeFileName alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
                         </div>
                     </p>
-                    <div class="button-group inline-block float--left">
-                        <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
-                            <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
-                        </ul>
-                    </div>
-                    <div class="column--md--6">
-                        <div class="input-size text-faded dots" data-qa-label="fileName">
-                            {{#if resumeFileName}}
-                                {{resumeFileName}}
-                            {{else}}
-                                {{labels.noFileSelected}}
-                            {{/if}}
+                    <div class="row">
+                        <div class="column--md--4">
+                            <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
+                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
+                            </ul>
+                        </div>
+                        <div class="column--md--8">
+                            <div class="input-size text-faded dots" data-qa-label="fileName">
+                                {{#if resumeFileName}}
+                                    {{resumeFileName}}
+                                {{else}}
+                                    {{labels.noFileSelected}}
+                                {{/if}}
+                            </div>
                         </div>
                     </div>
                 </div>
