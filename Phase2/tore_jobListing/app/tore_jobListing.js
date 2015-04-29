@@ -1,26 +1,3 @@
-$(window).load(function() {
-    console.log('READY: ');
-
-            var iframe = $('#iframe').contents().find('.column--md--4.mar--sm--only--txl').find('.button');
-            if (iframe) {
-                console.log('PO');
-            } else {
-                console.log('JO');
-            };
-
-    $('iframe').contents().find('.column--md--4.mar--sm--only--txl').find('.button').click(function() {
-        console.log('CLICKED: ');
-
-        $("body").animate({
-            scrollTop: 100
-        }, 1000);
-    });
-});
-
-
-
-
-
 // Kick off Ember
 App = Ember.Application.create({
     rootElement: '#application'
@@ -431,6 +408,9 @@ App.JobPostingController = Ember.ObjectController.extend({
             }
         }
     },
+    isMobile: function(){
+
+    }.property(''),
     actions: {
         displayLocationModal : function(applyType) {
             var self = this;
@@ -467,12 +447,9 @@ App.JobPostingController = Ember.ObjectController.extend({
                 findClosestLocation(self, applyCallback);
             }
         },
-        shareJob: function(){
-
-        },
         shareOnTwitter: function() {
             var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=Twitter';
-            var url = parent.window.location.href + utmParams;
+            var url = parent.window.location.href.split('&')[0] + utmParams;
             var jobTitle = this.get('jobPosting').Job_Title__c;
             var tweetString = 'Check out this job: ' + jobTitle; 
             var width = 626;
@@ -488,7 +465,7 @@ App.JobPostingController = Ember.ObjectController.extend({
         },
         shareOnLinkedIn: function (){
             var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=LinkedIn';
-            var url = parent.window.location.href + utmParams;
+            var url = parent.window.location.href.split('&')[0] + utmParams;
             var source = ''; // This does not show up anywhere except on url
             var width = 626;
             var height = 436;
@@ -505,7 +482,7 @@ App.JobPostingController = Ember.ObjectController.extend({
         },
         shareOnFacebook: function (){
             var utmParams = '&utm_campaign=social&utm_medium=Social&utm_source=Facebook';
-            var url = parent.window.location.href + utmParams;
+            var url = parent.window.location.href.split('&')[0] + utmParams;
             var docTitle = parent.document.title; // This is the document where the Share Button is
             var width = 626;
             var height = 436;
