@@ -5,7 +5,7 @@
             {{#if fe.isQuestion}}
                 {{#unless fe.isAtNone}}
                     {{#if fe.isRadioButton}}
-                        <p class="mar--sm--tm mar--md--txl" data-qa-label="questionText">
+                        <p class="mar--sm--tm mar--md--txl required-field" data-qa-label="questionText">
                             {{fe.Text__c}}
                         </p>
 
@@ -24,7 +24,7 @@
                     {{/if}}
 
                     {{#if fe.isCheckbox}}
-                        <p class="mar--sm--tm mar--md--txl" data-qa-label="questionText">
+                        <p class="mar--sm--tm mar--md--txl required-field" data-qa-label="questionText">
                             {{fe.Text__c}}
                         </p>
 
@@ -43,7 +43,7 @@
                     {{/if}}
 
                     {{#if fe.isTextField}}
-                        <p class="mar--sm--tm mar--md--txl" data-qa-input="questionText">
+                        <p class="mar--sm--tm mar--md--txl required-field" data-qa-input="questionText">
                             {{fe.Text__c}}
                         </p>
                
@@ -55,7 +55,7 @@
                     {{/if}}
 
                     {{#if fe.isParagraph}}
-                        <p class="mar--sm--tm mar--md--txl" data-qa-label="questionText">
+                        <p class="mar--sm--tm mar--md--txl required-field" data-qa-label="questionText">
                             {{fe.Text__c}}
                         </p>
 
@@ -67,7 +67,7 @@
                     {{/if}}
 
                     {{#if fe.isDate}}
-                        <p class="mar--sm--tm mar--md--txl" data-qa-label="questionText">
+                        <p class="mar--sm--tm mar--md--txl required-field" data-qa-label="questionText">
                             {{fe.Text__c}}
                         </p>
 

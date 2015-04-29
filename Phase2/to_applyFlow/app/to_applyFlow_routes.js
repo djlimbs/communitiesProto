@@ -461,9 +461,9 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
 
                 if (isValid === false && errorObj.message.indexOf('Education History') === -1) { // Only add error message once.
                     if (!Ember.isEmpty(errorObj.message)) {
-                        errorObj.message += '<br/>'
-                                         + 'Education History: <br/>';
+                        errorObj.message += '<br/>';
                     }
+                    errorObj.message += 'Education History: <br/>';
                     errorObj.message += labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
                                     + labels.and + ' ' + moment().add(10, 'years').format('YYYY');
                 }
@@ -665,7 +665,9 @@ App.ResumeRoute = Ember.Route.extend({
 
         self.controllerFor(currentPath).set('errorMessage', null);
 
-        if ((!Ember.isNone(fileName) || resume.isPersonalStatementEnabled === true) && alreadyUploaded !== true && applyController.get('showSavingNotification') !== true) {    
+        if ((!Ember.isNone(fileName) || resume.isPersonalStatementEnabled === true) 
+                        && (alreadyUploaded !== true || !Ember.isEmpty(resumeController.get('personalStatement'))) 
+                        && applyController.get('showSavingNotification') !== true) {    
             if (completeApplication !== true) {
                 transition.abort();
             }
@@ -685,11 +687,11 @@ App.ResumeRoute = Ember.Route.extend({
                 personalStatement = resumeController.get('personalStatement');
             }
 
-            if (resume.isAddResumeEnabled === true) {
+            if (resume.isAddResumeEnabled === true && alreadyUploaded !== true) {
                 resumeBaseUrl = parsedApplyMap.baseUrl;
             }
 
-            if (resume.isFromDropbox === true) {
+            if (resume.isFromDropbox === true && alreadyUploaded !== true) {
                 cont.createLinkAttachment(fileName, appId, function(res, evt) {
                     if (res) {
                         var parsedResult = parseResult(res);
@@ -710,7 +712,7 @@ App.ResumeRoute = Ember.Route.extend({
                         applyController.set('showSavingNotification', false);
                     }
                 });
-            } else if (resume.isAddResumeEnabled === true) {
+            } else if (resume.isAddResumeEnabled === true && alreadyUploaded !== true) {
                 $iframe.find('.fileInput').off('change');            
                 $iframe.find('.saveFile').click();
 

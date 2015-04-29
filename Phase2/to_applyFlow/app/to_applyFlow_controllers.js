@@ -61,7 +61,7 @@ App.OnePageController = Ember.ObjectController.extend({
                     resumeBaseUrl = parsedApplyMap.baseUrl;
                 }
 
-                if (model.resume.isFromDropbox === true) {
+                if (model.resume.isAddResumeEnabled === true && alreadyUploaded !== true && model.resume.isFromDropbox === true) {
                     cont.createLinkAttachment(fileName, appId, function(res, evt) {
                         if (res) {
                             var parsedResult = parseResult(res);
@@ -73,6 +73,7 @@ App.OnePageController = Ember.ObjectController.extend({
                                         var parsedResumeResult = parseResult(resumeRes);
 
                                         if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
+                                            self.set('resume.alreadyUploaded', true);
                                             resolve(self);
                                         } else {
                                             self.set('errorMessage', parsedResumeResult.errorMessages[0]);
@@ -104,6 +105,7 @@ App.OnePageController = Ember.ObjectController.extend({
                                     var parsedResumeResult = parseResult(resumeRes);
 
                                     if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
+                                        self.set('resume.alreadyUploaded', true);
                                         resolve(self);
                                     } else {
                                         self.set('errorMessage', parsedResumeResult.errorMessages[0])
@@ -126,6 +128,8 @@ App.OnePageController = Ember.ObjectController.extend({
                             }
                         }
                     });
+                } else {
+                    resolve(self);
                 }
             }            
         });
