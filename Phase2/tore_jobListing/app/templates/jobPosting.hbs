@@ -58,7 +58,7 @@
             <div class="column--md--4 mar--sm--only--txl">
                 <div class="button-group width--full inline-block vam width--full--sm--only">
                     <button class="button button--secondary width--full theme-border-color theme-link-color" data-toggle="dropdown" data-qa-button="shareJob">{{labels.shareJob}} <span class="juicon juicon-share"></span></button>
-                     <ul {{bind-attr class=":dropdown-menu isMobile:dropdown-menu--up"}}>
+                     <ul class="dropdown-menu dropdown-menu--up-on-small">
                         <li class="dropdown-menu__list-item" data-qa-link="shareOnTwitter"><a href="#" {{action "shareOnTwitter"}}><span class="juicon juicon-twitter"></span> {{labels.twitter}}</a></li>
                         <li class="dropdown-menu__list-item" data-qa-link="shareOnLinkedIn"><a href="#" {{action "shareOnLinkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.linkedIn}}</a></li>
                         <li class="dropdown-menu__list-item" data-qa-link="shareOnFacebook"><a href="#" {{action "shareOnFacebook"}}><span class="juicon juicon-facebook"></span> Facebook </a></li>

@@ -392,14 +392,7 @@ function program28(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.shareJob", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                     <ul ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
-  options = {hash:{
-    'class': (":dropdown-menu isMobile:dropdown-menu--up")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"shareOnTwitter\"><a href=\"#\" ");
+  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                     <ul class=\"dropdown-menu dropdown-menu--up-on-small\">\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"shareOnTwitter\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnTwitter", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

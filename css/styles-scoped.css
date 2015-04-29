@@ -447,6 +447,9 @@ body .scope-container .panel__sidebar {
 body .scope-container .panel__box {
   overflow: hidden; }
 
+.break-word {
+  word-wrap: break-word; }
+
 .list-style-type-none, body .scope-container .dropdown-menu, body .scope-container .dropdown-menu--top-right, body .scope-container .list-group, body .scope-container .panel__sidebar__list-group, body .scope-container .inline-list, body .scope-container .nav-bar__list, body .scope-container .nav-bar__list--right, body .scope-container .nav-bar__list--left, body .scope-container .pagination, body .scope-container .pagination--alt, .sig__container .sigNav {
   list-style-type: none;
   padding: 0; }
@@ -3680,6 +3683,8 @@ body .scope-container {
     @media (min-width: 769px) {
       body .scope-container .dropdown-menu, body .scope-container .dropdown-menu--top-right {
         max-width: 512px; } }
+    body .scope-container .dropdown-menu ul, body .scope-container .dropdown-menu--top-right ul {
+      margin: 0; }
     body .scope-container .dropdown-menu__list-item {
       display: block;
       padding: 0;
@@ -3702,6 +3707,10 @@ body .scope-container {
     body .scope-container .dropdown-menu--up {
       bottom: 100%;
       top: auto; }
+    @media (min-width: 1px) and (max-width: 769px) {
+      body .scope-container .dropdown-menu--up-on-small {
+        bottom: 100%;
+        top: auto; } }
   body .scope-container .open > .dropdown-menu, body .scope-container .open > .dropdown-menu--top-right {
     display: block; }
   body .scope-container .dropdown-backdrop {
@@ -5700,7 +5709,7 @@ body .scope-container {
       z-index: 1;
       position: relative;
       border: 0;
-      -moz-appearance: progresschunk; }
+      -moz-appearance: none; }
       body .scope-container .select__wrap select::-ms-expand, body .scope-container .select2-container select::-ms-expand {
         display: none; }
       body .scope-container .select__wrap select::-moz-focus-inner, body .scope-container .select2-container select::-moz-focus-inner {
@@ -7106,6 +7115,16 @@ input[type="color"] {
   height: 24px;
   width: 48px;
   border-radius: 4px; }
+
+.lh-normal {
+  line-height: 1.5; }
+
+.site-modal-open .modal__content {
+  border: 1px solid #dadee2; }
+.site-modal-open .modal__backdrop {
+  background-color: white; }
+  .site-modal-open .modal__backdrop.in {
+    background-color: rgba(255, 255, 255, 0.8); }
 
 .modal-open {
   overflow: hidden; }
