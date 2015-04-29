@@ -496,7 +496,7 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
             flattenedEducationHistory: flattenedEducationHistory
         };
 
-        return educationHistoryObj;
+        return educationHistoriesObj;
     } else if (!isValid) {
 
         return null;

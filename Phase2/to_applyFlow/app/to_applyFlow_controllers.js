@@ -75,7 +75,8 @@ App.OnePageController = Ember.ObjectController.extend({
                                         if (Ember.isEmpty(parsedResumeResult.errorMessages)) {
                                             resolve(self);
                                         } else {
-                                            reject(parsedResumeResult.errorMessages[0]);
+                                            self.set('errorMessage', parsedResumeResult.errorMessages[0]);
+                                            reject(self);
                                         }
                                     }
                                 });
@@ -151,7 +152,7 @@ App.OnePageController = Ember.ObjectController.extend({
                 var employmentHistoryObj = App.buildEmploymentHistorySaveObj(model, employmentHistoryController, errorObj);
 
                 if (employmentHistoryObj !== null) {
-                    saveObj.employmentHistory = employmentHistoryObj;
+                    saveObj.employmentHistory = JSON.stringify(employmentHistoryObj);
                 }
             }
 
@@ -159,7 +160,7 @@ App.OnePageController = Ember.ObjectController.extend({
                 var educationHistoryObj = App.buildEducationHistorySaveObj(model, educationHistoryController, errorObj);
 
                 if (educationHistoryObj !== null) {
-                    saveObj.educationHistory = educationHistoryObj;
+                    saveObj.educationHistory = JSON.stringify(educationHistoryObj);
                 }
             }
 
@@ -206,6 +207,7 @@ App.OnePageController = Ember.ObjectController.extend({
         });
     },
     handleError: function(self) {
+        console.log(self);
         self.setProperties({
             showSavingNotification: false,
             //disableFinish: false
