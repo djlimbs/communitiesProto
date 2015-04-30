@@ -1714,7 +1714,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'data-qa-input': ("personalStatement")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n	</span>\n	<span class=\"table-group__object--large\" data-qa-label=\"personalStatement\">Personal Statement</span>\n</label>");
+  data.buffer.push("\n	</span>\n	<span class=\"table-group__object--large\" data-qa-label=\"personalStatement\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.personalStatement", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n</label>");
   return buffer;
   
 });
