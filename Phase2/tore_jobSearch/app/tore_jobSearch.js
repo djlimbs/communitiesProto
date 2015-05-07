@@ -550,6 +550,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                     show: true,
                 });
 
+                window.parent.scrollTo(0,0);
+
                 $('#modalOk').click(function() {
                     var url = parent.urlPrefix + '/Login/';
                     window.parent.location.href = url;
