@@ -14,6 +14,6 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("<h1>TO JOB SEARCH</h1>");
+  data.buffer.push("<h1>TOOOO JOB SEARCH</h1>");
   
 });
