@@ -392,7 +392,7 @@ function program28(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.shareJob", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                     <ul class=\"dropdown-menu dropdown-menu--up-on-small\">\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"shareOnTwitter\"><a href=\"#\" ");
+  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                     <ul class=\"dropdown-menu dropdown-menu--up-on-small\">\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"twitter\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnTwitter", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -400,7 +400,7 @@ function program28(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.twitter", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"shareOnLinkedIn\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"linkedIn\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnLinkedIn", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -408,7 +408,7 @@ function program28(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.linkedIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"shareOnFacebook\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                        <li class=\"dropdown-menu__list-item\" data-qa-link=\"facebook\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnFacebook", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
