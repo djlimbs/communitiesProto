@@ -462,8 +462,20 @@ App.Select2Component = Ember.TextField.extend({
     }
 });
 
+App.OnePageView = Ember.View.extend({
+    afterRenderEvent: function() {
+        $(document).one('touchstart', function(e) {
+            $('#fixZoom').focus();
+        });
+    }
+});
+
 App.ApplyView = Ember.View.extend({
     afterRenderEvent: function() {
+        $(document).one('touchstart', function(e) {
+            $('#fixZoom').focus();
+        });
+
         if (parent && parent.toggleFooter) {
             Ember.run.later(this, function() { 
                 parent.toggleFooter();
@@ -558,8 +570,10 @@ App.ContactInfoView = Ember.View.extend({
 
                             if (parsedResult.data.isLinkedInUser === true) {
                                 $('#verifyLinkedInUserModal').modal();
+                                scrollToTop();
                             } else {
                                 $('#verifyUserModal').modal();
+                                scrollToTop();
                             }
 
                             confirmObj.userId = parsedResult.data.userId;
@@ -567,6 +581,7 @@ App.ContactInfoView = Ember.View.extend({
                             confirmObj.hasAppliedAlready = parsedResult.data.hasAppliedAlready;
                         } else if (!Ember.isEmpty(parsedResult.data.contactId)) {
                             $('#verifyContactModal').modal();
+                            scrollToTop();
                             confirmObj.contactId = parsedResult.data.contactId;
                             confirmObj.newContactId = parsedResult.data.newContactId;
                         } else { // No matches found
@@ -591,6 +606,11 @@ App.ContactInfoView = Ember.View.extend({
 App.ResumeView = Ember.View.extend({
     afterRenderEvent: function() {
         scrollToTop();
+
+        if (isBackFromDropboxOauth) {
+            isBackFromDropboxOauth = false;
+            this.get('controller').launchDropboxWidget();
+        }
     }
 });
 
@@ -632,6 +652,7 @@ App.LegallyRequiredView = Ember.View.extend({
 
 // Router
 App.Router.map(function() {
+    this.route('application_loading');
     this.resource('onePage');
     this.resource('apply', function() {
         this.resource('contactInfo');

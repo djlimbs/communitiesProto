@@ -392,8 +392,6 @@ App.Router.map(function() {
         this.resource('formElements', { path: 'formElements/:section/:subSection' });
         this.resource('applicationSection', { path: 'application/:section/:hiringModel' });
         this.resource('contactInfo', { path: 'contactInfo/:hiringModel' });
-        this.resource('employmentHistory', { path: '/employmentHistory' });
-        this.resource('educationHistory', { path: '/educationHistory' });
         this.resource('onePage', { path: '/onePage' });
     });
 });

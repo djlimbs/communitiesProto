@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      'build/to_sectionsFormBuilder.pck.js': 'app/to_sectionsFormBuilder_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle1_Phase3/to_sectionsFormBuilder.pck.js': 'app/to_sectionsFormBuilder_compiler.js'
     },
 
     /*
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
     watch: {
       application_code: {
         files: ['app/*.js'],
-        tasks: ['neuter', 'gh-pages']
+        tasks: ['neuter']
       },
 
      // handlebars_templates: {
@@ -89,11 +89,11 @@ module.exports = function(grunt) {
     ember_templates: {
       options: {
         templateName: function(sourceFile) {
-          return sourceFile.replace(/..\/to_formBuilderCommon\/templates\//, '');
+          return sourceFile.replace(/app\/templates\//, '');
         }
       },
       //'dependencies/compiled/templates.js': ["app/templates/**/*.hbs"]
-      'app/templates.js': ["../to_formBuilderCommon/**/*.hbs"]
+      'app/templates.js': ["app/templates/**/*.hbs"]
     },
 
     /*

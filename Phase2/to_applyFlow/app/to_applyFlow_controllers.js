@@ -149,7 +149,7 @@ App.OnePageController = Ember.ObjectController.extend({
             saveObj.contactInfo = JSON.stringify(App.buildContactSaveObj(model));
 
             if (model.isSkillsEnabled) {
-                saveObj.skills = App.buildSkillsSaveObj(model);
+                saveObj.skills = JSON.stringify(App.buildSkillsSaveObj(model));
             }
             
             if (model.isEmploymentHistoryEnabled) {
@@ -190,7 +190,7 @@ App.OnePageController = Ember.ObjectController.extend({
             }
 
             if (!Ember.isEmpty(errorObj.message)) {
-                self.set('errorMessage', 'There are some problems with your information: <br/><br/>' + errorObj.message);
+                self.set('errorMessage', '<strong>There are some problems with your information:</strong><br/><ul class="pad--sm--ll">' + errorObj.message + '</ul>');
                 reject(self);
             } else {
                 cont.saveAppSectionsExceptResume(JSON.stringify(saveObj), function(res, evt) {
@@ -450,10 +450,38 @@ App.ContactInfoController = Ember.ObjectController.extend({
     }
 });
 
+App.DropboxElementController = Ember.ObjectController.extend({
+    isSelected: function() {
+        return this.get('path') === this.get('selectedFile');
+    }.property('path', 'selectedFile'),
+    actions: {
+        clickElement: function() {
+            var is_dir = this.get('is_dir');
+            var path = this.get('path');
+            var name = this.get('name');
+
+            if (is_dir) {
+                this.send('clickFolder', path, name);
+            } else {
+                this.send('clickFile', path);
+                this.set('selectedFile', path);
+            }
+        }
+    }
+});
+
 App.ResumeController = Ember.ObjectController.extend({
     needs: ['apply'],
     isOnePageBinding: 'controllers.apply.isOnePage',
     errorMessageBinding: 'controllers.apply.errorMessage',
+    uploadFromDropboxBinding: 'controllers.apply.uploadFromDropbox',
+    backList: [],
+    backNameList: [],
+    dropboxContent: [],
+    logoPath: function() {
+        return dropboxPath + '/logo.png';
+    }.property(),
+    currentDropboxFolder: 'Home',
     fileToUploadDidChange: function() {
         var resumeFileName = this.get('resumeFileName');
         var personalStatement = this.get('personalStatement');
@@ -464,6 +492,93 @@ App.ResumeController = Ember.ObjectController.extend({
 
         this.get('controllers.apply').set('isResumeIncomplete', isResumeIncomplete);
     }.observes('resumeFileName', 'personalStatement'),
+    formattedDropboxContent: function() {
+        return this.get('dropboxContent').map(function(c) {
+            return {
+                name: c.path.substr(1, c.path.length),
+                path: c.path,
+                iconUrl: dropboxPath + '/icons/' + c.icon + '.png',
+                is_dir: c.is_dir
+            };
+        });
+    }.property('dropboxContent'),
+    getDropboxContent: function() {
+        var self = this;
+        var token = this.get('token');
+        var uploadFromDropbox = this.get('uploadFromDropbox');
+
+        if (!Ember.isEmpty(token) && uploadFromDropbox === true) {
+            var metaDataUrl = 'https://api.dropbox.com/1/metadata/auto/'
+            var accountInfoUrl = 'https://api.dropbox.com/1/account/info';
+
+            $.ajax(
+                {
+                    url: metaDataUrl,
+                    type: 'GET',
+                    cache: false,
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    complete: function(metaJqXHR, metaTextStatus) {
+                        var metaRes = JSON.parse(metaJqXHR.responseText);
+                        var rootContents = metaRes.contents;
+                        self.set('dropboxContent', rootContents);
+                        self.set('pendingBackTarget', {
+                            path: '',
+                            name: 'Home'
+                        });
+                        console.log(metaRes);
+                    }
+                }
+            );
+
+            $.ajax(
+                {
+                    url: accountInfoUrl,
+                    type: 'Get',
+                    cache: false,
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    complete: function(accountJqXHR, accountTextStatus) {
+                        var accountRes = JSON.parse(accountJqXHR.responseText);
+                        self.set('displayName', accountRes.display_name);
+                    }
+                }
+            );
+        }
+    }.observes('token', 'uploadFromDropbox'),
+    launchDropboxWidget: function() {
+        var self = this;
+        var currentUrl = parent.window.location.href;
+        var dropboxCode = parent.getUrlParameter('code');
+        var tokenUrl = 'https://api.dropbox.com/1/oauth2/token';
+        var postParams = {
+            code: dropboxCode,
+            client_id: 'nyope4fblmw0tcr',
+            client_secret: '9c5gnis7pa9hzvt',
+            grant_type: 'authorization_code',
+            redirect_uri: 'https://toproto1-developer-edition.na24.force.com/career/s/Apply?id=a0d1a000000RQHy&linkedIn=null'
+        };
+
+        $.ajax(
+            {
+                url: tokenUrl,
+                type: 'POST',
+                cache: false,
+                data: postParams,
+                complete: function(jqXHR, textStatus) {
+                    var res = JSON.parse(jqXHR.responseText);
+                    var token = res.access_token;
+                    var reqHeader = 'Authorization: Bearer ' + token;
+                    
+
+                    self.set('token', token);
+
+                }
+            }
+        );
+    },
     actions: {
         clickUploadFromDevice: function() {
             var fileInput = $('iframe#theIframe').contents().find('input.fileInput');
@@ -471,8 +586,23 @@ App.ResumeController = Ember.ObjectController.extend({
         },
         clickUploadFromDropbox: function(){
             var self = this;
+            var token = this.get('token');
             var currentFileName = this.get('resumeFileName');
-            Dropbox.choose({
+            var currentUrl = parent.window.location.href;
+            var redirectUrl = currentUrl.split('?')[0];
+            var state = currentUrl.split('?')[1];
+
+            /*parent.window.location.href = 'https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=nyope4fblmw0tcr&redirect_uri=' 
+                                        + redirectUrl
+                                        + '&state=' + state.replace(/&/g, '%26');*/
+            if (Ember.isEmpty(token)) {
+                parent.window.location.href = 'https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=nyope4fblmw0tcr&redirect_uri=' 
+                                        + currentUrl.replace(/&/g, '%26')
+                                        + '&state=resumeFromDropbox';
+            } else {
+                this.set('uploadFromDropbox', true);
+            }
+            /*Dropbox.choose({
                 success: function(file){
                     $('iframe#theIframe').contents().find('.fileInput').val('');
                     self.set('resumeFileName', file[0].link);
@@ -482,10 +612,126 @@ App.ResumeController = Ember.ObjectController.extend({
                 linktype : 'preview',
                 multiselect : false,
                 extensions : ['.pdf', '.doc', '.docx']
-            });
+            });*/
         },
         clearPersonalStatement: function(){
             this.set('personalStatement', '');
+        },
+        clickBack: function() {
+            var self = this;
+            var token = this.get('token');
+            var backObject = this.get('backList').popObject();
+            var lastObject = this.get('backList').get('lastObject');
+            var path = backObject.path;
+            if (path === '' || path === null) {
+                this.set('pendingBackTarget', {
+                    name: 'Home',
+                    path: ''
+                });
+
+                if (path === null) {
+                    return;
+                }
+            }
+
+            var metaDataUrl = 'https://api.dropbox.com/1/metadata/auto/' + path;
+            $.ajax(
+                {
+                    url: metaDataUrl,
+                    type: 'GET',
+                    cache: false,
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    complete: function(metaJqXHR, metaTextStatus) {
+                        var metaRes = JSON.parse(metaJqXHR.responseText);
+                        var rootContents = metaRes.contents;
+                        self.set('dropboxContent', rootContents);
+                        if (!Ember.isNone(lastObject)) {
+                            self.set('backFolder', lastObject.name);
+                        } else {
+                            self.set('backFolder', '');
+                        }
+                        self.set('currentDropboxFolder', backObject.name);
+                    }
+                }
+            );
+        },
+        clickFolder: function(path, name) {
+            var self = this;
+            var token = this.get('token');
+            var metaDataUrl = 'https://api.dropbox.com/1/metadata/auto/' + path;
+            var pendingBackTarget = this.get('pendingBackTarget');
+            this.set('backFolder', pendingBackTarget.name);
+            this.get('backList').pushObject(pendingBackTarget);
+            this.set('pendingBackTarget', {
+                name: name,
+                path: path
+            });
+            this.set('currentDropboxFolder', name);
+            $.ajax(
+                {
+                    url: metaDataUrl,
+                    type: 'GET',
+                    cache: false,
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    complete: function(metaJqXHR, metaTextStatus) {
+                        var metaRes = JSON.parse(metaJqXHR.responseText);
+                        var rootContents = metaRes.contents;
+                        self.set('backTarget', pendingBackTarget);
+                        self.set('dropboxContent', rootContents);
+                    }
+                }
+            );
+        },
+        clickFile: function(path) {
+            var self = this;
+            var token = this.get('token');
+            var fileUrl = 'https://api.dropbox.com/1/shares/auto/' + path;
+            $.ajax(
+                {
+                    url: fileUrl,
+                    type: 'POST',
+                    cache: false,
+                    data: {
+                        short_url: false
+                    },
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
+                    complete: function(fileJqXHR, fileTextStatus) {
+                        var fileRes = JSON.parse(fileJqXHR.responseText);
+                        var fileUrl = fileRes.url;
+                        self.set('highlightedFile', fileUrl);
+
+                        /*self.set('uploadFromDropbox', false);
+                        self.set('resumeFileName', fileUrl);
+                        self.set('isFromDropbox', true);
+                        self.set('alreadyUploaded', false);*/
+                        
+                        //self.set('uploadFromDropbox', false);
+                        /*if(parent.window.confirm('Use this file?')) {
+                            self.set('uploadFromDropbox', false);
+                            self.set('resumeFileName', fileUrl);
+                            self.set('isFromDropbox', true);
+                            self.set('alreadyUploaded', false);
+                        }*/
+                    }
+                }
+            );
+        },
+        clickChoose: function() {
+            var fileUrl = this.get('highlightedFile');
+            this.set('uploadFromDropbox', false);
+            this.set('resumeFileName', fileUrl);
+            this.set('isFromDropbox', true);
+            this.set('alreadyUploaded', false);
+        },
+        clickCancel: function() {
+            this.set('highlightedFile', null);
+            this.set('uploadFromDropbox', false);
         }
     }
 });
