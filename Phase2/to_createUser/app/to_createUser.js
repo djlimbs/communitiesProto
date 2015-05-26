@@ -51,11 +51,11 @@ var sourceClasses = {
         showAlert : true
     },
     verifyEmail : {
-        icon : '',
-        color : '',
-        alertText : '',
+        icon : 'juicon-exclamation-circle',
+        color : 'alert--warning',
+        alertText : 'Specify a password now so we can create an account.',
         buttonText : 'Create my account and continue applying',
-        showAlert : false    
+        showAlert : true    
     },
     error : {
         icon : 'juicon-exclamation-circle',
@@ -103,17 +103,17 @@ App.CreateUserController = Ember.ObjectController.extend({
     showJobLink : function(){
         return this.get('source') == 'application';
     }.property(),
-    showHeaderText : function(){
-        return this.get('source') == 'application';  
-    }.property(),
     showBodyText : function(){
-        return this.get('source') != 'offerEmail';
+        return this.get('source') != 'offerEmail' && this.get('source') != 'verifyEmail';
     }.property(),
     inputType : function(){
         return this.get('showPass') ? 'text' : 'password'
     }.property('showPass'),
     showBody : function(){
         return this.get('tokenVerified') && !this.get('loggedIn')
+    }.property(),
+    listingPage : function(){
+        return parent.urlPrefix + '/JobListing?id=' + this.get('app').Job_Posting__c;
     }.property(),
     resize : true,
     showPass : true,
@@ -133,7 +133,7 @@ App.CreateUserController = Ember.ObjectController.extend({
                 console.log(parsedCheckResults);
                 if(parsedCheckResults.errorMessages.length == 0){
                     console.log('no problems');
-                    cont.createUser(self.get('password'), self.get('app').Id, sourceContact, function(createResults, resultObj){
+                    cont.createUser(self.get('password'), self.get('app').Id, sourceContact, self.get('source'), joId, function(createResults, resultObj){
                         var parsedCreateResults = parseResult(createResults);
                         console.log('I AM CREATE');
                         console.log(parsedCreateResults);

@@ -501,7 +501,7 @@ App.JobPostingController = Ember.ObjectController.extend({
             if(Ember.isEmpty(this.get('savedJob'))){
                 interestObj = {
                     Job_Posting__c: jobPosting.Id,
-                    Name: jobPosting.Name,
+                    Name: jobPosting.Job_Title__c,
                     Candidate_User__c: self.get('loggedInUser').Id,
                     Expressed_By__c: 'Candidate', // Picklist
                     Source_Requisition__c: jobPosting.Requisition__c,
@@ -633,7 +633,7 @@ App.JobPostingRoute = Ember.Route.extend( {
             jobPostingMap.applications.forEach(function(app) {
                 
                 var applicationObj = {
-                    jobTitle: app.Job_Posting__r.Name,
+                    jobTitle: app.Job_Posting__r.Job_Title__c,
                     jobPostingUrl: parent.urlPrefix + '/JobListing?id=' + app.Job_Posting__c,
                     isApplication: true,
                     hasJobOffer: !Ember.isEmpty(app.Job_Offers__r),
@@ -665,7 +665,7 @@ App.JobPostingRoute = Ember.Route.extend( {
             jobPostingMap.savedJobs.forEach(function(savedJob) {
                     var jobObj = {
                         Id : savedJob.Id,
-                        jobTitle: savedJob.Name,
+                        jobTitle: savedJob.Job_Title__c,
                         jobPostingUrl: parent.urlPrefix + '/JobListing?id=' + savedJob.Job_Posting__c,
                         isSavedJob: true,
                         otherText : savedJob.locations.length > 2 ? labels.others : labels.other,
