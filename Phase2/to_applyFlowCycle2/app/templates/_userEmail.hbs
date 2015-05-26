@@ -1,0 +1,12 @@
+<div class="column--md--6">
+    <div {{bind-attr class=":form__group isHistorySection:mar--sm--bm"}}>
+        <label for="{{unbound field.name}}" class="required-field">
+            {{field.label}}
+            {{#if field.helpText}}
+                <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle" data-qa-label="helpText"></span>
+            {{/if}}
+        </label>
+        {{input data-dev="userEmail" type="text" value=field.value name=field.inputName data-qa-input="textField"}}
+        <small class="input-error-content">Error</small>
+    </div>
+</div>

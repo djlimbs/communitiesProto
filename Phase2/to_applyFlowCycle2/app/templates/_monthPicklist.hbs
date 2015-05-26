@@ -1,0 +1,18 @@
+{{#unless field.shouldDisableEndDateFields}}
+    <div {{bind-attr class="isOnePage:column--md--6:column--md--4"}}>
+        <div class="form__group mar--sm--bm">
+            <label data-qa-label="fieldName" class="required-field">{{field.label}} </label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select"
+                        content=field.picklistValues
+                        optionLabelPath="content.label"
+                        optionValuePath="content.value"
+                        value=field.value
+                        prompt=labels.pleaseSelect
+                        data-qa-input="select"
+                        disabled=field.shouldDisableEndDateFields}}
+            </div>
+        </div>
+    </div>
+{{/unless}}

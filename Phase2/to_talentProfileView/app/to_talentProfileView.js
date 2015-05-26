@@ -17,10 +17,11 @@ App.TalentProfileViewRoute = Ember.Route.extend({
 App.TalentProfileViewController = Ember.ObjectController.extend({
     actions: {
         clickEdit: function() {
+            var destUrl = '/apex/to_talentProfileEdit?id=' + userId;
             if (isSF1) {
-                sforce.one.navigateToURL('/apex/to_talentProfileEdit');
+                sforce.one.navigateToURL(destUrl);
             } else {
-                window.location.href = '/apex/to_talentProfileEdit';
+                parent.window.location.href = destUrl;
             }
         }
     }
