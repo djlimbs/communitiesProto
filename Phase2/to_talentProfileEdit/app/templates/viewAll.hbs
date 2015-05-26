@@ -3,16 +3,13 @@
         <h4 class="list-heading__title">Summary</h4>
     </div>
     <div class="panel__body pad--sm--bn">
-        {{#link-to "summaryEdit" type="button" tagName="button" classNames="button button--primary button--ghost float--right js-edit-section mar--sm--lm"}}
+        {{#link-to "summaryEdit" type="button" tagName="button" classNames="button button--primary button--ghost float--right mar--sm--lm"}}
             <span class="juicon juicon-pencil"></span>
         {{/link-to}}
             
         </button>
         <p class="mar--sm--tn">
-            This is typically a paragraph or two that gives an overview of the person’s value as an employee. Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.
-        </p>
-        <p class="mar--sm--tn">
-            Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.
+            {{Summary__c}}
         </p>
     </div>
 </section>
@@ -21,33 +18,26 @@
         <h4 class="list-heading__title">Projects</h4>
     </div>
     <div class="panel__body pad--sm--bn">
-        <article class="mar--sm--bm">
-            <button type="button" class="button button--primary button--ghost float--right js-edit-section mar--sm--lm">
-                <span class="juicon juicon-pencil"></span>
-            </button>
-            <h3>TalentObjects 1.0 release</h3>
-            <small class="text-faded">Oct 2014 to Mar 2015</small>
-            <p>
-                Responsible for the user experience design (UI concepts and task flows) of a recruiting module for a world-class workforce engagement solution.
-            </p>
-            <i>
-                Skills: User Experience Design, Interaction Design, Product Design
-            </i>
-            <hr class="hr-alt"/>
-        </article>
-        <article class="mar--sm--bm">
-            <button type="button" class="button button--primary button--ghost float--right js-edit-section mar--sm--lm">
-                <span class="juicon juicon-pencil"></span>
-            </button>
-            <h3>ASU Online redesign</h3>
-            <small class="text-faded">Jul 2008 to Feb 2009</small>
-            <p>
-                Redesigned ASU Online to focus on increasing prospective student enrollments. Implemented ongoing SEO and content strategy plan to continually increase conversions and brand trust.
-            </p>
-            <i>
-                Skills: User Experience Design, Interaction Design, Product Design
-            </i>
-        </article>
+        {{#each project in projects}}
+            <article class="mar--sm--bm">
+                {{#link-to "projectsEdit" project.eId type="button" tagName="button" classNames="button button--primary button--ghost float--right mar--sm--lm"}}
+                    <span class="juicon juicon-pencil"></span>
+                {{/link-to}}
+                <h3 class="mar--sm--n">{{project.Name}}</h3>
+                <small class="text-faded">{{project.Start_Date__c}} to {{project.End_Date__c}}</small>
+                <p>
+                    {{project.Description__c}}
+                </p>
+                <i>
+                    Skills: User Experience Design, Interaction Design, Product Design
+                </i>
+                <hr class="hr-alt"/>
+            </article>
+        {{/each}}
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="recognition">
@@ -84,6 +74,10 @@
                 Skills: Salesforce.com, Force.com, Peer Training, Community Stewardship
             </i>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="performanceRatings">
@@ -168,6 +162,10 @@
                 Skills: Public Speaking, Presentations, Communication
             </i>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="otherSkills">
@@ -207,6 +205,10 @@
                 Ross Belmont wants to help you do your job better. From contracts to selling design, from working with clients to working with each other, you’ll learn why navigating the business of design is just as important as the craft of it. Cultivated from his own experience, Ross packs this brief book with knowledge you can’t afford not to know.
             </p>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="patents">
@@ -226,6 +228,10 @@
             </p>
             <hr class="hr-alt"/>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="recommendations">
@@ -270,6 +276,10 @@
                 </div>
             </div>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="certifications">
@@ -302,6 +312,10 @@
                 Skills: User Experience Design, Interaction Design, Product Design
             </i>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="employment">
@@ -332,6 +346,10 @@
                 EDL Consulting is a national technology services firm specializing in the intelligent integration of eCommerce, CRM and business intelligence solutions to improve business performance. EDL solves the complex systems integration issues behind state-of-the-art technology solutions to make organizations more successful. The solutions EDL builds generate revenue, result in cost savings, promote differentiation and make it easier for clients to do business with their customers.
             </p>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="educations">
@@ -347,6 +365,10 @@
             <small class="text-faded block">BS, MIS</small>
             <small class="text-faded">1996-2000</small>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>
 <section id="languages">
@@ -379,5 +401,9 @@
                 CASA Kane County recruits, trains and supervises community volunteers who serve as Court Appointed Special Advocates (CASAs) for children in court due to abuse, neglect or private guardianship.
             </p>
         </article>
+        <hr class="hr-alt">
+        <button class="button button--primary button--ghost width--full mar--sm--bm" type="button">
+            <span class="juicon juicon-plus"></span> Add
+        </button>
     </div>
 </section>

@@ -1,0 +1,11 @@
+<div class="column--md--12">
+    <div {{bind-attr class=":form__group isHistorySection:mar--sm--bm"}}>
+        <label class="required-field" data-qa-label="fieldName">
+            {{field.label}}
+            {{#if field.helpText}}
+                <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle" data-original-title="{{unbound field.helpText}}" data-qa-label="helpText"></span>
+            {{/if}}
+        </label>
+        {{textarea value=field.value data-qa-input="textArea" maxlength=field.maxLength}}
+    </div>
+</div>

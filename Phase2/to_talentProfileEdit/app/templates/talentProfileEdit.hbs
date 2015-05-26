@@ -4,7 +4,7 @@
             <div class="panel__top">
                 {{#if editSection}}
                     <div class="js-edit-section-buttons" style="display: block;">
-                        <button class="button button--primary float--right mar--sm--ls js-save-section" type="button">
+                        <button {{action "clickSave"}} class="button button--primary float--right mar--sm--ls js-save-section" type="button">
                             Save
                         </button>
                         {{#link-to "viewAll" type="button" tagName="button" classNames="button button--secondary float--right"}}

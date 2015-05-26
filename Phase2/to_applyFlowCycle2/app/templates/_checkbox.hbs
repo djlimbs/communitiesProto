@@ -1,0 +1,12 @@
+<div class="column--md--12">
+    <div {{bind-attr class=":form__group isHistorySection:mar--sm--bm"}}>
+        <label data-qa-label="fieldName">{{field.label}}
+            {{#if field.helpText}}
+                <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle" data-qa-label="helpText"></span>
+            {{/if}}
+        </label>
+        <div class="input-size">
+            {{input type="checkbox" checked=field.value data-qa-input="checkbox"}}
+        </div>
+    </div>
+</div>
