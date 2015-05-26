@@ -1,0 +1,125 @@
+<div class="scope-container">
+    <div class="content--readable pad--md--m pad--sm--only--n">
+        <div {{bind-attr class=":snack-bar__container isSaving::hide"}} data-qa-banner="saving">
+            <div class="snack-bar">
+                <span data-qa-label="saving" class="saveText"><span class="juicon juicon-loading spin-it"></span> Saving</span>
+            </div>
+        </div>
+        {{#if hasValidationError}}
+            <div data-qa-label="errorMessages" {{bind-attr class=":alert :alert--error :mar--sm--bm"}}>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span class="alert-close-x"></span><span class="sr-only">Close</span>
+                </button>
+                {{#each errorMsg}}
+                    {{.}} <br/>
+                {{/each}}
+            </div>
+        {{/if}}
+
+        <nav id="myProfileNav" class="nav-bar--sf1 mar--sm--bn">
+            <button {{action "save"}} data-qa-button="save" {{bind-attr class=":button :button--primary :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this"}}>Save</button>
+            <button {{action "cancel"}} data-qa-button="cancel" {{bind-attr class=":float--right-left :button :button--secondary :mar--sm--only--ls isSaving:load-this"}}>Cancel</button>
+            <h1 data-qa-label="myAccount" class="nav-bar--sf1__title page__heading">My account</h1>
+        </nav>
+        <hr class="show-brkpoint--md"/>
+        <h3 data-qa-label="generalInfo" class="section__title">General info</h3>
+        <div class="content__section">
+            <div class="row">
+                <div class="column--md--6">
+                    <div {{bind-attr class=":form__group showEmptyFirstNameError:has-error"}}>
+                        <label for="firstName" class="required-field" data-qa-label="firstName">{{labels.firstName}} </label>
+                        {{input value=user.FirstName type="text" data-qa-input="firstName"}}
+                        <small data-qa-label="firstNameError" class="input-error-content">Please supply a value</small>
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div {{bind-attr class=":form__group showEmptyLastNameError:has-error"}}>
+                        <label for="lastName" class="required-field" data-qa-label="lastName">{{labels.lastName}} </label>
+                        {{input value=user.LastName type="text" data-qa-input="lastName"}}
+                        <small data-qa-label="lastNameError" class="input-error-content">Please supply a value</small>
+                    </div>
+                </div>
+            </div>
+            <div class="form__group">
+                <label for="title" data-qa-label="title">{{labels.title}}</label>
+                {{input value=user.Title type="text" data-qa-input="title"}}
+            </div>
+            <div class="form__group">
+                <label for="companyName" data-qa-label="companyName">{{labels.companyName}}</label>
+                {{input value=user.CompanyName type="text" data-qa-input="companyName"}}
+            </div>
+            <div class="form__group">
+                <label for="aboutMe" data-qa-label="aboutMe">{{labels.aboutMe}}</label>
+                {{textarea value=user.AboutMe data-qa-textarea="aboutMe"}}
+            </div>
+            <div class="row">
+                <div class="column--md--6">
+                    <div {{bind-attr class=":form__group showEmailError:has-error"}}>
+                        <label for="email" class="required-field" data-qa-label="email">{{labels.email}} </label>
+                        {{input value=user.Email type="email" data-qa-input="email"}}
+                        <small data-qa-label="emailError" class="input-error-content">{{emailError}}</small>
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="phone" data-qa-label="phone">{{labels.phone}}</label>
+                        {{input value=user.Phone type="tel" data-qa-input="phone"}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="cell" data-qa-lable="mobilePhone">{{labels.mobilePhone}}</label>
+                        {{input value=user.MobilePhone type="tel" data-qa-input="mobilePhone"}}
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="fax" data-qa-label="fax">{{labels.fax}}</label>
+                        {{input value=user.Fax type="tel" data-qa-input="fax"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="show-brkpoint--md"/>
+        <h3 class="section__title" data-qa-label="address">Address</h3>
+        <div class="content__section">
+            <div class="form__group">
+                <label for="street" data-qa-lable="street">{{labels.street}}</label>
+                {{textarea value=user.Street data-qa-textarea="street"}}
+            </div>
+            <div class="row">
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="city" data-qa-label="city">{{labels.city}}</label>
+                        {{input value=user.City type="text" data-qa-label="city"}}
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="state" data-qa-label="state">{{labels.state}}</label>
+                        {{input value=user.State type="text" data-qa-input="state"}}
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="zip" data-qa-label="zip">{{labels.postalCode}}</label>
+                        {{input value=user.PostalCode type="tel" data-qa-input="zip"}}
+                    </div>
+                </div>
+                <div class="column--md--6">
+                    <div class="form__group">
+                        <label for="country" data-qa-label="country">{{labels.country}}</label>
+                        {{input value=user.Country type="text" data-qa-input="country"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix mar--sm--only--tm mar--sm--only--bm">
+            <hr class="show-brkpoint--md"/>
+            <button {{action "save"}} data-qa-button="bottomSave" {{bind-attr class=":button :button--primary :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this"}}>Save</button>
+            <button {{action "cancel"}} data-qa-button="bottomCancel" {{bind-attr class=":float--right-left :button :button--secondary :mar--sm--only--ls isSaving:load-this"}}>Cancel</button>
+        </nav>
+    </div>
+</div>  

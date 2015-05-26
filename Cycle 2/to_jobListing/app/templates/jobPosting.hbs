@@ -1,0 +1,156 @@
+<div class="scope-container">
+    <div {{bind-attr class=":load-full showLoadingState::hide"}}>
+        <div class="load-full-icon"></div>
+    </div>
+    {{view "locationModal"}}
+    <div class="content pad--sm--tm pad--md--bl">
+        <div class="row">
+            <div class="column--md--8">
+                {{#if jobIsSaved}}
+                    {{#if recentSave}}
+                        <div class="alert alert--success mar--sm--bm saveAlert">
+                            <strong data-qa-label="savedJobPreviously">{{labels.yourJobHasBeenSaved}}</strong>
+                        </div>
+                    {{else}}
+                        <div class="alert alert--info mar--sm--bm saveAlert">
+                            <strong data-qa-label="savedJobToday">{{labels.youSavedThisJobOn}} {{formatDate savedJob.CreatedDate}}.</strong>
+                        </div>
+                    {{/if}}
+                {{/if}}
+                {{#if appliedMessage}}
+                    <div {{bind-attr class=":alert appliedAlertClass :mar--sm--bm"}}>
+                        <strong data-qa-label="applied">{{{appliedMessage}}}</strong>
+                    </div>
+                {{/if}}
+                <nav id="jobNav" class="relative">
+                    <div class="button-group float--right show-brkpoint--md">
+                        <a  data-qa-button="actionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}} target="_top">{{{actionButtonText}}}</a>
+                        <ul class="dropdown-menu">
+                            <li data-qa-button="applyEmail"class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}} Apply with email</a></li>
+                            <li data-qa-button="applyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}} Apply with LinkedIn</a></li>
+                        </ul>
+                    </div>
+                    <h1 data-qa-label="postName" class="has-subheading page__heading">{{jobPosting.Job_Title__c}}</h1>
+                    <h2 data-qa-label="locations" class="page__subheading wsn">{{locationString}}{{#if isRemoteAvailable}} | <small>Remote Avaliable{{labels.remoteAvailable}}</small>{{/if}}</h2>
+                </nav>
+                {{#each field in jpFields}}
+                    <h4 data-qa-label="fieldSetLabel" class="job-field-label">{{field.label}}</h4>
+                    {{#if field.value}}
+                        <p data-qa-label="fieldSetValue">{{{field.value}}}</p>
+                    {{else}}
+                        <p data-qa-label="fieldSetValue">Not Provided</p>
+                    {{/if}}
+                {{/each}}
+                <hr class="mar--sm--txl mar--sm--bxl">
+                {{#unless hasJobOffer}}
+                    <div class="button-group inline-block vam width--full--sm--only">
+                        <a data-qa-button="bottomActionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color :width--full--sm--only disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}}>{{{actionButtonText}}}</a>
+                        <ul class="dropdown-menu dropdown-menu--up">
+                            <li data-qa-button="bottomApplyEmail" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}} Apply with email</a></li>
+                            <li data-qa-button="bottomApplyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}} Apply with LinkedIn</a></li>
+                        </ul>
+                    </div>
+                {{/unless}}
+            </div>
+            <div class="column--md--4 mar--sm--only--txl">
+                {{#if hasPublicJP}}
+                    <div class="button-group width--full inline-block vam width--full--sm--only">
+                        <button class="button button--secondary width--full theme-border-color theme-link-color" data-toggle="dropdown" data-qa-button="shareJob">{{labels.shareJob}} Share Job <span class="juicon juicon-share"></span></button>
+                        <ul class="dropdown-menu dropdown-menu--up-on-small">
+                            <li class="dropdown-menu__list-item" data-qa-link="twitter"><a href="#" {{action "shareOnTwitter"}}><span class="juicon juicon-twitter"></span> {{labels.twitter}}Twitter</a></li>
+                            <li class="dropdown-menu__list-item" data-qa-link="linkedIn"><a href="#" {{action "shareOnLinkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.linkedIn}}LinkedIn</a></li>
+                            <li class="dropdown-menu__list-item" data-qa-link="facebook"><a href="#" {{action "shareOnFacebook"}}><span class="juicon juicon-facebook"></span> {{labels.facebook}}Facebook</a></li>
+                        </ul>
+                    </div>
+                    <hr>
+                {{/if}}
+                <article id="hiringManager" class="mar--sm--bm">
+                    <h3 data-qa-label="hiringManager" class="mar--sm--tn mar--sm--bs">Hiring Manager</h3>
+                    <div class="part__left--fixed pad--sm--n">
+                        <div class="img-container img-container--lg">
+                            <img data-qa-image="hiringManagerPhoto" {{bind-attr src=hiringManager.SmallPhotoUrl}}> </img>
+                        </div>
+                    </div>
+                    <div class="part__body width--full pad--sm--lm pad--sm--rm">
+                        <h5 data-qa-link="hiringManagerProfile" data-qa-label="hiringManagerName" class="mar--sm--bn relatedPerson"><a href="/{{unbound hiringManager.Id}}">{{hiringManager.Name}}</a></h5>
+                        <h5 data-qa-label="hiringManageTitle" class="text-faded">
+                            {{hiringManager.Title}}
+                        </h5>
+                    </div>
+                    <a href="#" data-qa-link="privateMessage" {{action "saveRecipientData" hiringManager.Id hiringManager.Name}} class="block mar--sm--ts sendPrivateMessage" data-toggle="modal" data-target="#privateMessageModal">
+                        <span class="juicon juicon-chat"></span> 
+                        Send a private message
+                    </a>
+                    <span data-qa-link="showReports" {{action "toggleReport"}} class="block toggleDirectReports text-primary pointer">
+                        <span class="juicon juicon-group"></span> 
+                        <span class="hideDirectReportsText">{{showReportText}}</span>
+                    </span>
+                    <ul style="display:none" class="directReports list-style-type-none mar--sm--ts pad--sm--ll">
+                        {{#each minions}}
+                            <li class="mar--sm--bxs">
+                                <div class="part__left--fixed pad--sm--n">
+                                    <div class="img-container img-container--sm">
+                                        <img data-qa-image="reportToPhoto" {{bind-attr src=SmallPhotoUrl}}> </img>
+                                    </div>
+                                </div>
+                                <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                    <h5 class="mar--sm--bn"><a data-qa-link="reportToProfile" href="/{{unbound Id}}">{{Name}}</a></h5>
+                                </div>
+                            </li>
+                        {{/each}}
+                        {{#if noMinions}}
+                            <li class="mar--sm--bxs">
+                                <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                    <h5 data-qa-label="noReports" class="mar--sm--bn text-faded">No Direct Reports</h5>
+                                </div>
+                            </li>
+                        {{/if}}
+                    </ul>
+                </article>
+                <article id="recruiter" class="mar--sm--bm">
+                    <h3 data-qa-label="recruiter"class="mar--sm--tn mar--sm--bs">Recruiter</h3>
+                    <div class="part__left pad--sm--n">
+                        <div class="img-container img-container--lg">
+                            <img data-qa-image="recruiterPhoto" {{bind-attr src=recruiter.SmallPhotoUrl}}> </img>
+                        </div>
+                    </div>
+                    <div class="part__body width--full pad--sm--lm pad--sm--rm">
+                        <h5 class="mar--sm--bn relatedPerson"><a data-qa-link="recruiterName" href="/{{unbound recruiter.Id}}">{{recruiter.Name}}</a></h5>
+                        <h5 data-qa-label="recruiterTitle" class="text-faded">
+                            {{recruiter.Title}}
+                        </h5>
+                    </div>
+                    <a href="#" data-qa-link="recruiterPrivateMessage" {{action "saveRecipientData" recruiter.Id recruiter.Name}} class="block mar--sm--ts sendPrivateMessage" data-toggle="modal" data-target="#privateMessageModal">
+                        <span class="juicon juicon-chat"></span> 
+                        Send a private message
+                    </a>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="privateMessageModal" tabindex="-1" role="dialog" aria-labelledby="privateMessageLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 data-qa-label="privateMessage" class="modal__heading" id="myModalLabel">Private Message</h2>
+            </div>
+            <div class="modal__body">
+                <div class="form__group">
+                    <p data-qa-label="messagePrompt" class="mar--sm--tn">
+                        Send a private message to <span data-qa-label="recipientName" class="privateMessageTarget">{{recipientName}}</span> about this job posting.
+                    </p>
+                    <label data-qa-label="privateMessage" for="privateMessage" class="sr-only">Private Message</label>
+                    {{textarea value=chatterMessage data-qa-textarea="messageBody"}}
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button data-qa-button="send" {{action "sendMessage"}} {{bind-attr disabled=disableSend}} type="button" class="button button--primary" data-dismiss="modal">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
