@@ -1,0 +1,46 @@
+{{#if isOnePage}}
+    <div class="wizardSection pad--sm--only--n mar--md--txl" data-qa-container="projectsOnePage">
+        <div class="panel">
+            <div class="panel__top">
+                <h2 class="panel__heading" data-qa-header="projects">
+                    Projects
+                </h2>
+            </div>
+            {{#each project in model itemController="historyBlock"}}
+                <div class="panel__component panel__component--removable" data-qa-container="projectBlock">
+                    <button type="button" class="close" {{action "clickProject" project}} data-qa-button="deleteProject"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <div class="row">
+                        {{#each field in project.fields itemController="additionalInfoField"}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div>    
+                </div>
+            {{/each}}
+            <div class="panel__component">
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddProject"}} data-qa-button="addProject">Add project <span class="juicon juicon-plus"></span></button>
+            </div>
+        </div>
+    </div>
+{{else}}
+    <div class="wizardSection pad--sm--only--n active" data-qa-container="projects">
+        <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="projects">Projects</h1>   
+        {{#if errorMessage}}
+            {{partial "errorAlert"}}
+        {{/if}}                         
+        <div class="panel">
+            {{#each project in model itemController="historyBlock"}}
+                <div class="panel__component panel__component--removable pad--sm--bn" data-qa-container="projectBlock">
+                    <button type="button" class="close" {{action "clickProject" project}} data-qa-button="deleteProject"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <div class="row">
+                        {{#each field in project.fields itemController="additionalInfoField"}}
+                            {{partial field.partial}}
+                        {{/each}}
+                    </div> 
+                </div>
+            {{/each}}
+            <div class="panel__component">
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddProject"}} data-qa-button="addProject">Add project <span class="juicon juicon-plus"></span></button>
+            </div>
+        </div>
+    </div>
+{{/if}}
