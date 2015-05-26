@@ -1,0 +1,18 @@
+<label class="table-group mar--sm--bs">
+    <span class="table-group__object--small">
+        {{input type="checkbox" checked=isEnabled data-qa-input="enabled"}}
+    </span>
+    <span class="table-group__object--large" data-qa-label="enabled">{{labels.enabled}}</span>
+</label>
+{{#if isEnabled}}
+    <div class="form__group pad--sm--lxl" id="empHistoryDrop">
+        <div class="select__wrap inline-block ">
+            <div class="input__icon juicon juicon-down"></div>
+            {{view "select" 
+                content=employmentHistoryYears
+                value=selectedEmploymentHistoryYears
+                data-qa-input="employmentHistoryYears"}}
+        </div>
+        <label class="pad--sm--ls" data-qa-label="employmentHistoryYears">{{labels.yearsOfHistoryRequired}}</label>
+    </div>
+{{/if}}

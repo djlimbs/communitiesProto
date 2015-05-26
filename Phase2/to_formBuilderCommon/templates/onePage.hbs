@@ -1,0 +1,7 @@
+<p data-qa-label="whichHiringModels">
+    {{labels.whichHiringModelsWillBeRendered}}
+</p>
+
+{{#each hm in hiringModels}}
+    <label class="table-group mar--sm--bs"><span class="table-group__object--small">{{input type="checkbox" checked=hm.isOnePage data-qa-input=hm.name}}</span><span class="table-group__object--large" data-qa-label="hiringModelName">{{hm.name}}</span></label>
+{{/each}}

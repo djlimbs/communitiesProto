@@ -1,0 +1,11 @@
+{{#unless isAtMaxElements}}
+    {{partial "newFormElement"}}
+{{/unless}}
+
+{{#if isEditing}}
+ 	{{partial "editFormElement"}}
+{{else}}
+	{{#unless isLast}}
+    	{{partial "previewFormElement"}}
+    {{/unless}}
+{{/if}}

@@ -46,7 +46,7 @@ App.FormBuilderMixin = Ember.Mixin.create({
             if (this.get('isSaving') !== true) {    
                 this.set('showSavingNotification', true);
 
-                if (currentPath === 'formBuilder.formElements') { 
+                if (currentPath === 'formBuilder.formElements' || Ember.isNone(currentPath)) { 
                     this.saveFormElements()
                         .then(this.updateObjectsAndKeepWorking)
                         .then(undefined, this.handleError);
@@ -58,6 +58,8 @@ App.FormBuilderMixin = Ember.Mixin.create({
                     var hiringModel = App.Fixtures.get('currentHiringModel');
 
                     this.send('saveContactInfo', hiringModel);
+                } else if (currentPath === 'formBuilder.onePage') {
+                    this.send('saveHiringModelData', null, true);
                 }
 
             }   

@@ -1,0 +1,16 @@
+<div {{bind-attr class="isPreview::building-block :has-hidden-items isInEditMode:edit-active"}} {{bind-attr id=divId}}>
+    <div class="building-block__done">
+        <ul class="list-style-type-none inline-block mar--sm--n text-right float--right hidden-item">
+            <li title="{{unbound labels.edit}}" class="inline-block relative editBlock" {{action "clickEdit"}} data-toggle="tooltip" data-placement="left" data-qa-icon="pencil">
+                <span class="juicon juicon-pencil component__icon text-faded pad--sm--ls"></span>
+            </li>
+            <li title="{{unbound labels.moveUp}}" class="inline-block relative" {{action "clickMoveUp"}} data-toggle="tooltip" data-placement="left" data-qa-icon="moveUp">
+                <span class="juicon juicon-upward component__icon text-faded pad--sm--ls"></span>
+            </li>
+            <li title="{{unbound labels.moveDown}}" class="inline-block relative" {{action "clickMoveDown"}} data-toggle="tooltip" data-placement="left" data-qa-icon="moveDown">
+                <span class="juicon juicon-downward component__icon text-faded pad--sm--ls"></span>
+            </li>
+        </ul>
+        {{partial previewTemplate}}
+    </div>
+</div>

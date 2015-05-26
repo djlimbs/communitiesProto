@@ -1,0 +1,45 @@
+<div class="scope-container">
+    <div class="content content--readable pad--sm--n pad--sm--tm">
+        <div class="panel mar--sm--bm js-panel">
+            <div class="panel__top">
+                {{#if editSection}}
+                    <div class="js-edit-section-buttons" style="display: block;">
+                        <button {{action "clickSave"}} class="button button--primary float--right mar--sm--ls js-save-section" type="button">
+                            Save
+                        </button>
+                        {{#link-to "viewAll" type="button" tagName="button" classNames="button button--secondary float--right"}}
+                            Cancel
+                        {{/link-to}}
+                    </div>
+                    <h2 class="panel__heading has-subheading">{{editSection}}</h2>
+                    <h3 class="panel__subheading">Talent Profile</h3></div>
+                {{else}}
+                    <div class="js-edit-buttons">
+                        <button class="button button--primary float--right mar--sm--ls js-save-page" type="button">
+                            Save profile
+                        </button>
+                        <button class="button button--secondary float--right js-cancel-edit-page" data-target="#discardModal" data-toggle="modal" type="button">
+                            Cancel
+                        </button>
+                    </div>
+                    <h2 class="panel__heading">Talent Profile</h2>                
+                {{/if}}
+            </div>
+            <section id="identity">
+                <div class="panel__body">
+                    <div class="part__left--fixed pad--sm--n">
+                        <div class="img-container img-container--lg"><img src="https://c.na24.content.force.com/profilephoto/005/F">
+                        </div>
+                    </div>
+                    <div class="part__body width--full pad--sm--lm pad--sm--rm">
+                        <h5 class="mar--sm--n relatedPerson"><a href="#">Jane Aaron</a></h5>
+                        <h5 class="text-faded mar--sm--n">
+                            Director of Sales (Midwest)
+                        </h5>
+                    </div>
+                </div>
+            </section>
+            {{outlet}}
+        </div>
+    </div>
+</div>
