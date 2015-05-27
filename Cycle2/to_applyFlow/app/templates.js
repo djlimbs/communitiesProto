@@ -1603,7 +1603,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddCertification", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addCertification\">Add certification <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -1613,7 +1613,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"certificationBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteCertification", "certification", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "certification", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteCertification\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -1658,7 +1658,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddCertification", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addCertification\">Add certification <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -1680,7 +1680,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"certificationBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteCertification", "certification", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "certification", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteCertification\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2360,7 +2360,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddLanguage", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addLanguage\">Add language <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2370,7 +2370,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"languageBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteLanguage", "language", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "language", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteLanguage\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2415,7 +2415,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddLanguage", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addLanguage\">Add language <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2437,7 +2437,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"languageBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteLanguage", "language", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "language", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteLanguage\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2726,7 +2726,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddPatent", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addPatent\">Add patent <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2736,7 +2736,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"patentBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeletePatent", "patent", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "patent", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deletePatent\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2781,7 +2781,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddPatent", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addPatent\">Add patent <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2803,7 +2803,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"patentBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeletePatent", "patent", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "patent", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deletePatent\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2845,7 +2845,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddProject", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addProject\">Add project <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2855,7 +2855,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"projectBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickProject", "project", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "project", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteProject\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2900,7 +2900,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddProject", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addProject\">Add project <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2922,7 +2922,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"projectBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickProject", "project", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "project", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteProject\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -2964,7 +2964,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddPublication", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addPublication\">Add publication <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -2974,7 +2974,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"publicationBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeletePublication", "publication", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "publication", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deletePublication\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3019,7 +3019,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddPublication", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addPublication\">Add publication <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3041,7 +3041,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"publicationBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeletePublication", "publication", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "publication", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deletePublication\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3083,7 +3083,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddRecognition", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addRecognition\">Add recognition <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3093,7 +3093,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"recognitionBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRecognition", "recognition", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "recognition", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteRecognition\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3138,7 +3138,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddRecognition", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addRecognition\">Add recognition <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3160,7 +3160,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"recognitionBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRecognition", "recognition", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "recognition", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteRecognition\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3202,7 +3202,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddRecommendation", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addRecommendation\">Add recommendation <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3212,7 +3212,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"recommendationBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRecommendation", "recommendation", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "recommendation", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteRecommendation\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3257,7 +3257,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddRecommendation", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addRecommendation\">Add recommendation <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3279,7 +3279,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"recommendationBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRecommendation", "recommendation", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "recommendation", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteRecommendation\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3641,7 +3641,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddTrainingDevelopment", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addTrainingDevelopment\">Add training & development <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3651,7 +3651,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"trainingDevelopmentBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteTrainingDevelopment", "trainingDevelopment", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "trainingDevelopment", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteTrainingDevelopment\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3696,7 +3696,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddTrainingDevelopment", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addTrainingDevelopment\">Add training & development <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3718,7 +3718,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"trainingDevelopmentBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteTrainingDevelopment", "trainingDevelopment", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "trainingDevelopment", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteTrainingDevelopment\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3760,7 +3760,7 @@ function program1(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddVolunteering", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addVolunteering\">Add volunteering <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3770,7 +3770,7 @@ function program2(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable\" data-qa-container=\"volunteeringBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteVolunteering", "volunteering", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "volunteering", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteVolunteering\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};
@@ -3815,7 +3815,7 @@ function program5(depth0,data) {
   data.buffer.push("\n            <div class=\"panel__component\">\n                <button class=\"button button--primary width--full--sm--only theme-bg-color\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddVolunteering", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAddAI", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"addVolunteering\">Add volunteering <span class=\"juicon juicon-plus\"></span></button>\n            </div>\n        </div>\n    </div>\n");
   return buffer;
   }
@@ -3837,7 +3837,7 @@ function program8(depth0,data) {
   data.buffer.push("\n                <div class=\"panel__component panel__component--removable pad--sm--bn\" data-qa-container=\"volunteeringBlock\">\n                    <button type=\"button\" class=\"close\" ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteVolunteering", "volunteering", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickDeleteAI", "volunteering", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" data-qa-button=\"deleteVolunteering\"><span class=\"component-remove-x\"></span><span class=\"sr-only\">");
   hashTypes = {};
   hashContexts = {};

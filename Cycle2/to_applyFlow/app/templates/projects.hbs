@@ -8,7 +8,7 @@
             </div>
             {{#each project in model itemController="historyBlock"}}
                 <div class="panel__component panel__component--removable" data-qa-container="projectBlock">
-                    <button type="button" class="close" {{action "clickProject" project}} data-qa-button="deleteProject"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <button type="button" class="close" {{action "clickDeleteAI" project}} data-qa-button="deleteProject"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
                     <div class="row">
                         {{#each field in project.fields itemController="additionalInfoField"}}
                             {{partial field.partial}}
@@ -17,7 +17,7 @@
                 </div>
             {{/each}}
             <div class="panel__component">
-                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddProject"}} data-qa-button="addProject">Add project <span class="juicon juicon-plus"></span></button>
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddAI"}} data-qa-button="addProject">Add project <span class="juicon juicon-plus"></span></button>
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
         <div class="panel">
             {{#each project in model itemController="historyBlock"}}
                 <div class="panel__component panel__component--removable pad--sm--bn" data-qa-container="projectBlock">
-                    <button type="button" class="close" {{action "clickProject" project}} data-qa-button="deleteProject"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <button type="button" class="close" {{action "clickDeleteAI" project}} data-qa-button="deleteProject"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
                     <div class="row">
                         {{#each field in project.fields itemController="additionalInfoField"}}
                             {{partial field.partial}}
@@ -39,7 +39,7 @@
                 </div>
             {{/each}}
             <div class="panel__component">
-                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddProject"}} data-qa-button="addProject">Add project <span class="juicon juicon-plus"></span></button>
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddAI"}} data-qa-button="addProject">Add project <span class="juicon juicon-plus"></span></button>
             </div>
         </div>
     </div>

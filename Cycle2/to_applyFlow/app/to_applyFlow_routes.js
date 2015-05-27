@@ -894,6 +894,39 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
     }
 };
 
+App.buildAdditionalInfoSaveObj = function(sectionName, application, sectionController, errorObj, shouldValidate) {
+    var additionalInfoArray = [];
+    var isValid = true;
+    var sectionArrayName = sectionName + 'Array';
+    var sectionArray = application[sectionArrayName];
+    var deletedArrayName = sectionController.get('deletedArrayName');
+
+    sectionArray.forEach(function(el) {
+        var additionalInfoObj = {
+            eId: el.eId,
+            Id: el.Id,
+            namespace_Application__c: appId,
+            namespace_Type__c: App.Fixtures.sectionToTypeMap[sectionName].type,
+            namespace_TypeAPIName__c: App.Fixtures.sectionToTypeMap[sectionName].typeAPIName
+        };
+
+        el.fields.forEach(function(f) {
+            // proto namespace, delete in production
+            var fieldName = f.name.indexOf('__c') !== -1 ? 'namespace_' + f.name : f.name;
+
+            additionalInfoObj[fieldName] = f.value;
+        });
+
+        additionalInfoArray.addObject(additionalInfoObj);
+    });
+
+    return {
+        upsertAdditionalInformation: additionalInfoArray,
+        deleteAdditionalInformation: sectionController.get(deletedArrayName),
+        applicationId: appId
+    };
+};
+
 App.redirectAfterFinish = function(application) {
     var redirectUrl;
 
@@ -1632,51 +1665,149 @@ App.LegallyRequiredRoute = Ember.Route.extend({
     }
 });
 
+App.saveAdditionalInfo = function(section, self, transition, completeApplication, shouldValidate) {
+    var errorObj = {};
+    var applicationModel = self.modelFor('apply');
+    var applyController = self.controllerFor('apply');
+    var sectionController = self.controllerFor(section);
+    var sectionModel = self.modelFor(section);
+    var additionalInfoSaveObj = App.buildAdditionalInfoSaveObj(section, applicationModel, sectionController, errorObj, shouldValidate);
+    var currentPath = applyController.get('currentPath');
+
+    if (applyController.get('showSavingNotification') !== true) {
+        if (completeApplication !== true) {
+            transition.abort();
+        }            
+
+        applyController.set('showSavingNotification', true);
+
+        var callback = function(parsedResult) {
+            if (completeApplication === true) {
+                App.redirectAfterFinish(applyController.get('application'));
+            } else {
+                transition.retry();
+
+                // UPDATE ADDITIONAL INFO OBJS
+                Object.keys(parsedResult.data.eIdToAIMap).forEach(function(eId) {
+                    var aIToUpdate = sectionModel.findBy('eId', parseInt(eId));
+                    aIToUpdate.Id = parsedResult.data.eIdToAIMap[eId].Id;
+                });
+            }
+        };
+
+        cont.upsertAdditionalInformation(JSON.stringify(additionalInfoSaveObj), App.generateRemoteActionCallback(self, callback, false, currentPath));
+    }
+};
+
 App.ProjectsRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').projectsArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('projects', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('projects', this, null, true, false);
+        }
     }
 });
 
 App.RecommendationsRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').recommendationsArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('recommendations', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('recommendations', this, null, true, false);
+        }
     }
 });
 
 App.RecognitionRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').recognitionArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('recognition', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('recognition', this, null, true, false);
+        }
     }
 });
 
 App.CertificationsRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').certificationsArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('certifications', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('certifications', this, null, true, false);
+        }
     }
 });
 
 App.TrainingDevelopmentRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').trainingDevelopmentArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('trainingDevelopment', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('trainingDevelopment', this, null, true, false);
+        }
     }
 });
 
 App.PublicationsRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').publicationsArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('publications', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('publications', this, null, true, false);
+        }
     }
 });
 
 App.PatentsRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').patentsArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('patents', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('patents', this, null, true, false);
+        }
     }
 });
 
 App.LanguagesRoute = Ember.Route.extend({
     model: function(params) {
         return this.modelFor('apply').languagesArray;
+    },
+    actions: {
+        willTransition: function(transition) {
+            App.saveAdditionalInfo('languages', this, transition, false, false);
+        },
+        clickDone: function() {
+            App.saveAdditionalInfo('languages', this, null, true, false);
+        }
     }
 });
 

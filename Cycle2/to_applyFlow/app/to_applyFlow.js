@@ -37,21 +37,73 @@ App.Fixtures = {
         'Email__c' : 'emailAddress',
         'Mobile_Phone__c' : 'phoneNumbers'
     },
-    numberToMonthMap: {
-        '1' : labels.January,
-        '2' : labels.February,
-        '3' : labels.March,
-        '4' : labels.April,
-        '5' : labels.May,
-        '6' : labels.June,
-        '7' : labels.July,
-        '8' : labels.August,
-        '9' : labels.September,
-        '10' : labels.October,
-        '11' : labels.November,
-        '12' : labels.December
+    monthToNumberMap: {
+        'January' : 1,
+        'February' : 2,
+        'March' : 3,
+        'April' : 4,
+        'May' : 5,
+        'June' : 6,
+        'July' : 7,
+        'August' : 8,
+        'September' : 9,
+        'October' : 10,
+        'November': 11,
+        'December' : 12
     },
-    degreePicklistValues: []
+    numberToMonthMap: {
+        1 : 'January',
+        2 : 'February',
+        3 : 'March',
+        4 : 'April',
+        5 : 'May',
+        6 : 'June',
+        7 : 'July',
+        8 : 'August',
+        9 : 'September',
+        10 : 'October',
+        11 : 'November',
+        12 : 'December'
+    },
+    degreePicklistValues: [],
+    sectionToTypeMap: {
+        'projects' : {
+            type: 'Project',
+            typeAPIName: 'Project__c'
+        },
+        'recommendations' : {
+            type: 'Recommendation',
+            typeAPIName: 'Recommendation__c'
+        },
+        'recognition' : {
+            type: 'Recognition',
+            typeAPIName: 'Recognition__c'
+        },
+        'certifications' : {
+            type: 'Certification',
+            typeAPIName: 'Certification__c'
+        },
+        'trainingDevelopment' : {
+            type: 'Training Activity',
+            typeAPIName: 'Training_Activity__c'
+        },
+        'publications' : {
+            type: 'Publication',
+            typeAPIName: 'Publication__c'
+        },
+        'patents' : {
+            type: 'Patent',
+            typeAPIName: 'Patent__c'
+        },
+        'languages' : {
+            type: 'Language',
+            typeAPIName: 'Language__c'
+        },
+        'volunteering' : {
+            type: 'Volunteer Work',
+            typeAPIName: 'Volunteer_Work__c'
+        }
+    }
 }
 
 // Pull in degree picklist values
@@ -73,9 +125,9 @@ App.getEmploymentHistoryBlock = function(employmentHistoryObj) {
             if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
                 fieldObjWithValue.partial = 'monthPicklist';
                 fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
-                fieldObjWithValue.picklistValues.forEach(function(pv) {
-                    pv.label = App.Fixtures.numberToMonthMap[pv.value];
-                });
+                //fieldObjWithValue.picklistValues.forEach(function(pv) {
+                //    pv.label = App.Fixtures.numberToMonthMap[pv.value];
+                //});
             } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
                 fieldObjWithValue.label = '';
                 fieldObjWithValue.partial = 'yearTelField';
@@ -124,9 +176,9 @@ App.getEducationHistoryBlock = function(educationHistoryObj) {
             if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
                 fieldObjWithValue.partial = 'monthPicklist';
                 fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
-                fieldObjWithValue.picklistValues.forEach(function(pv) {
+                /*fieldObjWithValue.picklistValues.forEach(function(pv) {
                     pv.label = App.Fixtures.numberToMonthMap[pv.value];
-                });
+                });*/
             } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
                 fieldObjWithValue.label = '';
                 fieldObjWithValue.partial = 'yearTelField';
@@ -275,9 +327,9 @@ App.convertLinkedInToEducationHistoryObj = function(educations) {
             Education_Level__c: App.Fixtures.degreePicklistValues.indexOf(e.degree) !== -1 ? e.degree : 'Other',
             Name: e.schoolName,
             Status__c: null,
-            Start_Month__c: !Ember.isNone(e.startDate) ? String(e.startDate.month) : null,
+            Start_Month__c: !Ember.isNone(e.startDate) ? App.Fixtures.numberToMonthMap[e.startDate.month] : null,
             Start_Year__c: !Ember.isNone(e.startDate) ? e.startDate.year : null,
-            End_Month__c: !Ember.isNone(e.endDate) ? String(e.endDate.month) : null,
+            End_Month__c: !Ember.isNone(e.endDate) ? App.Fixtures.numberToMonthMap[e.endDate.month] : null,
             End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null
         };
     });
@@ -290,9 +342,9 @@ App.convertLinkedInToEmploymentHistoryObj = function(positions) {
         return {
             Name: !Ember.isNone(p.company) ? p.company.name : null,
             Job_Title__c: p.title,
-            Start_Month__c: !Ember.isNone(p.startDate) ? String(p.startDate.month) : null,
+            Start_Month__c: !Ember.isNone(p.startDate) ? App.Fixtures.numberToMonthMap[p.startDate.month] : null,
             Start_Year__c: !Ember.isNone(p.startDate) ? p.startDate.year : null,
-            End_Month__c: !Ember.isNone(p.endDate) ? String(p.endDate.month) : null,
+            End_Month__c: !Ember.isNone(p.endDate) ? App.Fixtures.numberToMonthMap[p.endDate.month] : null,
             End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
             Is_Current__c: p.isCurrent,
         };
@@ -438,8 +490,8 @@ App.checkForEmploymentHistoryGaps = function(employmentHistoryObjArray, employme
             return true;
         }
 
-        var startDate = moment(eh.Start_Month__c+'/1/'+eh.Start_Year__c, 'M/D/YYYY');
-        var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+'/1/'+eh.End_Year__c, 'M/D/YYYY');
+        var startDate = moment(eh.Start_Month__c+' 1 '+eh.Start_Year__c, 'MMMM D YYYY');
+        var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+' 1 '+eh.End_Year__c, 'MMMM D YYYY');
 
         var startDateMs = startDate.valueOf();
         var endDateMs = endDate.valueOf();

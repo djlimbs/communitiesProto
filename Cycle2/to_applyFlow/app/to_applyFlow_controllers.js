@@ -242,7 +242,9 @@ App.ApplyController = Ember.ObjectController.extend({
         return this.get(incompleteProperty) || this.get('showSavingNotification') === true;
     }.property('currentPath', 'isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
                     'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
-                    'isProjectsIncomplete', 'isRecommendationsIncomplete', 'isRecognitionIncomplete', 'showSavingNotification'),
+                    'isProjectsIncomplete', 'isRecommendationsIncomplete', 'isRecognitionIncomplete', 'isCertificationsIncomplete', 
+                    'isTrainingDevelopmentIncomplete', 'isPublicationsIncomplete', 'isPatentsIncomplete', 'isLanguagesIncomplete', 
+                    'isVolunteeringIncomplete', 'showSavingNotification'),
     disablePrevious: Ember.computed.equal('showSavingNotification', true),
     disableContactInfo: function() {
         return this.get('showSavingNotification');
@@ -265,7 +267,7 @@ App.ApplyController = Ember.ObjectController.extend({
                         || this.get('isEducationHistoryIncomplete')
                         || this.get('showSavingNotification');
     }.property('disableEducationHistory', 'isEducationHistoryIncomplete', 'showSavingNotification'),
-    /*disableRecommendations: function() {
+    disableRecommendations: function() {
         return this.get('disableProjects')
                         || this.get('isProjectsIncomplete')
                         || this.get('showSavingNotification');
@@ -313,7 +315,7 @@ App.ApplyController = Ember.ObjectController.extend({
     }.property('disableGeneral', 'isGeneralIncomplete','showSavingNotification'),
     disableLegallyRequired: function() {
         return this.get('disableJobSpecific') || this.get('isJobSpecificIncomplete') || this.get('showSavingNotification');
-    }.property('disableJobSpecific', 'isJobSpecificIncomplete', 'showSavingNotification'),*/
+    }.property('disableJobSpecific', 'isJobSpecificIncomplete', 'showSavingNotification'),
     actions: {
         clickNext: function() {
             var currentPath = this.get('currentPath');
@@ -704,229 +706,92 @@ App.AdditionalInfoFieldController = Ember.ObjectController.extend({
     }.observes('value')
 });
 
-App.ProjectsController = Ember.ArrayController.extend({
+App.AdditionalInfoMixin = Ember.Mixin.create({
     needs: ['apply'],
     isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedProjects: [],
     isHistorySection: true,
-    projectsDidChenge: function() {
+    aIDidChenge: function() {
         var currentProjects = this.get('[]');
+        var incompleteFieldName = this.get('incompleteFieldName');
         var hasEmptyField = App.checkForBlankObjectFields(currentProjects);
 
-        this.get('controllers.apply').set('isProjectsIncomplete', hasEmptyField);
+        this.get('controllers.apply').set(incompleteFieldName, hasEmptyField);
     }.observes('[]', '[].@each.fields'),
     actions: {
-        clickAddProject: function() {
-            var projectBlock = App.getObjectBlock('project');
+        clickAddAI: function() {
+            var blockName = this.get('blockName');
+            var projectBlock = App.getObjectBlock(blockName);
             this.get('[]').addObject(projectBlock);
         },
-        clickDeleteProject: function(projectToDelete) {
-            if (!Ember.isNone(projectToDelete.Id)) {
-                this.get('deletedProjects').addObject(projectToDelete.Id);
+        clickDeleteAI: function(aIToDelete) {
+            var deletedArrayName = this.get('deletedArrayName');
+            if (!Ember.isNone(aIToDelete.Id)) {
+                this.get(deletedArrayName).addObject(aIToDelete.Id);
             }
-            this.get('[]').removeObject(projectToDelete);
+            this.get('[]').removeObject(aIToDelete);
         }
     }
 });
 
-App.RecommendationsController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedRecommendations: [],
-    isHistorySection: true,
-    recommendationsDidChenge: function() {
-        var currentRecommendations = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentRecommendations);
+App.ProjectsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
+    blockName: 'project',
+    deletedArrayName: 'deletedProjects',
+    incompleteFieldName: 'isProjectsIncomplete',
+    deletedProjects: []
+});
 
-        this.get('controllers.apply').set('isRecommendationsIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddRecommendation: function() {
-            var recommendationBlock = App.getObjectBlock('recommendation');
-            this.get('[]').addObject(recommendationBlock);
-        },
-        clickDeleteRecommendation: function(recommendationToDelete) {
-            if (!Ember.isNone(recommendationToDelete.Id)) {
-                this.get('deletedRecommendations').addObject(recommendationToDelete.Id);
-            }
-            this.get('[]').removeObject(recommendationToDelete);
-        }
-    }
+App.RecommendationsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
+    blockName: 'recommendation',
+    deletedArrayName: 'deletedRecommendations',
+    incompleteFieldName: 'isRecommendationsIncomplete',
+    deletedRecommendations: []
 });
 
 App.RecognitionController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedRecognitions: [],
-    isHistorySection: true,
-    recognitionsDidChenge: function() {
-        var currentRecognitions = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentRecognitions);
-
-        this.get('controllers.apply').set('isRecognitionsIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddRecognition: function() {
-            var recognitionBlock = App.getObjectBlock('recognition');
-            this.get('[]').addObject(recognitionBlock);
-        },
-        clickDeleteRecognition: function(recognitionToDelete) {
-            if (!Ember.isNone(recognitionToDelete.Id)) {
-                this.get('deletedRecognitions').addObject(recognitionToDelete.Id);
-            }
-            this.get('[]').removeObject(recognitionToDelete);
-        }
-    }
+    blockName: 'recognition',
+    deletedArrayName: 'deletedRecognitions',
+    incompleteFieldName: 'isRecognitionIncomplete',
+    deletedRecognitions: []
 });
 
 App.CertificationsController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedCertifications: [],
-    isHistorySection: true,
-    certificationsDidChenge: function() {
-        var currentCertifications = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentCertifications);
-
-        this.get('controllers.apply').set('isCertificationsIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddCertification: function() {
-            var certificationBlock = App.getObjectBlock('certification');
-            this.get('[]').addObject(certificationBlock);
-        },
-        clickDeleteCertification: function(certificationToDelete) {
-            if (!Ember.isNone(certificationToDelete.Id)) {
-                this.get('deletedCertifications').addObject(certificationToDelete.Id);
-            }
-            this.get('[]').removeObject(certificationToDelete);
-        }
-    }
+    blockName: 'certification',
+    deletedArrayName: 'deletedCertifications',
+    incompleteFieldName: 'isCertificationsIncomplete',
+    deletedCertifications: []
 });
 
-
-
 App.TrainingDevelopmentController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedTrainingDevelopments: [],
-    isHistorySection: true,
-    trainingDevelopmentsDidChenge: function() {
-        var currentTrainingDevelopments = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentTrainingDevelopments);
-
-        this.get('controllers.apply').set('isTrainingDevelopmentsIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddTrainingDevelopment: function() {
-            var trainingDevelopmentBlock = App.getObjectBlock('trainingDevelopment');
-            this.get('[]').addObject(trainingDevelopmentBlock);
-        },
-        clickDeleteTrainingDevelopment: function(trainingDevelopmentToDelete) {
-            if (!Ember.isNone(trainingDevelopmentToDelete.Id)) {
-                this.get('deletedTrainingDevelopments').addObject(trainingDevelopmentToDelete.Id);
-            }
-            this.get('[]').removeObject(trainingDevelopmentToDelete);
-        }
-    }
+    blockName: 'trainingDevelopment',
+    deletedArrayName: 'deletedTrainingDevelopments',
+    incompleteFieldName: 'isTrainingDevelopmentIncomplete',
+    deletedTrainingDevelopments: []
 });
 
 App.PublicationsController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedPublications: [],
-    isHistorySection: true,
-    publicationsDidChenge: function() {
-        var currentPublications = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentPublications);
-
-        this.get('controllers.apply').set('isPublicationsIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddPublication: function() {
-            var publicationBlock = App.getObjectBlock('publication');
-            this.get('[]').addObject(publicationBlock);
-        },
-        clickDeletePublication: function(publicationToDelete) {
-            if (!Ember.isNone(publicationToDelete.Id)) {
-                this.get('deletedPublications').addObject(publicationToDelete.Id);
-            }
-            this.get('[]').removeObject(publicationToDelete);
-        }
-    }
+    blockName: 'publication',
+    deletedArrayName: 'deletedPublications',
+    incompleteFieldName: 'isPublicationsIncomplete',
+    deletedPublications: []
 });
 
 App.PatentsController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedPatents: [],
-    isHistorySection: true,
-    patentsDidChenge: function() {
-        var currentPatents = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentPatents);
-
-        this.get('controllers.apply').set('isPatentsIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddPatent: function() {
-            var patentBlock = App.getObjectBlock('patent');
-            this.get('[]').addObject(patentBlock);
-        },
-        clickDeletePatent: function(patentToDelete) {
-            if (!Ember.isNone(patentToDelete.Id)) {
-                this.get('deletedPatents').addObject(patentToDelete.Id);
-            }
-            this.get('[]').removeObject(patentToDelete);
-        }
-    }
+    blockName: 'patent',
+    deletedArrayName: 'deletedPatents',
+    incompleteFieldName: 'isPatentsIncomplete',
+    deletedPatents: []
 });
 
 App.LanguagesController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedLanguages: [],
-    isHistorySection: true,
-    languagesDidChenge: function() {
-        var currentLanguages = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentLanguages);
-
-        this.get('controllers.apply').set('isLanguagesIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddLanguage: function() {
-            var languageBlock = App.getObjectBlock('language');
-            this.get('[]').addObject(languageBlock);
-        },
-        clickDeleteLanguage: function(languageToDelete) {
-            if (!Ember.isNone(languageToDelete.Id)) {
-                this.get('deletedLanguages').addObject(languageToDelete.Id);
-            }
-            this.get('[]').removeObject(languageToDelete);
-        }
-    }
+    blockName: 'language',
+    deletedArrayName: 'deletedLanguages',
+    incompleteFieldName: 'isLanguagesIncomplete',
+    deletedLanguages: []
 });
 
 App.VolunteeringController = Ember.ArrayController.extend({
-    needs: ['apply'],
-    isOnePageBinding: 'controllers.apply.isOnePage',
-    deletedVolunteerings: [],
-    isHistorySection: true,
-    volunteeringsDidChenge: function() {
-        var currentVolunteerings = this.get('[]');
-        var hasEmptyField = App.checkForBlankObjectFields(currentVolunteerings);
-
-        this.get('controllers.apply').set('isVolunteeringIncomplete', hasEmptyField);
-    }.observes('[]', '[].@each.fields'),
-    actions: {
-        clickAddVolunteering: function() {
-            var volunteeringBlock = App.getObjectBlock('volunteering');
-            this.get('[]').addObject(volunteeringBlock);
-        },
-        clickDeleteVolunteering: function(volunteeringToDelete) {
-            if (!Ember.isNone(volunteeringToDelete.Id)) {
-                this.get('deletedVolunteerings').addObject(volunteeringToDelete.Id);
-            }
-            this.get('[]').removeObject(volunteeringToDelete);
-        }
-    }
+    blockName: 'volunteering',
+    deletedArrayName: 'deletedVolunteerings',
+    incompleteFieldName: 'isVolunteeringIncomplete',
+    deletedVolunteerings: []
 });

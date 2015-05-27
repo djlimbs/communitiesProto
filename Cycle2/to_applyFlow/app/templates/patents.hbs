@@ -8,7 +8,7 @@
             </div>
             {{#each patent in model itemController="historyBlock"}}
                 <div class="panel__component panel__component--removable" data-qa-container="patentBlock">
-                    <button type="button" class="close" {{action "clickDeletePatent" patent}} data-qa-button="deletePatent"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <button type="button" class="close" {{action "clickDeleteAI" patent}} data-qa-button="deletePatent"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
                     <div class="row">
                         {{#each field in patent.fields itemController="additionalInfoField"}}
                             {{partial field.partial}}
@@ -17,7 +17,7 @@
                 </div>
             {{/each}}
             <div class="panel__component">
-                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddPatent"}} data-qa-button="addPatent">Add patent <span class="juicon juicon-plus"></span></button>
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddAI"}} data-qa-button="addPatent">Add patent <span class="juicon juicon-plus"></span></button>
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@
         <div class="panel">
             {{#each patent in model itemController="historyBlock"}}
                 <div class="panel__component panel__component--removable pad--sm--bn" data-qa-container="patentBlock">
-                    <button type="button" class="close" {{action "clickDeletePatent" patent}} data-qa-button="deletePatent"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                    <button type="button" class="close" {{action "clickDeleteAI" patent}} data-qa-button="deletePatent"><span class="component-remove-x"></span><span class="sr-only">{{labels.close}}</span></button>
                     <div class="row">
                         {{#each field in patent.fields itemController="additionalInfoField"}}
                             {{partial field.partial}}
@@ -39,7 +39,7 @@
                 </div>
             {{/each}}
             <div class="panel__component">
-                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddPatent"}} data-qa-button="addPatent">Add patent <span class="juicon juicon-plus"></span></button>
+                <button class="button button--primary width--full--sm--only theme-bg-color" {{action "clickAddAI"}} data-qa-button="addPatent">Add patent <span class="juicon juicon-plus"></span></button>
             </div>
         </div>
     </div>
