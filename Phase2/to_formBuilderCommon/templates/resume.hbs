@@ -11,11 +11,7 @@
 
 <label class="table-group mar--sm--bs">
     <span class="table-group__object--small">
-        {{#if isInternal}}
-            <input type="checkbox" disabled data-qa-input="required"/>
-        {{else}}
-            {{input type="checkbox" checked=professionalSummary data-qa-input="professionalSummary"}}
-        {{/if}}
+        {{input type="checkbox" checked=professionalSummary data-qa-input="professionalSummary"}}
     </span>
     <span class="table-group__object--large" data-qa-label="professionalSummary">{{labels.professionalSummary}}</span>
 </label>

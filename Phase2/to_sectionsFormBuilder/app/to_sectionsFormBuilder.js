@@ -139,7 +139,7 @@ App.FormBuilderRoute = Ember.Route.extend( {
                     projects: {
                         isEnabled: false
                     },
-                    recognitions: {
+                    recognition: {
                         isEnabled: false
                     },
                     recommendations: {
