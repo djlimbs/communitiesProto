@@ -375,7 +375,7 @@ App.JobPostingController = Ember.ObjectController.extend({
     }.property(),
     apply : function(applyType){
         var self = this;
-        var applyUrl = 'apex/to_applyFlow?reqId=' + self.get('jobPosting').Requisition_Lookup__c + '&jobPostingId=' + self.get('jobPosting').Id
+        var applyUrl = 'to_applyFlow?reqId=' + self.get('jobPosting').Requisition_Lookup__c + '&jobPostingId=' + self.get('jobPosting').Id
 
         if (self.get('selectedLocation') === 'Remote') {
             applyUrl += '&prefersRemote=true&locationId=' + self.get('locations').findBy('Primary__c', true).Location__c;

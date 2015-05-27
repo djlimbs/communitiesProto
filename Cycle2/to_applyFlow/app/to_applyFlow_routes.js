@@ -1695,7 +1695,7 @@ App.saveAdditionalInfo = function(section, self, transition, completeApplication
             }
         };
 
-        cont.upsertAdditionalInformation(JSON.stringify(additionalInfoSaveObj), App.generateRemoteActionCallback(self, callback, false, currentPath));
+        cont.upsertAdditionalInformation(JSON.stringify(additionalInfoSaveObj), completeApplication, App.generateRemoteActionCallback(self, callback, false, currentPath));
     }
 };
 
