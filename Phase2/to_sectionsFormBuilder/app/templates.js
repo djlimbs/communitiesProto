@@ -1919,7 +1919,7 @@ function program1(depth0,data) {
 Ember.TEMPLATES["resume"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
+  var buffer = '', stack1, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
 
 function program1(depth0,data) {
   
@@ -1943,22 +1943,6 @@ function program3(depth0,data) {
   return buffer;
   }
 
-function program5(depth0,data) {
-  
-  var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n            ");
-  hashContexts = {'type': depth0,'checked': depth0,'data-qa-input': depth0};
-  hashTypes = {'type': "STRING",'checked': "ID",'data-qa-input': "STRING"};
-  options = {hash:{
-    'type': ("checkbox"),
-    'checked': ("professionalSummary"),
-    'data-qa-input': ("professionalSummary")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n        ");
-  return buffer;
-  }
-
   data.buffer.push("<label class=\"table-group mar--sm--bs\">\n    <span class=\"table-group__object--small\">\n        ");
   hashTypes = {};
   hashContexts = {};
@@ -1969,10 +1953,14 @@ function program5(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.resume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</span>\n</label>\n\n<label class=\"table-group mar--sm--bs\">\n    <span class=\"table-group__object--small\">\n        ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isInternal", {hash:{},inverse:self.program(5, program5, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  hashContexts = {'type': depth0,'checked': depth0,'data-qa-input': depth0};
+  hashTypes = {'type': "STRING",'checked': "ID",'data-qa-input': "STRING"};
+  options = {hash:{
+    'type': ("checkbox"),
+    'checked': ("professionalSummary"),
+    'data-qa-input': ("professionalSummary")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n    </span>\n    <span class=\"table-group__object--large\" data-qa-label=\"professionalSummary\">");
   hashTypes = {};
   hashContexts = {};
