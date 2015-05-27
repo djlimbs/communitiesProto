@@ -1,0 +1,126 @@
+<!--Candidate-->
+<div {{bind-attr class=":card :pointer :no-border-on-small :mar--sm--only--n cardErrorType"}}>
+    <div class="row mar--sm--n">
+        <div class="column--sm--9 column--md--12 pad--sm--n">
+            <div class="card__body pad--sm--bs">
+                <div class="float--left avatar-container--md">
+                    <img {{bind-attr src="photoUrl"}} alt="">
+                </div>
+                <div class="card__top">
+                    <h4 data-qa-label="name" class="card__heading dots">{{First_Name__c}} {{Last_Name__c}}</h4>
+                    <h5 data-qa-label="status" class="card__subheading dots">{{labels.cardStatus}} {{statusText}}
+                        {{#if hasOutcome}}
+                            <small data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{Outcome__c}}</small>
+                        {{/if}}
+                    </h5>
+                </div>
+            </div>
+            <div class="content">
+                <div class="form__group mar--sm--bn">
+                    <small class="block dots" data-qa-label="source"><label>{{labels.cardSource}}</label> {{Source__c}}</small>
+                </div>
+                <div class="form__group mar--sm--bn">
+                    <small class="block dots" data-qa-label="employment"><label>{{labels.cardEmployment}}</label> {{employmentText}}</small>
+                </div>
+                <div class="row mar--sm--ts mar--sm--bs">
+                    <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                        <small class="block dots" data-qa-label="noResume">
+                            <label>
+                                <span class="juicon juicon-document"></span>
+                                {{#if isInternal}}
+                                    <a data-qa-link="talentProfile" {{bind-attr href="downloadUrl"}}> {{labels.cardResume}} ({{formatSize resume.ContentSize}})</a>
+                                {{else}}
+                                    {{#if resume}}
+                                        <a data-qa-link="resume" {{bind-attr href="downloadUrl"}}> {{labels.cardResume}} ({{formatSize resume.ContentSize}})</a>
+                                    {{else}}
+                                        {{labels.noResume}}
+                                    {{/if}}
+                                {{/if}}
+                            </label>
+                        </small>
+                    </div>
+                    <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                        <small class="block dots">
+                            <label data-qa-label="noProfile">
+                                <span class="juicon juicon-linkedin"></span>
+                                {{#if isSF1}}
+                                    {{#if hasProfile}}
+                                        <a data-qa-link="linkedIn" {{action "loadLinkedIn"}} href="#" target="_blank"> {{labels.cardProfile}}</a>
+                                    {{else}}
+                                        {{labels.noProfile}}
+                                    {{/if}}
+                                {{else}}
+                                    <a data-qa-link="linkedIn" {{bind-attr href="linkedInAddress"}} target="_blank"> {{linkedInLinkText}}</a>
+                                {{/if}}
+                                    {{!--
+                                    <a data-qa-link="linkedIn" {{bind-attr href="linkedInAddress"}} target="_blank"> {{linkedInLinkText}}</a>
+                                    --}}
+                            </label>
+                        </small>
+                    </div>
+                    <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                        <small class="block dots">
+                            <label data-qa-label="noAddress">
+                                <span class="juicon juicon-location"></span>
+                                {{#if hasAddress}}
+                                    {{#if isSF1}}
+                                        <span>{{City__c}}, {{State_Province__c}}</span>
+                                    {{else}}
+                                        <a data-qa-link="address" {{action loadGoogleMaps}} href="#" target="_blank">{{City__c}}, {{State_Province__c}}</a>
+                                    {{/if}}
+                                {{else}}
+                                    {{labels.cardNoAddress}}
+                                {{/if}}
+                                
+                                {{!--}}
+                                {{#if hasAddress}}
+                                    <a data-qa-link="address" {{bind-attr href="loadAddress"}} target="_blank">{{City__c}}, {{State_Province__c}}</a>
+                                {{else}}
+                                    {{labels.cardNoAddress}}
+                                {{/if}}--}}
+                            </label>
+                        </small>
+                    </div>
+                    <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                        <small class="block dots">
+                            <label>
+                                <span class="juicon juicon-calendar"></span>
+                                <span data-qa-label="createdDate" data-toggle="tooltip" {{bind-attr title=localeDate}}>{{formatDate CreatedDate}}</span>
+                            <a data-qa-link="otherApps" {{action "openApplicationModal"}} {{bind-attr title=otherAppTooltip}} data-toggle="tooltip" data-target="#applicantModal">{{otherAppText}}</a>
+                            </label>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column--sm--3 column--md--12 pad--sm--n">
+            <hr class="mar--sm--bn mar--sm--ts hr-alt dashed show-brkpoint--md"/>
+            <small class="card__bottom pad-sm--only-ln pad--sm--only--rm pad--sm--ts pad--sm--bs block">
+                <div class="row text-faded table mar--sm--n text-center width--full">
+                    <span {{bind-attr class=":table-cell :block-on-small  :pad--sm--n :block :text-center-right :mar--sm--only--ts chatterPosts:text-primary"}}>
+                        <span data-qa-tooltip="chatterPosts" data-toggle="tooltip" {{bind-attr title=labels.chatterTooltip}}>
+                            <span data-qa-label="chatterPosts" class="juicon juicon-chat"></span> {{chatterPosts}}
+                        </span>
+                    </span>
+                    <span {{bind-attr class=":table-cell :block-on-small  :pad--sm--n :block :text-center-right :mar--sm--only--ts positive:text-success"}}>
+                        <span data-qa-tooltip="positive" data-toggle="tooltip" {{bind-attr title=positiveTooltip}}>
+                            <span data-qa-label="positive" class="juicon juicon-like"></span> {{positive}}
+                        </span>
+                    </span>
+                    <span {{bind-attr class=":table-cell :block-on-small  :pad--sm--n :block :text-center-right :mar--sm--only--ts negative:text-warning"}}>
+                        <span data-qa-tooltip="negative" data-toggle="tooltip" {{bind-attr title=negativeTooltip}}>
+                            <span data-qa-label="negative" class="juicon juicon-dislike"></span> {{negative}}
+                        </span>
+                    </span>
+                    {{#if allowNeutral}}
+                        <span {{bind-attr class=":table-cell :block-on-small  :pad--sm--n :block :text-center-right :mar--sm--only--ts neutral:text-info"}}>
+                            <span data-qa-tooltip="inconclusive" data-toggle="tooltip" {{bind-attr title=neutralTooltip}}>
+                                <span data-qa-label="inconclusive" class="juicon juicon-question-circle"></span> {{neutral}}
+                            </span>
+                        </span>
+                    {{/if}}
+                </div>
+            </small>
+        </div>
+    </div>
+</div>

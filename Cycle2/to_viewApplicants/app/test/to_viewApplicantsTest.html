@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	 	<meta charset="utf-8">
+	  	<title>Test to_viewApplicants</title>
+	  	<link rel="stylesheet" href="../../lib/qunit/qunit-1.14.0.css">
+	</head>
+	<body>
+	  	<div id="qunit"></div>
+	  	<div id="qunit-fixture"></div>
+
+	  	<script>
+	  		var labels = {
+	  			cardNoEmployment: 'Employment History Does Not Exist',
+	  			others: 'Others',
+        		since: new Date("2007-04-25T01:32:21.196+0600"),
+        		before: new Date("2010-04-25T01:32:21.196+0600"),
+        		applicationsSince: new Date('2007-01-23T09:54:51'),
+        		cardProfile: 'Card Profile',
+        		cardSearch: 'Card Search'
+	  		};
+	  		var isSF1;
+	  		var jobTitle = '';
+			var reqId = '';
+			var scoreSort = '';
+			var createdToday = 0;
+			var total = 0;
+			cont = {};
+			cont.getApplicantData = function(result, resultObj){
+   			};
+
+			var applicantDashboard = '';
+	  	</script>
+	  	
+		<script src="../../lib/jquery/jquery-1.11.1.min.js"></script>
+		<script src="../../lib/handlebars/handlebars-v1.3.0.js"></script>
+		<script src="../../lib/emberjs/ember.js"></script>
+	  	<script src="../../lib/qunit/qunit-1.14.0.js"></script>
+	  	<script src="../../lib/moment/moment.js"></script>
+	  	<script src="../../lib/dist/globals/main.js"></script>
+	  	<script src="../../js/jui.js"></script>
+	  	<script src="../../js/toHelpers.js"></script>
+	  	<script src="../to_viewApplicants.js"></script>
+	  	<script src="./to_viewApplicantsTest.js"></script>
+	</body>
+</html>
