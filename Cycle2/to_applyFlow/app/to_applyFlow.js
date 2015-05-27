@@ -37,21 +37,73 @@ App.Fixtures = {
         'Email__c' : 'emailAddress',
         'Mobile_Phone__c' : 'phoneNumbers'
     },
-    numberToMonthMap: {
-        '1' : labels.January,
-        '2' : labels.February,
-        '3' : labels.March,
-        '4' : labels.April,
-        '5' : labels.May,
-        '6' : labels.June,
-        '7' : labels.July,
-        '8' : labels.August,
-        '9' : labels.September,
-        '10' : labels.October,
-        '11' : labels.November,
-        '12' : labels.December
+    monthToNumberMap: {
+        'January' : 1,
+        'February' : 2,
+        'March' : 3,
+        'April' : 4,
+        'May' : 5,
+        'June' : 6,
+        'July' : 7,
+        'August' : 8,
+        'September' : 9,
+        'October' : 10,
+        'November': 11,
+        'December' : 12
     },
-    degreePicklistValues: []
+    numberToMonthMap: {
+        1 : 'January',
+        2 : 'February',
+        3 : 'March',
+        4 : 'April',
+        5 : 'May',
+        6 : 'June',
+        7 : 'July',
+        8 : 'August',
+        9 : 'September',
+        10 : 'October',
+        11 : 'November',
+        12 : 'December'
+    },
+    degreePicklistValues: [],
+    sectionToTypeMap: {
+        'projects' : {
+            type: 'Project',
+            typeAPIName: 'Project__c'
+        },
+        'recommendations' : {
+            type: 'Recommendation',
+            typeAPIName: 'Recommendation__c'
+        },
+        'recognition' : {
+            type: 'Recognition',
+            typeAPIName: 'Recognition__c'
+        },
+        'certifications' : {
+            type: 'Certification',
+            typeAPIName: 'Certification__c'
+        },
+        'trainingDevelopment' : {
+            type: 'Training Activity',
+            typeAPIName: 'Training_Activity__c'
+        },
+        'publications' : {
+            type: 'Publication',
+            typeAPIName: 'Publication__c'
+        },
+        'patents' : {
+            type: 'Patent',
+            typeAPIName: 'Patent__c'
+        },
+        'languages' : {
+            type: 'Language',
+            typeAPIName: 'Language__c'
+        },
+        'volunteering' : {
+            type: 'Volunteer Work',
+            typeAPIName: 'Volunteer_Work__c'
+        }
+    }
 }
 
 // Pull in degree picklist values
@@ -73,9 +125,9 @@ App.getEmploymentHistoryBlock = function(employmentHistoryObj) {
             if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
                 fieldObjWithValue.partial = 'monthPicklist';
                 fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
-                fieldObjWithValue.picklistValues.forEach(function(pv) {
-                    pv.label = App.Fixtures.numberToMonthMap[pv.value];
-                });
+                //fieldObjWithValue.picklistValues.forEach(function(pv) {
+                //    pv.label = App.Fixtures.numberToMonthMap[pv.value];
+                //});
             } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
                 fieldObjWithValue.label = '';
                 fieldObjWithValue.partial = 'yearTelField';
@@ -110,7 +162,7 @@ App.getEmploymentHistoryBlock = function(employmentHistoryObj) {
     }
 
     return newBlock;
-}
+};
 
 App.getEducationHistoryBlock = function(educationHistoryObj) {
     if(Ember.isNone(App.Fixtures.educationHistoryBlock)) {
@@ -124,9 +176,9 @@ App.getEducationHistoryBlock = function(educationHistoryObj) {
             if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
                 fieldObjWithValue.partial = 'monthPicklist';
                 fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
-                fieldObjWithValue.picklistValues.forEach(function(pv) {
+                /*fieldObjWithValue.picklistValues.forEach(function(pv) {
                     pv.label = App.Fixtures.numberToMonthMap[pv.value];
-                });
+                });*/
             } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
                 fieldObjWithValue.label = '';
                 fieldObjWithValue.partial = 'yearTelField';
@@ -160,7 +212,112 @@ App.getEducationHistoryBlock = function(educationHistoryObj) {
     }
 
     return newBlock;
-}
+};
+
+App.getProjectBlock = function(projectObj) {
+    if(Ember.isNone(App.Fixtures.projectBlock)) {
+        App.Fixtures.projectBlock = {
+            fields: []
+        };
+    
+        parsedApplyMap.projectFields.forEach(function(f) {
+            var fieldObjWithValue = JSON.parse(JSON.stringify(f));
+
+            fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            
+            App.Fixtures.projectBlock.fields.addObject(fieldObjWithValue);
+        });
+    }
+    var newBlock = {
+        eId: ++App.EID,
+        fields: []
+    };
+        
+    App.Fixtures.projectBlock.fields.copy(true).forEach(function(f) {
+        newBlock.fields.addObject(Ember.Object.create(f));
+    });
+
+    if (!Ember.isNone(projectObj)) {
+        newBlock.fields.forEach(function(f) {
+            f.set('value', projectObj[f.name]);
+        });
+
+        newBlock.Id = projectObj.Id;
+    }
+
+    return newBlock;
+};
+
+App.getRecommendationBlock = function(recommendationObj) {
+    if(Ember.isNone(App.Fixtures.recommendationBlock)) {
+        App.Fixtures.recommendationBlock = {
+            fields: []
+        };
+    
+        parsedApplyMap.recommendationFields.forEach(function(f) {
+            var fieldObjWithValue = JSON.parse(JSON.stringify(f));
+
+            fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            
+            App.Fixtures.projectBlock.fields.addObject(fieldObjWithValue);
+        });
+    }
+    var newBlock = {
+        eId: ++App.EID,
+        fields: []
+    };
+        
+    App.Fixtures.projectBlock.fields.copy(true).forEach(function(f) {
+        newBlock.fields.addObject(Ember.Object.create(f));
+    });
+
+    if (!Ember.isNone(projectObj)) {
+        newBlock.fields.forEach(function(f) {
+            f.set('value', projectObj[f.name]);
+        });
+
+        newBlock.Id = projectObj.Id;
+    }
+
+    return newBlock;
+};
+
+App.getObjectBlock = function(objName, obj) {
+    var blockName = (objName + ' Block').camelize();
+    var fieldsName = (objName + ' Fields').camelize();
+
+    if(Ember.isNone(App.Fixtures[blockName])) {
+        App.Fixtures[blockName] = {
+            fields: []
+        };
+    
+        parsedApplyMap[fieldsName].forEach(function(f) {
+            var fieldObjWithValue = JSON.parse(JSON.stringify(f));
+
+            fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            
+            App.Fixtures[blockName].fields.addObject(fieldObjWithValue);
+        });
+    }
+    var newBlock = {
+        eId: ++App.EID,
+        fields: []
+    };
+        
+    App.Fixtures[blockName].fields.copy(true).forEach(function(f) {
+        newBlock.fields.addObject(Ember.Object.create(f));
+    });
+
+    if (!Ember.isNone(obj)) {
+        newBlock.fields.forEach(function(f) {
+            f.set('value', obj[f.name]);
+        });
+
+        newBlock.Id = obj.Id;
+    }
+
+    return newBlock;
+};
 
 App.convertLinkedInToEducationHistoryObj = function(educations) {
     return educations.map(function(e) {
@@ -170,9 +327,9 @@ App.convertLinkedInToEducationHistoryObj = function(educations) {
             Education_Level__c: App.Fixtures.degreePicklistValues.indexOf(e.degree) !== -1 ? e.degree : 'Other',
             Name: e.schoolName,
             Status__c: null,
-            Start_Month__c: !Ember.isNone(e.startDate) ? String(e.startDate.month) : null,
+            Start_Month__c: !Ember.isNone(e.startDate) ? App.Fixtures.numberToMonthMap[e.startDate.month] : null,
             Start_Year__c: !Ember.isNone(e.startDate) ? e.startDate.year : null,
-            End_Month__c: !Ember.isNone(e.endDate) ? String(e.endDate.month) : null,
+            End_Month__c: !Ember.isNone(e.endDate) ? App.Fixtures.numberToMonthMap[e.endDate.month] : null,
             End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null
         };
     });
@@ -185,9 +342,9 @@ App.convertLinkedInToEmploymentHistoryObj = function(positions) {
         return {
             Name: !Ember.isNone(p.company) ? p.company.name : null,
             Job_Title__c: p.title,
-            Start_Month__c: !Ember.isNone(p.startDate) ? String(p.startDate.month) : null,
+            Start_Month__c: !Ember.isNone(p.startDate) ? App.Fixtures.numberToMonthMap[p.startDate.month] : null,
             Start_Year__c: !Ember.isNone(p.startDate) ? p.startDate.year : null,
-            End_Month__c: !Ember.isNone(p.endDate) ? String(p.endDate.month) : null,
+            End_Month__c: !Ember.isNone(p.endDate) ? App.Fixtures.numberToMonthMap[p.endDate.month] : null,
             End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
             Is_Current__c: p.isCurrent,
         };
@@ -207,7 +364,7 @@ App.createApplicantRequiredDataObj = function(legalFormElements) {
                     Form_Element__c: fe.Id,
                     Question__c: fe.Text__c,
                     Value__c: ac.Value__c,
-                    namespace_Answer_Choice__c: ac.Id
+                    Answer_Choice__c: ac.Id
                 };
 
                 applicantRequiredData.addObject(applicantRequiredDataObj);
@@ -224,7 +381,7 @@ App.createApplicantRequiredDataObj = function(legalFormElements) {
             if (!Ember.isNone(fe.Answer_Choices__r)) { 
                 var answerChoice = fe.Answer_Choices__r.records.findBy('Value__c', fe.value);
 
-                applicantRequiredDataObj.namespace_Answer_Choice__c = answerChoice.Id;
+                applicantRequiredDataObj.Answer_Choice__c = answerChoice.Id;
             }
 
             applicantRequiredData.addObject(applicantRequiredDataObj);
@@ -329,8 +486,12 @@ App.checkForEmploymentHistoryGaps = function(employmentHistoryObjArray, employme
     var hasGap = false;
 
     employmentHistoryObjArray.forEach(function(eh) {
-        var startDate = moment(eh.Start_Month__c+'/1/'+eh.Start_Year__c, 'M/D/YYYY');
-        var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+'/1/'+eh.End_Year__c, 'M/D/YYYY');
+        if (isNaN(eh.Start_Year__c) || (isNaN(eh.End_Year__c) && eh.Is_Current__c !== true)) { // if any value is invalid, break out and say there's a gap.
+            return true;
+        }
+
+        var startDate = moment(eh.Start_Month__c+' 1 '+eh.Start_Year__c, 'MMMM D YYYY');
+        var endDate = eh.Is_Current__c === true ? moment() : moment(eh.End_Month__c+' 1 '+eh.End_Year__c, 'MMMM D YYYY');
 
         var startDateMs = startDate.valueOf();
         var endDateMs = endDate.valueOf();
@@ -401,7 +562,35 @@ App.checkForBlankEducationHistoryFields = function(currentHistory) {
     });
 
     return hasEmptyField;
-}
+};
+
+App.checkForBlankProjectFields = function(currentProjects) {
+    var hasEmptyField = false;
+
+    currentProjects.getEach('fields').forEach(function(fieldArray) {
+        fieldArray.forEach(function(field) {
+            if (Ember.isEmpty(field.value)) {
+                hasEmptyField = true;
+            }
+        });
+    });
+
+    return hasEmptyField;
+};
+
+App.checkForBlankObjectFields = function(objects) {
+    var hasEmptyField = false;
+
+    objects.getEach('fields').forEach(function(fieldArray) {
+        fieldArray.forEach(function(field) {
+            if (Ember.isEmpty(field.value)) {
+                hasEmptyField = true;
+            }
+        });
+    });
+
+    return hasEmptyField;
+};
 
 var scrollToTop = function() {
     Ember.run.scheduleOnce('afterRender', this, function() {
@@ -443,7 +632,6 @@ App.RadioButtonComponent = Ember.Component.extend({
     }.property('value', 'name'),
     click: function () {
         this.set('name', this.get('value'));
-        this.notifyPropertyChange('name');
     }
 });
 
@@ -467,6 +655,12 @@ App.OnePageView = Ember.View.extend({
         $(document).one('touchstart', function(e) {
             $('#fixZoom').focus();
         });
+
+        if (parent && parent.toggleFooter) {
+            Ember.run.later(this, function() { 
+                parent.toggleFooter();
+            }, 200);
+        }
     }
 });
 
@@ -606,11 +800,6 @@ App.ContactInfoView = Ember.View.extend({
 App.ResumeView = Ember.View.extend({
     afterRenderEvent: function() {
         scrollToTop();
-
-        if (isBackFromDropboxOauth) {
-            isBackFromDropboxOauth = false;
-            this.get('controller').launchDropboxWidget();
-        }
     }
 });
 
@@ -627,6 +816,60 @@ App.EmploymentHistoryView = Ember.View.extend({
 });
 
 App.EducationHistoryView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.ProjectsView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.RecommendationsView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.RecognitionView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.CertificationsView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.TrainingDevelopmentView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.PublicationsView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.PatentsView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.LanguagesView = Ember.View.extend({
+    afterRenderEvent: function() {
+        scrollToTop();
+    }
+});
+
+App.VolunteeringView = Ember.View.extend({
     afterRenderEvent: function() {
         scrollToTop();
     }
@@ -660,6 +903,15 @@ App.Router.map(function() {
         this.resource('skills');
         this.resource('employmentHistory');
         this.resource('educationHistory');
+        this.resource('projects');
+        this.resource('recommendations');
+        this.resource('recognition');
+        this.resource('certifications');
+        this.resource('trainingDevelopment');
+        this.resource('publications');
+        this.resource('patents');
+        this.resource('languages');
+        this.resource('volunteering');
         this.resource('general');
         this.resource('jobSpecific');
         this.resource('legallyRequired');

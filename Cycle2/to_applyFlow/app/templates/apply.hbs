@@ -9,7 +9,9 @@
         <div class="row mar--sm--only--n">
             <div class="column--md--3 pad--sm--only--n" data-qa-container="nav">
                 <ul class="list-group wizardNav show-brkpoint--md mar--md--tn">
-                    {{#link-to "contactInfo" tagName="li" class="list-group__item" disabledWhen="disableContactInfo" data-qa-link="contactInfo"}}<a>{{labels.contactInfo}}</a>{{/link-to}}
+                    {{#if isContactInfoEnabled}}
+                        {{#link-to "contactInfo" tagName="li" class="list-group__item" disabledWhen="disableContactInfo" data-qa-link="contactInfo"}}<a>{{labels.contactInfo}}</a>{{/link-to}}
+                    {{/if}}
                     {{#if isResumeEnabled}}
                         {{#link-to "resume" tagName="li" class="list-group__item" disabledWhen="disableResume" data-qa-link="resume"}}<a>{{labels.resumeHeader}}</a>{{/link-to}}
                     {{/if}}
@@ -21,6 +23,33 @@
                     {{/if}}
                     {{#if isEducationHistoryEnabled}}
                         {{#link-to "educationHistory" tagName="li" class="list-group__item" disabledWhen="disableEducationHistory" data-qa-link="educationHistory"}}<a>{{labels.educationHistory}}</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isProjectsEnabled}}
+                        {{#link-to "projects" tagName="li" class="list-group__item" disabledWhen="disableProjects" data-qa-link="projects"}}<a>Projects</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isRecommendationsEnabled}}
+                        {{#link-to "recommendations" tagName="li" class="list-group__item" disabledWhen="disableRecommendations" data-qa-link="recommendations"}}<a>Recommendations</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isRecognitionEnabled}}
+                        {{#link-to "recognition" tagName="li" class="list-group__item" disabledWhen="disableRecognition" data-qa-link="recognition"}}<a>Recognition</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isCertificationsEnabled}}
+                        {{#link-to "certifications" tagName="li" class="list-group__item" disabledWhen="disableCertifications" data-qa-link="certifications"}}<a>Certifications</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isTrainingDevelopmentEnabled}}
+                        {{#link-to "trainingDevelopment" tagName="li" class="list-group__item" disabledWhen="disableTrainingDevelopment" data-qa-link="trainingDevelopment"}}<a>Training & Development</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isPublicationsEnabled}}
+                        {{#link-to "publications" tagName="li" class="list-group__item" disabledWhen="disablePublications" data-qa-link="publications"}}<a>Publications</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isPatentsEnabled}}
+                        {{#link-to "patents" tagName="li" class="list-group__item" disabledWhen="disablePatents" data-qa-link="patents"}}<a>Patents</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isLanguagesEnabled}}
+                        {{#link-to "languages" tagName="li" class="list-group__item" disabledWhen="disableLanguages" data-qa-link="languages"}}<a>Languages</a>{{/link-to}}
+                    {{/if}}
+                    {{#if isVolunteeringEnabled}}
+                        {{#link-to "volunteering" tagName="li" class="list-group__item" disabledWhen="disableVolunteering" data-qa-link="volunteering"}}<a>Volunteering</a>{{/link-to}}
                     {{/if}}
                     {{#unless isGeneralEmpty}}
                         {{#link-to "general" tagName="li" class="list-group__item" disabledWhen="disableGeneral" data-qa-link="general"}}<a>{{labels.general}}</a>{{/link-to}}

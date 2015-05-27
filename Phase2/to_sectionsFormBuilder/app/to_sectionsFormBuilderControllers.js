@@ -15,7 +15,6 @@ App.FormBuilderController = Ember.ObjectController.extend(App.FormBuilderMixin, 
         return App.Fixtures.get('currentSection') === 'Legal';
     }.property('App.Fixtures.currentSection'),
     isInOnePage: function() {
-        console.log(this.get('currentPath'));
         return this.get('currentPath') === 'formBuilder.onePage';
     }.property('currentPath'),
     formElements: function() {
@@ -94,15 +93,21 @@ App.AnswerController = Ember.ObjectController.extend(App.AnswerMixin, App.Sectio
     isInLegalBinding: 'controllers.formBuilder.isInLegal'
 });
 
+App.ContactInfoController = Ember.ObjectController.extend({
+    isInternal: function() {
+        return App.Fixtures.get('currentHiringModel') == 'Internal';
+    }.property('App.Fixtures.currentHiringModel')
+});
+
 App.ApplicationSectionController = Ember.ObjectController.extend({
+    isInternal: function() {
+        return App.Fixtures.get('currentHiringModel') == 'Internal';
+    }.property('App.Fixtures.currentHiringModel'),
     employmentHistoryYears: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 });
 
 App.FieldController = Ember.ObjectController.extend({
     isRequired: function() {
-        console.log(this.get('model'));
-        console.log(this.get('isDBRequired'));
-        console.log(this.get('isFieldSetRequired'));
         return this.get('isDBRequired') === true || this.get('isFieldSetRequired') === true;
     }.property('isDBRequired', 'isFieldSetRequired')
 });
