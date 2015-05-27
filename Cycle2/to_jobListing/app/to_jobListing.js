@@ -306,6 +306,8 @@ App.JobPostingController = Ember.ObjectController.extend({
                     && ['Extended', 'Accepted', 'Declined'].indexOf(application.Job_Offers__r.records[0].Status__c) !== -1) {
             return 'View Offer'//labels.viewOffer;
         } else if(!Ember.isNone(application) && application.Status__c === 'In Progress'){
+            console.log('adsdasdsa')
+            console.log(application)
             return 'Finish' //labels.finish;
         } else {
             return 'Apply <span class="show-brkpoint--md">Now</span>' //labels.apply + ' <span class="show-brkpoint--md">' + labels.now + '</span>'

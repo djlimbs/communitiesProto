@@ -23,31 +23,19 @@ function program1(depth0,data) {
 
 function program3(depth0,data) {
   
-  var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n                                    <a data-qa-link=\"talentProfile\" ");
-  hashContexts = {'href': depth0};
-  hashTypes = {'href': "STRING"};
-  options = {hash:{
-    'href': ("downloadUrl")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push("> ");
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                    <span class=\"juicon\">\n                                        <svg version=\"1.0\" id=\"Layer_1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" x=\"0px\" y=\"0px\"\n                                             width=\"13px\" height=\"16px\" viewBox=\"0 0 13 16\" style=\"enable-background:new 0 0 13 16;\" xml:space=\"preserve\">\n                                        <style type=\"text/css\">\n                                        <![CDATA[\n                                            .st0{fill:#8d9aa5;}\n                                        ]]>\n                                        </style>\n                                        <path class=\"st0\" d=\"M5.372,11.937c0.065,0.111,0.075,0.246,0.026,0.366c-0.049,0.118-0.152,0.208-0.276,0.239\n                                            c-1.415,0.364-2.709,0.765-3.252,2.013c-0.102,0.231-0.09,0.498,0.032,0.721c0.122,0.222,0.342,0.376,0.592,0.413\n                                            C3.801,15.891,5.138,16,6.5,16s2.699-0.109,4.005-0.312c0.252-0.037,0.47-0.191,0.592-0.413s0.136-0.489,0.033-0.721\n                                            c-0.544-1.25-1.84-1.651-3.258-2.014c-0.124-0.032-0.226-0.119-0.276-0.236c-0.049-0.118-0.042-0.253,0.022-0.363\n                                            c0.564-0.985,0.927-2.033,0.927-2.487C8.545,8.099,7.856,7,6.5,7C5.145,7,4.454,8.099,4.454,9.454\n                                            C4.454,10.099,4.812,10.999,5.372,11.937z\"/>\n                                        <path class=\"st0\" d=\"M4.65,5.987L4.762,6C5.125,5.829,5.972,5.435,6.5,5.171C7.029,5.435,7.874,5.829,8.237,6L8.35,5.987L8.396,5.88\n                                            C8.359,5.47,8.267,4.528,8.185,3.917c0.428-0.453,1.037-1.196,1.295-1.513L9.498,2.29L9.415,2.211\n                                            C9.036,2.124,8.149,1.923,7.556,1.821C7.276,1.25,6.801,0.412,6.597,0.057L6.5,0L6.403,0.057C6.2,0.412,5.725,1.25,5.444,1.821\n                                            c-0.594,0.103-1.48,0.303-1.86,0.391L3.502,2.29l0.021,0.114C3.78,2.721,4.39,3.464,4.814,3.917C4.732,4.528,4.642,5.47,4.604,5.88\n                                            L4.65,5.987z\"/>\n                                        </svg>\n                                    </span>\n                                    <a ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.cardResume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" (");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.formatSize || (depth0 && depth0.formatSize)),stack1 ? stack1.call(depth0, "resume.ContentSize", options) : helperMissing.call(depth0, "formatSize", "resume.ContentSize", options))));
-  data.buffer.push(")</a>\n                                ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "viewTalentProfile", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-link=\"talentProfile\" href=\"#\"> Talent Profile</a>\n                                ");
   return buffer;
   }
 
 function program5(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                                    ");
+  data.buffer.push("\n                                    <span class=\"juicon juicon-document\"></span>\n                                    ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "resume", {hash:{},inverse:self.program(8, program8, data),fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
@@ -276,7 +264,7 @@ function program24(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "employmentText", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</small>\n                </div>\n                <div class=\"row mar--sm--ts mar--sm--bs\">\n                    <div class=\"column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn\">\n                        <small class=\"block dots\" data-qa-label=\"noResume\">\n                            <label>\n                                <span class=\"juicon juicon-document\"></span>\n                                ");
+  data.buffer.push("</small>\n                </div>\n                <div class=\"row mar--sm--ts mar--sm--bs\">\n                    <div class=\"column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn\">\n                        <small class=\"block dots\" data-qa-label=\"noResume\">\n                            <label>\n                                ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "isInternal", {hash:{},inverse:self.program(5, program5, data),fn:self.program(3, program3, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
