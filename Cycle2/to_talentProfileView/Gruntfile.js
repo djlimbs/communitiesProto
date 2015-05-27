@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      '/Volumes/s3.amazonaws.com/toprototype1/Cycle1_Phase3/to_talentProfileView.pck.js': 'app/to_talentProfileView_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle2/to_talentProfileView.pck.js': 'app/to_talentProfileView_compiler.js'
     },
 
     /*

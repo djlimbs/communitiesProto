@@ -50,11 +50,11 @@ App.OnePageController = Ember.ObjectController.extend({
                 var fileName = model.resume.resumeFileName;
                 var alreadyUploaded = model.resume.alreadyUploaded;
                 var $iframe = $('iframe#theIframe').contents();
-                var personalStatement = null;
+                var professionalSummary = null;
                 var resumeBaseUrl = null;
 
-                if (model.resume.isPersonalStatementEnabled) {
-                    personalStatement = model.resume.personalStatement;
+                if (model.resume.isProfessionalSummaryEnabled) {
+                    professionalSummary = model.resume.professionalSummary;
                 }
 
                 if (model.resume.isAddResumeEnabled === true && alreadyUploaded !== true) {
@@ -68,7 +68,7 @@ App.OnePageController = Ember.ObjectController.extend({
 
                             if (Ember.isEmpty(parsedResult.errorMessages)) {
                                 $iframe.find('.fileInput').off('change');
-                                cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, false, function(resumeRes, resumeEvt) {
+                                cont.completeResumeSection(resumeBaseUrl, professionalSummary, appId, false, function(resumeRes, resumeEvt) {
                                     if (resumeRes) {
                                         var parsedResumeResult = parseResult(resumeRes);
 
@@ -100,7 +100,7 @@ App.OnePageController = Ember.ObjectController.extend({
                             self.set('errorMessage', errorMessage);
                             reject(self);
                         } else {
-                            cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, false, function(resumeRes, resumeEvt) {
+                            cont.completeResumeSection(resumeBaseUrl, professionalSummary, appId, false, function(resumeRes, resumeEvt) {
                                 if (resumeRes) {
                                     var parsedResumeResult = parseResult(resumeRes);
 
@@ -115,8 +115,8 @@ App.OnePageController = Ember.ObjectController.extend({
                             });
                         }
                     });
-                } else if (model.resume.isPersonalStatementEnabled === true) {
-                    cont.completeResumeSection(resumeBaseUrl, personalStatement, appId, false, function(resumeRes, resumeEvt) {
+                } else if (model.resume.isProfessionalSummaryEnabled === true) {
+                    cont.completeResumeSection(resumeBaseUrl, professionalSummary, appId, false, function(resumeRes, resumeEvt) {
                         if (resumeRes) {
                             var parsedResumeResult = parseResult(resumeRes);
 
@@ -144,7 +144,10 @@ App.OnePageController = Ember.ObjectController.extend({
             var employmentHistoryController = self.get('controllers.employmentHistory');
             var educationHistoryController = self.get('controllers.educationHistory');
 
-            self.set('errorMessage', null);
+            self.setProperties({
+                errorMessage: null,
+                hasStrongTag: null
+            });
 
             saveObj.contactInfo = JSON.stringify(App.buildContactSaveObj(model));
 
@@ -190,7 +193,8 @@ App.OnePageController = Ember.ObjectController.extend({
             }
 
             if (!Ember.isEmpty(errorObj.message)) {
-                self.set('errorMessage', '<strong>There are some problems with your information:</strong><br/><ul class="pad--sm--ll">' + errorObj.message + '</ul>');
+                self.set('errorMessage', '<strong>' + labels.thereAreSomeProblemsWithYouInfo + ':</strong><br/><ul class="pad--sm--ll">' + errorObj.message + '</ul>');
+                self.set('hasStrongTag', true);
                 reject(self);
             } else {
                 cont.saveAppSectionsExceptResume(JSON.stringify(saveObj), function(res, evt) {
@@ -238,7 +242,9 @@ App.ApplyController = Ember.ObjectController.extend({
         return this.get(incompleteProperty) || this.get('showSavingNotification') === true;
     }.property('currentPath', 'isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
                     'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
-                    'showSavingNotification'),
+                    'isProjectsIncomplete', 'isRecommendationsIncomplete', 'isRecognitionIncomplete', 'isCertificationsIncomplete', 
+                    'isTrainingDevelopmentIncomplete', 'isPublicationsIncomplete', 'isPatentsIncomplete', 'isLanguagesIncomplete', 
+                    'isVolunteeringIncomplete', 'showSavingNotification'),
     disablePrevious: Ember.computed.equal('showSavingNotification', true),
     disableContactInfo: function() {
         return this.get('showSavingNotification');
@@ -247,40 +253,69 @@ App.ApplyController = Ember.ObjectController.extend({
         return this.get('isContactInfoIncomplete') || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'showSavingNotification'),
     disableSkills: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('showSavingNotification');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'showSavingNotification'),
+        return this.get('disableResume') || this.get('isResumeIncomplete') || this.get('showSavingNotification');
+    }.property('disableResume', 'isResumeIncomplete', 'showSavingNotification'),
     disableEmploymentHistory: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') || this.get('isSkillsIncomplete')
-                    || this.get('showSavingNotification');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'showSavingNotification'),
+        return this.get('disableSkills') || this.get('isSkillsIncomplete') || this.get('showSavingNotification');
+    }.property('disableSkills', 'isSkillsIncomplete', 'showSavingNotification'),
     disableEducationHistory: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
+        return this.get('disableEmploymentHistory') || this.get('isEmploymentHistoryIncomplete')
                         || this.get('showSavingNotification');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
-                'showSavingNotification'),
+    }.property('disableEmploymentHistory', 'isEmploymentHistoryIncomplete','showSavingNotification'),
+    disableProjects: function() {
+        return this.get('disableEducationHistory')
+                        || this.get('isEducationHistoryIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableEducationHistory', 'isEducationHistoryIncomplete', 'showSavingNotification'),
+    disableRecommendations: function() {
+        return this.get('disableProjects')
+                        || this.get('isProjectsIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableProjects', 'isProjectsIncomplete', 'showSavingNotification'),
+    disableRecognition: function() {
+        return this.get('disableRecommendations')
+                        || this.get('isRecommendationsIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableRecommendations', 'isRecommendationsIncomplete', 'showSavingNotification'),
+    disableCertifications: function() {
+        return this.get('disableRecognition')
+                        || this.get('isRecognitionIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableRecognition', 'isRecognitionIncomplete', 'showSavingNotification'),
+    disableTrainingDevelopment: function() {
+        return this.get('disableCertifications')
+                        || this.get('isCertificationsIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableCertifications', 'isCertificationsIncomplete', 'showSavingNotification'),
+    disablePublications: function() {
+        return this.get('disableTrainingDevelopment')
+                        || this.get('isTrainingDevelopmentIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableTrainingDevelopment', 'isTrainingDevelopmentIncomplete', 'showSavingNotification'),
+    disablePatents: function() {
+        return this.get('disablePublications')
+                        || this.get('isPublicationsIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disablePublications', 'isPublicationsIncomplete', 'showSavingNotification'),
+    disableLanguages: function() {
+        return this.get('disablePatents')
+                        || this.get('isPatentsIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disablePatents', 'isPatentsIncomplete', 'showSavingNotification'),
+    disableVolunteering: function() {
+        return this.get('disableLanguages')
+                        || this.get('isLanguagesIncomplete')
+                        || this.get('showSavingNotification');
+    }.property('disableLanguages', 'isLanguagesIncomplete', 'showSavingNotification'),
     disableGeneral: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-                       || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-                       || this.get('isEducationHistoryIncomplete') || this.get('showSavingNotification');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
-                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'showSavingNotification'),
+        return this.get('disableVolunteering') || this.get('isVolunteeringIncomplete') || this.get('showSavingNotification');
+    }.property('disableVolunteering', 'isVolunteeringIncomplete', 'showSavingNotification'),
     disableJobSpecific: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete')
-                        || this.get('showSavingNotification');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
-                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 'isGeneralIncomplete', 
-                            'showSavingNotification'),
+        return this.get('disableGeneral') || this.get('isGeneralIncomplete') || this.get('showSavingNotification');
+    }.property('disableGeneral', 'isGeneralIncomplete','showSavingNotification'),
     disableLegallyRequired: function() {
-        return this.get('isContactInfoIncomplete') || this.get('isResumeIncomplete') 
-                        || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
-                        || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') 
-                        || this.get('isJobSpecificIncomplete') || this.get('showSavingNotification');
-    }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 
-                            'isEmploymentHistoryIncomplete', 'isEducationHistoryIncomplete', 
-                            'isGeneralIncomplete', 'isJobSpecificIncomplete', 'showSavingNotification'),
+        return this.get('disableJobSpecific') || this.get('isJobSpecificIncomplete') || this.get('showSavingNotification');
+    }.property('disableJobSpecific', 'isJobSpecificIncomplete', 'showSavingNotification'),
     actions: {
         clickNext: function() {
             var currentPath = this.get('currentPath');
@@ -450,135 +485,20 @@ App.ContactInfoController = Ember.ObjectController.extend({
     }
 });
 
-App.DropboxElementController = Ember.ObjectController.extend({
-    isSelected: function() {
-        return this.get('path') === this.get('selectedFile');
-    }.property('path', 'selectedFile'),
-    actions: {
-        clickElement: function() {
-            var is_dir = this.get('is_dir');
-            var path = this.get('path');
-            var name = this.get('name');
-
-            if (is_dir) {
-                this.send('clickFolder', path, name);
-            } else {
-                this.send('clickFile', path);
-                this.set('selectedFile', path);
-            }
-        }
-    }
-});
-
 App.ResumeController = Ember.ObjectController.extend({
     needs: ['apply'],
     isOnePageBinding: 'controllers.apply.isOnePage',
     errorMessageBinding: 'controllers.apply.errorMessage',
-    uploadFromDropboxBinding: 'controllers.apply.uploadFromDropbox',
-    backList: [],
-    backNameList: [],
-    dropboxContent: [],
-    logoPath: function() {
-        return dropboxPath + '/logo.png';
-    }.property(),
-    currentDropboxFolder: 'Home',
     fileToUploadDidChange: function() {
         var resumeFileName = this.get('resumeFileName');
-        var personalStatement = this.get('personalStatement');
+        var professionalSummary = this.get('professionalSummary');
         var isAddResumeEnabled = this.get('isAddResumeEnabled');
-        var isPersonalStatementEnabled = this.get('isPersonalStatementEnabled');
+        var isProfessionalSummaryEnabled = this.get('isProfessionalSummaryEnabled');
 
-        var isResumeIncomplete = (isAddResumeEnabled === true && Ember.isEmpty(resumeFileName)) || (isPersonalStatementEnabled && Ember.isEmpty(personalStatement));
+        var isResumeIncomplete = (isAddResumeEnabled === true && Ember.isEmpty(resumeFileName)) || (isProfessionalSummaryEnabled && Ember.isEmpty(professionalSummary));
 
         this.get('controllers.apply').set('isResumeIncomplete', isResumeIncomplete);
-    }.observes('resumeFileName', 'personalStatement'),
-    formattedDropboxContent: function() {
-        return this.get('dropboxContent').map(function(c) {
-            return {
-                name: c.path.substr(1, c.path.length),
-                path: c.path,
-                iconUrl: dropboxPath + '/icons/' + c.icon + '.png',
-                is_dir: c.is_dir
-            };
-        });
-    }.property('dropboxContent'),
-    getDropboxContent: function() {
-        var self = this;
-        var token = this.get('token');
-        var uploadFromDropbox = this.get('uploadFromDropbox');
-
-        if (!Ember.isEmpty(token) && uploadFromDropbox === true) {
-            var metaDataUrl = 'https://api.dropbox.com/1/metadata/auto/'
-            var accountInfoUrl = 'https://api.dropbox.com/1/account/info';
-
-            $.ajax(
-                {
-                    url: metaDataUrl,
-                    type: 'GET',
-                    cache: false,
-                    headers: {
-                        Authorization: 'Bearer ' + token
-                    },
-                    complete: function(metaJqXHR, metaTextStatus) {
-                        var metaRes = JSON.parse(metaJqXHR.responseText);
-                        var rootContents = metaRes.contents;
-                        self.set('dropboxContent', rootContents);
-                        self.set('pendingBackTarget', {
-                            path: '',
-                            name: 'Home'
-                        });
-                        console.log(metaRes);
-                    }
-                }
-            );
-
-            $.ajax(
-                {
-                    url: accountInfoUrl,
-                    type: 'Get',
-                    cache: false,
-                    headers: {
-                        Authorization: 'Bearer ' + token
-                    },
-                    complete: function(accountJqXHR, accountTextStatus) {
-                        var accountRes = JSON.parse(accountJqXHR.responseText);
-                        self.set('displayName', accountRes.display_name);
-                    }
-                }
-            );
-        }
-    }.observes('token', 'uploadFromDropbox'),
-    launchDropboxWidget: function() {
-        var self = this;
-        var currentUrl = parent.window.location.href;
-        var dropboxCode = parent.getUrlParameter('code');
-        var tokenUrl = 'https://api.dropbox.com/1/oauth2/token';
-        var postParams = {
-            code: dropboxCode,
-            client_id: 'nyope4fblmw0tcr',
-            client_secret: '9c5gnis7pa9hzvt',
-            grant_type: 'authorization_code',
-            redirect_uri: 'https://toproto1-developer-edition.na24.force.com/career/s/Apply?id=a0d1a000000RQHy&linkedIn=null'
-        };
-
-        $.ajax(
-            {
-                url: tokenUrl,
-                type: 'POST',
-                cache: false,
-                data: postParams,
-                complete: function(jqXHR, textStatus) {
-                    var res = JSON.parse(jqXHR.responseText);
-                    var token = res.access_token;
-                    var reqHeader = 'Authorization: Bearer ' + token;
-                    
-
-                    self.set('token', token);
-
-                }
-            }
-        );
-    },
+    }.observes('resumeFileName', 'professionalSummary'),
     actions: {
         clickUploadFromDevice: function() {
             var fileInput = $('iframe#theIframe').contents().find('input.fileInput');
@@ -586,23 +506,8 @@ App.ResumeController = Ember.ObjectController.extend({
         },
         clickUploadFromDropbox: function(){
             var self = this;
-            var token = this.get('token');
             var currentFileName = this.get('resumeFileName');
-            var currentUrl = parent.window.location.href;
-            var redirectUrl = currentUrl.split('?')[0];
-            var state = currentUrl.split('?')[1];
-
-            /*parent.window.location.href = 'https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=nyope4fblmw0tcr&redirect_uri=' 
-                                        + redirectUrl
-                                        + '&state=' + state.replace(/&/g, '%26');*/
-            if (Ember.isEmpty(token)) {
-                parent.window.location.href = 'https://www.dropbox.com/1/oauth2/authorize?response_type=code&client_id=nyope4fblmw0tcr&redirect_uri=' 
-                                        + currentUrl.replace(/&/g, '%26')
-                                        + '&state=resumeFromDropbox';
-            } else {
-                this.set('uploadFromDropbox', true);
-            }
-            /*Dropbox.choose({
+            Dropbox.choose({
                 success: function(file){
                     $('iframe#theIframe').contents().find('.fileInput').val('');
                     self.set('resumeFileName', file[0].link);
@@ -612,126 +517,10 @@ App.ResumeController = Ember.ObjectController.extend({
                 linktype : 'preview',
                 multiselect : false,
                 extensions : ['.pdf', '.doc', '.docx']
-            });*/
-        },
-        clearPersonalStatement: function(){
-            this.set('personalStatement', '');
-        },
-        clickBack: function() {
-            var self = this;
-            var token = this.get('token');
-            var backObject = this.get('backList').popObject();
-            var lastObject = this.get('backList').get('lastObject');
-            var path = backObject.path;
-            if (path === '' || path === null) {
-                this.set('pendingBackTarget', {
-                    name: 'Home',
-                    path: ''
-                });
-
-                if (path === null) {
-                    return;
-                }
-            }
-
-            var metaDataUrl = 'https://api.dropbox.com/1/metadata/auto/' + path;
-            $.ajax(
-                {
-                    url: metaDataUrl,
-                    type: 'GET',
-                    cache: false,
-                    headers: {
-                        Authorization: 'Bearer ' + token
-                    },
-                    complete: function(metaJqXHR, metaTextStatus) {
-                        var metaRes = JSON.parse(metaJqXHR.responseText);
-                        var rootContents = metaRes.contents;
-                        self.set('dropboxContent', rootContents);
-                        if (!Ember.isNone(lastObject)) {
-                            self.set('backFolder', lastObject.name);
-                        } else {
-                            self.set('backFolder', '');
-                        }
-                        self.set('currentDropboxFolder', backObject.name);
-                    }
-                }
-            );
-        },
-        clickFolder: function(path, name) {
-            var self = this;
-            var token = this.get('token');
-            var metaDataUrl = 'https://api.dropbox.com/1/metadata/auto/' + path;
-            var pendingBackTarget = this.get('pendingBackTarget');
-            this.set('backFolder', pendingBackTarget.name);
-            this.get('backList').pushObject(pendingBackTarget);
-            this.set('pendingBackTarget', {
-                name: name,
-                path: path
             });
-            this.set('currentDropboxFolder', name);
-            $.ajax(
-                {
-                    url: metaDataUrl,
-                    type: 'GET',
-                    cache: false,
-                    headers: {
-                        Authorization: 'Bearer ' + token
-                    },
-                    complete: function(metaJqXHR, metaTextStatus) {
-                        var metaRes = JSON.parse(metaJqXHR.responseText);
-                        var rootContents = metaRes.contents;
-                        self.set('backTarget', pendingBackTarget);
-                        self.set('dropboxContent', rootContents);
-                    }
-                }
-            );
         },
-        clickFile: function(path) {
-            var self = this;
-            var token = this.get('token');
-            var fileUrl = 'https://api.dropbox.com/1/shares/auto/' + path;
-            $.ajax(
-                {
-                    url: fileUrl,
-                    type: 'POST',
-                    cache: false,
-                    data: {
-                        short_url: false
-                    },
-                    headers: {
-                        Authorization: 'Bearer ' + token
-                    },
-                    complete: function(fileJqXHR, fileTextStatus) {
-                        var fileRes = JSON.parse(fileJqXHR.responseText);
-                        var fileUrl = fileRes.url;
-                        self.set('highlightedFile', fileUrl);
-
-                        /*self.set('uploadFromDropbox', false);
-                        self.set('resumeFileName', fileUrl);
-                        self.set('isFromDropbox', true);
-                        self.set('alreadyUploaded', false);*/
-                        
-                        //self.set('uploadFromDropbox', false);
-                        /*if(parent.window.confirm('Use this file?')) {
-                            self.set('uploadFromDropbox', false);
-                            self.set('resumeFileName', fileUrl);
-                            self.set('isFromDropbox', true);
-                            self.set('alreadyUploaded', false);
-                        }*/
-                    }
-                }
-            );
-        },
-        clickChoose: function() {
-            var fileUrl = this.get('highlightedFile');
-            this.set('uploadFromDropbox', false);
-            this.set('resumeFileName', fileUrl);
-            this.set('isFromDropbox', true);
-            this.set('alreadyUploaded', false);
-        },
-        clickCancel: function() {
-            this.set('highlightedFile', null);
-            this.set('uploadFromDropbox', false);
+        clearProfessionalSummary: function(){
+            this.set('professionalSummary', '');
         }
     }
 });
@@ -909,4 +698,100 @@ App.FormElementController = Ember.ObjectController.extend({
     didCheckboxChange: function() {
         this.get('parentController').notifyPropertyChange('[].@each.value');
     }.observes('answerChoices.@each.isChecked')
+});
+
+App.AdditionalInfoFieldController = Ember.ObjectController.extend({
+    valuesDidChange: function() {
+        this.get('parentController').notifyPropertyChange('fields');
+    }.observes('value')
+});
+
+App.AdditionalInfoMixin = Ember.Mixin.create({
+    needs: ['apply'],
+    isOnePageBinding: 'controllers.apply.isOnePage',
+    isHistorySection: true,
+    aIDidChenge: function() {
+        var currentProjects = this.get('[]');
+        var incompleteFieldName = this.get('incompleteFieldName');
+        var hasEmptyField = App.checkForBlankObjectFields(currentProjects);
+
+        this.get('controllers.apply').set(incompleteFieldName, hasEmptyField);
+    }.observes('[]', '[].@each.fields'),
+    actions: {
+        clickAddAI: function() {
+            var blockName = this.get('blockName');
+            var projectBlock = App.getObjectBlock(blockName);
+            this.get('[]').addObject(projectBlock);
+        },
+        clickDeleteAI: function(aIToDelete) {
+            var deletedArrayName = this.get('deletedArrayName');
+            if (!Ember.isNone(aIToDelete.Id)) {
+                this.get(deletedArrayName).addObject(aIToDelete.Id);
+            }
+            this.get('[]').removeObject(aIToDelete);
+        }
+    }
+});
+
+App.ProjectsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
+    blockName: 'project',
+    deletedArrayName: 'deletedProjects',
+    incompleteFieldName: 'isProjectsIncomplete',
+    deletedProjects: []
+});
+
+App.RecommendationsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
+    blockName: 'recommendation',
+    deletedArrayName: 'deletedRecommendations',
+    incompleteFieldName: 'isRecommendationsIncomplete',
+    deletedRecommendations: []
+});
+
+App.RecognitionController = Ember.ArrayController.extend({
+    blockName: 'recognition',
+    deletedArrayName: 'deletedRecognitions',
+    incompleteFieldName: 'isRecognitionIncomplete',
+    deletedRecognitions: []
+});
+
+App.CertificationsController = Ember.ArrayController.extend({
+    blockName: 'certification',
+    deletedArrayName: 'deletedCertifications',
+    incompleteFieldName: 'isCertificationsIncomplete',
+    deletedCertifications: []
+});
+
+App.TrainingDevelopmentController = Ember.ArrayController.extend({
+    blockName: 'trainingDevelopment',
+    deletedArrayName: 'deletedTrainingDevelopments',
+    incompleteFieldName: 'isTrainingDevelopmentIncomplete',
+    deletedTrainingDevelopments: []
+});
+
+App.PublicationsController = Ember.ArrayController.extend({
+    blockName: 'publication',
+    deletedArrayName: 'deletedPublications',
+    incompleteFieldName: 'isPublicationsIncomplete',
+    deletedPublications: []
+});
+
+App.PatentsController = Ember.ArrayController.extend({
+    blockName: 'patent',
+    deletedArrayName: 'deletedPatents',
+    incompleteFieldName: 'isPatentsIncomplete',
+    deletedPatents: []
+});
+
+App.LanguagesController = Ember.ArrayController.extend({
+    blockName: 'language',
+    deletedArrayName: 'deletedLanguages',
+    incompleteFieldName: 'isLanguagesIncomplete',
+    deletedLanguages: []
+});
+
+App.VolunteeringController = Ember.ArrayController.extend({
+    blockName: 'volunteering',
+    deletedArrayName: 'deletedVolunteerings',
+    incompleteFieldName: 'isVolunteeringIncomplete',
+    deletedVolunteerings: []
 });

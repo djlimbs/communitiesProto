@@ -1,0 +1,138 @@
+<div {{bind-attr class=":load-full showLoadingState::hide"}}>
+    <div class="load-full-icon"></div>
+</div>
+
+<div class="pad--md--bm content pad--md--tm pad--md--bn pad--sm--only--n pad--sm--tm">
+    <div data-qa-label='error' {{bind-attr class=":alert :alert--error :mar--sm--bm showAlert::hide"}}>
+        <button type="button" class="close" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">{{labels.close}}</span></button>
+        </button>
+        {{#each errorMsg}}
+            {{.}} <br/>
+        {{/each}}
+    </div>
+
+    <nav id="formBuildNav" class="nav-bar--sf1 mar--sm--bn">
+        <button data-qa-button="filter" {{action "saveModalState"}} class="float--right button button--secondary mar--sm--only--rs filterButton" data-toggle="modal" data-target="#myModal"><span class="show-brkpoint--md">{{labels.filter}}</span> <span class="juicon juicon-funnel"></span></button>
+        <button data-qa-button="sort" {{action "saveModalState"}} class="float--right-left button button--secondary mar--sm--ls mar--md--rs sortButton" data-toggle="modal" data-target="#sortModal"><span class="show-brkpoint--md">{{labels.sort}}</span> <span class="juicon juicon-flip"></span></button>
+
+        <h1 data-qa-label="title" class="nav-bar--sf1__title has-subtitle has-subheading page__heading">{{labels.applicants}}</h1>
+        <h2 data-qa-label="jobTitle" class="nav-bar--sf1__subtitle page__subheading">{{jobTitle}}</h2>
+    </nav>
+    <!-- Sort Modal -->
+    <div class="modal fade" data-backdrop="static" id="sortModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal__shell">
+            <div class="modal__content">
+                <div class="modal__top">
+                    <button data-qa-button="close" {{action "restoreModalState"}} type="button" class="close" data-dismiss="modal">
+                        <span class="close-modal-x"></span><span class="sr-only">{{labels.close}}</span>
+                    </button>
+                    <h2 data-qa-label="sortApplicants" class="modal__heading" id="sortModalLabel">{{labels.sortApplicants}}</h2>
+                </div>
+                <div class="modal__body">
+                    <div class="form__group">
+                        <label data-qa-label="sortBy" for="filterStage">{{labels.sortBy}}</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" data-qa-select="sort" content=sortOptions value=selectedSort optionLabelPath="content.label" optionValuePath="content.value"}}
+                        </div>
+                        <small class="input-error-content">You need stuff in this thing</small>
+                    </div>
+                </div>
+                <div class="modal__footer">
+                    <button data-qa-button="cancel" {{action "restoreModalState"}} type="button" class="button button--secondary" data-dismiss="modal">{{labels.cancel}}</button>
+                    <button data-qa-button="ok" {{action "filterApps"}} type="button" class="button button--primary filterOK" data-dismiss="modal">{{labels.ok}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Modal -->
+    <div class="modal fade" data-backdrop="static" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal__shell">
+            <div class="modal__content">
+                <div class="modal__top">
+                    <button data-qa-button="close" {{action "restoreModalState"}} type="button" class="close" data-dismiss="modal">
+                        <span class="close-modal-x"></span><span class="sr-only">{{labels.close}}</span>
+                    </button>
+                    <h2 data-qa-label="filterApplicants" class="modal__heading" id="myModalLabel">{{labels.filterApplicants}}</h2>
+                </div>
+                <div class="modal__body">
+                    <div class="form__group">
+                        <label data-qa-label="stage" for="filterStage">{{labels.stageFilter}}</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" data-qa-select="stage" content=stages value=selectedStage optionLabelPath="content.label" optionValuePath="content.value"}}
+                        </div>
+                        <small class="input-error-content">You need stuff in this thing</small>
+                    </div>
+                    <div class="form__group">
+                        <label data-qa-label="status" for="filterStatus">{{labels.statusFilter}}</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" data-qa-select="status" content=status value=selectedStatus optionLabelPath="content.label" optionValuePath="content.value"}}
+                        </div>
+                        <small class="input-error-content">You need stuff in this thing</small>
+                    </div>
+                    <div class="form__group">
+                        <label data-qa-label="source" for="filterStatus">{{labels.sourceFilter}}Source</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" data-qa-select="source" content=source value=selectedSource optionLabelPath="content.label" optionValuePath="content.value"}}
+                        </div>
+                        <small class="input-error-content">You need stuff in this thing</small>
+                    </div>
+                    <ul class="form__group list-style-type-none">
+                        <li class="form__group mar--sm--tm">
+                            <label><span class="part__left--fixed pad--sm--rn">{{input type="checkbox" data-qa-checkbox="showRejected" checked=showRejected}}</span><span data-qa-label="showRejected" class="part__body">{{labels.showRejected}}</span></label>
+                        </li>
+                        <li class="form__group mar--sm--tm">
+                            <label><span class="part__left--fixed pad--sm--rn">{{input type="checkbox" data-qa-checkbox="showWithdrew" checked=showWithdrawn}}</span><span data-qa-label="showWithdrew" class="part__body">{{labels.showWithdrew}}</span></label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal__footer">
+                    <button {{action "restoreModalState"}} data-qa-button="cancel" type="button" class="button button--secondary" data-dismiss="modal">{{labels.cancel}}</button>
+                    <button {{action "filterApps"}} data-qa-button="ok" type="button" class="button button--primary filterOK" data-dismiss="modal">{{labels.ok}}</button>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+    <!-- Applicant Modal -->
+    <div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal__shell">
+            <div class="modal__content">
+                <div class="modal__top pad--sm--m">
+                    <button data-qa-button="close" type="button" class="close" data-dismiss="modal">
+                        <span class="close-modal-x"></span><span class="sr-only">{{labels.close}}</span>
+                    </button>
+                    <h3 data-qa-label="applications" class="modal__heading" id="myModalLabel">{{labels.otherApplications}}</h3>
+                    <h4 data-qa-label="name" class="mar--sm--n"><span class="text-faded ">{{modalApplicantName}}</span></h4>
+                </div>
+                <div class="modal__body pad--sm--n">
+                    {{#each modalAppsToDisplay itemController="app"}}
+                        {{view "modalApplicant"}}
+                    {{/each}}
+                </div>
+                <div class="modal__footer pad--sm--m">
+                    <button type="button" class="button button--secondary" data-dismiss="modal">{{labels.close}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr class="show-brkpoint--md mar--sm--bn"/>
+    <p data-qa-label="emptyState" {{bind-attr class=":text-faded :text-center :ad--md--xl showEmptyState::hide"}}>
+        {{labels.emptyState}}
+    </p>
+    
+    <div class="row mar--sm--only--n mar--sm--tm">
+        {{#each apps itemController="app"}}
+            {{view "applicant"}}
+        {{/each}}
+    </div>
+    <div {{bind-attr class=":pad--sm--only--m hideLoadMore:hide"}}>
+        <button {{action loadMore}} data-qa-button="loadMore" type="button" class="button button--secondary width--full--sm--only">{{labels.loadMore}}</button>
+    </div>
+</div>

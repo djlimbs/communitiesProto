@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      '/Volumes/s3.amazonaws.com/toprototype1/Cycle2/to_jobListing.pck.js': 'app/to_jobListing_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle2/to_viewApplicants.pck.js': 'app/to_viewApplicants_compiler.js'
     },
 
     /*
@@ -105,18 +105,6 @@ module.exports = function(grunt) {
     build_test_runner_file: {
       all: ['test/**/*_test.js']
     },
-
-    /* 
-      Push to github pages
-    */
-    /*
-    'gh-pages': {
-      options: {
-        base: 'build',
-        add: true,
-      },
-      src: ['**.pck.js']
-    }*/
   });
   
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -125,7 +113,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-neuter');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-ember-templates');
-  //grunt.loadNpmTasks('grunt-gh-pages');
 
   /*
     A task to build the test runner html file that get place in
