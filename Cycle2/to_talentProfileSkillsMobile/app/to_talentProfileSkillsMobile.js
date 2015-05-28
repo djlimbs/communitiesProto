@@ -70,7 +70,7 @@ App.MainController = Ember.ObjectController.extend({
             skillName : self.get('name'),
         }
         
-        cont(JSON.stringify(params), function(jsonString, results){
+        cont.foundSkills(JSON.stringify(params), function(jsonString, results){
             var parsedResults = JSON.parse($('<div>').html(jsonString).text()).data;
             parsedResults.relatedItems = parsedResults.relatedItems.sortBy('Name').slice(0, 5);
         });
