@@ -713,7 +713,7 @@ App.AdditionalInfoMixin = Ember.Mixin.create({
     aIDidChenge: function() {
         var currentProjects = this.get('[]');
         var incompleteFieldName = this.get('incompleteFieldName');
-        var hasEmptyField = App.checkForBlankObjectFields(currentProjects);
+        var hasEmptyField = App.checkForBlankObjectFields(currentProjects, this.get('allowBlankEndDates'));
 
         this.get('controllers.apply').set(incompleteFieldName, hasEmptyField);
     }.observes('[]', '[].@each.fields'),
@@ -737,6 +737,7 @@ App.ProjectsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'project',
     deletedArrayName: 'deletedProjects',
     incompleteFieldName: 'isProjectsIncomplete',
+    allowBlankEndDates: true,
     deletedProjects: []
 });
 
@@ -747,51 +748,53 @@ App.RecommendationsController = Ember.ArrayController.extend(App.AdditionalInfoM
     deletedRecommendations: []
 });
 
-App.RecognitionController = Ember.ArrayController.extend({
+App.RecognitionController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'recognition',
     deletedArrayName: 'deletedRecognitions',
     incompleteFieldName: 'isRecognitionIncomplete',
     deletedRecognitions: []
 });
 
-App.CertificationsController = Ember.ArrayController.extend({
+App.CertificationsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'certification',
     deletedArrayName: 'deletedCertifications',
     incompleteFieldName: 'isCertificationsIncomplete',
+    allowBlankEndDates: true,
     deletedCertifications: []
 });
 
-App.TrainingDevelopmentController = Ember.ArrayController.extend({
+App.TrainingDevelopmentController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'trainingDevelopment',
     deletedArrayName: 'deletedTrainingDevelopments',
     incompleteFieldName: 'isTrainingDevelopmentIncomplete',
     deletedTrainingDevelopments: []
 });
 
-App.PublicationsController = Ember.ArrayController.extend({
+App.PublicationsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'publication',
     deletedArrayName: 'deletedPublications',
     incompleteFieldName: 'isPublicationsIncomplete',
     deletedPublications: []
 });
 
-App.PatentsController = Ember.ArrayController.extend({
+App.PatentsController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'patent',
     deletedArrayName: 'deletedPatents',
     incompleteFieldName: 'isPatentsIncomplete',
     deletedPatents: []
 });
 
-App.LanguagesController = Ember.ArrayController.extend({
+App.LanguagesController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'language',
     deletedArrayName: 'deletedLanguages',
     incompleteFieldName: 'isLanguagesIncomplete',
     deletedLanguages: []
 });
 
-App.VolunteeringController = Ember.ArrayController.extend({
+App.VolunteeringController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
     blockName: 'volunteering',
     deletedArrayName: 'deletedVolunteerings',
     incompleteFieldName: 'isVolunteeringIncomplete',
+    allowBlankEndDates: true,
     deletedVolunteerings: []
 });

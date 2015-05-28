@@ -18,7 +18,8 @@ App.Fixtures = {
         'DATE' : 'date',
         'PICKLIST' : 'picklist',
         'BOOLEAN' : 'checkbox',
-        'DOUBLE' : 'telField'
+        'DOUBLE' : 'telField',
+        'URL' : 'textField'
     },
     fieldApiNameToFieldNameMap: {
         'First_Name__c' : 'firstname',
@@ -69,39 +70,48 @@ App.Fixtures = {
     sectionToTypeMap: {
         'projects' : {
             type: 'Project',
-            typeAPIName: 'Project__c'
+            typeAPIName: 'Project__c',
+            singleRowFields: ['Name']
         },
         'recommendations' : {
             type: 'Recommendation',
-            typeAPIName: 'Recommendation__c'
+            typeAPIName: 'Recommendation__c',
+            singleRowFields: []
         },
         'recognition' : {
             type: 'Recognition',
-            typeAPIName: 'Recognition__c'
+            typeAPIName: 'Recognition__c',
+            singleRowFields: []
         },
         'certifications' : {
             type: 'Certification',
-            typeAPIName: 'Certification__c'
+            typeAPIName: 'Certification__c',
+            singleRowFields: ['Number__c']
         },
         'trainingDevelopment' : {
             type: 'Training Activity',
-            typeAPIName: 'Training_Activity__c'
+            typeAPIName: 'Training_Activity__c',
+            singleRowFields: []
         },
         'publications' : {
             type: 'Publication',
-            typeAPIName: 'Publication__c'
+            typeAPIName: 'Publication__c',
+            singleRowFields: []
         },
         'patents' : {
             type: 'Patent',
-            typeAPIName: 'Patent__c'
+            typeAPIName: 'Patent__c',
+            singleRowFields: []
         },
         'languages' : {
             type: 'Language',
-            typeAPIName: 'Language__c'
+            typeAPIName: 'Language__c',
+            singleRowFields: []
         },
         'volunteering' : {
             type: 'Volunteer Work',
-            typeAPIName: 'Volunteer_Work__c'
+            typeAPIName: 'Volunteer_Work__c',
+            singleRowFields: []
         }
     }
 }
@@ -183,11 +193,6 @@ App.getEducationHistoryBlock = function(educationHistoryObj) {
                 fieldObjWithValue.label = '';
                 fieldObjWithValue.partial = 'yearTelField';
                 fieldObjWithValue.picklistValues = [];
-
-                for (i = 1900; i <= parseInt(moment().format('YYYY')); i++) {
-                    fieldObjWithValue.picklistValues.addObject(i);
-                }
-
             } else {
                 fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
             }
@@ -223,7 +228,19 @@ App.getProjectBlock = function(projectObj) {
         parsedApplyMap.projectFields.forEach(function(f) {
             var fieldObjWithValue = JSON.parse(JSON.stringify(f));
 
-            fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            if (f.name === 'namespace_Start_Month__c' || f.name === 'namespace_End_Month__c') {
+                fieldObjWithValue.partial = 'monthPicklist';
+                fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
+                /*fieldObjWithValue.picklistValues.forEach(function(pv) {
+                    pv.label = App.Fixtures.numberToMonthMap[pv.value];
+                });*/
+            } else if (f.name === 'namespace_Start_Year__c' || f.name === 'namespace_End_Year__c') {
+                fieldObjWithValue.label = '';
+                fieldObjWithValue.partial = 'yearTelField';
+                fieldObjWithValue.picklistValues = [];
+            } else {
+                fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            }
             
             App.Fixtures.projectBlock.fields.addObject(fieldObjWithValue);
         });
@@ -294,7 +311,23 @@ App.getObjectBlock = function(objName, obj) {
         parsedApplyMap[fieldsName].forEach(function(f) {
             var fieldObjWithValue = JSON.parse(JSON.stringify(f));
 
-            fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            if (f.name === 'Start_Month__c' || f.name === 'End_Month__c') {
+                fieldObjWithValue.partial = 'monthPicklist';
+                fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
+            } else if (f.name === 'Start_Year__c' || f.name === 'End_Year__c') {
+                fieldObjWithValue.label = '';
+                fieldObjWithValue.partial = 'yearTelField';
+            } else if (f.name === 'Month__c') {
+                fieldObjWithValue.partial = 'monthPicklist';
+            } else if (f.name === 'Year__c') {
+                fieldObjWithValue.partial = 'yearTelField';
+            } else {
+                fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
+            }
+
+            if (App.Fixtures.sectionToTypeMap[objName].singleRowFields.indexOf(f.name) !== -1) {
+                fieldObjWithValue.isFullRow = true;
+            }
             
             App.Fixtures[blockName].fields.addObject(fieldObjWithValue);
         });
@@ -564,28 +597,23 @@ App.checkForBlankEducationHistoryFields = function(currentHistory) {
     return hasEmptyField;
 };
 
-App.checkForBlankProjectFields = function(currentProjects) {
+
+App.checkForBlankObjectFields = function(objects, allowBlankEndDate) {
     var hasEmptyField = false;
 
-    currentProjects.getEach('fields').forEach(function(fieldArray) {
-        fieldArray.forEach(function(field) {
-            if (Ember.isEmpty(field.value)) {
-                hasEmptyField = true;
-            }
-        });
-    });
-
-    return hasEmptyField;
-};
-
-App.checkForBlankObjectFields = function(objects) {
-    var hasEmptyField = false;
+    var endDateFields = ['End_Month__c', 'End_Year__c', 'End_Date__c'];
 
     objects.getEach('fields').forEach(function(fieldArray) {
         fieldArray.forEach(function(field) {
-            if (Ember.isEmpty(field.value)) {
-                hasEmptyField = true;
+
+            // Only check if allowBlankEndDate is not true, or the field is not an end date type.
+            if ((allowBlankEndDate !== true && endDateFields.indexOf(field.name) !== -1) || endDateFields.indexOf(field.name) === -1) {
+                if (Ember.isEmpty(field.value)) {
+                    hasEmptyField = true;
+                }
             }
+
+
         });
     });
 
@@ -675,6 +703,10 @@ App.ApplyView = Ember.View.extend({
                 parent.toggleFooter();
             }, 200);
         }
+
+        $('body').tooltip({
+            selector: '[data-toggle=tooltip]'
+        });
     }
 });
 
