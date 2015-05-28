@@ -202,7 +202,7 @@ App.ApplicantDashboardController = Ember.ObjectController.extend({
             };
 
             this.set('showLoadingState', true);
-            
+
 
             cont.getApplicantData(params, function(result, resultObj){
                 var parsedResult = parseResult(result);
@@ -235,7 +235,9 @@ App.AppController = Ember.ObjectController.extend({
     }.property(),
     employmentText : function(){
         var employmentHistory = this.get('employmentHistory');
-        if(!Ember.isEmpty(employmentHistory)){
+        if(this.get('isInternal')){
+            return this.get('parentController').get('user').Title
+        } else if(!Ember.isEmpty(employmentHistory)){
             return employmentHistory.Job_Title__c  + ' at ' + employmentHistory.Name;
         }
 
@@ -243,6 +245,9 @@ App.AppController = Ember.ObjectController.extend({
     }.property(),
     isSF1 : function(){
         return isSF1;
+    }.property(),
+    isInternal : function(){
+        return this.get('Source__c') == 'Internal';
     }.property(),
     hasOutcome : function(){
         return !Ember.isEmpty(this.get('Outcome__c'))
@@ -379,6 +384,15 @@ App.AppController = Ember.ObjectController.extend({
                 } else {
                     window.location.href = address;
                 }
+            }
+        },
+        viewTalentProfile : function(){
+            var tpId = this.get('parentController').get('tpIds')[this.get('Candidate_User__c')];
+
+            if(isSF1){
+                sforce.one.navigateToSObject(tpId);
+            } else {
+                window.location.href = '/' + tpId;
             }
         },
         loadGoogleMaps: function(){

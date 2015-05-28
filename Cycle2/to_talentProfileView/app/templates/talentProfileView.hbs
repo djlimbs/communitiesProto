@@ -117,9 +117,9 @@
                                 <article class="mar--sm--bm">
                                     <h3>
                                         {{#if Link__c}}
-                                            <a {{action "navigation" Link__c}} href="#" target>{{Rating__c}} {{#if Rating_Score__c}}({{Rating_Score__c}}){{/if}}</a>
+                                            <a {{action "navigation" Link__c}} href="#" target>{{Name}} {{#if Rating_Score__c}}({{Rating_Score__c}}){{/if}}</a>
                                         {{else}}
-                                            {{Rating__c}} {{#if Rating_Score__c}}({{Rating_Score__c}}){{/if}}
+                                            {{Name}} {{#if Rating_Score__c}}({{Rating_Score__c}}){{/if}}
                                         {{/if}}
                                     </h3>
                                     <small class="text-faded">{{#if Date__c}}{{Date__c}} ● {{/if}}{{Job_Title__c}}</small>
@@ -252,7 +252,7 @@
                                                 <p>
                                                     {{Recommender__c}}
                                                 </p>
-                                                {{Recommender_Title__c}}
+                                                {{Name}}
                                             </div>
                                         </div>
                                     </div>

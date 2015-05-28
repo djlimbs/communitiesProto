@@ -19,9 +19,9 @@ App.TalentProfileViewRoute = Ember.Route.extend({
 App.TalentProfileViewController = Ember.ObjectController.extend({
     actions: {
         clickEdit: function() {
-            var destUrl = '/' + ;
+            var destUrl = '/' + this.get('talentProfile').Id;
             if (isSF1) {
-                sforce.one.navigateToURL(destUrl);
+                sforce.one.navigateToSObject(this.get('talentProfile').Id);
             } else {
                 parent.window.location.href = destUrl;
             }
