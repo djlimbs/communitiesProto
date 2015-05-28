@@ -1,13 +1,17 @@
 <label class="table-group mar--sm--bs">
     <span class="table-group__object--small">
-        {{input type="checkbox" checked=isEnabled data-qa-input="enabled"}}
+        {{#if isInternal}}
+            <input type="checkbox" disabled data-qa-input="required"/>
+        {{else}}
+            {{input type="checkbox" checked=isEnabled data-qa-input="enabled"}}
+        {{/if}}
     </span>
-    <span class="table-group__object--large" data-qa-label="enabled">Resume</span>
+    <span class="table-group__object--large" data-qa-label="enabled">{{labels.resume}}</span>
 </label>
 
 <label class="table-group mar--sm--bs">
-	<span class="table-group__object--small">
-		{{input type="checkbox" checked=personalStatement data-qa-input="personalStatement"}}
-	</span>
-	<span class="table-group__object--large" data-qa-label="personalStatement">{{labels.personalStatement}}</span>
+    <span class="table-group__object--small">
+        {{input type="checkbox" checked=professionalSummary data-qa-input="professionalSummary"}}
+    </span>
+    <span class="table-group__object--large" data-qa-label="professionalSummary">{{labels.professionalSummary}}</span>
 </label>

@@ -8,35 +8,40 @@
 
 
         <div class="wizardContent">
+            <span style="position:fixed"><a id="fixZoom" href="#" style="color: white; font-size:0.1em">link</a></span>
             {{#if errorMessage}}
                 {{partial "errorAlert"}}
             {{/if}}
-            {{render "contactInfo" contactFields}}
+            {{#unless uploadFromDropbox}}
+                {{render "contactInfo" contactFields}}
+            {{/unless}}
             {{#if isResumeEnabled}}
                 {{render "resume" resume}}
             {{/if}}
-            {{#if isSkillsEnabled}}
-                {{render "skills" skills}}
-            {{/if}}
-            {{#if isEmploymentHistoryEnabled}}
-                {{render "employmentHistory" employmentHistoryArray}}
-            {{/if}}
-            {{#if isEducationHistoryEnabled}}
-                {{render "educationHistory" educationHistoryArray}}
-            {{/if}}
-            {{#unless isGeneralEmpty}}
-                {{render "general" generalFormElements}}
+            {{#unless uploadFromDropbox}}
+                {{#if isSkillsEnabled}}
+                    {{render "skills" skills}}
+                {{/if}}
+                {{#if isEmploymentHistoryEnabled}}
+                    {{render "employmentHistory" employmentHistoryArray}}
+                {{/if}}
+                {{#if isEducationHistoryEnabled}}
+                    {{render "educationHistory" educationHistoryArray}}
+                {{/if}}
+                {{#unless isGeneralEmpty}}
+                    {{render "general" generalFormElements}}
+                {{/unless}}
+                {{#unless isJobSpecificEmpty}}
+                    {{render "jobSpecific" jobSpecificFormElements}}
+                {{/unless}}
+                {{#unless isLegalEmpty}}
+                    {{render "legallyRequired" legalFormElements}}
+                {{/unless}}
+                <div class="content mar--sm--txl pad--md--n mar--sm--bm" data-qa-container="desktopButtons">
+                    <hr class="show-brkpoint--md"/>
+                        <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableFinish:disabled" disabled="disableFinish"}} style="top:0;right:0;" {{action "clickFinish"}} data-qa-button="done"><span class="show-brkpoint--md">Finish</span> <span class="juicon juicon-check"></span> </button>
+                </div>
             {{/unless}}
-            {{#unless isJobSpecificEmpty}}
-                {{render "jobSpecific" jobSpecificFormElements}}
-            {{/unless}}
-            {{#unless isLegalEmpty}}
-                {{render "legallyRequired" legalFormElements}}
-            {{/unless}}
-            <div class="content mar--sm--txl pad--md--n mar--sm--bm" data-qa-container="desktopButtons">
-                <hr class="show-brkpoint--md"/>
-                    <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableFinish:disabled" disabled="disableFinish"}} style="top:0;right:0;" {{action "clickFinish"}} data-qa-button="done"><span class="show-brkpoint--md">Finish</span> <span class="juicon juicon-check"></span> </button>
-            </div>
         </div>
 
         <footer>

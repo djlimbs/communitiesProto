@@ -5,10 +5,14 @@
             <label class="table-group mar--sm--bs">
                 <span class="table-group__object--large" data-qa-label="nameField">{{nameField.label}}</span>
                 <span class="table-group__object--small">
-                    {{#if nameField.isRequired}}
-                        <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                    {{#if isInternal}}
+                        <input type="checkbox" disabled data-qa-input="required"/>
                     {{else}}
-                        {{input type="checkbox" checked=nameField.isEnabled data-qa-input="required"}}
+                        {{#if nameField.isRequired}}
+                            <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                        {{else}}
+                            {{input type="checkbox" checked=nameField.isEnabled data-qa-input="required"}}
+                        {{/if}}
                     {{/if}}
                 </span>
             </label>
@@ -23,10 +27,14 @@
             <label class="table-group mar--sm--bs">
                 <span class="table-group__object--large" data-qa-label="contactField">{{contactField.label}}</span>
                 <span class="table-group__object--small">
-                    {{#if contactField.isRequired}}
-                        <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                    {{#if isInternal}}
+                        <input type="checkbox" disabled data-qa-input="required"/>
                     {{else}}
-                        {{input type="checkbox" checked=contactField.isEnabled data-qa-input="required"}}
+                        {{#if contactField.isRequired}}
+                            <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                        {{else}}
+                            {{input type="checkbox" checked=contactField.isEnabled data-qa-input="required"}}
+                        {{/if}}
                     {{/if}}
                 </span>
             </label>
@@ -41,10 +49,14 @@
             <label class="table-group mar--sm--bs">
                 <span class="table-group__object--large" data-qa-label="addressField">{{addressField.label}}</span>
                 <span class="table-group__object--small">
-                    {{#if addressField.isRequired}}
-                        <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                    {{#if isInternal}}
+                        <input type="checkbox" disabled data-qa-input="required"/>
                     {{else}}
-                        {{input type="checkbox" checked=addressField.isEnabled data-qa-input="required"}}
+                        {{#if addressField.isRequired}}
+                            <input type="checkbox" checked=true disabled data-qa-input="required"/>
+                        {{else}}
+                            {{input type="checkbox" checked=addressField.isEnabled data-qa-input="required"}}
+                        {{/if}}
                     {{/if}}
                 </span>
             </label>

@@ -96,9 +96,69 @@ App.FormBuilderRoute = Ember.Route.extend( {
         var hiringModelData = {};
 
         var hiringModelPicklistValues = parsedFormElementsMap.hiringModelPicklistValues.getEach('value');
+        
+        // add Internal
+        hiringModelPicklistValues.push('Internal');
 
         hiringModelPicklistValues.forEach(function(hm) {
             var hiringModel = parsedFormElementsMap.allModels.findBy('Name', hm);
+
+            // defaults
+            hiringModelData[hm] = {
+                Id: null,
+                data: {
+                    certifications: {
+                        isEnabled: false
+                    },
+                    contactInfo: {
+                        First_Name__c: true,
+                        Last_Name__c: true,
+                        Email__c: true,
+                        Mobile_Phone__c: false,
+                        Street_Address__c: false,
+                        City__c: false,
+                        State_Province__c: false,
+                        Zip_Postal_Code__c: false,
+                        Country__c: false
+                    },
+                    educationHistory: {
+                        isEnabled: false
+                    },
+                    employmentHistory: {
+                        isEnabled: false
+                    },
+                    languages: {
+                        isEnabled: false
+                    },
+                    patents: {
+                        isEnabled: false
+                    },
+                    publications: {
+                        isEnabled: false
+                    },
+                    projects: {
+                        isEnabled: false
+                    },
+                    recognition: {
+                        isEnabled: false
+                    },
+                    recommendations: {
+                        isEnabled: false
+                    },
+                    resume: {
+                        isEnabled: false
+                    },
+                    skills: {
+                        isEnabled: false
+                    },
+                    training_development: {
+                        isEnabled: false
+                    },
+                    volunteering: {
+                        isEnabled: false
+                    },
+                }
+            };
 
             if (!Ember.isNone(hiringModel)) {
 
@@ -112,40 +172,11 @@ App.FormBuilderRoute = Ember.Route.extend( {
                         delete configObj.contactInfo[key];
                     }
                 });
-
-                hiringModelData[hm] = {
-                    Id: hiringModel.Id,
-                    data: configObj
-                };
-            } else {
-                hiringModelData[hm] = {
-                    Id: null,
-                    data: {
-                        contactInfo: {
-                            First_Name__c: true,
-                            Last_Name__c: true,
-                            Email__c: true,
-                            Mobile_Phone__c: false,
-                            Street_Address__c: false,
-                            City__c: false,
-                            State_Province__c: false,
-                            Zip_Postal_Code__c: false,
-                            Country__c: false
-                        },
-                        resume: {
-                            isEnabled: false
-                        },
-                        skills: {
-                            isEnabled: false
-                        },
-                        employmentHistory: {
-                            isEnabled: false
-                        },
-                        educationHistory: {
-                            isEnabled: false
-                        }
-                    }
-                };
+                
+                hiringModelData[hm]['Id'] = hiringModel.Id;
+                for (config in configObj) {
+                    hiringModelData[hm]['data'][config] = configObj[config];
+                }
             }
         });
 
@@ -275,7 +306,6 @@ App.FormElementsRoute = Ember.Route.extend({
         } else {
             formBuilderModel.set('selectedHiringModel', subSection);
         }
-        console.log('set params');
     },
     actions: {
         willTransition: function(transition) {
@@ -360,7 +390,12 @@ App.ApplicationSectionRoute = Ember.Route.extend({
         return hiringModelData;
     },
     renderTemplate: function(controller, model) {
-        this.render(App.Fixtures.get('currentSection'), {
+        var section = App.Fixtures.get('currentSection');
+        if (!this.container.has('template:' + section)) {
+            section = 'additionalInformation';
+        }
+        
+        this.render(section, {
             controller: controller
         });
     },
@@ -392,8 +427,6 @@ App.Router.map(function() {
         this.resource('formElements', { path: 'formElements/:section/:subSection' });
         this.resource('applicationSection', { path: 'application/:section/:hiringModel' });
         this.resource('contactInfo', { path: 'contactInfo/:hiringModel' });
-        this.resource('employmentHistory', { path: '/employmentHistory' });
-        this.resource('educationHistory', { path: '/educationHistory' });
         this.resource('onePage', { path: '/onePage' });
     });
 });

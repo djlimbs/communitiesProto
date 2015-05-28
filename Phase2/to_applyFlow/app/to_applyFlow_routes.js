@@ -363,9 +363,11 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
                 }
 
                 if (isValid === false) {
-                    errorObj.message = 'Emplyoment History: <br/>'
+                    errorObj.message = '<li><strong>Employment History Section:</strong><br>'
+                                    + '<ul class="pad--sm--ll"><li><small>'
                                     + labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
-                                    + labels.and + ' ' + moment().format('YYYY');
+                                    + labels.and + ' ' + moment().format('YYYY')
+                                    + '</small></li></ul></li>';
                 }
             } else {
                 employmentHistoryObj[field.name] = field.value;
@@ -416,12 +418,18 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
             var earliestMonth = moment().subtract(application.employmentHistoryYears, 'years');
             var earliestMonthString = App.Fixtures.numberToMonthMap[earliestMonth.format('M')] + ' ' + earliestMonth.format('YYYY');
 
-            if (errorObj.message !== '') {
-                errorObj.message += '</br>';
+            if (errorObj.message === '') {
+                errorObj.message = '<li><strong>Employment History Section:</strong><br>'
+                                    + '<ul class="pad--sm--ll">';
             }
+
+            errorObj.message += '<li><small>';
+
 
             errorObj.message += labels.pleaseAccountForEveryMonthBetween + ' ' 
                                 + currentMonthString + ' ' + labels.and + ' ' + earliestMonthString + ' ' + labels.inclusive + '.';
+        
+            errorObj.message += '</small></li></ul></li>';
         }
 
         return null;
@@ -460,12 +468,11 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
                 }
 
                 if (isValid === false && errorObj.message.indexOf('Education History') === -1) { // Only add error message once.
-                    if (!Ember.isEmpty(errorObj.message)) {
-                        errorObj.message += '<br/>';
-                    }
-                    errorObj.message += 'Education History: <br/>';
-                    errorObj.message += labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
-                                    + labels.and + ' ' + moment().add(10, 'years').format('YYYY');
+                    errorObj.message += '<li><strong>Education History:</strong><br>'
+                                    + '<ul class="pad--sm--ll"><li><small>'
+                                    + labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
+                                    + labels.and + ' ' + moment().format('YYYY')
+                                    + '</small></li></ul></li>';
                 }
             } else {
                 educationHistoryObj[field.name] = field.value;
@@ -515,10 +522,18 @@ App.redirectAfterFinish = function(application) {
     window.parent.location.href = redirectUrl;
 };
 
+App.ApplicationLoadingRoute = Ember.Route.extend({
+  renderTemplate: function() {
+    this.render('loading');
+  }
+});
+
 App.ApplicationRoute = Ember.Route.extend({
     model: function(params) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
             if (Ember.isEmpty(applicationRedirectUrl)) {
+                            console.log('a');
+
                 var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
 
                 isOnePage = hiringModel.isOnePage;
@@ -556,6 +571,7 @@ App.ApplicationRoute = Ember.Route.extend({
         });
     },
     afterModel: function(model, transition) {
+        console.log('ran?');
         if (isOnePage === true) {
             this.transitionTo('onePage');
         } else {
@@ -566,10 +582,15 @@ App.ApplicationRoute = Ember.Route.extend({
 
 App.ApplyRoute = Ember.Route.extend( {
     model: function(params) {
+        console.log('apply');
         return this.modelFor('application');
     },
     afterModel: function(transition) {
-        this.transitionTo('contactInfo');
+        if (isBackFromDropboxOauth) {
+            this.transitionTo('resume');
+        } else {
+            this.transitionTo('contactInfo');
+        }
     }
 });
 
@@ -579,8 +600,10 @@ App.OnePageRoute = Ember.Route.extend({
     },
     setupController: function(controller, model) {
         controller.set('model', model);
+        controller.set('uploadFromDropbox', isBackFromDropboxOauth);
         this.controllerFor('apply').set('model', model);
         this.controllerFor('apply').set('isOnePage', true);
+        //this.controllerFor('apply').set('uploadFromDropbox', isBackFromDropboxOauth);
         //this.controllerFor('contactInfo').set('model', model.contactFields);
         console.log(model);
     }
@@ -752,7 +775,7 @@ App.SkillsRoute = Ember.Route.extend({
     saveSkills: function(transition, completeApplication) {
         var self = this;
         var apply = this.controllerFor('apply');
-        var currentPath = applyController.get('currentPath');
+        var currentPath = apply.get('currentPath');
         
         if (apply.get('showSavingNotification') !== true) {
             if (completeApplication !== true) {
@@ -760,7 +783,7 @@ App.SkillsRoute = Ember.Route.extend({
             }
             var successCallback = function(parsedResult) {
                 if (completeApplication === true) {
-                    App.redirectAfterFinish(applyController.get('application'));
+                    App.redirectAfterFinish(apply.get('application'));
                 } else {
                     transition.retry();
                 }
@@ -768,11 +791,7 @@ App.SkillsRoute = Ember.Route.extend({
 
             apply.set('showSavingNotification', true);
 
-            if (!Ember.isEmpty(selectedSkillsString)) {
-                selectedSkills = selectedSkillsString.split(',');
-            }
-
-            var saveObj = App.buildSkillsSaveObj(apply);
+            var saveObj = App.buildSkillsSaveObj(apply.get('model'));
 
             cont.saveSkills(JSON.stringify(saveObj), completeApplication, App.generateRemoteActionCallback(self, successCallback, false, currentPath));
         }  

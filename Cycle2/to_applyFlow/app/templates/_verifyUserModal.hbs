@@ -1,0 +1,19 @@
+<div class="modal fade" id="verifyUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <h2 data-qa-label="modalHeader" class="modal__heading" id="myModalLabel">{{labels.goodNews}}</h2>
+            </div>
+            <div class="modal__body">
+                <p data-qa-label="modalBody" class="mar--sm--tn">
+                    {{labels.loginUserBody}}
+                </p>
+                
+            </div>
+            <div class="modal__footer">
+                <button data-qa-button="noThanks" type="button" class="button button--secondary" data-dismiss="modal" {{action "clickNo"}}>{{labels.noThanks}}</button>
+                <button id="modalOk" data-qa-button="yesLogIn" type="button" class="button button--primary theme-bg-color" data-dismiss="modal" {{action "clickLogin"}}>{{labels.yesLogIn}}</button>
+            </div>
+        </div>
+    </div>
+</div>

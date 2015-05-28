@@ -1,53 +1,57 @@
 {{#if isOnePage}}
-    <div class="wizardSection pad--sm--only--n active mar--md--txl" data-qa-container="resumeOnePage">
-        <div class="panel">
-            <div class="panel__top">
-                <h2 class="panel__heading" data-qa-header="resume">
-                    {{labels.resumeHeader}}
-                </h2>
-            </div>
-            {{#if isAddResumeEnabled}}
-                <div class="panel__body">
-                    <p class="mar--sm--tn required-field" data-qa-label="uploadResume">
-                        {{labels.pleaseUploadYourResume}}
-                        <div style="display:none;">
-                            {{view "uploadFile" resumeFileName=resumeFileName alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
-                        </div>
-                    </p>
-                    <div class="row">
-                        <div class="column--md--4">
-                            <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
-                                <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
-                            </ul>
-                        </div>
-                        <div class="column--md--8">
-                            <div class="input-size text-faded dots" data-qa-label="fileName">
-                                {{#if resumeFileName}}
-                                    {{resumeFileName}}
-                                {{else}}
-                                    {{labels.noFileSelected}}
-                                {{/if}}
+    {{#if uploadFromDropbox}}
+        {{partial "dropboxChooserOnePage"}}
+    {{else}}
+        <div class="wizardSection pad--sm--only--n active mar--md--txl" data-qa-container="resumeOnePage">
+            <div class="panel">
+                <div class="panel__top">
+                    <h2 class="panel__heading" data-qa-header="resume">
+                        {{labels.resumeHeader}}
+                    </h2>
+                </div>
+                {{#if isAddResumeEnabled}}
+                    <div class="panel__body">
+                        <p class="mar--sm--tn required-field" data-qa-label="uploadResume">
+                            {{labels.pleaseUploadYourResume}}
+                            <div style="display:none;">
+                                {{view "uploadFile" resumeFileName=resumeFileName alreadyUploaded=alreadyUploaded isFromDropbox=isFromDropbox}}
+                            </div>
+                        </p>
+                        <div class="row">
+                            <div class="column--md--4">
+                                <div class="button button--secondary" data-toggle="dropdown" data-qa-button="uploadDropdown">{{labels.upload}} <span class="show-brkpoint--md">{{labels.your}}</span> {{labels.resume}} <span class="juicon juicon-upload"></span></div>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-menu__list-item" {{action "clickUploadFromDropbox"}} data-qa-button="fromDropbox"><a href="#"><span class="juicon juicon-dropbox"></span> {{labels.fromDropbox}}</a></li>
+                                    <li class="dropdown-menu__list-item" {{action "clickUploadFromDevice"}} data-qa-button="fromDevice"><a href="#"><span class="juicon juicon-upload"></span> {{labels.fromDevice}}</a></li>
+                                </ul>
+                            </div>
+                            <div class="column--md--8">
+                                <div class="input-size text-faded dots" data-qa-label="fileName">
+                                    {{#if resumeFileName}}
+                                        {{resumeFileName}}
+                                    {{else}}
+                                        {{labels.noFileSelected}}
+                                    {{/if}}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            {{/if}}
+                {{/if}}
 
-            {{#if isPersonalStatementEnabled}}
-                <div class="panel__body pad--sm--tn pad--sm--bn">
-                    <div class="form__group">
-                        <a href="#" {{action "clearPersonalStatement"}} class="text-error float--right text-underline" data-qa-link="clear"><small>Clear</small></a>
-                        <label for="textareaSomething" class="required-field" data-qa-label="personalStatement">{{labels.personalStatement}} </label>
-                        {{textarea placeholder="" value=personalStatement maxlength="2000" data-qa-input="personalStatement"}}
-                        <small class="input-error-content"></small>
+                {{#if isPersonalStatementEnabled}}
+                    <div class="panel__body pad--sm--tn pad--sm--bn">
+                        <div class="form__group">
+                            <a href="#" {{action "clearPersonalStatement"}} class="text-error float--right text-underline" data-qa-link="clear"><small>Clear</small></a>
+                            <label for="textareaSomething" class="required-field" data-qa-label="personalStatement">{{labels.personalStatement}} </label>
+                            {{textarea placeholder="" value=personalStatement maxlength="2000" data-qa-input="personalStatement"}}
+                            <small class="input-error-content"></small>
+                        </div>
                     </div>
-                </div>
-            {{/if}}
+                {{/if}}
 
+            </div>
         </div>
-    </div>
+    {{/if}}
 {{else}}
     <div class="wizardSection pad--sm--only--n active" data-qa-container="resume">
         <h1 class="text-left-center page__heading pad--sm--tm pad--md--tn pad--sm--bm" data-qa-header="resume">{{labels.resumeHeader}}</h1>
@@ -95,6 +99,10 @@
                         <small class="input-error-content"></small>
                     </div>
                 </div>
+            {{/if}}
+
+            {{#if uploadFromDropbox}}
+                {{partial "dropboxChooser"}}
             {{/if}}
         </div>
     </div>

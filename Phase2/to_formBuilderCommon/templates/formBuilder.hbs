@@ -46,10 +46,37 @@
                         {{/link-to}}
                         {{#link-to "applicationSection" "employmentHistory" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="employmentHistory"}}
                             <a>{{labels.employmentHistory}}</a>
-                        {{/link-to}} 
+                        {{/link-to}}
                         {{#link-to "applicationSection" "educationHistory" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="educationHistory"}}
                             <a>{{labels.educationHistory}}</a>
-                        {{/link-to}} 
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "projects" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="projects"}}
+                            <a>Projects</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "recommendations" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="recommendation"}}
+                            <a>Recommendations</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "recognition" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="recognition"}}
+                            <a>Recognition</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "certifications" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="certifications"}}
+                            <a>Certifications</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "training_development" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="training_development"}}
+                            <a>Training &amp; Development</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "publications" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="publications"}}
+                            <a>Publications</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "patents" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="patents"}}
+                            <a>Patents</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "languages" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="languages"}}
+                            <a>Languages</a>
+                        {{/link-to}}
+                        {{#link-to "applicationSection" "volunteering" selectedHiringModel class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="volunteering"}}
+                            <a>Volunteering</a>
+                        {{/link-to}}
                         {{#link-to "formElements" "General" selectedHiringModel class="list-group__item"  tagName="li" disabledWhen=disableCancel data-qa-link="general"}}
                             <a>{{labels.general}}</a>
                         {{/link-to}}
@@ -57,7 +84,7 @@
                             <a>{{labels.legal}}</a>
                         {{/link-to}}
                         {{#link-to "onePage" class="list-group__item" tagName="li" disabledWhen=disableCancel data-qa-link="onePage"}}
-                            <a>Single Page</a>
+                            <a>{{labels.singlePage}}</a>
                         {{/link-to}}
                     </ul>
                 </div>

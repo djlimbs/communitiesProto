@@ -1,0 +1,52 @@
+<div class="panel__body pad--sm--bn">
+    <div class="form__group">
+        <label for="project-name">Name</label>
+        {{input placeholder="Enter name" value=model.Name type="text"}}
+        <small class="input-error-content">Error</small>
+    </div>
+    <div class="form__group">
+        <label for="project-start-date">Start Date</label>
+        <div class="row input__group">
+            <div class="column--md--8">
+                <input id="startDate" placeholder="00/00/00" type="text">
+            </div>
+            <div class="column--md--4">
+                <button class="button button--secondary datepicker" data-date="2012-02-20" data-date-format="yyyy-mm-dd" type="button">
+                    <span class="juicon juicon-calendar"></span>
+                </button>
+            </div>
+        </div>
+        <small class="input-error-content">Error</small>
+    </div>
+    <div class="form__group">
+        <label for="project-end-date">End Date (If present leave blank)</label>
+        <div class="row input__group">
+            <div class="column--md--8">
+                <input id="endDate" placeholder="00/00/00" type="text">
+            </div>
+            <div class="column--md--4">
+                <button class="button button--secondary datepicker" data-date="2012-02-20" data-date-format="yyyy-mm-dd" type="button">
+                    <span class="juicon juicon-calendar"></span>
+                </button>
+            </div>
+        </div>
+        <small class="input-error-content">Error</small>
+    </div>
+    <div class="form__group">
+        <label for="project-description">Description</label>
+        {{textarea name="project-description" placeholder="Enter a description" value=model.Description__c}}
+        <small class="input-error-content">Error.</small>
+    </div>
+    <div class="form__group">
+        <label for="select2multi">Related skills</label>
+        <div class="select2-container select2-container-multi select2multi" id="s2id_autogen1"><ul class="select2-choices">  <li class="select2-search-choice">    <div>Sales</div>    <a href="#" class="select2-search-choice-close" tabindex="-1"></a></li><li class="select2-search-choice">    <div>Marketing</div>    <a href="#" class="select2-search-choice-close" tabindex="-1"></a></li><li class="select2-search-field">    <label for="s2id_autogen2" class="select2-offscreen"></label>    <input type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="select2-input" id="s2id_autogen2" placeholder="" style="width: 10px;">  </li></ul><div class="select2-drop select2-drop-multi select2-display-none">   <ul class="select2-results">   <li class="select2-no-results">No matches found</li></ul></div></div><select class="select2multi" multiple="multiple" tabindex="-1" style="display: none;">
+            <option selected="selected" value="sales">Sales</option>
+            <option selected="selected" value="marketing">Marketing</option>
+            <option value="apex">Apex</option>
+            <option value="css">CSS</option>
+        </select>
+    </div>
+    <button class="button button--ghost button--error width--full mar--sm--bm">
+        <span class="juicon juicon-trash"></span> Delete 
+    </button>
+</div>

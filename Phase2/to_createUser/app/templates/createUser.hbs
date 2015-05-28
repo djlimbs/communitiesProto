@@ -1,7 +1,7 @@
 <div class="scope-container">
     <header class="content pad--md--ts">
         <div class="content__section show-brkpoint--md">
-            <img class="mar--sm--bxl theme-logo" src="../css/img/logo-tagline-company.png"/>
+            <img data-qa-image="logo" class="mar--sm--bxl theme-logo" {{bind-attr src="companyLogo"}}/>
         </div>
     </header>
     {{#if resize}}
@@ -11,34 +11,34 @@
         {{#if showAlert}}
             <div {{bind-attr class=":alert alertColor :pad--sm--m :mar--sm--bl"}}>
                 <span class="part__left--fixed">
-                    <span {{bind-attr class=":juicon alertIcon"}}></span>
+                    <span data-qa-icon="alertIcon" {{bind-attr class=":juicon alertIcon"}}></span>
                 </span>
-                <span class="part__body">{{{alertText}}}</span>
+                <span data-qa-label="alertText" class="part__body">{{{alertText}}}</span>
             </div>
         {{/if}}
 
         {{#if showBody}}
             {{#if showBodyText}}
                 {{#if showHeaderText}}
-                    <h3 class="mar--sm--bn">
+                    <h3 data-qa-label="headerText" class="mar--sm--bn">
                         Want to make it easier to accept a job offer?
                     </h3>
                 {{/if}}
-                <p class="mar--sm--tn">Specify a password now so we can create an account.</p>
+                <p data-qa-label="subHeaderText" class="mar--sm--tn">Specify a password now so we can create an account.</p>
             {{/if}}
             <div class="form__group">
-                <label for="password">Password</label>
-                {{input type=inputType value=password}}
+                <label data-qa-label="password" for="password">Password</label>
+                {{input type=inputType value=password data-qa-input="password"}}
             </div>
             <div class="form__group">
                 <span class="part__left pad--sm--n">
-                    {{input type="checkbox" checked=showPass}}
+                    {{input type="checkbox" checked=showPass data-qa-input="showPassword"}}
                 </span>
-                <span class="part__body"><label for="showPass"> Show password</label></span>
+                <span class="part__body"><label data-qa-label="showPassword" for="showPass"> Show password</label></span>
             </div>
-            <button {{action "createUser"}} type="button" class="button button--primary">{{buttonText}}</button>
+            <button {{action "createUser"}} type="button" class="button button--primary" data-qa-button="createUser">{{buttonText}}</button>
             {{#if showJobLink}}
-                <span>Or just <a {{action "goToListing"}} href="" class="text-underline">go back to the job</a>.</span>
+                <span>Or just <a data-qa-link="jobListing" {{bind-attr href="listingPage"}} target="_top" class="text-underline">go back to the job</a>.</span>
             {{/if}}
         {{/if}}
     </section>

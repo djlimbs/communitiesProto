@@ -1,0 +1,24 @@
+<div class="modal fade" id="privateMessageModal" tabindex="-1" role="dialog" aria-labelledby="privateMessageLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading" id="myModalLabel">Private Message</h2>
+            </div>
+            <div class="modal__body">
+                <div class="form__group">
+                    <p class="mar--sm--tn">
+                        Send a private message to <span class="privateMessageTarget"></span> about this job posting.
+                    </p>
+                    <label for="privateMessage" class="sr-only">Private Message</label>
+                    <textarea type="text" id="privateMessage"/>
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="button button--primary" data-dismiss="modal">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

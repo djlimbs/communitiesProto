@@ -923,8 +923,16 @@ function program9(depth0,data) {
     'data-qa-link': ("legal")
   },hashTypes:{'class': "STRING",'tagName': "STRING",'disabledWhen': "ID",'data-qa-link': "STRING"},hashContexts:{'class': depth0,'tagName': depth0,'disabledWhen': depth0,'data-qa-link': depth0},inverse:self.noop,fn:self.program(22, program22, data),contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],data:data},helper ? helper.call(depth0, "formElements", "Legal", "selectedGeography", options) : helperMissing.call(depth0, "link-to", "formElements", "Legal", "selectedGeography", options));
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                        ");
+  stack1 = (helper = helpers['link-to'] || (depth0 && depth0['link-to']),options={hash:{
+    'class': ("list-group__item"),
+    'tagName': ("li"),
+    'disabledWhen': ("disableCancel"),
+    'data-qa-link': ("onePage")
+  },hashTypes:{'class': "STRING",'tagName': "STRING",'disabledWhen': "ID",'data-qa-link': "STRING"},hashContexts:{'class': depth0,'tagName': depth0,'disabledWhen': depth0,'data-qa-link': depth0},inverse:self.noop,fn:self.program(24, program24, data),contexts:[depth0],types:["STRING"],data:data},helper ? helper.call(depth0, "onePage", options) : helperMissing.call(depth0, "link-to", "onePage", options));
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                    </ul>\n                </div>\n                <div class=\"column--md--9 pad--md--lxl\">\n                    ");
-  stack1 = helpers['if'].call(depth0, "isInLegal", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(26, program26, data),fn:self.program(24, program24, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers.unless.call(depth0, "isInOnePage", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(26, program26, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                    <hr class=\"hr-alt\">\n                    ");
   stack1 = helpers._triageMustache.call(depth0, "outlet", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
@@ -1005,10 +1013,29 @@ function program22(depth0,data) {
 function program24(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\n                        <label class=\"mar--sm--rs\" data-qa-label=\"geography\">");
+  data.buffer.push("\n                            <a>");
+  stack1 = helpers._triageMustache.call(depth0, "labels.singlePage", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</a>\n                        ");
+  return buffer;
+  }
+
+function program26(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n                        ");
+  stack1 = helpers['if'].call(depth0, "isInLegal", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(29, program29, data),fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                    ");
+  return buffer;
+  }
+function program27(depth0,data) {
+  
+  var buffer = '', stack1;
+  data.buffer.push("\n                            <label class=\"mar--sm--rs\" data-qa-label=\"geography\">");
   stack1 = helpers._triageMustache.call(depth0, "labels.geography", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</label>\n                        <span class=\"select__wrap inline-block\">\n                            <span class=\"input__icon juicon juicon-down\"></span>\n                            ");
+  data.buffer.push("</label>\n                            <span class=\"select__wrap inline-block\">\n                                <span class=\"input__icon juicon juicon-down\"></span>\n                                ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
     'content': ("geographies"),
     'optionValuePath': ("content.Id"),
@@ -1017,28 +1044,28 @@ function program24(depth0,data) {
     'data-qa-input': ("geography"),
     'disabled': ("disableCancel")
   },hashTypes:{'content': "ID",'optionValuePath': "STRING",'optionLabelPath': "STRING",'value': "ID",'data-qa-input': "STRING",'disabled': "ID"},hashContexts:{'content': depth0,'optionValuePath': depth0,'optionLabelPath': depth0,'value': depth0,'data-qa-input': depth0,'disabled': depth0},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push("\n                        </span>\n                    ");
+  data.buffer.push("\n                            </span>\n                        ");
   return buffer;
   }
 
-function program26(depth0,data) {
+function program29(depth0,data) {
   
   var buffer = '', stack1;
-  data.buffer.push("\n                        <label class=\"mar--sm--rs\" data-qa-label=\"hiringModel\">");
+  data.buffer.push("\n                            <label class=\"mar--sm--rs\" data-qa-label=\"hiringModel\">");
   stack1 = helpers._triageMustache.call(depth0, "labels.hiringModel", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("</label>\n                        <span class=\"select__wrap inline-block\">\n                            <span class=\"input__icon juicon juicon-down\"></span>\n                            ");
+  data.buffer.push("</label>\n                            <span class=\"select__wrap inline-block\">\n                                <span class=\"input__icon juicon juicon-down\"></span>\n                                ");
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
     'content': ("hiringModelPicklistValues"),
     'value': ("selectedHiringModel"),
     'data-qa-input': ("hiringModel"),
     'disabled': ("disableCancel")
   },hashTypes:{'content': "ID",'value': "ID",'data-qa-input': "STRING",'disabled': "ID"},hashContexts:{'content': depth0,'value': depth0,'data-qa-input': depth0,'disabled': depth0},contexts:[depth0],types:["STRING"],data:data})));
-  data.buffer.push("\n                        </span>\n                    ");
+  data.buffer.push("\n                            </span>\n                        ");
   return buffer;
   }
 
-function program28(depth0,data) {
+function program31(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n                <div class=\"button-group float--right mar--sm--only--rs mar--md--lxs\">\n                    <button ");
@@ -1087,7 +1114,7 @@ function program28(depth0,data) {
   return buffer;
   }
 
-function program30(depth0,data) {
+function program33(depth0,data) {
   
   var buffer = '', stack1;
   data.buffer.push("\n                <button ");
@@ -1127,7 +1154,7 @@ function program30(depth0,data) {
   stack1 = helpers['if'].call(depth0, "isOnJobSpecific", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n    </div>\n    \n    <div class=\"content pad--md--tm pad--md--bl pad--sm--only--n pad--sm--tm\">\n        <nav id=\"formBuildNav\" class=\"nav-bar--sf1 mar--sm--bn\">\n            ");
-  stack1 = helpers['if'].call(depth0, "isOnJobSpecific", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(30, program30, data),fn:self.program(28, program28, data),contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers['if'].call(depth0, "isOnJobSpecific", {hash:{},hashTypes:{},hashContexts:{},inverse:self.program(33, program33, data),fn:self.program(31, program31, data),contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n        </nav>\n    </div>\n</div>");
   return buffer;
@@ -1248,6 +1275,37 @@ function program6(depth0,data) {
   
 });
 
+Ember.TEMPLATES["onePage"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, helper, options;
+  data.buffer.push("\n    <label class=\"table-group mar--sm--bs\"><span class=\"table-group__object--small\">");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("checkbox"),
+    'checked': ("hm.isOnePage"),
+    'data-qa-input': ("hm.name")
+  },hashTypes:{'type': "STRING",'checked': "ID",'data-qa-input': "ID"},hashContexts:{'type': depth0,'checked': depth0,'data-qa-input': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("</span><span class=\"table-group__object--large\" data-qa-label=\"hiringModelName\">");
+  stack1 = helpers._triageMustache.call(depth0, "hm.name", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span></label>\n");
+  return buffer;
+  }
+
+  data.buffer.push("<p data-qa-label=\"whichHiringModels\">\n    ");
+  stack1 = helpers._triageMustache.call(depth0, "labels.whichHiringModelsWillBeRendered", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n</p>\n\n");
+  stack1 = helpers.each.call(depth0, "hm", "in", "hiringModels", {hash:{},hashTypes:{},hashContexts:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["resume"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -1261,7 +1319,16 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'data-qa-input': ("enabled")
   },hashTypes:{'type': "STRING",'checked': "ID",'data-qa-input': "STRING"},hashContexts:{'type': depth0,'checked': depth0,'data-qa-input': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n    </span>\n    <span class=\"table-group__object--large\" data-qa-label=\"enabled\">");
-  stack1 = helpers._triageMustache.call(depth0, "labels.enabled", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  stack1 = helpers._triageMustache.call(depth0, "labels.resume", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("</span>\n</label>\n\n<label class=\"table-group mar--sm--bs\">\n	<span class=\"table-group__object--small\">\n		");
+  data.buffer.push(escapeExpression((helper = helpers.input || (depth0 && depth0.input),options={hash:{
+    'type': ("checkbox"),
+    'checked': ("professionalSummary"),
+    'data-qa-input': ("professionalSummary")
+  },hashTypes:{'type': "STRING",'checked': "ID",'data-qa-input': "STRING"},hashContexts:{'type': depth0,'checked': depth0,'data-qa-input': depth0},contexts:[],types:[],data:data},helper ? helper.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n	</span>\n	<span class=\"table-group__object--large\" data-qa-label=\"professionalSummary\">");
+  stack1 = helpers._triageMustache.call(depth0, "labels.professionalSummary", {hash:{},hashTypes:{},hashContexts:{},contexts:[depth0],types:["ID"],data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</span>\n</label>");
   return buffer;
