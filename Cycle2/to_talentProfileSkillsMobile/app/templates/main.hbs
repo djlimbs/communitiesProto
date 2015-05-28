@@ -1,0 +1,33 @@
+<div class="scope-container">
+    <div class="content content--readable pad--sm--n pad--md--m">
+        <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
+            <div class="load-block hide">
+                <div class="load-block-icon juicon juicon-loading">
+                </div>
+            </div>
+            <div class="panel__top">
+                <h2 class="panel__heading">
+                    Skills
+                </h2>
+            </div>
+            {{#each currentSkills itemController="items"}}
+                <div class="panel__component panel__component--removable">
+                    <button class="close" type="button">
+                        <span {{action "deleteSkill"}} class="component-remove-x"></span><span class="sr-only">Close</span>
+                    </button>
+                    <div class="form__group mar--sm--bn">
+                        <label class="sr-only">New skill</label>
+                        {{select-2 value=selectedSkills data-qa-input="select2" class="searchThis"}}
+                        <small class="input-error-content">Error.</small>
+                    </div>
+                </div>
+            {{/each}}
+
+            <div class="panel__component">
+                <button {{action "addSkill"}} class="button button--primary button--ghost mar--sm--tm" type="button">
+                    Add skill <span class="juicon juicon-plus"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
