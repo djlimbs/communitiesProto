@@ -11,14 +11,15 @@ function program1(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "deleteSkill", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" class=\"component-remove-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <div class=\"form__group mar--sm--bn\">\n                        <label class=\"sr-only\">New skill</label>\n                        ");
-  hashContexts = {'value': depth0,'data-qa-input': depth0,'class': depth0};
-  hashTypes = {'value': "ID",'data-qa-input': "STRING",'class': "STRING"};
+  hashContexts = {'type': depth0,'class': depth0,'data-qa': depth0,'value': depth0};
+  hashTypes = {'type': "STRING",'class': "STRING",'data-qa': "STRING",'value': "ID"};
   options = {hash:{
-    'value': ("selectedSkills"),
-    'data-qa-input': ("select2"),
-    'class': ("searchThis")
+    'type': ("text"),
+    'class': ("searchThis"),
+    'data-qa': ("input"),
+    'value': ("name")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['select-2'] || (depth0 && depth0['select-2'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "select-2", options))));
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
   data.buffer.push("\n                        <small class=\"input-error-content\">Error.</small>\n                    </div>\n                </div>\n            ");
   return buffer;
   }

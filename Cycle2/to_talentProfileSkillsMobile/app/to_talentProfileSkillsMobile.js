@@ -55,6 +55,27 @@ App.MainController = Ember.ObjectController.extend({
         return arr;
     }.property('skills'),
 
+
+    searchSkills: function() {
+        var self = this;
+        var skills = self.get('skills');
+
+        if(self.get('searchType') == 'searchUsers'){
+            selectedUsers.forEach(function(user){
+                userIds.push(user.Id);
+            })
+        }
+
+        var params = {
+            skillName : self.get('name'),
+        }
+        
+        cont(JSON.stringify(params), function(jsonString, results){
+            var parsedResults = JSON.parse($('<div>').html(jsonString).text()).data;
+            parsedResults.relatedItems = parsedResults.relatedItems.sortBy('Name').slice(0, 5);
+        });
+    },
+
     actions: {
         addSkill: function(){
             this.get('skills').addObject(Ember.Object.create({
@@ -82,24 +103,19 @@ App.ItemsController = Ember.ObjectController.extend({
 App.MainRoute = Ember.Route.extend({
 
     model: function (){
-        //var skillsAssertions = parsedTalentProfileMap.skillsAssertions;
-        //var skills = [];
-        // skillsAssertions.forEach(function(skillsAssertion){
-        //     var skillsAssertion = skillsAssertion;
-        //     skills.push(skillsAssertion.Skill__r);
-        // });
+        var skillsAssertions = parsedTalentProfileMap.skillsAssertions;
+        var skills = [];
+        skillsAssertions.forEach(function(skillsAssertion){
+            var skillsAssertion = skillsAssertion;
+            skills.push(skillsAssertion.Skill__r);
+        });
+
+        console.log('####');
+        console.log(skills);
         
-        console.log('??????????')
-        console.log(parsedTalentProfileMap);
-
-
-
-        var allSkills = [{
-            Name: 'Swift'
-        }];
-
+        
         return Ember.Object.create({
-            skills: allSkills,
+            skills: skills,
         });
     }
 });
