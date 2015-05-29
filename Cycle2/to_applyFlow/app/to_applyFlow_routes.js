@@ -1734,6 +1734,8 @@ App.saveAdditionalInfo = function(section, self, transition, completeApplication
                     var aIToUpdate = sectionModel.findBy('eId', parseInt(eId));
                     aIToUpdate.Id = parsedResult.data.eIdToAIMap[eId].Id;
                 });
+
+                sectionController.get(sectionController.get('deletedArrayName')).clear();
             }
         };
 

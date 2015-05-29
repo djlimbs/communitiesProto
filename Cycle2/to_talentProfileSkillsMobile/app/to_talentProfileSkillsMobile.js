@@ -3,22 +3,7 @@ App = Ember.Application.create({
     rootElement: '#application'
 });
 
-
-
-App.Select2Component = Ember.TextField.extend({
-    attributeBindings: ['multiple', 'data-qa-input'],
-    multiple: true,
-    didInsertElement: function() {
-        var self = this;
-        this.$().select2({
-            minimumInputLength: 2,
-            placeholder: 'Add Skills',
-            tags: [],
-            formatNoMatches: 'No Skills',
-            tokenSeparators: [',']
-        });
-    }
-});
+var searchTimer = null;
 
 // App.SkillsView = Ember.View.extend({
 //     afterRenderEvent: function() {
@@ -79,8 +64,21 @@ App.MainController = Ember.ObjectController.extend({
     actions: {
         addSkill: function(){
             this.get('skills').addObject(Ember.Object.create({
-                Name : 'C#'
+                Name : ''
             }));
+        },
+        clickSave: function() {
+            var skills = this.get('skills');
+            
+            var saveObj = {
+                skills: this.get('skills').getEach('Name'),
+                tpId: parsedTalentProfileMap.tpId
+            };
+            console.log(skills);
+            
+            cont.saveSkills(JSON.stringify(saveObj), function(jsonString, results) {
+                sforce.one.navigateToSObject(parsedTalentProfileMap.tpId);
+            });
         }
     }
 });
@@ -88,11 +86,61 @@ App.MainController = Ember.ObjectController.extend({
 App.ItemsController = Ember.ObjectController.extend({
     needs: ['main'],
     skillsBinding: 'controllers.main.skills',
+    selectedSkill: function() {
+        return this.get('Name');
+    }.property(),
+    showSearchBox: function() {
+        return !Ember.isEmpty(this.get('Name')) && this.get('selectedSkill') !== this.get('Name');
+    }.property('Name', 'selectedSkill'),
+    didNameChange: function() {
+        var self = this;
+        var selectedSkill = this.get('selectedSkill');
+        var currentName = this.get('Name');
 
+        if (selectedSkill !== currentName) {
+            if(!Ember.isEmpty(currentName)){
+                clearTimeout(searchTimer);
+                searchTimer = window.setTimeout(function(){
+                    self.searchSkills();
+                }, 200)
+            } else {
+                clearTimeout(searchTimer);
+                self.set('foundSkills', null);
+            }
+        }
+    }.observes('Name'),
+    searchSkills: function() {
+        var self = this;
+        var selectedSkills = self.get('skills');
+        var selectedSkillIds = [];
+
+        selectedSkills.forEach(function(skill){
+            if(skill.Id){
+                selectedSkillIds.addObject(skill.Id);
+            }
+        });
+
+        var params = {
+            searchParam : self.get('Name'),
+            selectedSkills : selectedSkillIds,
+        }
+        
+        cont.searchSkills(JSON.stringify(params), function(jsonString, results){
+            var parsedResults = JSON.parse($('<div>').html(jsonString).text()).data;
+            self.set('foundSkills', parsedResults.skills);
+        });
+    },
     actions : {
         deleteSkill : function(type){
-            console.log('HALO');
             this.get('skills').removeObject(this.get('model'));
+        },
+        selectSkill: function(name, id) {
+            this.setProperties({
+                Id : id,
+                Name : name,
+                selectedSkill : name,
+                foundSkills : null
+            });
         }
     }
 });
