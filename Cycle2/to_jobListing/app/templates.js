@@ -64,7 +64,7 @@ function program6(depth0,data) {
 function program8(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push(" | <small>Remote Avaliable");
+  data.buffer.push(" | <small>");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.remoteAvailable", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -133,7 +133,7 @@ function program15(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applyWithEmail", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Apply with email</a></li>\n                            <li data-qa-button=\"bottomApplyLinkedIn\" class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                            <li data-qa-button=\"bottomApplyLinkedIn\" class=\"dropdown-menu__list-item\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "displayLocationModal", "linkedIn", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -141,7 +141,7 @@ function program15(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applyWithLinkedIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Apply with LinkedIn</a></li>\n                        </ul>\n                    </div>\n                ");
+  data.buffer.push("</a></li>\n                        </ul>\n                    </div>\n                ");
   return buffer;
   }
 
@@ -152,7 +152,7 @@ function program17(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.shareJob", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Share Job <span class=\"juicon juicon-share\"></span></button>\n                        <ul class=\"dropdown-menu dropdown-menu--up-on-small\">\n                            <li class=\"dropdown-menu__list-item\" data-qa-link=\"twitter\"><a href=\"#\" ");
+  data.buffer.push(" <span class=\"juicon juicon-share\"></span></button>\n                        <ul class=\"dropdown-menu dropdown-menu--up-on-small\">\n                            <li class=\"dropdown-menu__list-item\" data-qa-link=\"twitter\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnTwitter", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -160,7 +160,7 @@ function program17(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.twitter", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("Twitter</a></li>\n                            <li class=\"dropdown-menu__list-item\" data-qa-link=\"linkedIn\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                            <li class=\"dropdown-menu__list-item\" data-qa-link=\"linkedIn\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnLinkedIn", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -168,7 +168,7 @@ function program17(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.linkedIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("LinkedIn</a></li>\n                            <li class=\"dropdown-menu__list-item\" data-qa-link=\"facebook\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                            <li class=\"dropdown-menu__list-item\" data-qa-link=\"facebook\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "shareOnFacebook", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -176,7 +176,7 @@ function program17(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.facebook", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("Facebook</a></li>\n                        </ul>\n                    </div>\n                    <hr>\n                ");
+  data.buffer.push("</a></li>\n                        </ul>\n                    </div>\n                    <hr>\n                ");
   return buffer;
   }
 
@@ -208,7 +208,7 @@ function program21(depth0,data) {
   data.buffer.push("\n                            <li class=\"mar--sm--bxs\">\n                                <div class=\"part__body width--full pad--sm--ls pad--sm--rm\">\n                                    <h5 data-qa-label=\"noReports\" class=\"mar--sm--bn text-faded\">No Direct Reports</h5>\n                                </div>\n                            </li>\n                        ");
   }
 
-  data.buffer.push("<div class=\"scope-container\">\n    <div ");
+  data.buffer.push("x<div class=\"scope-container\">\n    <div ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
@@ -253,7 +253,7 @@ function program21(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applyWithEmail", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Apply with email</a></li>\n                            <li data-qa-button=\"applyLinkedIn\" class=\"dropdown-menu__list-item\"><a href=\"#\" ");
+  data.buffer.push("</a></li>\n                            <li data-qa-button=\"applyLinkedIn\" class=\"dropdown-menu__list-item\"><a href=\"#\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "displayLocationModal", "linkedIn", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -261,7 +261,7 @@ function program21(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applyWithLinkedIn", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Apply with LinkedIn</a></li>\n                        </ul>\n                    </div>\n                    <h1 data-qa-label=\"postName\" class=\"has-subheading page__heading\">");
+  data.buffer.push("</a></li>\n                        </ul>\n                    </div>\n                    <h1 data-qa-label=\"postName\" class=\"has-subheading page__heading\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "jobPosting.Job_Title__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

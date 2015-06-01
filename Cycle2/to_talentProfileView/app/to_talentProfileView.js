@@ -50,7 +50,7 @@ App.Router.reopen( {
 
 Ember.Handlebars.helper('pluralfication', function(records, name) {
     if(records.length > 1){
-        if(name.charAt(name.length) == 'y'){
+        if(name.charAt(name.length - 1) == 'y'){
             return name.slice(0, name.length - 1) + 'ies';
         } else {
             return name + 's';
@@ -66,12 +66,11 @@ Ember.Handlebars.helper('displayDate', function(startDate, endDate, text) {
     } else if(Ember.isEmpty(endDate)){
         return (startDate + ' ' + text + ' Present')
     } else {
-        return (startDate + ' ' + text + endDate)
+        return (startDate + ' ' + text + ' ' + endDate)
     }
 });
 
 Ember.Handlebars.helper('displayMonthYear', function(startMonth, startYear, endMonth, endYear, text) {
-    console.log(startMonth);
     if(Ember.isEmpty(startMonth) && Ember.isEmpty(startYear)){
         return '';
     } else if(Ember.isEmpty(endMonth) && Ember.isEmpty(endYear)){
@@ -79,4 +78,18 @@ Ember.Handlebars.helper('displayMonthYear', function(startMonth, startYear, endM
     } else {
         return (monthMap[startMonth] + ' ' + startYear + ' ' + text + ' ' + monthMap[endMonth] + ' ' + endYear) ;
     }
+});
+
+Ember.Handlebars.helper('formattedSkills', function(records) {
+    var skills = '';
+    
+    records.forEach(function(skill){
+        if(skills == ''){
+            skills = skill.Skill__r.Name
+        } else {
+            skills += ', ' + skill.Skill__r.Name;
+        }
+    })
+
+    return skills;
 });
