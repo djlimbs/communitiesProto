@@ -1,0 +1,24 @@
+<ul {{bind-attr id=Id}} class="directReports list-style-type-none mar--sm--ts pad--sm--ll" style="display: none;">	
+	{{#if hiringManager.ManagedUsers.records}}
+	    {{#each hiringManager.ManagedUsers.records}}
+	        <li class="mar--sm--bxs">
+	            <div class="part__left--fixed pad--sm--n">
+	                <div class="img-container img-container--sm"><img {{bind-attr src="FullPhotoUrl"}}>
+	                </div>
+	            </div>
+	            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+	                <h5 class="mar--sm--bn"><a href="/{{unbound Id}}">{{Name}}</a></h5>
+	            </div>
+	        </li>
+	    {{/each}}
+
+	{{else}}
+         <li class="mar--sm--bxs">
+            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                <h5 class="text-faded" data-qa-label="hiringManagerTitle">
+		        	No Direct Reports
+		        </h5>
+            </div>
+        </li>
+	{{/if}}
+</ul>

@@ -1,1 +1,191 @@
-<h1>TOOOO JOB SEARCH</h1>
+<div class="scope-container">
+    {{partial "privateMessageModal"}}
+
+    <div class="content pad--sm--m">
+        <div class="panel">
+            <div class="panel__top">
+                <h1 class="panel__heading" data-qa-label="searchForAJob">Search for a job</h1>
+            </div>
+            <div class="panel__component bg-2">
+                <div class="table-group">
+                    <div class="table-group__object--large block-on-small pad--sm--only--rn">
+                        <div class="row">
+                            <div class="column--md--6">
+                                <div class="form__group mar--md--bn">
+                                    <div class="input__wrap has-icon--right">
+                                        <div class="input__icon juicon juicon-chch"></div>
+                                        {{input type="text" data-qa-input="searchjobs" placeholder="Search jobs..." class="bg-1" value=searchTerm}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column--md--6">
+                                <div class="form__group mar--md--bn">
+                                    <div class="select__wrap">
+                                        <div class="input__icon juicon juicon-location"></div>
+                                        {{view "select" data-qa-select="location" content=locations value=selectedLocation}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column--md--6">
+                                <div class="form__group mar--sm--tm mar--md--bn">
+                                    <div class="select__wrap">
+                                        <div class="input__icon juicon juicon-down"></div>
+                                        {{view "select" data-qa-select="categories" content=categories value=selectedJobFamily}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{#if isNear}}
+                                <div class="column--md--6">
+                                    <div class="form__group mar--sm--tm mar--md--bn">
+                                        <div class="input__wrap has-icon--right">
+                                            <div class="input__icon juicon juicon-chch"></div>
+                                            {{input type="text" data-qa-input="cityStateZip" placeholder="City, State, or Zip" class="bg-1" value=nearValue}}
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
+
+                            {{#if isNearMe}}
+                                <div class="column--md--6">
+                                    <div class="row">
+                                        <div class="column--sm--6">
+                                            <div class="form__group mar--sm--tm mar--md--bn">
+                                                <div class="select__wrap">
+                                                    <div class="input__icon juicon juicon-down"></div>
+                                                    {{view "select" data-qa-select="distance" content=radiusOptions value=selectedRadius}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="column--sm--6">
+                                            <div class="form__group mar--sm--tm mar--md--bn">
+                                                <div class="select__wrap">
+                                                    <div class="input__icon juicon juicon-down"></div>
+                                                    {{view "select" data-qa-select="unit" content=radiusUnits value=selectedUnit}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/if}}
+
+                        </div>
+                    </div>
+                    <div class="table-group__object--small pad--md--lm block-on-small width--full--sm--only mar--sm--only--bxl">
+                        <button id="search" type="button" data-qa-button="Search" {{bind-attr disabled="disableSearch" class=":button :button--primary :width--full--sm--only :theme-bg-color isSearching:load-this"}} {{action "clickSearch"}}>Search</button>
+                    </div>
+                </div>
+            </div>
+            
+            {{#if showEmptyState}}
+                <div>
+                    <div class="panel">
+                        <p data-qa-label="emptyState" class="text-faded text-center pad--sm--xl">
+                            Sorry, there are no jobs that match your criteria.
+                        </p>
+                    </div>
+                </div>
+            {{/if}}
+
+            {{#each searchResult in searchResults itemController="jobPosting"}}
+                <div class="panel__component">
+                    <section class="row">
+                        <div class="column--md--9">
+
+                            <nav class="relative" id="jobNav"> 
+                                <h1 data-qa-link="jobTitle" class="page__heading has-subheading"><a class="theme-link-color" href="#" {{action "jobPostingDrillIn"}}>{{searchResult.Job_Title__c}}</a></h1>
+                                <h2 data-qa-label="primaryLocation" class="page__subheading">
+                                    {{searchResult.firstLocationString}} 
+                                    {{#if searchResult.otherLocationsString}} &amp; 
+                                        <a data-qa-link="otherLocations" data-toggle="tooltip" title="" class="pointer text-primary theme-link-color" data-original-title="{{unbound searchResult.otherLocationsString}}">
+                                            {{searchResult.otherLocationsCount}} {{searchResult.othersText}}</a>
+                                    {{/if}}
+                                    {{#if searchResult.allowRemote}}
+                                        &nbsp;<small data-qa-label="remoteAvailable">(remote available)</small>
+                                    {{/if}}
+                                </h2>
+                            </nav>
+
+                            {{#with searchResult}}
+                                {{!-- <div class="job-field">
+                                    <h4 class="job-field-label">Hiring Manager</h4>
+                                    <div class="part__left--fixed pad--sm--n">
+                                        <div class="img-container img-container--sm">
+                                            <img {{bind-attr src="hiringManager.FullPhotoUrl"}} data-qa-picture="hiringManagerPicture">
+                                        </div>
+                                    </div>
+                                    <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                        <h5 class="mar--sm--bn">
+                                            <a href="/{{unbound hiringManager.Id}}" data-qa-link="hiringManagerName">{{hiringManager.Name}}</a>
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div class="job-field">
+                                    <h4 class="job-field-label">Recruiter</h4>
+                                    <div class="part__left--fixed pad--sm--n">
+                                        <div class="img-container img-container--sm">
+                                            <img {{bind-attr src="recruiter.FullPhotoUrl"}} data-qa-picture="recruiterPicture">
+                                        </div>
+                                    </div>
+                                    <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                        <h5 class="mar--sm--bn">
+                                            <a href="/{{unbound recruiter.Id}}" data-qa-link="recruiterName">{{recruiter.Name}}</a>
+                                        </h5>
+                                    </div>
+                                </div> --}}
+
+                                <div class="row">
+                                    <div class="column--md--6">
+                                        <div class="job-field">
+                                            <h4 class="job-field-label">Hiring Manager</h4>
+                                            <div class="part__left--fixed pad--sm--n">
+                                                <div class="img-container img-container--sm">
+                                                    <img {{bind-attr src="hiringManager.FullPhotoUrl"}} data-qa-picture="hiringManagerPicture">
+                                                </div>
+                                            </div>
+                                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                                <h5 class="mar--sm--bn">
+                                                    <a href="/{{unbound hiringManager.Id}}" data-qa-link="hiringManagerName">{{hiringManager.Name}}</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column--md--6">
+                                        <div class="job-field">
+                                            <h4 class="job-field-label">Recruiter</h4>
+                                            <div class="part__left--fixed pad--sm--n">
+                                                <div class="img-container img-container--sm">
+                                                    <img {{bind-attr src="recruiter.FullPhotoUrl"}} data-qa-picture="recruiterPicture">
+                                                </div>
+                                            </div>
+                                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                                <h5 class="mar--sm--bn">
+                                                    <a href="/{{unbound recruiter.Id}}" data-qa-link="recruiterName">{{recruiter.Name}}</a>
+                                                </h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/with}}
+
+                        </div>
+                        <div class="column--md--3 mar--sm--only--txl">
+                            <a {{action "jobPostingDrillIn"}} class="button button--secondary width--full">
+                                View this job
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            {{/each}}
+
+        </div>
+
+        {{#if showLoadMore}}
+            <button {{action "loadMore"}} data-qa-button="loadMore" type="button" class="width--full button button--secondary mar--sm--tm">
+                Load More
+            </button>
+        {{/if}}
+    </div>
+</div>
+
+
+
