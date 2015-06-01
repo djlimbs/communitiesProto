@@ -70,7 +70,20 @@ var partialMap = {
 App.MainView = Ember.View.extend({
     afterRenderEvent: function() {
         $('body').tooltip({
-            selector: '[data-toggle=tooltip]' // bind the tip. Just the tip.
+            selector: '[data-toggle=tooltip]'
+        });
+        
+        $('.chatterFeed').each(function() {
+            var chatterFeed = $('#chatterFeed').clone();
+            chatterFeed.removeAttr('id');
+            chatterFeed.show();
+            $(this).hide();
+            $(this).append(chatterFeed);
+        });
+        
+        $('body').on('click', '.chatterToggle', function(){
+            $(this).siblings('.chatterFeed').slideToggle( "slow", function(){});
+            $(this).find('.showChatterText, .hideChatterText').toggle();
         });
     }
 });
@@ -133,12 +146,37 @@ App.MainRoute = Ember.Route.extend({
             return pageData;
 
         }
-
-        pageData.icSettings = JSON.parse(icSettings);
-
+        
+        if (typeof sforce != 'undefined' && sforce != null) {
+            pageData.sforce = sforce;
+        } else {
+            pageData.sforce = null;
+        }
+        
+        pageData.icSettings = icSettings;
+        
+        // fix labels
+        var ic_cs = icSettings.findBy('Name', CAREER_SITE_CHANNEL_NAME);
+        // default label
+        var cs_name = CAREER_SITE_CHANNEL_NAME;
+        if (ic_cs) {
+            cs_name = ic_cs.Field1__c;
+        }
+        labels.to_jobPosting_error_autocreate = labels.to_jobPosting_error_autocreate.replace('{0}', cs_name);
+        labels.to_jobPosting_post_modal_body = labels.to_jobPosting_post_modal_body.replace('{0}', cs_name);
+        labels.to_jobPosting_post_modal_title = labels.to_jobPosting_post_modal_title.replace('{0}', cs_name);
+        
+        // info message?
+        if (window.location.hash == '#info') {
+            pageData.infoMessage = true;
+            // remove
+            window.location.hash = '';
+        }
+        
         pageData.displayState = isView; // are we in new/edit or view mode? 
         pageData.isSelfPost = true;
         pageData.csjpId = pageData.data.csjpId;
+        pageData.isSF1 = isSF1;
         pageData.hasCareerSitePosting = (pageData.csjpId != null);
         pageData.isTwitterWithCareerSitePosting = false;
         pageData.url = pageData.data.url;
@@ -146,12 +184,25 @@ App.MainRoute = Ember.Route.extend({
         pageData.isSocial = pageData.data.jobPosting.Type__c == SOCIAL_CHANNEL_TYPE;
         pageData.socialDisplayState = pageData.displayState && pageData.isSocial;
         
+        if (pageData.data.skills) {
+            pageData.skillsFormat = pageData.data.skills.join(', ');
+        }
+        
+        if (pageData.data.jobPosting.Channel__c == CAREER_SITE_CHANNEL_NAME) {
+            pageData.data.jobPosting.channelName = icSettings.findBy('Name', CAREER_SITE_CHANNEL_NAME).Field1__c;
+        } else if (pageData.data.jobPosting.Channel__c == 'Internal') {
+            pageData.isInternal = true;
+            pageData.data.jobPosting.channelName = pageData.data.jobPosting.Channel__c;
+        } else {
+            pageData.data.jobPosting.channelName = pageData.data.jobPosting.Channel__c;
+        }
+        
         if (pageData.data.jobPosting.Activation_Date__c) {
             var date_array = pageData.data.jobPosting.Activation_Date__c.split('-');
             pageData.date = new Date(date_array[0], date_array[1]-1, date_array[2]).toDateString().substring(4);
         } else {
             var today = new Date();
-            pageData.date = today.toDateString().substring(4, 7) + ' ' + today.getDay();
+            pageData.date = today.toDateString().substring(4, 7) + ' ' + today.getDate();
         }
         
         pageData.isEdit = !Ember.isEmpty(pageData.data.jobPosting.Id);
@@ -166,24 +217,31 @@ App.MainRoute = Ember.Route.extend({
             var channelData = JSON.parse(pageData.data.channelData);
             pageData.data.channelData = ''; // Clear it out after we get it. (Keep it from submitting to the back-end)            
 
-            if (pageData.isEdit) {
-                pageData.channelData = channelData._embedded.channels;
-                
-            } else {
-                pageData.channelData = Ember.A();
+            pageData.channelData = Ember.A();
 
-                channelData._embedded.channels.forEach(function(channel) {
-                    if ((channel.type == 'Job Board' && pageData.data.channelCreds.indexOf(channel.name) !== -1) ||  channel.type == SOCIAL_CHANNEL_TYPE) {
-                        pageData.channelData.push(channel);
-                      }
-                });
-            }
+            channelData._embedded.channels.forEach(function(channel) {
+                if (channel.type == 'App' || channel.type == 'Website' || channel.type == 'Job Board' || channel.type == 'Social') {
+                    channel.value = channel.name;
+                    
+                    if (channel.type == 'Website') {
+                        var website = icSettings.findBy('Name', CAREER_SITE_CHANNEL_NAME);
+
+                        if (website) {
+                            // set channel name for Career Site to Name of Career Site
+                            channel.name = website.Field1__c;
+                        }
+                    }
+                    pageData.channelData.push(channel);
+                }
+            });
             
             pageData.channelData.sort(function(a, b) {
+                var channel_order = ['Website', 'Job Board', 'Social'];
+                
                 if (a.type == b.type) {
                     return a.name > b.name;
                 } else {
-                    return a.type > b.type;
+                    return channel_order.indexOf(a.type) > channel_order.indexOf(b.type);
                 }
             });
         } 
@@ -245,7 +303,7 @@ App.MainRoute = Ember.Route.extend({
         // Check if the channel data was populated and set data.
         if (!Ember.isEmpty(pageData.data.jobPosting.Channel__c)) {
             pageData.channelName = pageData.data.jobPosting.Channel__c;
-            pageData.socialAccountName = pageData.icSettings.findBy('Name', pageData.channelName) ? pageData.icSettings.findBy('Name', pageData.channelName).Field3__c : '';
+            pageData.socialAccountName = pageData.icSettings.findBy('Name', pageData.channelName + '-' + userId) ? pageData.icSettings.findBy('Name', pageData.channelName + '-' + userId).Field3__c : '';
             pageData.channelButtonSelected = false;
                         
             var selectedChannelData = pageData.channelData.findBy('name', pageData.channelName);
@@ -373,6 +431,15 @@ App.MainRoute = Ember.Route.extend({
             }
         });
         
+        pageData.data.internalJobPostingFields.forEach(function(field) {
+            if (field.type == 'BOOLEAN') {
+                field.value = pageData.data.jobPosting[field.name] ? pageData.data.jobPosting[field.name] : false;
+            }
+            else {
+                field.value = pageData.data.jobPosting[field.name] ? pageData.data.jobPosting[field.name] : '';
+            }
+        });
+        
         return pageData; // This is the object.
     },
     afterModel: function(model) {
@@ -396,12 +463,12 @@ App.MainController = Ember.ObjectController.extend({
                 var parsedResult = parseResult(res);
                 
                 if (!Ember.isEmpty(parsedResult.errorMessages)) {
-                    self.set('connectionerror', 'Connection error: please contact your system administrator if this persists.');
+                    self.set('connectionerror', labels.connectionError);
                     self.set('connectionMessage', self.get('connectionerror'));
                     $(window).scrollTop(0);
 
                 } else {
-                    self.set('connectionerror', 'Connection error: please contact your system administrator if this persists.');
+                    self.set('connectionerror', labels.connectionError);
 
                     var subParse = parseResult(parsedResult.data.response);
 
@@ -433,13 +500,13 @@ App.MainController = Ember.ObjectController.extend({
                     var parsedResult = parseResult(res);
                 
                     if (!Ember.isEmpty(parsedResult.errorMessages)) {
-                        self.set('connectionerror', 'Connection error: please contact your system administrator if this persists.');
+                        self.set('connectionerror', labels.connectionError);
                         self.set('connectionMessage', self.get('connectionerror'));
                         $(window).scrollTop(0);
                         reject(self);
 
                     } else {
-                        self.set('connectionerror', 'Connection error: please contact your system administrator if this persists.');
+                        self.set('connectionerror', labels.connectionError);
 
                         var subParse = parseResult(parsedResult.data.response);
 
@@ -516,30 +583,33 @@ App.MainController = Ember.ObjectController.extend({
     
     // Title
     onTitleChange: function() {
-        Ember.run.debounce(this, function() {
-            if (this.get('data.jobPosting.Job_Title__c')) {
-                this.set('socialTitleLimit', this.get('fields.Job_Title__c.maxLength') - this.get('data.jobPosting.Job_Title__c').length);
-            }
-        }, 500);
+        Ember.run.debounce(this, this.calcSocialTitleLimit, 500); // 1/2 second.
     }.observes('data.jobPosting.Job_Title__c'),
+    calcSocialTitleLimit: function() {
+        if (this.get('data.jobPosting.Job_Title__c')) {
+            this.set('socialTitleLimit', this.get('fields.Job_Title__c.maxLength') - this.get('data.jobPosting.Job_Title__c').length);
+        }
+    },
     
     // Summary
     onSummaryChange: function() {
-        Ember.run.debounce(this, function() {
-            if (this.get('data.jobPosting.Summary__c')) {
-                this.set('socialSummaryLimit', this.get('fields.Summary__c.maxLength') - this.get('data.jobPosting.Summary__c').length);
-            }
-        }, 500);
+        Ember.run.debounce(this, this.calcSocialSummaryLimit, 500); // 1/2 second
     }.observes('data.jobPosting.Summary__c'),
+    calcSocialSummaryLimit: function() {
+        if (this.get('data.jobPosting.Summary__c')) {
+            this.set('socialSummaryLimit', this.get('fields.Summary__c.maxLength') - this.get('data.jobPosting.Summary__c').length);
+        }
+    },
     
     // Message
     onMessageChange: function() {
-        Ember.run.debounce(this, function() {
-            if (this.get('data.jobPosting.Message__c')) {
-                this.set('socialMessageLimit', this.get('fields.Message__c.maxLength') - this.get('data.jobPosting.Message__c').length);
-            }
-        }, 500);
+        Ember.run.debounce(this, this.calcSocialMessageLimit, 500); // 1/2 second
     }.observes('data.jobPosting.Message__c'),
+    calcSocialMessageLimit: function() {
+        if (this.get('data.jobPosting.Message__c')) {
+            this.set('socialMessageLimit', this.get('fields.Message__c.maxLength') - this.get('data.jobPosting.Message__c').length);
+        }
+    },
 
     observeCategory: function() {
         if (!Ember.isNone(this.get('categoryName'))) {
@@ -566,11 +636,25 @@ App.MainController = Ember.ObjectController.extend({
     observeChannel: function() {
         if (!Ember.isNone(this.get('channelName'))) {
             // no creds?
-            if (this.get('data.channelCreds').indexOf(this.get('channelName')) == -1) {
-                $("#credsModal").modal();
+            if (this.get('channelName') == 'Internal') {
+                this.set('isInternal', true);
+                
+                if (this.get('data.jobPosting.Id') == null) {
+                    this.set('data.jobPosting.Job_Title__c', this.get('data.requisition.Name'));
+                }
+            } else {
+                this.set('isInternal', false);
+                
+                if (this.get('data.jobPosting.Id') == null) {
+                    this.set('data.jobPosting.Job_Title__c', this.get('data.requisition.Job_Posting_Title__c'));
+                }
+                if (this.get('data.channelCreds').indexOf(this.get('channelName')) == -1 && this.get('data.channelCreds').indexOf(this.get('channelName') + '-' + userId) == -1) {
+                    $("#credsModal").modal();
+                }
             }
             
-            var specificChannelData = this.get('channelData').findBy('name', this.get('channelName')); // Create local Var.
+            var specificChannelData = this.get('channelData').findBy('value', this.get('channelName')); // Create local Var.
+            
             this.set('data.jobPosting.Channel__c', this.get('channelName')); // Set the channel
             this.set('channelButtonSelected', false);
             this.set('isSelfPost', this.get('channelName') == CAREER_SITE_CHANNEL_NAME);
@@ -726,6 +810,13 @@ App.MainController = Ember.ObjectController.extend({
                 this.set('categoryData', specificChannelData.fields.Category__c.values);
             }
             
+            if (this.get('channelName') == CAREER_SITE_CHANNEL_NAME) {
+                this.set('to_jobPosting_post_ok', labels.to_jobPosting_post_ok.replace('{0}', icSettings.findBy('Name', CAREER_SITE_CHANNEL_NAME).Field1__c));
+            } else {
+                this.set('to_jobPosting_post_ok', labels.to_jobPosting_post_ok.replace('{0}', this.get('channelName')));
+            }
+            this.set('modal_credentials_title', labels.to_jobPosting_modal_credentials_title.replace('{0}', this.get('channelName')));
+            this.set('modal_credentials_body', labels.to_jobPosting_modal_credentials_body.replace('{0}', this.get('channelName')));
             // Else this is not a map.
         }
     }.observes('channelName'),
@@ -882,21 +973,28 @@ App.MainController = Ember.ObjectController.extend({
     },
     presave: function(self) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
-            cont.getActiveCareerSiteJobPostingId(JSON.stringify(self.model.data.jobPosting), function(res, resObj) {
-                if (res) {
-                    var parsedResult = parseResult(res);
-                    if (!Ember.isEmpty(parsedResult.errorMessages)) {
-                        self.set('error', labels.to_jobPosting_error_autocreate + ' ' + parsedResult.errorMessages.join('.\n'));
-                        reject(self);
+            if (self.get('isInternal')) {
+                resolve(self);
+            } else {
+                cont.getActiveCareerSiteJobPostingId(JSON.stringify(self.model.data.jobPosting), function(res, resObj) {
+                    if (res) {
+                        var parsedResult = parseResult(res);
+                        if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                            var ic = icSettings.findBy('name', CAREER_SITE_CHANNEL_NAME);
+                        
+                            self.set('error', labels.to_jobPosting_error_autocreate + ' ' + parsedResult.errorMessages.join('.\n'));
+                            reject(self);
+                        } else {
+                            self.set('model.data.csjpId', parsedResult.data.csjpId);
+                            self.set('hasCareerSitePosting', true);
+                            resolve(self);
+                        }
                     } else {
-                        self.set('model.data.csjpId', parsedResult.data.csjpId);
-                        resolve(self);
+                        self.set('error', resObj.message);
+                        reject(self);
                     }
-                } else {
-                    self.set('error', resObj.message);
-                    reject(self);
-                }
-            });
+                });
+            }
         });
     },
     save: function(self) {
@@ -909,7 +1007,22 @@ App.MainController = Ember.ObjectController.extend({
                         reject(self);
                     } else {
                         self.set('model.data.jobPosting.Id', parsedResult.data.jobPostingId);
-                        resolve(self);
+                        
+                        if (self.get('isInternal')) {
+                            cont.saveSkills(self.get('data.skills'), parsedResult.data.jobPostingId, function(res2, resObj2) {
+                                if (res2) {
+                                    var parsedResult2 = parseResult(res2);
+                                    if (!Ember.isEmpty(parsedResult2.errorMessages)) {
+                                        self.set('error', parsedResult2.errorMessages[0]);
+                                        reject(self);
+                                    } else {
+                                        resolve(self);
+                                    }
+                                }
+                            });
+                        } else {
+                            resolve(self);
+                        }
                     }
                 } else {
                     self.set('error', resObj.message);
@@ -922,10 +1035,18 @@ App.MainController = Ember.ObjectController.extend({
         var self = myself;
         
         return new Ember.RSVP.Promise(function(resolve, reject) {
-            if (self.model.isSelfPost) {
+            // no credentials?
+            if (self.get('channelName') != 'Internal' && self.get('data.channelCreds').indexOf(self.get('channelName')) == -1 && self.get('data.channelCreds').indexOf(self.get('channelName') + '-' + userId) == -1) {
+                $("#credsModal").modal();
+                reject(self);
+            }
+            
+            // verify only if linkedin (due to expiring linkedin token)
+            // this could end up being a problem if linkedin has limited token requests (like twitter)
+            if (self.get('channelName') != 'LinkedIn') { // || !self.get('channelData').findBy('value', self.get('channelName')).canVerify) {
                 resolve(self);
             } else {
-                cont.verify(self.get('model.data.jobPosting.channelName'), function(res, resObj) {
+                cont.verify(self.get('data.jobPosting.Id'), function(res, resObj) {
                     if (res) {
                         var parsedResult = parseResult(res);
                         if (!Ember.isEmpty(parsedResult.errorMessages)) {
@@ -957,13 +1078,21 @@ App.MainController = Ember.ObjectController.extend({
                 });
                 
                 resolve(self);
+            } else if (self.model.isInternal) {
+                self.setStatus({
+                    "responseData" : {
+                        "url" : window.location.href + '&preview=true' // PREVIEW
+                    },
+                    "status" : "Active"
+                });
+                
+                resolve(self);
             } else {
                 cont.postToBoard(self.get('model.data.jobPosting.Id'), function(res, resObj) { 
                     if (res) {
                         var parsedResult = parseResult(res);
                         if (!Ember.isEmpty(parsedResult.errorMessages)) {
                             self.set('error', parsedResult.errorMessages[0]);
-                            $("#credsModal").modal();
                             reject(self);
                         } else { // This was successful.
                             // grab the data from the response.
@@ -974,7 +1103,6 @@ App.MainController = Ember.ObjectController.extend({
                         }
                     } else {
                         self.set('error', resObj.message);
-                        $("#credsModal").modal();
                         reject(self);
                     }
                 });
@@ -986,6 +1114,10 @@ App.MainController = Ember.ObjectController.extend({
         var statusToSet = data.status.charAt(0).toUpperCase() + data.status.slice(1).toLowerCase();
         
         self.set('model.isStatusEdited', false);
+        
+        if (self.get('model.data.jobPosting.Status__c') == 'Edited' && statusToSet == 'Active') {
+            self.set('infoMessage', true);
+        }
         
         self.set('model.data.jobPosting.Status__c', statusToSet); 
         self.set('model.button', {
@@ -1001,10 +1133,14 @@ App.MainController = Ember.ObjectController.extend({
         
         if (statusToSet == 'Error') {
             self.set('model.data.jobPosting.Status_Message__c', data.errorMessages[0]);
+        } else if (statusToSet == 'Pending') {
+            self.set('infoMessage', labels.to_jobPosting_infoMessage);
         } else {
+            // clear error message
+            self.set('model.data.jobPosting.Status_Message__c', '');
             self.set('model.data.jobPosting.Posting_Url__c', data.responseData.url); // Switch this to the posting URL
             
-            if (!self.get('isSelfPost')) {
+            if (!self.get('isSelfPost') && !self.get('isInternal')) {
                 self.set('model.data.jobPosting.Apply_Url__c', self.model.data.url + '/s/JobListing?id=' + self.model.data.csjpId +
                     "&utm_source=" + encodeURIComponent(self.model.data.jobPosting.Channel__c) +
                     "&utm_medium=" + encodeURIComponent(self.model.data.jobPosting.Type__c)); // Where to apply to?
@@ -1024,6 +1160,15 @@ App.MainController = Ember.ObjectController.extend({
                         "url" : self.model.data.url + '/s/JobListing?id=' + self.model.data.csjpId +
                             "&utm_source=" + encodeURIComponent(self.model.data.jobPosting.Channel__c) +
                             "&utm_medium=" + encodeURIComponent(self.model.data.jobPosting.Type__c)
+                    },
+                    "status" : "Unposted"
+                });
+                
+                resolve(self);
+            } else if (self.model.isInternal) {
+                self.setStatus({
+                    "responseData" : {
+                        "url" : window.location.href + '&preview=true' // PREVIEW
                     },
                     "status" : "Unposted"
                 });
@@ -1094,19 +1239,31 @@ App.MainController = Ember.ObjectController.extend({
     },
     gotoObject: function(self) {
         var objectId = self.model.data.jobPosting.Id;
-        if(isSF1) {
-            sforce.one.navigateToSObject(objectId);
-        } else {
-            window.location.href = '/' + objectId;
+        if (!isTest) {
+            if(isSF1) {
+                sforce.one.navigateToSObject(objectId);
+            } else {
+                if (self.get('infoMessage')) {
+                    window.location.href = '/' + objectId + '#info';
+                } else {
+                    window.location.href = '/' + objectId;
+                }
+            }
         }
+        
+        return false;
     },
     gotoReq: function(self) {
-        var objectId = self.model.data.jobPosting.Requisition__c;    
-        if(isSF1) {
-            sforce.one.navigateToSObject(objectId);
-        } else {
-            window.location.href = '/' + objectId;
+        var objectId = self.model.data.requisition.Id;
+        if (!isTest) {
+            if(isSF1) {
+                sforce.one.navigateToSObject(objectId);
+            } else {
+                window.location.href = '/' + objectId;
+            }
         }
+        
+        return false;
     },
     handleError: function(self) {
         self.set('model.spinnerIsUp', false);
@@ -1141,19 +1298,49 @@ App.MainController = Ember.ObjectController.extend({
             resolve(self);
         });
     },
+    getSkills: function(query) {
+        cont.getSkillsByPartialName(query.term, function(res, resObj) {
+            var results = null;
+            
+            if (res) {
+                var parsedResult = parseResult(res);
+                if (res.data) {
+                    results = res.data.skills;
+                }
+            }
+            
+            query.callback(results);
+        });
+    },
     actions: {
+        previewClick: function() {
+            var url = window.location.href + '&preview=true';
+            if (isSF1) {
+                sforce.one.navigateToURL(url);
+            } else {
+                window.location.href = url;
+            }
+        },
+        removeInfoMessage: function() {
+            var self = this;
+
+            self.set('infoMessage', false);
+        },
         onDurationDefault: function() {
             if (Ember.isEmpty(this.get('data.jobPosting.Duration__c'))) {
                 this.set('data.jobPosting.Duration__c', 30 );
                 this.set('postingDurationText', 30 );
             }
         },
+        reqClick: function() {
+            this.gotoReq(this);
+        },
         deleteClick: function() {
             // Reset Errors
             this.set('errorMessage', null);                
             // If draft, then we can remove and redirect to the req
             var self = this;
-            var objectId = this.get('data.jobPosting.Requisition__c');
+            var objectId = this.get('data.requisition.Id');
 
             if (this.get('data.jobPosting.Status__c') == 'Draft' || 
                 (this.get('data.jobPosting.Status__c') == 'Edited' && Ember.isEmpty(this.get('data.jobPosting.Posting_Url__c')))) {
@@ -1168,10 +1355,12 @@ App.MainController = Ember.ObjectController.extend({
 
                         } else {
                             // deleted, go to the Req.
-                            if(isSF1) {
-                                sforce.one.navigateToSObject(objectId);
-                            } else {
-                                window.location.href = '/' + objectId;
+                            if (!isTest) {
+                                if(isSF1) {
+                                    sforce.one.navigateToSObject(objectId);
+                                } else {
+                                    window.location.href = '/' + objectId;
+                                }
                             }
                         }
 
@@ -1194,17 +1383,21 @@ App.MainController = Ember.ObjectController.extend({
             }
         },
         editClick: function() {
-            var objectId = this.get('data.jobPosting.Id')
-//            if(isSF1) {
-//                sforce.one.editRecord(objectId);
-//            } else {
+            var objectId = this.get('data.jobPosting.Id');
+            var url;
             if (!Ember.isEmpty(vfNamespace)) {
-                window.location.href = '/apex/' + vfNamespace + '__to_jobPosting?id=' + objectId; 
+                url = '/apex/' + vfNamespace + '__to_jobPosting?id=' + objectId; 
             } else {
-                window.location.href = '/apex/c__to_jobPosting?id=' + objectId; 
+                url = '/apex/c__to_jobPosting?id=' + objectId; 
             }
-                
-//            }
+            
+            if (!isTest) {
+                if(isSF1) {
+                    sforce.one.navigateToURL(url);
+                } else {
+                    window.location = url;
+                }
+            }
         },
         sendClick: function () {
             // Reset Errors
@@ -1249,9 +1442,24 @@ App.MainController = Ember.ObjectController.extend({
             } else {
                 self.set('data.jobPosting.Status__c', 'Draft');
             }
-            // field set values
+            // fieldset values
             if (self.get('isSelfPost')) {
                 self.get('data.jobPostingFields').forEach(function(field) {
+                    if (field.type == 'TEXTAREA' && field.isHTML) {
+                        // Handle the rich text block
+                        var templateContent = $('#' + field.componentId + ' iframe.cke_reset:first').contents().find('body');
+                        templateContent.find('[style]').removeAttr('style');
+                        templateContent.find('[class]').removeAttr('class');
+                        templateContent = templateContent.html();
+                        self.set('data.jobPosting.' + field.name, templateContent);
+                    } else {
+                        self.set('data.jobPosting.' + field.name, field.value);
+                    }
+                });
+            }
+            
+            if (self.get('isInternal')) {
+                self.get('data.internalJobPostingFields').forEach(function(field) {
                     if (field.type == 'TEXTAREA' && field.isHTML) {
                         // Handle the rich text block
                         var templateContent = $('#' + field.componentId + ' iframe.cke_reset:first').contents().find('body');
@@ -1280,7 +1488,11 @@ App.MainController = Ember.ObjectController.extend({
 //            this.set('data.jobPosting.Locations__c', JSON.stringify(this.get('locations')));
             
             // Set the title
-            self.set('data.jobPosting.Name', self.get('data.jobPosting.Channel__c') + ' (' + self.get('data.jobPosting.Job_Title__c') + ')' )
+            if (self.get('data.jobPosting.Channel__c') == CAREER_SITE_CHANNEL_NAME) {
+                self.set('data.jobPosting.Name', icSettings.findBy('Name', CAREER_SITE_CHANNEL_NAME).Field1__c + ' (' + self.get('data.jobPosting.Job_Title__c') + ')' )
+            } else {
+                self.set('data.jobPosting.Name', self.get('data.jobPosting.Channel__c') + ' (' + self.get('data.jobPosting.Job_Title__c') + ')' )
+            }
 
             //Handled the contact information
             self.set('data.jobPosting.Contact_Name__c', self.get('data.contactPosting.Contact_Name__c'));
@@ -1310,28 +1522,32 @@ App.MainController = Ember.ObjectController.extend({
         },
         goCreds: function() {
             var self = this;
-            window.location.href = '/apex/to_creds_jobPosting?name=' + self.get('model').channelName + "&returnUrl=" + encodeURIComponent(window.location.href + '&channelName=' + self.get('model').channelName);
+            if (!isTest) {
+                window.location.href = '/apex/to_creds_jobPosting?name=' + self.get('model').channelName + "&returnUrl=" + encodeURIComponent(window.location.href + '&channelName=' + self.get('model').channelName);
+            }
         },
         cancelClick: function () {
-            if(isSF1) {
-                sforce.one.back(true);
-            } else {
-                if (Ember.isEmpty(returnUrl)) {
-                    var objectId = this.get('data.jobPosting.Id');
-
-                    if (Ember.isEmpty(objectId)) {
-                        // Go to the req.
-                        objectId = this.get('data.jobPosting.Requisition__c');
-                    }    
-
-                    if (!Ember.isEmpty(objectId)) {
-                        window.location.href = '/' + objectId;    
-                    } else {
-                        window.history.back();
-                    }
-                    
+            if (!isTest) {
+                if(isSF1) {
+                    sforce.one.back(true);
                 } else {
-                    window.location.href = returnUrl;
+                    if (Ember.isEmpty(returnUrl)) {
+                        var objectId = this.get('data.jobPosting.Id');
+
+                        if (Ember.isEmpty(objectId)) {
+                            // Go to the req.
+                            objectId = this.get('data.requisition.Id');
+                        }    
+
+                        if (!Ember.isEmpty(objectId)) {
+                            window.location.href = '/' + objectId;    
+                        } else {
+                            window.history.back();
+                        }
+                    
+                    } else {
+                        window.location.href = returnUrl;
+                    }
                 }
             }
         },
@@ -1375,7 +1591,6 @@ App.MainController = Ember.ObjectController.extend({
         }
         
     },
-
 });
 
 App.Select2Component = Ember.Select.extend({
@@ -1388,35 +1603,73 @@ App.Select2Component = Ember.Select.extend({
             var self = this;
             var $el = this.$();
             $el.select2({
-                placeholder: this.get('placeholder'),
                 maximumSelectionSize: this.get('maximumSelectionSize'),
-                
+                placeholder: this.get('placeholder')
             });
-            // $el.select2().on('change', function(e) {
-            //     self.set('valueArray', e.val);
-            // });
+            
             $el.select2('val', this.get('valueArray')); 
 
             this.on('change', function(e) {
                 self.set('valueArray', e.val);
             });
-
-
         };
-
-
-   // },
-   //  contentDidChange: function() {
-   //      // Apply the update...
-   //      var self = this;
-   //      var $el = this.$();
     },
     updateSelect2: function() { // Rerender the select2 container with new values, etc.
         this.rerender();
     }.observes('content')
 });
 
-
+App.Select2SkillsComponent = Ember.TextField.extend({
+    attributeBindings: ['placeholder', 'valueArray' ],
+    didInsertElement: function() {
+        Ember.run.scheduleOnce('afterRender', this, this.applySelect);
+    },
+    applySelect: function() {
+        if (this._state == 'inDOM') {
+            var self = this;
+            var $el = this.$();
+            $el.select2({
+                createSearchChoice: function (term, data) {
+                    if (data.findBy('text', term)) {
+                        return null;
+                    }
+                    return { id: term, text: term };
+                },
+                initSelection : function (element, callback) {
+                    var data = [];
+                    $(element.val().split(",")).each(function () {
+                        if (this.length >= 2) {
+                            data.push({id: this, text: this});
+                        }
+                    });
+                    
+                    callback(data);
+                },
+                minimumInputLength: 2,
+                placeholder: this.get('placeholder'),
+                query: function(query) {
+                    cont.getSkillsByPartialName(query.term, function(res, resObj) {
+                        if (res) {
+                            var parsedResult = parseResult(res);
+                            query.callback(parsedResult.data);
+                        }
+                    });
+                },
+                tags: true,
+                tokenSeparators: [',']
+            });
+            
+            $el.select2('val', this.get('valueArray'));
+            
+            this.on('change', function(e) {
+                self.set('valueArray', e.val);
+            });
+        };
+    },
+    updateSelect2: function() { // Rerender the select2 container with new values, etc.
+        this.rerender();
+    }.observes('content')
+});
 
 var convertCtyCodeName = function(code) {
     if (code == 'US') {
@@ -1502,20 +1755,5 @@ var convertStateCodeName = function(cty, state) {
     if (code == "US:WV") { return "West Virginia" }
     if (code == "US:WI") { return "Wisconsin" }
     if (code == "US:WY") { return "Wyoming" }
-    return state;    
+    return state;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
