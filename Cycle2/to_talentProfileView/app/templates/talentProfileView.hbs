@@ -3,10 +3,12 @@
         <div class="panel mar--sm--bm js-panel">
             <div class="panel__top">
                 <div class="js-view-buttons">
-                    <button type="button" class="button button--primary float--right mar--sm--ls">
-                        <span class="juicon juicon-download"></span>
-                        Import from LinkedIn
-                    </button>
+                    {{#if isOwner}}
+                        <button type="button" class="button button--primary float--right mar--sm--ls">
+                            <span class="juicon juicon-download"></span>
+                            Import from LinkedIn
+                        </button>
+                    {{/if}}
                     <button type="button" {{action "clickEdit"}} class="button button--secondary float--right js-edit-page">
                         <span class="juicon juicon-pencil"></span>
                     </button>
@@ -39,9 +41,9 @@
                                 <div class="column--md--6">
                                     <label class="block">{{field.label}}</label>
                                     {{#if field.value}}
-                                        <p data-qa-label="fieldSetValue">{{{field.value}}}</p>
+                                        <div data-qa-label="fieldSetValue">{{{field.value}}}</div>
                                     {{else}}
-                                        <p data-qa-label="fieldSetValue">Not Provided</p>
+                                        <div data-qa-label="fieldSetValue">Not Provided</div>
                                     {{/if}}
                                 </div> 
                             {{/each}}
@@ -179,7 +181,7 @@
                         </div>
                         <div class="panel__body">
                             {{#each records}}
-                                {{Skill__r.Name}},
+                                <span class="label label--secondary inline-block mar--sm--bxs">{{Skill__r.Name}}</span>
                             {{/each}}
                         </div>
                     </section>
@@ -224,8 +226,20 @@
                                             {{Name}}
                                         {{/if}}
                                     </h3>
-                                    <small class="text-faded block">{{Number__c}} {{#if Office__c}}({{Office}}){{/if}}</small>
-                                    <small class="text-faded">{{Date__c}} {{#if status}}({{status}}){{/if}}</small>
+                                    <small class="text-faded block">
+                                        {{#if Number__c}}
+                                            {{Number__c}} {{#if Office__c}}({{Office__c}}){{/if}}
+                                        {{else}}
+                                            {{Office__c}}
+                                        {{/if}}
+                                    </small>
+                                    <small class="text-faded">
+                                        {{#if Date__c}}
+                                            {{Date__c}} {{#if Status__c}}({{Status__c}}){{/if}}
+                                        {{else}}
+                                            {{Status__c}}
+                                        {{/if}}
+                                    </small>
                                     <p>
                                         {{Summary__c}}
                                     </p>
@@ -250,9 +264,9 @@
                                             </p>
                                             <div class="text-right">
                                                 <p>
-                                                    {{Recommender__c}}
+                                                    {{Name}}
                                                 </p>
-                                                {{Name}}
+                                                {{Recommender_Title__c}}
                                             </div>
                                         </div>
                                     </div>
@@ -270,7 +284,7 @@
                         <div class="test panel__body pad--sm--bn">
                             {{#each records}}
                                 <article class="mar--sm--bm">
-                                    <h3>{{Name}} ({{Number__c}})</h3>
+                                    <h3>{{Name}} {{#if Number__c}}({{Number__c}}){{/if}}</h3>
                                     <small class="text-faded block">{{Issuer__c}}</small>
                                     <small class="text-faded">{{displayMonthYear Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
                                     <hr class="hr-alt"/>

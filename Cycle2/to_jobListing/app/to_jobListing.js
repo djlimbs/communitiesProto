@@ -282,15 +282,18 @@ App.JobPostingController = Ember.ObjectController.extend({
     }.property(),
     redirectUrl : function(){
         var application = this.get('application');
-        var href = '';
         
         if (this.get('hasJobOffer')) {
             return '/' + parent.urlPrefix.split('/')[1] + '/' + extnamespace + 'to_offerLetterCandidate?id=' + application.Job_Offers__r.records[0].Id;
-        } else if(!Ember.isNone(application) && application.Status__c === 'In Progress'){
-            return parent.urlPrefix + '/Apply?id=' + application.Id;
-        } 
+        } else if(!Ember.isNone(application)){
+            if(application.Stage__c == 'Application' && application.Status__c === 'In Progress'){
+                return '/apex/to_applyFlow?id=' + application.Id;
+            } else {
+                return '#';
+            }
+        }
         
-        return href;
+        return '';
     }.property('hasJobOffer', 'application'),
     toggleDropdown : function(){
         return Ember.isEmpty(this.get('redirectUrl')) ? 'dropdown' : '';

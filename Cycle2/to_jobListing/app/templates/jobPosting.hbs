@@ -1,4 +1,4 @@
-<div class="scope-container">
+x<div class="scope-container">
     <div {{bind-attr class=":load-full showLoadingState::hide"}}>
         <div class="load-full-icon"></div>
     </div>
@@ -26,12 +26,12 @@
                     <div class="button-group float--right show-brkpoint--md">
                         <a  data-qa-button="actionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}} target="_top">{{{actionButtonText}}}</a>
                         <ul class="dropdown-menu">
-                            <li data-qa-button="applyEmail"class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}} Apply with email</a></li>
-                            <li data-qa-button="applyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}} Apply with LinkedIn</a></li>
+                            <li data-qa-button="applyEmail"class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}}</a></li>
+                            <li data-qa-button="applyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}}</a></li>
                         </ul>
                     </div>
                     <h1 data-qa-label="postName" class="has-subheading page__heading">{{jobPosting.Job_Title__c}}</h1>
-                    <h2 data-qa-label="locations" class="page__subheading wsn">{{locationString}}{{#if isRemoteAvailable}} | <small>Remote Avaliable{{labels.remoteAvailable}}</small>{{/if}}</h2>
+                    <h2 data-qa-label="locations" class="page__subheading wsn">{{locationString}}{{#if isRemoteAvailable}} | <small>{{labels.remoteAvailable}}</small>{{/if}}</h2>
                 </nav>
                 {{#each field in jpFields}}
                     <h4 data-qa-label="fieldSetLabel" class="job-field-label">{{field.label}}</h4>
@@ -46,8 +46,8 @@
                     <div class="button-group inline-block vam width--full--sm--only">
                         <a data-qa-button="bottomActionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color :width--full--sm--only disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}}>{{{actionButtonText}}}</a>
                         <ul class="dropdown-menu dropdown-menu--up">
-                            <li data-qa-button="bottomApplyEmail" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}} Apply with email</a></li>
-                            <li data-qa-button="bottomApplyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}} Apply with LinkedIn</a></li>
+                            <li data-qa-button="bottomApplyEmail" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}}</a></li>
+                            <li data-qa-button="bottomApplyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}}</a></li>
                         </ul>
                     </div>
                 {{/unless}}
@@ -55,11 +55,11 @@
             <div class="column--md--4 mar--sm--only--txl">
                 {{#if hasPublicJP}}
                     <div class="button-group width--full inline-block vam width--full--sm--only">
-                        <button class="button button--secondary width--full theme-border-color theme-link-color" data-toggle="dropdown" data-qa-button="shareJob">{{labels.shareJob}} Share Job <span class="juicon juicon-share"></span></button>
+                        <button class="button button--secondary width--full theme-border-color theme-link-color" data-toggle="dropdown" data-qa-button="shareJob">{{labels.shareJob}} <span class="juicon juicon-share"></span></button>
                         <ul class="dropdown-menu dropdown-menu--up-on-small">
-                            <li class="dropdown-menu__list-item" data-qa-link="twitter"><a href="#" {{action "shareOnTwitter"}}><span class="juicon juicon-twitter"></span> {{labels.twitter}}Twitter</a></li>
-                            <li class="dropdown-menu__list-item" data-qa-link="linkedIn"><a href="#" {{action "shareOnLinkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.linkedIn}}LinkedIn</a></li>
-                            <li class="dropdown-menu__list-item" data-qa-link="facebook"><a href="#" {{action "shareOnFacebook"}}><span class="juicon juicon-facebook"></span> {{labels.facebook}}Facebook</a></li>
+                            <li class="dropdown-menu__list-item" data-qa-link="twitter"><a href="#" {{action "shareOnTwitter"}}><span class="juicon juicon-twitter"></span> {{labels.twitter}}</a></li>
+                            <li class="dropdown-menu__list-item" data-qa-link="linkedIn"><a href="#" {{action "shareOnLinkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.linkedIn}}</a></li>
+                            <li class="dropdown-menu__list-item" data-qa-link="facebook"><a href="#" {{action "shareOnFacebook"}}><span class="juicon juicon-facebook"></span> {{labels.facebook}}</a></li>
                         </ul>
                     </div>
                     <hr>
