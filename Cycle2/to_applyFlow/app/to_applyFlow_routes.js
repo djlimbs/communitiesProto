@@ -1,7 +1,8 @@
 App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
+    applicationObj.showSavingNotification = false;
     if (isInternal === true) {
         applicationObj.isContactInfoEnabled = false;
-        applicationObj.isContactInfoComplete = true;
+        applicationObj.isContactInfoIncomplete = false;
     } else {
         applicationObj.isContactInfoEnabled = true;
         applicationObj.sectionArray.addObject('contactInfo');
@@ -466,7 +467,7 @@ App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiring
 };
 
 App.setupTrainingDevelopmentSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
-    if (hiringModel.training_development.isEnabled === true) {
+    if (hiringModel.trainingActivities.isEnabled === true) {
         applicationObj.isTrainingDevelopmentEnabled = true;
         applicationObj.isTrainingDevelopmentIncomplete = true;
 
