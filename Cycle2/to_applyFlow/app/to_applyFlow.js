@@ -19,7 +19,8 @@ App.Fixtures = {
         'PICKLIST' : 'picklist',
         'BOOLEAN' : 'checkbox',
         'DOUBLE' : 'telField',
-        'URL' : 'textField'
+        'URL' : 'textField',
+        'CURRENCY' : 'telField'
     },
     fieldApiNameToFieldNameMap: {
         'First_Name__c' : 'firstname',
@@ -366,7 +367,7 @@ App.convertLinkedInToEducationHistoryObj = function(educations) {
             End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null
         };
     });
-}
+};
 
 App.convertLinkedInToEmploymentHistoryObj = function(positions) {
     return positions.map(function(p) {
@@ -382,7 +383,29 @@ App.convertLinkedInToEmploymentHistoryObj = function(positions) {
             Is_Current__c: p.isCurrent,
         };
     });
-}
+};
+
+App.convertLinkedInToRecommendationObj = function(recs) {
+    return recs.map(function(r) {
+        return {
+            Name: !Ember.isNone(r.recommender) ? r.recommender.firstName  + ' ' + r.recommender.lastName : null,
+            Recommendation_Text__c: r.recommendationText,
+            Recommender_Title__c : null
+        };
+    });
+};
+
+App.convertLinkedInToRecognitionObj = function(recs) {
+    return recs.map(function(r) {
+        return {
+            Name: r.name,
+            Description__c: r.description,
+            Month__c : !Ember.isNone(r.date) ? r.date.month : null,
+            Year__c : !Ember.isNone(r.date) ? r.date.year : null,
+            Issuer__c : r.issuer
+        };
+    });
+};
 
 App.createApplicantRequiredDataObj = function(legalFormElements) {
     var applicantRequiredData = [];

@@ -235,6 +235,9 @@ App.ApplyController = Ember.ObjectController.extend({
     }.property('currentPath'),
     isContactInfo: Ember.computed.equal('currentPath', 'contactInfo'),
     isLegallyRequired: Ember.computed.equal('currentPath', 'legallyRequired'),
+    isFirstSection: function() {
+        return this.get('currentSectionNum') === 1;
+    }.property('currentSectionNum'),
     isLastSection: function() {
         return this.get('currentSectionNum') === this.get('sectionArray').length;
     }.property('currentSectionNum'),
