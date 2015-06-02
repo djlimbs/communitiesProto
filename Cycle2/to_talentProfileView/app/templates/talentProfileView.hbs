@@ -4,7 +4,7 @@
             <div class="panel__top">
                 <div class="js-view-buttons">
                     {{#if isOwner}}
-                        <button type="button" class="button button--primary float--right mar--sm--ls">
+                        <button class="button button--primary float--right mar--sm--ls hide-brkpoint--sm" data-target="#linkedinModal" data-toggle="modal" type="button">
                             <span class="juicon juicon-download"></span>
                             Import from LinkedIn
                         </button>
@@ -17,40 +17,44 @@
                     Talent Profile
                 </h2>
             </div>
-            {{#with talentProfile.User__r}}
-                <section id="identity" style="display: block;">
-                    <div class="panel__body">
-                        <div class="part__left--fixed pad--sm--n">
-                            <div class="img-container img-container--lg"><img src="{{unbound SmallPhotoUrl}}">
+            {{#if showPersonalInfo}}
+                {{#with talentProfile.User__r}}
+                    <section id="identity" style="display: block;">
+                        <div class="panel__body">
+                            <div class="part__left--fixed pad--sm--n">
+                                <div class="img-container img-container--lg"><img src="{{unbound SmallPhotoUrl}}">
+                                </div>
+                            </div>
+                            <div class="part__body width--full pad--sm--lm pad--sm--rm">
+                                    <h5 class="mar--sm--n relatedPerson"><a href="/{{unbound Id}}">{{Name}}</a></h5>
+                                    <h5 class="text-faded mar--sm--n">
+                                        {{Title}}
+                                    </h5>
                             </div>
                         </div>
-                        <div class="part__body width--full pad--sm--lm pad--sm--rm">
-                                <h5 class="mar--sm--n relatedPerson"><a href="/{{unbound Id}}">{{Name}}</a></h5>
-                                <h5 class="text-faded mar--sm--n">
-                                    {{Title}}
-                                </h5>
+                    </section>
+                {{/with}}
+            {{/if}}
+            {{#if tpFields}}
+                <section id="custom-fields">
+                    <div class="js-section-view">
+                        <div {{bind-attr class=":panel__body showPersonalInformation:pad--sm--tn"}}>
+                            <div class="row pad--sm--rxxl">
+                                {{#each field in tpFields}}
+                                    <div class="column--sm--6 column--xs--only--12">
+                                        <label class="block">{{field.label}}</label>
+                                        {{#if field.value}}
+                                            <div data-qa-label="fieldSetValue">{{{field.value}}}</div>
+                                        {{else}}
+                                            <div data-qa-label="fieldSetValue">Not Provided</div>
+                                        {{/if}}
+                                    </div> 
+                                {{/each}}
+                            </div>
                         </div>
                     </div>
                 </section>
-            {{/with}}
-            <section id="custom-fields">
-                <div class="js-section-view">
-                    <div class="panel__body pad--sm--tn">
-                        <div class="row pad--sm--rxxl">
-                            {{#each field in tpFields}}
-                                <div class="column--md--6">
-                                    <label class="block">{{field.label}}</label>
-                                    {{#if field.value}}
-                                        <div data-qa-label="fieldSetValue">{{{field.value}}}</div>
-                                    {{else}}
-                                        <div data-qa-label="fieldSetValue">Not Provided</div>
-                                    {{/if}}
-                                </div> 
-                            {{/each}}
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {{/if}}
             {{#with talentProfile}}
                 {{#if Summary__c}}
                     <section id="summary">
@@ -304,6 +308,7 @@
                                     <h3>{{Job_Title__c}}</h3>
                                     <small class="text-faded block">{{Name}}</small>
                                     <small class="text-faded">{{displayMonthYear Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
+                                    <p>{{namespace_Description__c}}</p>
                                     <hr class="hr-alt"/>
                                 </article>
                             {{/each}}
@@ -359,6 +364,40 @@
                     </section>
                 {{/with}}
             {{/with}}
+        </div>
+    </div>
+
+    <div aria-hidden="true" aria-labelledby="linkedinModalLabel" class="modal fade" id="linkedinModal" role="dialog" tabindex="-1" style="display: none;">
+        <div class="modal__shell">
+            <div class="modal__content">
+                <div class="modal__top">
+                    <button class="close" data-dismiss="modal" type="button">
+                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                    </button>
+                    <h2 class="modal__heading" id="myModalLabel">Import from LinkedIn</h2>
+                </div>
+                <div class="modal__body">
+                    <p>Importing from LinkedIn will add the following to your Talent Profile (where available):</p>
+                    <ul>
+                        <li>Summary</li>
+                        <li>Recognition (Honors and Awards)</li>
+                        <li>Publications</li>
+                        <li>Patents</li>
+                        <li>Recommendations</li>
+                        <li>Certification</li>
+                        <li>Other Skills</li>
+                        <li>Employment </li>
+                        <li>Education </li>
+                        <li>Languages</li>
+                        <li>Volunteer Work</li>
+                    </ul>
+                    <p>You can then edit your profile further before saving.</p>
+                </div>
+                <div class="modal__footer">
+                    <button class="button button--secondary" data-dismiss="modal" type="button">Cancel</button>
+                    <button class="button button--primary" data-dismiss="modal" type="button">Continue</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
