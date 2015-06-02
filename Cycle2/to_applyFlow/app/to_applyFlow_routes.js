@@ -1,8 +1,9 @@
 App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
-    if (isInternal === true) {
-        applicationObj.isContactInfoEnabled = false;
-        applicationObj.isContactInfoComplete = true;
-    } else {
+    applicationObj.showSavingNotification = false;
+    //if (isInternal === true) {
+    //    applicationObj.isContactInfoEnabled = false;
+    //    applicationObj.isContactInfoIncomplete = false;
+    //} else {
         applicationObj.isContactInfoEnabled = true;
         applicationObj.sectionArray.addObject('contactInfo');
 
@@ -43,7 +44,7 @@ App.setupContactInfoFields = function(parsedApplyMap, applicationObj, hiringMode
                 }
             });
         });
-    }    
+    //}    
 };
 
 App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
@@ -74,6 +75,10 @@ App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, l
 
         if (Ember.isEmpty(applicationObj.resume.professionalSummary)) {
             applicationObj.isResumeIncomplete = true;
+        }
+
+        if (applicationObj.resume.isAddResumeEnabled !== true) {
+            labels.resumeHeader = labels.professionalSummary;
         }
     } else {
         applicationObj.resume.isProfessionalSummaryEnabled = false;
@@ -321,19 +326,10 @@ App.setupProjectsSection = function(parsedApplyMap, applicationObj, hiringModel,
                 applicationObj.isProjectsIncomplete = hasEmptyFields;
             }
         }
-
-        // if we don't have data already but have logged in via linkedin
-        /*if (Ember.isEmpty(applicationObj.educationHistoryArray) && !Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.educations) && !Ember.isEmpty(linkedInMap.educations.values)) {
-            var educationHistoryObjs = App.convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
-            educationHistoryObjs.forEach(function(eh) {
-                applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
-            });
-        }  */
         
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.projectsArray)) {
-            applicationObj.projectsArray.addObject(App.getObjectBlock('projects'));
+            applicationObj.isProjectsIncomplete = false;
         }
     } else {
         applicationObj.isProjectsEnabled = false;
@@ -364,17 +360,18 @@ App.setupRecommendationsSection = function(parsedApplyMap, applicationObj, hirin
             }
         }
         // if we don't have data already but have logged in via linkedin
-        /*if (Ember.isEmpty(applicationObj.educationHistoryArray) && !Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.educations) && !Ember.isEmpty(linkedInMap.educations.values)) {
-            var educationHistoryObjs = App.convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
-            educationHistoryObjs.forEach(function(eh) {
-                applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
+        if (Ember.isEmpty(applicationObj.recommendationsArray) && !Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.recommendationsReceived) && !Ember.isEmpty(linkedInMap.recommendationsReceived.values)) {
+            var recommendationObjs = App.convertLinkedInToRecommendationObj(linkedInMap.recommendationsReceived.values);
+            recommendationObjs.forEach(function(rec) {
+                applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations', rec));
             });
         }  
-        */
+        
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.recommendationsArray)) {
-            applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations'));
+            applicationObj.isRecommendationsIncomplete = false;
+            //applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations'));
         }
     } else {
         applicationObj.isRecommendationsEnabled = false;
@@ -404,22 +401,24 @@ App.setupRecognitionSection = function(parsedApplyMap, applicationObj, hiringMod
                 applicationObj.isRecognitionIncomplete = hasEmptyFields;
             }
         }
+
         // if we don't have data already but have logged in via linkedin
-        /*if (Ember.isEmpty(applicationObj.educationHistoryArray) && !Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.educations) && !Ember.isEmpty(linkedInMap.educations.values)) {
-            var educationHistoryObjs = App.convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
-            educationHistoryObjs.forEach(function(eh) {
-                applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
+        if (Ember.isEmpty(applicationObj.recognitionArray) && !Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.honorsAwards) && !Ember.isEmpty(linkedInMap.honorsAwards.values)) {
+            var recognitionObjs = App.convertLinkedInToRecognitionObj(linkedInMap.honorsAwards.values);
+            recognitionObjs.forEach(function(rec) {
+                applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition', rec));
             });
         }  
-        */
+
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.recognitionArray)) {
-            applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition'));
+            applicationObj.isRecognitionIncomplete = false;
+            //applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition'));
         }
     } else {
-        applicationObj.isPatentsEnabled = false;
-        applicationObj.isPatentsIncomplete = false;
+        applicationObj.isRecognitionEnabled = false;
+        applicationObj.isRecognitionIncomplete = false;
     }
 };
 
@@ -457,7 +456,8 @@ App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiring
         */
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.certificationsArray)) {
-            applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications'));
+            applicationObj.isCertificationsIncomplete = false;
+            //applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications'));
         }
     } else {
         applicationObj.isCertificationsEnabled = false;
@@ -466,7 +466,7 @@ App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiring
 };
 
 App.setupTrainingDevelopmentSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
-    if (hiringModel.training_development.isEnabled === true) {
+    if (hiringModel.trainingActivities.isEnabled === true) {
         applicationObj.isTrainingDevelopmentEnabled = true;
         applicationObj.isTrainingDevelopmentIncomplete = true;
 
@@ -498,7 +498,8 @@ App.setupTrainingDevelopmentSection = function(parsedApplyMap, applicationObj, h
         */
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.trainingDevelopmentArray)) {
-            applicationObj.trainingDevelopmentArray.addObject(App.getObjectBlock('trainingDevelopment'));
+            applicationObj.isTrainingDevelopmentIncomplete = false;
+            //applicationObj.trainingDevelopmentArray.addObject(App.getObjectBlock('trainingDevelopment'));
         }
     } else {
         applicationObj.isTrainingDevelopmentEnabled = false;
@@ -539,7 +540,8 @@ App.setupPublicationsSection = function(parsedApplyMap, applicationObj, hiringMo
         */
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.publicationsArray)) {
-            applicationObj.publicationsArray.addObject(App.getObjectBlock('publications'));
+            applicationObj.isPublicationsIncomplete = false;
+            //applicationObj.publicationsArray.addObject(App.getObjectBlock('publications'));
         }
     } else {
         applicationObj.isPublicationsEnabled = false;
@@ -580,7 +582,8 @@ App.setupPatentsSection = function(parsedApplyMap, applicationObj, hiringModel, 
         */
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.patentsArray)) {
-            applicationObj.patentsArray.addObject(App.getObjectBlock('patents'));
+            applicationObj.isPatentsIncomplete = false;
+            //applicationObj.patentsArray.addObject(App.getObjectBlock('patents'));
         }
     } else {
         applicationObj.isPatentsEnabled = false;
@@ -621,7 +624,8 @@ App.setupLanguagesSection = function(parsedApplyMap, applicationObj, hiringModel
         */
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.languagesArray)) {
-            applicationObj.languagesArray.addObject(App.getObjectBlock('languages'));
+            applicationObj.isLanguagesIncomplete = false;
+            //applicationObj.languagesArray.addObject(App.getObjectBlock('languages'));
         }
     } else {
         applicationObj.isLanguagesEnabled = false;
@@ -662,7 +666,8 @@ App.setupVolunteeringSection = function(parsedApplyMap, applicationObj, hiringMo
         */
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.volunteeringArray)) {
-            applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering'));
+            applicationObj.isVolunteeringIncomplete = false;
+            //applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering'));
         }
     } else {
         applicationObj.isVolunteeringEnabled = false;
@@ -1055,7 +1060,17 @@ App.ApplicationRoute = Ember.Route.extend({
                 console.log('***MODEL');
                 console.log(applicationObj);
                 
-                resolve(applicationObj);
+                if (Ember.isEmpty(applicationObj.application.Status__c)) {
+                    cont.setAppToInProgress(appId, function(res, evt) {
+                        var parsedResult = parseResult(res);
+
+                        if (parsedResult.isSuccess === true) {
+                            resolve(applicationObj);
+                        }
+                    });
+                } else {
+                    resolve(applicationObj);
+                }
             }
         });
     },

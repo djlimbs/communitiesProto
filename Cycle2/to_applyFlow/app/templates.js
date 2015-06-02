@@ -1622,7 +1622,7 @@ function program62(depth0,data) {
   data.buffer.push("\n                    <div class=\"content mar--sm--txl pad--md--n mar--sm--bm\" data-qa-container=\"desktopButtons\">\n                        <hr class=\"show-brkpoint--md\"/>\n                        ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers.unless.call(depth0, "isContactInfo", {hash:{},inverse:self.noop,fn:self.program(58, program58, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers.unless.call(depth0, "isFirstSection", {hash:{},inverse:self.noop,fn:self.program(58, program58, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n\n                        ");
   hashTypes = {};
