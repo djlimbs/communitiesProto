@@ -1,7 +1,7 @@
 {{#unless field.shouldDisableEndDateFields}}
     <div {{bind-attr class="isOnePage:column--md--6:column--md--4"}}>
         <div class="form__group mar--sm--bm">
-            <label data-qa-label="fieldName" class="required-field">{{field.label}} </label>
+            <label data-qa-label="fieldName" {{bind-attr class="field.isNotRequired::required-field"}}>{{field.label}} </label>
             <div class="select__wrap">
                 <div class="input__icon juicon juicon-down"></div>
                 {{view "select"

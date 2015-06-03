@@ -10,7 +10,7 @@ function processJobPostings(jobPostings, jobPostingFieldsToDisplay){
             jp = $.extend(jp, createLocationStrings(jp.locations));
         }
 
-        jp.allowRemote = jp.Requisition__r.Allow_Remote_Employees__c;
+        jp.allowRemote = jp.Requisition_Lookup__r.Allow_Remote_Employees__c;
         
         // Build display
         jp.fieldsToDisplay = [];
@@ -525,7 +525,7 @@ App.JobPostingController = Ember.ObjectController.extend({
                                     otherLocationsString: obj.otherLocationsString,
                                     otherLocationsCount: obj.otherLocationsCount,
                                     jobPostingUrl: parent.urlPrefix + '/JobListing?id=' + jsonString.Job_Posting__c,
-                                    isRemoteAvailable: jobPosting.Requisition__r.Allow_Remote_Employees__c,
+                                    isRemoteAvailable: jobPosting.Requisition_Lookup__r.Allow_Remote_Employees__c,
                                     jobPostingId: jsonString.Job_Posting__c
                                 };
 
@@ -590,7 +590,7 @@ App.JobSearchRoute = Ember.Route.extend( {
                     hasJobOffer: !Ember.isEmpty(app.Job_Offers__r),
                     jobOfferStatus: !Ember.isEmpty(app.Job_Offers__r) ? app.Job_Offers__r.records[0].Status__c : null,
                     statusText: app.Status__c === 'Completed' ? 'Applied' : 'In Progress',
-                    isRemoteAvailable: app.Requisition__r.Allow_Remote_Employees__c,
+                    isRemoteAvailable: app.Requisition_Lookup__r.Allow_Remote_Employees__c,
                     createdDate: app.CreatedDate
                 };
 
@@ -625,7 +625,7 @@ App.JobSearchRoute = Ember.Route.extend( {
                     otherLocationsString: obj.otherLocationsString,
                     otherLocationsCount: obj.otherLocationsCount,
                     jobPostingUrl: parent.urlPrefix + '/JobListing?id=' + savedJob.Job_Posting__c,
-                    isRemoteAvailable: savedJob.Source_Requisition__r.Allow_Remote_Employees__c,
+                    isRemoteAvailable: savedJob.Source_Requisition_Lookup__r.Allow_Remote_Employees__c,
                     createdDate: savedJob.CreatedDate
                 };
 

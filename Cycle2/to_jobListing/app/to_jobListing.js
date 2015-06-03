@@ -393,11 +393,31 @@ App.JobPostingController = Ember.ObjectController.extend({
         } else {
             applyUrl += '&importLinkedIn=true';
 
-            if (!Ember.isNone(self.get('linkedInMap'))) {
-                window.parent.location.href = applyUrl;
-            } else {
-                window.parent.location.href = self.get('applyWithLinkedInUrl') + applyUrl.replace(/&/g, '%26');
+            var redirectUri = window.location.origin + applyUrl;
+            /*var url = routeUri + 'connect/linkedin';
+
+            $form = $('<form action="' + url + '" method="post"></form>');
+            $form.append('<input name="url" type="text" value="' + redirectUri + '" />');
+            if (self.get('name') == 'Facebook') {
+                $form.append('<input name="scope" type="text" value="manage_pages, publish_actions" />');
+            } else if (self.get('name') == 'LinkedIn') {
+                $form.append('<input name="scope" type="text" value="rw_company_admin" />');
             }
+
+            parent.$('body').append($form);
+            $form.submit();*/
+            
+            var oauthObj = {
+                redirectUri: encodeURIComponent(redirectUri)
+            };
+
+            cont.postToIHubForLinkedInOauth(JSON.stringify(oauthObj), function(res, evt) {
+                var parsedResult = parseResult(res);
+
+                var targetUrl = parsedResult.data.targetUrl;
+
+                parent.window.location = targetUrl;
+            });
         }
     },
     showReport : false,
