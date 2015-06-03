@@ -236,7 +236,7 @@ App.AppController = Ember.ObjectController.extend({
     employmentText : function(){
         var employmentHistory = this.get('employmentHistory');
         if(this.get('isInternal')){
-            return this.get('parentController').get('user').Title
+            return !Ember.isEmpty(this.get('Candidate_User__r')) ? this.get('Candidate_User__r').Title : '';
         } else if(!Ember.isEmpty(employmentHistory)){
             return employmentHistory.Job_Title__c  + ' at ' + employmentHistory.Name;
         }
@@ -352,8 +352,6 @@ App.AppController = Ember.ObjectController.extend({
     actions: {
         loadLinkedIn: function(){
             if(Ember.isEmpty(this.get('LinkedIn_Profile_Id__c'))){
-                console.log('am i not here?')
-                //var address = 'https://www.linkedin.com/pub/dir/?first=' + this.get('First_Name__c') + '&last=' + this.get('Last_Name__c');
                 var address = 'https://www.google.com?#q=' + this.get('First_Name__c') + ' ' + this.get('Last_Name__c') + ' site://linkedin.com'
                 console.log(address);
                 if (isSF1){
@@ -387,12 +385,18 @@ App.AppController = Ember.ObjectController.extend({
             }
         },
         viewTalentProfile : function(){
-            var tpId = this.get('parentController').get('tpIds')[this.get('Candidate_User__c')];
+            var url = '';
+
+            if(isProd){
+                url = '/apex/' + extnamespace + 'to_talentProfileView?id=' + this.get('Candidate_User__c');
+            } else {
+                url = '/apex/to_talentProfileView?id=' + this.get('Candidate_User__c');
+            }
 
             if(isSF1){
-                sforce.one.navigateToSObject(tpId);
+                sforce.one.navigateToUrl(url);
             } else {
-                window.location.href = '/' + tpId;
+                window.location.href = url;
             }
         },
         loadGoogleMaps: function(){

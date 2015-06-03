@@ -18,6 +18,9 @@ App.TalentProfileViewRoute = Ember.Route.extend({
 
 App.TalentProfileViewController = Ember.ObjectController.extend({
     actions: {
+        clickImportLinkedIn: function(){
+            
+        },
         clickEdit: function() {
             var destUrl = '/' + this.get('talentProfile').Id;
             if (isSF1) {
