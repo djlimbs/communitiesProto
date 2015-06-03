@@ -19,7 +19,19 @@ App.TalentProfileViewRoute = Ember.Route.extend({
 App.TalentProfileViewController = Ember.ObjectController.extend({
     actions: {
         clickImportLinkedIn: function(){
-            
+            var url = encodeURIComponent(window.location.href.split('&')[0]);
+
+            var oauthObj = {
+                redirectUri : url
+            }
+
+            cont.getLinkedInRedirect(JSON.stringify(oauthObj), function(res, evt) {
+                var parsedResult = parseResult(res);
+                console.log(parsedResult);
+                var targetUrl = parsedResult.data.targetUrl;
+
+                window.location.href = targetUrl;
+            });
         },
         clickEdit: function() {
             var destUrl = '/' + this.get('talentProfile').Id;
