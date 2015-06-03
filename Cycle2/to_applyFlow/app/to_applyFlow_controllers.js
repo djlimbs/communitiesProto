@@ -449,7 +449,7 @@ App.ContactInfoController = Ember.ObjectController.extend({
                 window.parent.location.href = loginUrl;
 
             } else {
-                loginUrl += '/Apply?id%3D' + applyController.get('application').Id + '%26contactId%3D' + confirmObj.contactId;
+                loginUrl += '/Apply?id%3D' + applyController.get('application').Id;// + '%26contactId%3D' + confirmObj.contactId;
 
                 ['name', 'contact', 'address'].forEach(function(section) {
                     self.get(section).forEach(function(f) {
@@ -706,6 +706,9 @@ App.FormElementController = Ember.ObjectController.extend({
 });
 
 App.AdditionalInfoFieldController = Ember.ObjectController.extend({
+    isNotRequired: function() {
+        return this.get('isDBRequired') !== true && this.get('isFieldSetRequired') !== true;
+    }.property('isDBRequired', 'isFieldSetRequired'),
     valuesDidChange: function() {
         this.get('parentController').notifyPropertyChange('fields');
     }.observes('value')

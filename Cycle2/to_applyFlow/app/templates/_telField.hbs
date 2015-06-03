@@ -1,6 +1,6 @@
 <div class="column--md--6">
     <div {{bind-attr class=":form__group isHistorySection:mar--sm--bm field.hasError:has-error"}}>
-        <label for="firstName" class="required-field">
+        <label for="firstName" {{bind-attr class="field.isNotRequired::required-field"}}>
             {{field.label}}
             {{#if field.helpText}}
                 <span data-toggle="tooltip" data-placement="bottom" title="{{unbound field.helpText}}" class="has-tooltip juicon juicon-info-circle" data-qa-label="helpText"></span>

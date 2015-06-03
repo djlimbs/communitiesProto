@@ -407,6 +407,68 @@ App.convertLinkedInToRecognitionObj = function(recs) {
     });
 };
 
+App.convertLinkedInToCertificationsObj = function(certs) {
+    return certs.map(function(c) {
+        return {
+            Name: c.name,
+            Number__c: c.number,
+            Start_Month__c: !Ember.isNone(c['start-date']) ? c['start-date'].month : null,
+            Start_Year__c: !Ember.isNone(c['start-date']) ? c['start-date'].year : null,
+            End_Month__c: !Ember.isNone(c['end-date']) ? c['end-date'].month : null,
+            End_Year__c: !Ember.isNone(c['end-date']) ? c['end-date'].year : null
+        };
+    });
+};
+
+App.convertLinkedInToPublicationsObj = function(pubs) {
+    return pubs.map(function(p) {
+        return {
+            Name: p.title,
+            Publisher__c: !Ember.isNone(p.publisher) ? p.publisher.name : null,
+            Link__c: p.url,
+            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
+            Description__c: p.summary
+        };
+    });
+};
+
+App.convertLinkedInToPatentsObj = function(patents) {
+    return patents.map(function(p) {
+        return {
+            Name: p.title,
+            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
+            Link__c: p.url,
+            Number__c: p.number,
+            Office__c: p.summary,
+            Status__c: !Ember.isNone(p.status) ? p.status.name : null,
+            Summary__c: p.summary
+        };
+    });
+};
+
+App.convertLinkedInToLanguagesObj = function(languages) {
+    return languages.map(function(l) {
+        return {
+            Name: !Ember.isNone(l.language) ? l.language.name : null,
+            Proficiency_Level__c: !Ember.isNone(l.proficiency) ? l.proficiency.name : null
+        };
+    });
+};
+
+App.convertLinkedInToVolunteerObj = function(volunteering) {
+    return volunteering.map(function(v) {
+        return {
+            Name: !Ember.isNone(v.organization) ? v.organization.name : null,
+            Description__c: !Ember.isNone(v.cause) ? v.cause.name : null,
+            Role__c: v.role,
+            Start_Month__c: null,
+            Start_Year__c: null,
+            End_Month__c: null,
+            End_Year__c: null
+        };
+    });
+}
+
 App.createApplicantRequiredDataObj = function(legalFormElements) {
     var applicantRequiredData = [];
 
@@ -631,7 +693,7 @@ App.checkForBlankObjectFields = function(objects, allowBlankEndDate) {
 
             // Only check if allowBlankEndDate is not true, or the field is not an end date type.
             if ((allowBlankEndDate !== true && endDateFields.indexOf(field.name) !== -1) || endDateFields.indexOf(field.name) === -1) {
-                if (Ember.isEmpty(field.value)) {
+                if (Ember.isEmpty(field.value) && (field.isDBRequired === true || field.isFieldSetRequired === true)) {
                     hasEmptyField = true;
                 }
             }
