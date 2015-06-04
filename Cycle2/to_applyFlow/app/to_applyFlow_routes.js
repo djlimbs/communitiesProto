@@ -1269,10 +1269,12 @@ App.ApplicationRoute = Ember.Route.extend({
                     });
 
                     initialSaveObj.employmentHistory.forEach(function(eh) {
+                        eh.namespace_Employment_History__c = eh.Employment_History__c;
                         eh.namespace_LinkedInId__c = eh.LinkedInId__c;
                     });
 
                     initialSaveObj.educationHistory.forEach(function(eh) {
+                        eh.namespace_Education_History__c = eh.Education_History__c;
                         eh.namespace_LinkedInId__c = eh.LinkedInId__c;
                     });
                     /**************************/
