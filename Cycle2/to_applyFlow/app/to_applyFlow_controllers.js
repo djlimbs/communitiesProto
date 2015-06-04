@@ -17,10 +17,17 @@ App.OnePageController = Ember.ObjectController.extend({
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
                         || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') 
                         || this.get('isJobSpecificIncomplete') || this.get('isLegallyRequiredIncomplete')
+                        || this.get('isProjectsIncomplete') || this.get('isRecommendationsIncomplete')
+                        || this.get('isRecognitionIncomplete') || this.get('isCertificationsIncomplete')
+                        || this.get('isTrainingDevelopmentIncomplete') || this.get('isPublicationsIncomplete')
+                        || this.get('isPatentsIncomplete') || this.get('isLanguagesIncomplete')
+                        || this.get('isVolunteeringIncomplete')
                         || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
                     'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
-                    'showSavingNotification'),
+                    'isProjectsIncomplete', 'isRecommendationsIncomplete', 'isRecognitionIncomplete', 'isCertificationsIncomplete',
+                    'isTrainingDevelopmentIncomplete', 'isPublicationsIncomplete', 'isPatentsIncomplete', 'isLanguagesIncomplete',
+                    'isVolunteeringIncomplete', 'showSavingNotification'),
     actions: {
         clickFinish: function() {
             parent.window.scrollTo(0,0);
@@ -168,6 +175,12 @@ App.OnePageController = Ember.ObjectController.extend({
             if (model.isEmploymentHistoryEnabled) {
                 var employmentHistoryObj = App.buildEmploymentHistorySaveObj(model, employmentHistoryController, errorObj);
 
+                /* NAMESPACE PROTO STUFF */
+                employmentHistoryObj.employmentHistories.forEach(function(eh) {
+                    eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                });
+                /**************************/
+
                 if (employmentHistoryObj !== null) {
                     saveObj.employmentHistory = JSON.stringify(employmentHistoryObj);
                 }
@@ -175,6 +188,12 @@ App.OnePageController = Ember.ObjectController.extend({
 
             if (model.isEducationHistoryEnabled) {
                 var educationHistoryObj = App.buildEducationHistorySaveObj(model, educationHistoryController, errorObj);
+
+                /* NAMESPACE PROTO STUFF */
+                educationHistoryObj.educationHistories.forEach(function(eh) {
+                    eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                });
+                /**************************/
 
                 if (educationHistoryObj !== null) {
                     saveObj.educationHistory = JSON.stringify(educationHistoryObj);
@@ -260,6 +279,16 @@ App.OnePageController = Ember.ObjectController.extend({
                     saveObj.additionalInformation.upsertAdditionalInformation.addObjects(volunteeringObj.upsertAdditionalInformation);
                     saveObj.additionalInformation.deleteAdditionalInformation.addObjects(volunteeringObj.deleteAdditionalInformation);                }
             }
+
+            /* NAMESPACE PROTO STUFF */
+            saveObj.additionalInformation.upsertAdditionalInformation.forEach(function(ai) {
+                Object.keys(ai).forEach(function(k) {
+                    if (k.indexOf('__c') !== -1 && k.indexOf('namespace_') === -1) {
+                        ai['namespace_' + k] = ai[k];
+                    }
+                });
+            });
+            /**************************/
 
             saveObj.additionalInformation = JSON.stringify(saveObj.additionalInformation);
 
@@ -811,17 +840,17 @@ App.AdditionalInfoMixin = Ember.Mixin.create({
     isOnePageBinding: 'controllers.apply.isOnePage',
     isHistorySection: true,
     aIDidChenge: function() {
-        var currentProjects = this.get('[]');
+        var currentAis = this.get('[]');
         var incompleteFieldName = this.get('incompleteFieldName');
-        var hasEmptyField = App.checkForBlankObjectFields(currentProjects, this.get('allowBlankEndDates'));
+        var hasEmptyField = App.checkForBlankObjectFields(currentAis, this.get('allowBlankEndDates'));
 
         this.get('controllers.apply').set(incompleteFieldName, hasEmptyField);
     }.observes('[]', '[].@each.fields'),
     actions: {
         clickAddAI: function() {
             var blockName = this.get('blockName');
-            var projectBlock = App.getObjectBlock(blockName);
-            this.get('[]').addObject(projectBlock);
+            var aiBlock = App.getObjectBlock(blockName);
+            this.get('[]').addObject(aiBlock);
         },
         clickDeleteAI: function(aIToDelete) {
             var deletedArrayName = this.get('deletedArrayName');

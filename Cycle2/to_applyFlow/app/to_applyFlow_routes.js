@@ -103,12 +103,16 @@ App.setupSkillsSection = function(parsedApplyMap, applicationObj, hiringModel, l
         
         // Linkedin
         var linkedInIds = [];
+        var linkedInSkills = [];
 
         if (!Ember.isNone(linkedInMap) && !Ember.isEmpty(linkedInMap.skills)) {
             linkedInMap.skills.values.forEach(function(skill) {
                 skillsArray.addObject(skill.skill.name);
                 linkedInIds.addObject(skill.id);
+                linkedInSkills.addObject(skill.skill.name);
             });
+
+            applicationObj.linkedInSkills = linkedInSkills;
         }
 
         // if we have data
@@ -125,11 +129,7 @@ App.setupSkillsSection = function(parsedApplyMap, applicationObj, hiringModel, l
             applicationObj.skills.selectedSkills = skillsArray.join(',');
         }
 
-        objectsForInitialSave = {
-            skills: skillsArray,
-            flattenedSkills: skillsArray.join(', '),
-            applicationId: appId
-        };
+        objectsForInitialSave = App.buildSkillsSaveObj(applicationObj);
 
         return objectsForInitialSave;
     } else {
@@ -168,9 +168,9 @@ App.setupEmploymentHistorySection = function(parsedApplyMap, applicationObj, hir
 
         if (!Ember.isEmpty(parsedApplyMap.employmentHistories)) {
             parsedApplyMap.employmentHistories.forEach(function(eh) {
-                if (linkedInIds.indexOf(parseInt(eh.LinkedInId__c)) !== -1) {
-                    applicationObj.employmentHistoryArray.findBy('LinkedInId__c', parseInt(eh.LinkedInId__c)).Employment_History__c = eh.Employment_History__c;
-                    objectsForInitialSave.findBy('LinkedInId__c', parseInt(eh.LinkedInId__c)).Employment_History__c = eh.Employment_History__c;
+                if (linkedInIds.indexOf(eh.LinkedInId__c) !== -1) {
+                    applicationObj.employmentHistoryArray.findBy('LinkedInId__c', eh.LinkedInId__c).Employment_History__c = eh.Employment_History__c;
+                    objectsForInitialSave.findBy('LinkedInId__c', eh.LinkedInId__c).Employment_History__c = eh.Employment_History__c;
                 } else {
                     applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock(eh));
                     eh.Application__c = appId;
@@ -227,9 +227,9 @@ App.setupEducationHistorySection = function(parsedApplyMap, applicationObj, hiri
         // if we have data already.
         if (!Ember.isEmpty(parsedApplyMap.educationHistories)) {
             parsedApplyMap.educationHistories.forEach(function(eh) {
-                if (linkedInIds.indexOf(parseInt(eh.LinkedInId__c)) !== -1) {
-                    applicationObj.educationHistoryArray.findBy('LinkedInId__c', parseInt(eh.LinkedInId__c)).Education_History__c = eh.Education_History__c;
-                    objectsForInitialSave.findBy('LinkedInId__c', parseInt(eh.LinkedInId__c)).Education_History__c = eh.Education_History__c;
+                if (linkedInIds.indexOf(eh.LinkedInId__c) !== -1) {
+                    applicationObj.educationHistoryArray.findBy('LinkedInId__c', eh.LinkedInId__c).Education_History__c = eh.Education_History__c;
+                    objectsForInitialSave.findBy('LinkedInId__c', eh.LinkedInId__c).Education_History__c = eh.Education_History__c;
                 } else {
                     applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
                     eh.Application__c = appId;
@@ -434,9 +434,9 @@ App.setupRecommendationsSection = function(parsedApplyMap, applicationObj, hirin
             // if we have data already.
             if (!Ember.isEmpty(recommendations)) {
                 recommendations.forEach(function(r) {
-                    if (linkedInIds.indexOf(parseInt(r.LinkedInId__c)) !== -1) {
-                        applicationObj.recommendationsArray.findBy('LinkedInId__c', parseInt(r.LinkedInId__c)).Recommendation__c = r.Recommendation__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(r.LinkedInId__c)).Recommendation__c = r.Recommendation__c;
+                    if (linkedInIds.indexOf(r.LinkedInId__c) !== -1) {
+                        applicationObj.recommendationsArray.findBy('LinkedInId__c', r.LinkedInId__c).Recommendation__c = r.Recommendation__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', r.LinkedInId__c).Recommendation__c = r.Recommendation__c;
                     } else {
                         applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations', r));
                         objectsForInitialSave.addObject(r);
@@ -499,9 +499,9 @@ App.setupRecognitionSection = function(parsedApplyMap, applicationObj, hiringMod
             // if we have data already.
             if (!Ember.isEmpty(recognitions)) {
                 recognitions.forEach(function(r) {
-                    if (linkedInIds.indexOf(parseInt(r.LinkedInId__c)) !== -1) {
-                        applicationObj.recognitionArray.findBy('LinkedInId__c', parseInt(r.LinkedInId__c)).Recognition__c = r.Recognition__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(r.LinkedInId__c)).Recognition__c = r.Recognition__c;
+                    if (linkedInIds.indexOf(r.LinkedInId__c) !== -1) {
+                        applicationObj.recognitionArray.findBy('LinkedInId__c', r.LinkedInId__c).Recognition__c = r.Recognition__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', r.LinkedInId__c).Recognition__c = r.Recognition__c;
                     } else {
                         applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition', r));
                         objectsForInitialSave.addObject(r);
@@ -564,9 +564,9 @@ App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiring
             // if we have data already.
             if (!Ember.isEmpty(certifications)) {
                 certifications.forEach(function(c) {
-                    if (linkedInIds.indexOf(parseInt(c.LinkedInId__c)) !== -1) {
-                        applicationObj.certificationsArray.findBy('LinkedInId__c', parseInt(c.LinkedInId__c)).Certification__c = c.Certification__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(c.LinkedInId__c)).Certification__c = c.Certification__c;
+                    if (linkedInIds.indexOf(c.LinkedInId__c) !== -1) {
+                        applicationObj.certificationsArray.findBy('LinkedInId__c', c.LinkedInId__c).Certification__c = c.Certification__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', c.LinkedInId__c).Certification__c = c.Certification__c;
                     } else {
                         applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications', c));
                         objectsForInitialSave.addObject(c);
@@ -674,9 +674,9 @@ App.setupPublicationsSection = function(parsedApplyMap, applicationObj, hiringMo
             // if we have data already.
             if (!Ember.isEmpty(publications)) {
                 publications.forEach(function(p) {
-                    if (linkedInIds.indexOf(parseInt(p.LinkedInId__c)) !== -1) {
-                        applicationObj.publicationsArray.findBy('LinkedInId__c', parseInt(p.LinkedInId__c)).Publication__c = p.Publication__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(p.LinkedInId__c)).Publication__c = p.Publication__c;
+                    if (linkedInIds.indexOf(p.LinkedInId__c) !== -1) {
+                        applicationObj.publicationsArray.findBy('LinkedInId__c', p.LinkedInId__c).Publication__c = p.Publication__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', p.LinkedInId__c).Publication__c = p.Publication__c;
                     } else {
                         applicationObj.publicationsArray.addObject(App.getObjectBlock('publications', p));
                         objectsForInitialSave.addObject(p);
@@ -738,9 +738,9 @@ App.setupPatentsSection = function(parsedApplyMap, applicationObj, hiringModel, 
             // if we have data already.
             if (!Ember.isEmpty(patents)) {
                 patents.forEach(function(p) {
-                    if (linkedInIds.indexOf(parseInt(p.LinkedInId__c)) !== -1) {
-                        applicationObj.patentsArray.findBy('LinkedInId__c', parseInt(p.LinkedInId__c)).Patent__c = p.Patent__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(p.LinkedInId__c)).Patent__c = p.Patent__c;
+                    if (linkedInIds.indexOf(p.LinkedInId__c) !== -1) {
+                        applicationObj.patentsArray.findBy('LinkedInId__c', p.LinkedInId__c).Patent__c = p.Patent__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', p.LinkedInId__c).Patent__c = p.Patent__c;
                     } else {
                         applicationObj.patentsArray.addObject(App.getObjectBlock('patents', p));
                         objectsForInitialSave.addObject(p);
@@ -802,9 +802,9 @@ App.setupLanguagesSection = function(parsedApplyMap, applicationObj, hiringModel
             // if we have data already.
             if (!Ember.isEmpty(languages)) {
                 languages.forEach(function(l) {
-                    if (linkedInIds.indexOf(parseInt(l.LinkedInId__c)) !== -1) {
+                    if (linkedInIds.indexOf(l.LinkedInId__c) !== -1) {
                         applicationObj.languagesArray.findBy('LinkedInId__c', l.LinkedInId__c).Language__c = l.Language__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(l.LinkedInId__c)).Language__c = l.Language__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', l.LinkedInId__c).Language__c = l.Language__c;
                     } else {
                         applicationObj.languagesArray.addObject(App.getObjectBlock('languages', l));
                         objectsForInitialSave.addObject(l);
@@ -867,9 +867,9 @@ App.setupVolunteeringSection = function(parsedApplyMap, applicationObj, hiringMo
             // if we have data already.
             if (!Ember.isEmpty(volunteerings)) {
                 volunteerings.forEach(function(v) {
-                    if (linkedInIds.indexOf(parseInt(v.LinkedInId__c)) !== -1) {
-                        applicationObj.volunteeringArray.findBy('LinkedInId__c', parseInt(v.LinkedInId__c)).Volunteer_Work__c = v.Volunteer_Work__c;
-                        objectsForInitialSave.findBy('LinkedInId__c', parseInt(v.LinkedInId__c)).Volunteer_Work__c = v.Volunteer_Work__c;
+                    if (linkedInIds.indexOf(v.LinkedInId__c) !== -1) {
+                        applicationObj.volunteeringArray.findBy('LinkedInId__c', v.LinkedInId__c).Volunteer_Work__c = v.Volunteer_Work__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', v.LinkedInId__c).Volunteer_Work__c = v.Volunteer_Work__c;
                     } else {
                         objectsForInitialSave.addObject(v);
                         applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering', v));
@@ -920,10 +920,18 @@ App.buildContactSaveObj = function(application) {
 App.buildSkillsSaveObj = function(application) {
     var selectedSkillsString = application.skills.selectedSkills;
     var selectedSkills = [];
+    var linkedInSkills = application.linkedInSkills || [];
 
     if (!Ember.isEmpty(selectedSkillsString)) {
         selectedSkills = selectedSkillsString.split(',');
     }
+
+    selectedSkills = selectedSkills.map(function(s) {
+        return {
+            name: s,
+            isFromLinkedIn: linkedInSkills.indexOf(s) !== -1
+        };
+    });
 
     var skillsObj = {
         applicationId: appId,
@@ -1251,6 +1259,24 @@ App.ApplicationRoute = Ember.Route.extend({
 
                     initialSaveObj.professionalSummary = applicationObj.resume.professionalSummary;
 
+                    /* NAMESPACE PROTO STUFF */
+                    initialSaveObj.additionalInformation.forEach(function(ai) {
+                        Object.keys(ai).forEach(function(k) {
+                            if (k.indexOf('__c') !== -1 && k.indexOf('namespace_') === -1) {
+                                ai['namespace_' + k] = ai[k];
+                            }
+                        });
+                    });
+
+                    initialSaveObj.employmentHistory.forEach(function(eh) {
+                        eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                    });
+
+                    initialSaveObj.educationHistory.forEach(function(eh) {
+                        eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                    });
+                    /**************************/
+
                     initialSaveObj.employmentHistory = JSON.stringify({
                         employmentHistories: initialSaveObj.employmentHistory,
                         deletedEmploymentHistories: []
@@ -1260,16 +1286,6 @@ App.ApplicationRoute = Ember.Route.extend({
                         educationHistories: initialSaveObj.educationHistory,
                         deletedEducationHistories: []
                     });
-
-                    /* NAMESPACE PROTO STUFF */
-                    initialSaveObj.additionalInformation.forEach(function(ai) {
-                        Object.keys(ai).forEach(function(k) {
-                            if (k.indexOf('__c') !== -1 && k.indexOf('namespace_') === -1) {
-                                ai['namespace_' + k] = ai[k];
-                            }
-                        });
-                    });
-                    /**************************/
 
                     initialSaveObj.additionalInformation = JSON.stringify({
                         upsertAdditionalInformation: initialSaveObj.additionalInformation,

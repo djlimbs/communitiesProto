@@ -271,7 +271,7 @@ App.getObjectBlock = function(objName, obj) {
         });
 
         newBlock.Id = obj.Id;
-        newBlock.LinkedInId__c = obj.LinkedInId__c
+        newBlock.LinkedInId__c = obj.LinkedInId__c;
     }
 
     return newBlock;
@@ -289,7 +289,7 @@ App.convertLinkedInToEducationHistoryObj = function(educations) {
             Start_Year__c: !Ember.isNone(e.startDate) ? e.startDate.year : null,
             End_Month__c: !Ember.isNone(e.endDate) ? App.Fixtures.numberToMonthMap[e.endDate.month] : null,
             End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null,
-            LinkedInId__c: e.id
+            LinkedInId__c: appId + '_' + e.id
         };
     });
 };
@@ -306,7 +306,7 @@ App.convertLinkedInToEmploymentHistoryObj = function(positions) {
             End_Month__c: !Ember.isNone(p.endDate) ? App.Fixtures.numberToMonthMap[p.endDate.month] : null,
             End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
             Is_Current__c: p.isCurrent,
-            LinkedInId__c: p.id
+            LinkedInId__c: appId + '_' + p.id
         };
     });
 };
@@ -317,7 +317,7 @@ App.convertLinkedInToRecommendationObj = function(recs) {
             Name: !Ember.isNone(r.recommender) ? r.recommender.firstName  + ' ' + r.recommender.lastName : null,
             Recommendation_Text__c: r.recommendationText,
             Recommender_Title__c : null,
-            LinkedInId__c: r.id
+            LinkedInId__c: appId + '_' + r.id
         };
     });
 };
@@ -330,7 +330,7 @@ App.convertLinkedInToRecognitionObj = function(recs) {
             Month__c : !Ember.isNone(r.date) ? r.date.month : null,
             Year__c : !Ember.isNone(r.date) ? r.date.year : null,
             Issuer__c : r.issuer,
-            LinkedInId__c: r.id
+            LinkedInId__c: appId + '_' + r.id
         };
     });
 };
@@ -344,7 +344,7 @@ App.convertLinkedInToCertificationsObj = function(certs) {
             Start_Year__c: !Ember.isNone(c['start-date']) ? c['start-date'].year : null,
             End_Month__c: !Ember.isNone(c['end-date']) ? c['end-date'].month : null,
             End_Year__c: !Ember.isNone(c['end-date']) ? c['end-date'].year : null,
-            LinkedInId__c: c.id
+            LinkedInId__c: appId + '_' + c.id
         };
     });
 };
@@ -357,7 +357,7 @@ App.convertLinkedInToPublicationsObj = function(pubs) {
             Link__c: p.url,
             Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
             Description__c: p.summary,
-            LinkedInId__c: p.id
+            LinkedInId__c: appId + '_' + p.id
         };
     });
 };
@@ -366,13 +366,13 @@ App.convertLinkedInToPatentsObj = function(patents) {
     return patents.map(function(p) {
         return {
             Name: p.title,
-            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
+            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format('YYYY-MM-DD') : null,
             Link__c: p.url,
             Number__c: p.number,
             Office__c: p.summary,
             Status__c: !Ember.isNone(p.status) ? p.status.name : null,
             Summary__c: p.summary,
-            LinkedInId__c: p.id
+            LinkedInId__c: appId + '_' + p.id
         };
     });
 };
@@ -382,7 +382,7 @@ App.convertLinkedInToLanguagesObj = function(languages) {
         return {
             Name: !Ember.isNone(l.language) ? l.language.name : null,
             Proficiency_Level__c: !Ember.isNone(l.proficiency) ? l.proficiency.name : null,
-            LinkedInId__c: l.id
+            LinkedInId__c: appId + '_' + l.id
         };
     });
 };
@@ -397,7 +397,7 @@ App.convertLinkedInToVolunteerObj = function(volunteering) {
             Start_Year__c: null,
             End_Month__c: null,
             End_Year__c: null,
-            LinkedInId__c: v.id
+            LinkedInId__c: appId + '_' + v.id
         };
     });
 }
@@ -626,7 +626,7 @@ App.checkForBlankObjectFields = function(objects, allowBlankEndDate) {
 
             // Only check if allowBlankEndDate is not true, or the field is not an end date type.
             if ((allowBlankEndDate !== true && endDateFields.indexOf(field.name) !== -1) || endDateFields.indexOf(field.name) === -1) {
-                if (Ember.isEmpty(field.value) && (field.isDBRequired === true || field.isFieldSetRequired === true)) {
+                if (Ember.isEmpty(field.value)) {
                     hasEmptyField = true;
                 }
             }
