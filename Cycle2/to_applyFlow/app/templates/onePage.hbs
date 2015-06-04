@@ -25,6 +25,33 @@
             {{#if isEducationHistoryEnabled}}
                 {{render "educationHistory" educationHistoryArray}}
             {{/if}}
+            {{#if isProjectsEnabled}}
+                {{render "projects" projectsArray}}
+            {{/if}}
+            {{#if isRecommendationsEnabled}}
+                {{render "recommendations" recommendationsArray}}
+            {{/if}}
+            {{#if isRecognitionEnabled}}
+                {{render "recognition" recognitionArray}}
+            {{/if}}
+            {{#if isCertificationsEnabled}}
+                {{render "certifications" certificationsArray}}
+            {{/if}}
+            {{#if isTrainingDevelopmentEnabled}}
+                {{render "trainingDevelopment" trainingDevelopmentArray}}
+            {{/if}}
+            {{#if isPublicationsEnabled}}
+                {{render "publications" publicationsArray}}
+            {{/if}}
+            {{#if isPatentsEnabled}}
+                {{render "patents" patentsArray}}
+            {{/if}}
+            {{#if isLanguagesEnabled}}
+                {{render "languages" languagesArray}}
+            {{/if}}
+            {{#if isVolunteeringEnabled}}
+                {{render "volunteering" volunteeringArray}}
+            {{/if}}
             {{#unless isGeneralEmpty}}
                 {{render "general" generalFormElements}}
             {{/unless}}

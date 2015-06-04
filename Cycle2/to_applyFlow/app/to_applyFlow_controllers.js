@@ -2,7 +2,8 @@
 App.ApplicationController = Ember.Controller.extend({});
 
 App.OnePageController = Ember.ObjectController.extend({
-    needs: ['apply', 'employmentHistory', 'educationHistory'],
+    needs: ['apply', 'employmentHistory', 'educationHistory', 'projects', 'recommendations', 'recognition', 'certifications',
+            'trainingDevelopment', 'publications', 'patents', 'languages', 'volunteering'],
     isContactInfoIncompleteBinding: 'controllers.apply.isContactInfoIncomplete', 
     isResumeIncompleteBinding: 'controllers.apply.isResumeIncomplete', 
     isSkillsIncompleteBinding: 'controllers.apply.isSkillsIncomplete', 
@@ -143,6 +144,15 @@ App.OnePageController = Ember.ObjectController.extend({
             var saveObj = {};
             var employmentHistoryController = self.get('controllers.employmentHistory');
             var educationHistoryController = self.get('controllers.educationHistory');
+            var projectsController = self.get('controllers.projects');
+            var recommendationsController = self.get('controllers.recommendations');
+            var recognitionController = self.get('controllers.recognition');
+            var certificationsController = self.get('controllers.certifications');
+            var trainingDevelopmentController = self.get('controllers.trainingDevelopment');
+            var publicationsController = self.get('controllers.publications');
+            var patentsController = self.get('controllers.patents');
+            var languagesController = self.get('controllers.languages');
+            var volunteeringController = self.get('controllers.volunteering');
 
             self.setProperties({
                 errorMessage: null,
@@ -170,6 +180,88 @@ App.OnePageController = Ember.ObjectController.extend({
                     saveObj.educationHistory = JSON.stringify(educationHistoryObj);
                 }
             }
+
+            saveObj.additionalInformation = {
+                upsertAdditionalInformation: [],
+                deleteAdditionalInformation: [],
+                applicationId: appId
+            };
+
+            if (model.isProjectsEnabled) {
+                var projectsObj = App.buildAdditionalInfoSaveObj('projects', model, projectsController, errorObj, false);
+
+                if (projectsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(projectsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(projectsObj.deleteAdditionalInformation);
+                }
+            }
+
+            if (model.isRecommendationsEnabled) {
+                var recommendationsObj = App.buildAdditionalInfoSaveObj('recommendations', model, recommendationsController, errorObj, false);
+
+                if (recommendationsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(recommendationsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(recommendationsObj.deleteAdditionalInformation);
+                }
+            }
+
+            if (model.isRecognitionEnabled) {
+                var recognitionObj = App.buildAdditionalInfoSaveObj('recognition', model, recognitionController, errorObj, true);
+
+                if (recognitionObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(recognitionObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(recognitionObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isCertificationsEnabled) {
+                var certificationsObj = App.buildAdditionalInfoSaveObj('certifications', model, certificationsController, errorObj, true);
+
+                if (certificationsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(certificationsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(certificationsObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isTrainingDevelopmentEnabled) {
+                var trainingDevelopmentObj = App.buildAdditionalInfoSaveObj('trainingDevelopment', model, trainingDevelopmentController, errorObj, false);
+
+                if (trainingDevelopmentObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(trainingDevelopmentObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(trainingDevelopmentObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isPublicationsEnabled) {
+                var publicationsObj = App.buildAdditionalInfoSaveObj('publications', model, publicationsController, errorObj, false);
+
+                if (publicationsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(publicationsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(publicationsObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isPatentsEnabled) {
+                var patentsObj = App.buildAdditionalInfoSaveObj('patents', model, patentsController, errorObj, false);
+
+                if (patentsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(patentsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(patentsObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isLanguagesEnabled) {
+                var languagesObj = App.buildAdditionalInfoSaveObj('languages', model, languagesController, errorObj, false);
+
+                if (languagesObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(languagesObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(languagesObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isVolunteeringEnabled) {
+                var volunteeringObj = App.buildAdditionalInfoSaveObj('volunteering', model, volunteeringController, errorObj, false);
+
+                if (volunteeringObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(volunteeringObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(volunteeringObj.deleteAdditionalInformation);                }
+            }
+
+            saveObj.additionalInformation = JSON.stringify(saveObj.additionalInformation);
 
             if (model.isGeneralEmpty !== true) {  
                 saveObj.generalApplicantResponses = JSON.stringify({

@@ -393,7 +393,7 @@ App.JobPostingController = Ember.ObjectController.extend({
         } else {
             applyUrl += '&importLinkedIn=true';
 
-            var redirectUri = window.location.origin + applyUrl;
+            var redirectUri = window.location.origin + '/apex/' + applyUrl;
             /*var url = routeUri + 'connect/linkedin';
 
             $form = $('<form action="' + url + '" method="post"></form>');
