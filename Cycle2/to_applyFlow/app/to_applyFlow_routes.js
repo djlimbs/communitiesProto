@@ -111,19 +111,22 @@ App.setupSkillsSection = function(parsedApplyMap, applicationObj, hiringModel, l
                 linkedInIds.addObject(skill.id);
                 linkedInSkills.addObject(skill.skill.name);
             });
-
-            applicationObj.linkedInSkills = linkedInSkills;
         }
 
         // if we have data
         if (!Ember.isEmpty(parsedApplyMap.skills)) {
-
+            var existingLinkedInSkills = parsedApplyMap.skills.filterBy('IsLinkedIn__c', true);
+            if (!Ember.isEmpty(existingLinkedInSkills)) {
+                linkedInSkills.addObjects(existingLinkedInSkills.getEach('Skill__r').getEach('Name'));
+            }
             skillsArray.addObjects(parsedApplyMap.skills.filter(function(s) {
                 return Ember.isEmpty(s.LinkedInId__c) || linkedInIds.indexOf(parseInt(s.LinkedInId__c)) !== -1;
             }).getEach('Skill__r').getEach('Name'));
 
         }
         
+        applicationObj.linkedInSkills = linkedInSkills;
+
         if (!Ember.isEmpty(skillsArray)) {
             applicationObj.isSkillsIncomplete = false;
             applicationObj.skills.selectedSkills = skillsArray.join(',');
@@ -929,7 +932,7 @@ App.buildSkillsSaveObj = function(application) {
     selectedSkills = selectedSkills.map(function(s) {
         return {
             name: s,
-            isFromLinkedIn: linkedInSkills.indexOf(s) !== -1
+            isLinkedIn: linkedInSkills.indexOf(s) !== -1
         };
     });
 
@@ -1200,7 +1203,7 @@ App.redirectAfterFinish = function(application) {
 
 App.ApplicationLoadingRoute = Ember.Route.extend({
   renderTemplate: function() {
-    this.render('loading');
+        this.render('loading');
   }
 });
 
@@ -1305,6 +1308,9 @@ App.ApplicationRoute = Ember.Route.extend({
                             var destinationUrl = currentUrlBase + '?id=' + appId;
                             window.parent.location.replace(destinationUrl);
                             //resolve(applicationObj);
+                        } else if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                            applicationObj.errorMessage = parsedResult.errorMessages[0];
+                            reject(applicationObj);
                         }
                     });
                 } else {
@@ -1325,6 +1331,16 @@ App.ApplicationRoute = Ember.Route.extend({
                 this.transitionTo('apply');
             }
         }
+    },
+    actions: {
+        error: function(model, transition) {
+            //transition.abort();
+            this.controllerFor('error').set('model', model);
+            this.render('error', {
+                into: 'application',
+                controller: 'error'
+            });
+        }
     }
 });
 
@@ -1333,7 +1349,6 @@ App.ApplyRoute = Ember.Route.extend( {
         return this.modelFor('application');
     },
     afterModel: function(model, transition) {
-        console.log(model);
         this.transitionTo(model.sectionArray[0]);
     }
 });

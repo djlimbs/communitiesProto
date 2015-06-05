@@ -949,6 +949,7 @@ App.LegallyRequiredView = Ember.View.extend({
 
 // Router
 App.Router.map(function() {
+    this.route('error');
     this.route('application_loading');
     this.resource('onePage');
     this.resource('apply', function() {
