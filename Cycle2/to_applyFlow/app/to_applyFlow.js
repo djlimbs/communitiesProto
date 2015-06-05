@@ -355,7 +355,7 @@ App.convertLinkedInToPublicationsObj = function(pubs) {
             Name: p.title,
             Publisher__c: !Ember.isNone(p.publisher) ? p.publisher.name : null,
             Link__c: p.url,
-            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
+            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format('YYYY-MM-DD') : null,
             Description__c: p.summary,
             LinkedInId__c: appId + '_' + p.id
         };
@@ -363,14 +363,18 @@ App.convertLinkedInToPublicationsObj = function(pubs) {
 };
 
 App.convertLinkedInToPatentsObj = function(patents) {
+    var patentStatusMap = Object.create(null);
+    patentStatusMap['Application'] = 'Patent Pending';
+    patentStatusMap['Patent'] = 'Patent Issued';
+
     return patents.map(function(p) {
         return {
             Name: p.title,
             Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format('YYYY-MM-DD') : null,
             Link__c: p.url,
             Number__c: p.number,
-            Office__c: p.summary,
-            Status__c: !Ember.isNone(p.status) ? p.status.name : null,
+            Office__c: !Ember.isNone(p.office) ? p.office.name : null,
+            Status__c: !Ember.isNone(p.status) ? patentStatusMap[p.status.name] : null,
             Summary__c: p.summary,
             LinkedInId__c: appId + '_' + p.id
         };
