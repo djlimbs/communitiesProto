@@ -6,15 +6,30 @@ App.Router.map(function(){
     this.resource('main', {path: '/'});
 });
 
-if(!isSF1){
-    App.MainView = Ember.View.extend({
-        afterRenderEvent: function() {
+App.MainView = Ember.View.extend({
+    didInsertElement: function() {
+        Ember.run.scheduleOnce('afterRender', this, function() {
+            // iPhone CSS mod to handle scrolling with the containing div insted of the iframe
+            // When Mobile Safari fixes how it resizes iframes to content, this can go away.
+            console.log('hello');
+            console.log(isSF1);
+            if (isSF1) {
+                $('#mobileMainView').css({
+                    'max-height' : window.innerHeight,
+                    'overflow-y' : 'scroll',
+                    '-webkit-overflow-scrolling' : 'touch'
+                });
+            }
+        });
+    },
+    afterRenderEvent: function() {
+        if(!isSF1){
             $('body').tooltip({
                 selector: '[data-toggle=tooltip]'
             });
         }
-    });
-}
+    }
+});
 
 var outcomeColorMap = {
     'Hired' : 'label--success',
@@ -63,9 +78,9 @@ App.ApplicantDashboardRoute = Ember.Route.extend({
                     self.set('errorMsg', parsedResult.errorMessages);
                     return;
                 }
-                console.log('hello?');
+
                 var data = parsedResult.data
-                console.log(data);
+
                 var emberApps = processApps(data);
             
                 data.stages.unshift({label : '(Any)', value : null});
@@ -157,7 +172,6 @@ App.ApplicantDashboardController = Ember.ObjectController.extend({
 
             cont.getApplicantData(params, function(result, resultObj){
                 var parsedResult = parseResult(result);
-
                 if(!parsedResult.isSuccess){
                     self.set('errorMsg', parsedResult.errorMessages);
                     return;
@@ -189,7 +203,6 @@ App.ApplicantDashboardController = Ember.ObjectController.extend({
         },
         filterApps : function(){
             var self = this;
-            console.log(this);
             var params = {
                 reqId : reqId,
                 stage : this.get('selectedStage'),
@@ -353,7 +366,6 @@ App.AppController = Ember.ObjectController.extend({
         loadLinkedIn: function(){
             if(Ember.isEmpty(this.get('LinkedIn_Profile_Id__c'))){
                 var address = 'https://www.google.com?#q=' + this.get('First_Name__c') + ' ' + this.get('Last_Name__c') + ' site://linkedin.com'
-                console.log(address);
                 if (isSF1){
                     sforce.one.navigateToURL(address);
                 } else {
@@ -388,13 +400,13 @@ App.AppController = Ember.ObjectController.extend({
             var url = '';
 
             if(isProd){
-                url = '/apex/' + extnamespace + 'to_talentProfileView?id=' + this.get('Candidate_User__c');
+                url = '/apex/' + extnamespace + 'to_talentProfileView?userId=' + this.get('Candidate_User__c');
             } else {
-                url = '/apex/to_talentProfileView?id=' + this.get('Candidate_User__c');
+                url = '/apex/to_talentProfileView?userId=' + this.get('Candidate_User__c');
             }
 
             if(isSF1){
-                sforce.one.navigateToUrl(url);
+                sforce.one.navigateToURL(url);
             } else {
                 window.location.href = url;
             }

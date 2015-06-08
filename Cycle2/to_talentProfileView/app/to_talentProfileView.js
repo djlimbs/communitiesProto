@@ -12,6 +12,7 @@ App.TalentProfileViewRoute = Ember.Route.extend({
         });
 
         monthMap = parsedTalentProfileMap.monthMap
+        parsedTalentProfileMap.isSF1 = isSF1;
         return parsedTalentProfileMap;
     }
 });
@@ -75,36 +76,38 @@ Ember.Handlebars.helper('pluralfication', function(records, name) {
     }
 });
 
+Ember.Handlebars.helper('convertNewLinesToBreaks', function(text, name) {
+    if(text){
+        return new Ember.Handlebars.SafeString(text.replace(/\n/g, '<br/>'));
+    } else {
+        return '';
+    }
+});
+
+Ember.Handlebars.helper('formatDate', function(startDate) {
+    return moment(startDate).format('MMM DD, YYYY');
+});
+
 Ember.Handlebars.helper('displayDate', function(startDate, endDate, text) {
     if(Ember.isEmpty(startDate)){
         return '';
     } else if(Ember.isEmpty(endDate)){
-        return (startDate + ' ' + text + ' Present')
+        return (moment(startDate).format('MMM DD, YYYY') + ' ' + text + ' Present')
     } else {
-        return (startDate + ' ' + text + ' ' + endDate)
+        return (moment(startDate).format('MMM DD, YYYY') + ' ' + text + ' ' + moment(startDate).format('MMM DD, YYYY'))
     }
 });
 
 Ember.Handlebars.helper('displayMonthYear', function(startMonth, startYear, endMonth, endYear, text) {
-    if(Ember.isEmpty(startMonth) && Ember.isEmpty(startYear)){
+    if(Ember.isEmpty(startMonth) || Ember.isEmpty(startYear)){
         return '';
     } else if(Ember.isEmpty(endMonth) && Ember.isEmpty(endYear)){
-        return (monthMap[startMonth] + ' ' + startYear + ' ' + text + ' Present');
+        formattedStartMonth = monthMap[startMonth] ? monthMap[startMonth].slice(0, 3) : '';
+        return (formattedStartMonth + ' ' + startYear + ' ' + text + ' Present');
     } else {
-        return (monthMap[startMonth] + ' ' + startYear + ' ' + text + ' ' + monthMap[endMonth] + ' ' + endYear) ;
+        formattedStartMonth = monthMap[startMonth] ? monthMap[startMonth].slice(0, 3) : '';
+        formattedEndMonth = monthMap[endMonth] ? monthMap[endMonth].slice(0, 3) : '';
+
+        return formattedStartMonth + ' ' + startYear + ' ' + text + ' ' + formattedEndMonth + ' ' + endYear ;
     }
-});
-
-Ember.Handlebars.helper('formattedSkills', function(records) {
-    var skills = '';
-    
-    records.forEach(function(skill){
-        if(skills == ''){
-            skills = skill.Skill__r.Name
-        } else {
-            skills += ', ' + skill.Skill__r.Name;
-        }
-    })
-
-    return skills;
 });
