@@ -820,7 +820,7 @@ function program1(depth0,data) {
   data.buffer.push("</span>\n                <span class=\"table-group__object--small\">\n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isInternal", {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "nameField.isRequired", {hash:{},inverse:self.program(4, program4, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                </span>\n            </label>\n        </div>\n    ");
   return buffer;
@@ -828,30 +828,13 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   
-  data.buffer.push("\n                        <input type=\"checkbox\" disabled data-qa-input=\"required\"/>\n                    ");
+  data.buffer.push("\n                        <input type=\"checkbox\" checked=true disabled data-qa-input=\"required\"/>\n                    ");
   }
 
 function program4(depth0,data) {
   
-  var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                        ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "nameField.isRequired", {hash:{},inverse:self.program(7, program7, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                    ");
-  return buffer;
-  }
-function program5(depth0,data) {
-  
-  
-  data.buffer.push("\n                            <input type=\"checkbox\" checked=true disabled data-qa-input=\"required\"/>\n                        ");
-  }
-
-function program7(depth0,data) {
-  
   var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n                            ");
+  data.buffer.push("\n                        ");
   hashContexts = {'type': depth0,'checked': depth0,'data-qa-input': depth0};
   hashTypes = {'type': "STRING",'checked': "ID",'data-qa-input': "STRING"};
   options = {hash:{
@@ -860,11 +843,11 @@ function program7(depth0,data) {
     'data-qa-input': ("required")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n                        ");
+  data.buffer.push("\n                    ");
   return buffer;
   }
 
-function program9(depth0,data) {
+function program6(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
   data.buffer.push("\n        <div class=\"column--md--6\" data-qa-container=\"contactField\">\n            <label class=\"table-group mar--sm--bs\">\n                <span class=\"table-group__object--large\" data-qa-label=\"contactField\">");
@@ -874,26 +857,15 @@ function program9(depth0,data) {
   data.buffer.push("</span>\n                <span class=\"table-group__object--small\">\n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isInternal", {hash:{},inverse:self.program(10, program10, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "contactField.isRequired", {hash:{},inverse:self.program(7, program7, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                </span>\n            </label>\n        </div>\n    ");
   return buffer;
   }
-function program10(depth0,data) {
-  
-  var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                        ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "contactField.isRequired", {hash:{},inverse:self.program(11, program11, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                    ");
-  return buffer;
-  }
-function program11(depth0,data) {
+function program7(depth0,data) {
   
   var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n                            ");
+  data.buffer.push("\n                        ");
   hashContexts = {'type': depth0,'checked': depth0,'data-qa-input': depth0};
   hashTypes = {'type': "STRING",'checked': "ID",'data-qa-input': "STRING"};
   options = {hash:{
@@ -902,11 +874,11 @@ function program11(depth0,data) {
     'data-qa-input': ("required")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n                        ");
+  data.buffer.push("\n                    ");
   return buffer;
   }
 
-function program13(depth0,data) {
+function program9(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
   data.buffer.push("\n        <div class=\"column--md--6\" data-qa-container=\"addressField\">\n            <label class=\"table-group mar--sm--bs\">\n                <span class=\"table-group__object--large\" data-qa-label=\"addressField\">");
@@ -916,26 +888,15 @@ function program13(depth0,data) {
   data.buffer.push("</span>\n                <span class=\"table-group__object--small\">\n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isInternal", {hash:{},inverse:self.program(14, program14, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "addressField.isRequired", {hash:{},inverse:self.program(10, program10, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                </span>\n            </label>\n        </div>\n    ");
   return buffer;
   }
-function program14(depth0,data) {
-  
-  var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                        ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "addressField.isRequired", {hash:{},inverse:self.program(15, program15, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                    ");
-  return buffer;
-  }
-function program15(depth0,data) {
+function program10(depth0,data) {
   
   var buffer = '', stack1, hashContexts, hashTypes, options;
-  data.buffer.push("\n                            ");
+  data.buffer.push("\n                        ");
   hashContexts = {'type': depth0,'checked': depth0,'data-qa-input': depth0};
   hashTypes = {'type': "STRING",'checked': "ID",'data-qa-input': "STRING"};
   options = {hash:{
@@ -944,7 +905,7 @@ function program15(depth0,data) {
     'data-qa-input': ("required")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
-  data.buffer.push("\n                        ");
+  data.buffer.push("\n                    ");
   return buffer;
   }
 
@@ -956,12 +917,12 @@ function program15(depth0,data) {
   data.buffer.push("\n</div>\n<hr class=\"hr-alt\">\n<!--Communication stuff-->\n<div class=\"row\">\n    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "contactField", "in", "contact", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "contactField", "in", "contact", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</div>\n<hr class=\"hr-alt\">\n<!--Address stuff-->\n<div class=\"row\">\n    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.each.call(depth0, "addressField", "in", "address", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.each.call(depth0, "addressField", "in", "address", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</div>");
   return buffer;
@@ -1295,9 +1256,9 @@ function program9(depth0,data) {
     'class': ("list-group__item"),
     'tagName': ("li"),
     'disabledWhen': ("disableCancel"),
-    'data-qa-link': ("training_development")
+    'data-qa-link': ("trainingActivities")
   },inverse:self.noop,fn:self.program(28, program28, data),contexts:[depth0,depth0,depth0],types:["STRING","STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "applicationSection", "training_development", "selectedHiringModel", options) : helperMissing.call(depth0, "link-to", "applicationSection", "training_development", "selectedHiringModel", options));
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "applicationSection", "trainingActivities", "selectedHiringModel", options) : helperMissing.call(depth0, "link-to", "applicationSection", "trainingActivities", "selectedHiringModel", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                        ");
   hashContexts = {'class': depth0,'tagName': depth0,'disabledWhen': depth0,'data-qa-link': depth0};

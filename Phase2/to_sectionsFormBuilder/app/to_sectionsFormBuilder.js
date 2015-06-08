@@ -151,7 +151,7 @@ App.FormBuilderRoute = Ember.Route.extend( {
                     skills: {
                         isEnabled: false
                     },
-                    training_development: {
+                    trainingActivities: {
                         isEnabled: false
                     },
                     volunteering: {
