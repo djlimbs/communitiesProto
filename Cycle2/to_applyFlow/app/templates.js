@@ -1001,6 +1001,18 @@ function program2(depth0,data) {
   
 });
 
+Ember.TEMPLATES["application"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+
+
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outlet", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  
+});
+
 Ember.TEMPLATES["apply"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -2329,6 +2341,23 @@ function program13(depth0,data) {
   
 });
 
+Ember.TEMPLATES["error"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"scope-container\">\n    <div class=\"content content--readable pad--md--ts pad--md--bl pad--sm--only--n pad--sm--tm\">\n        <div class=\"wizardContent\">\n            <div class=\"alert alert--error mar--md--bm\" data-qa-alert=\"errorMessage\">\n                <strong>Sorry, an error occurred:</strong> ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "errorMessage", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["general"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -2713,7 +2742,7 @@ function program11(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "general", "generalFormElements", options) : helperMissing.call(depth0, "render", "general", "generalFormElements", options))));
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "projects", "projectsArray", options) : helperMissing.call(depth0, "render", "projects", "projectsArray", options))));
   data.buffer.push("\n            ");
   return buffer;
   }
@@ -2725,12 +2754,120 @@ function program13(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "jobSpecific", "jobSpecificFormElements", options) : helperMissing.call(depth0, "render", "jobSpecific", "jobSpecificFormElements", options))));
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "recommendations", "recommendationsArray", options) : helperMissing.call(depth0, "render", "recommendations", "recommendationsArray", options))));
   data.buffer.push("\n            ");
   return buffer;
   }
 
 function program15(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "recognition", "recognitionArray", options) : helperMissing.call(depth0, "render", "recognition", "recognitionArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program17(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "certifications", "certificationsArray", options) : helperMissing.call(depth0, "render", "certifications", "certificationsArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program19(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "trainingDevelopment", "trainingDevelopmentArray", options) : helperMissing.call(depth0, "render", "trainingDevelopment", "trainingDevelopmentArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program21(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "publications", "publicationsArray", options) : helperMissing.call(depth0, "render", "publications", "publicationsArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program23(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "patents", "patentsArray", options) : helperMissing.call(depth0, "render", "patents", "patentsArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program25(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "languages", "languagesArray", options) : helperMissing.call(depth0, "render", "languages", "languagesArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program27(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "volunteering", "volunteeringArray", options) : helperMissing.call(depth0, "render", "volunteering", "volunteeringArray", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program29(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "general", "generalFormElements", options) : helperMissing.call(depth0, "render", "general", "generalFormElements", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program31(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.render || (depth0 && depth0.render)),stack1 ? stack1.call(depth0, "jobSpecific", "jobSpecificFormElements", options) : helperMissing.call(depth0, "render", "jobSpecific", "jobSpecificFormElements", options))));
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+
+function program33(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n                ");
@@ -2784,17 +2921,62 @@ function program15(depth0,data) {
   data.buffer.push("\n            ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers.unless.call(depth0, "isGeneralEmpty", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "isProjectsEnabled", {hash:{},inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n            ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers.unless.call(depth0, "isJobSpecificEmpty", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "isRecommendationsEnabled", {hash:{},inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n            ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers.unless.call(depth0, "isLegalEmpty", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "isRecognitionEnabled", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isCertificationsEnabled", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isTrainingDevelopmentEnabled", {hash:{},inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isPublicationsEnabled", {hash:{},inverse:self.noop,fn:self.program(21, program21, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isPatentsEnabled", {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isLanguagesEnabled", {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isVolunteeringEnabled", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "isGeneralEmpty", {hash:{},inverse:self.noop,fn:self.program(29, program29, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "isJobSpecificEmpty", {hash:{},inverse:self.noop,fn:self.program(31, program31, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "isLegalEmpty", {hash:{},inverse:self.noop,fn:self.program(33, program33, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n            <div class=\"content mar--sm--txl pad--md--n mar--sm--bm\" data-qa-container=\"desktopButtons\">\n                <hr class=\"show-brkpoint--md\"/>\n                    <button ");
   hashContexts = {'class': depth0,'disabled': depth0};

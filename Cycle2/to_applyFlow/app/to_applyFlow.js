@@ -37,7 +37,8 @@ App.Fixtures = {
         'First_Name__c' : 'firstName',
         'Last_Name__c' : 'lastName',
         'Email__c' : 'emailAddress',
-        'Mobile_Phone__c' : 'phoneNumbers'
+        'Mobile_Phone__c' : 'phoneNumbers',
+        'Street_Address__c' : 'mainAddress'
     },
     monthToNumberMap: {
         'January' : 1,
@@ -170,6 +171,7 @@ App.getEmploymentHistoryBlock = function(employmentHistoryObj) {
         });
 
         newBlock.Id = employmentHistoryObj.Id;
+        newBlock.LinkedInId__c = employmentHistoryObj.LinkedInId__c;
     }
 
     return newBlock;
@@ -215,86 +217,7 @@ App.getEducationHistoryBlock = function(educationHistoryObj) {
         });
 
         newBlock.Id = educationHistoryObj.Id;
-    }
-
-    return newBlock;
-};
-
-App.getProjectBlock = function(projectObj) {
-    if(Ember.isNone(App.Fixtures.projectBlock)) {
-        App.Fixtures.projectBlock = {
-            fields: []
-        };
-    
-        parsedApplyMap.projectFields.forEach(function(f) {
-            var fieldObjWithValue = JSON.parse(JSON.stringify(f));
-
-            if (f.name === 'namespace_Start_Month__c' || f.name === 'namespace_End_Month__c') {
-                fieldObjWithValue.partial = 'monthPicklist';
-                fieldObjWithValue.label = f.name === 'Start_Month__c' ? labels.from : labels.to;
-                /*fieldObjWithValue.picklistValues.forEach(function(pv) {
-                    pv.label = App.Fixtures.numberToMonthMap[pv.value];
-                });*/
-            } else if (f.name === 'namespace_Start_Year__c' || f.name === 'namespace_End_Year__c') {
-                fieldObjWithValue.label = '';
-                fieldObjWithValue.partial = 'yearTelField';
-                fieldObjWithValue.picklistValues = [];
-            } else {
-                fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
-            }
-            
-            App.Fixtures.projectBlock.fields.addObject(fieldObjWithValue);
-        });
-    }
-    var newBlock = {
-        eId: ++App.EID,
-        fields: []
-    };
-        
-    App.Fixtures.projectBlock.fields.copy(true).forEach(function(f) {
-        newBlock.fields.addObject(Ember.Object.create(f));
-    });
-
-    if (!Ember.isNone(projectObj)) {
-        newBlock.fields.forEach(function(f) {
-            f.set('value', projectObj[f.name]);
-        });
-
-        newBlock.Id = projectObj.Id;
-    }
-
-    return newBlock;
-};
-
-App.getRecommendationBlock = function(recommendationObj) {
-    if(Ember.isNone(App.Fixtures.recommendationBlock)) {
-        App.Fixtures.recommendationBlock = {
-            fields: []
-        };
-    
-        parsedApplyMap.recommendationFields.forEach(function(f) {
-            var fieldObjWithValue = JSON.parse(JSON.stringify(f));
-
-            fieldObjWithValue.partial = App.Fixtures.fieldTypeToPartialMap[f.type];
-            
-            App.Fixtures.projectBlock.fields.addObject(fieldObjWithValue);
-        });
-    }
-    var newBlock = {
-        eId: ++App.EID,
-        fields: []
-    };
-        
-    App.Fixtures.projectBlock.fields.copy(true).forEach(function(f) {
-        newBlock.fields.addObject(Ember.Object.create(f));
-    });
-
-    if (!Ember.isNone(projectObj)) {
-        newBlock.fields.forEach(function(f) {
-            f.set('value', projectObj[f.name]);
-        });
-
-        newBlock.Id = projectObj.Id;
+        newBlock.LinkedInId__c = educationHistoryObj.LinkedInId__c;
     }
 
     return newBlock;
@@ -348,6 +271,7 @@ App.getObjectBlock = function(objName, obj) {
         });
 
         newBlock.Id = obj.Id;
+        newBlock.LinkedInId__c = obj.LinkedInId__c;
     }
 
     return newBlock;
@@ -364,7 +288,8 @@ App.convertLinkedInToEducationHistoryObj = function(educations) {
             Start_Month__c: !Ember.isNone(e.startDate) ? App.Fixtures.numberToMonthMap[e.startDate.month] : null,
             Start_Year__c: !Ember.isNone(e.startDate) ? e.startDate.year : null,
             End_Month__c: !Ember.isNone(e.endDate) ? App.Fixtures.numberToMonthMap[e.endDate.month] : null,
-            End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null
+            End_Year__c: !Ember.isNone(e.endDate) ? e.endDate.year : null,
+            LinkedInId__c: appId + '_' + e.id
         };
     });
 };
@@ -381,6 +306,7 @@ App.convertLinkedInToEmploymentHistoryObj = function(positions) {
             End_Month__c: !Ember.isNone(p.endDate) ? App.Fixtures.numberToMonthMap[p.endDate.month] : null,
             End_Year__c: !Ember.isNone(p.endDate) ? p.endDate.year : null,
             Is_Current__c: p.isCurrent,
+            LinkedInId__c: appId + '_' + p.id
         };
     });
 };
@@ -390,7 +316,8 @@ App.convertLinkedInToRecommendationObj = function(recs) {
         return {
             Name: !Ember.isNone(r.recommender) ? r.recommender.firstName  + ' ' + r.recommender.lastName : null,
             Recommendation_Text__c: r.recommendationText,
-            Recommender_Title__c : null
+            Recommender_Title__c : null,
+            LinkedInId__c: appId + '_' + r.id
         };
     });
 };
@@ -402,7 +329,8 @@ App.convertLinkedInToRecognitionObj = function(recs) {
             Description__c: r.description,
             Month__c : !Ember.isNone(r.date) ? r.date.month : null,
             Year__c : !Ember.isNone(r.date) ? r.date.year : null,
-            Issuer__c : r.issuer
+            Issuer__c : r.issuer,
+            LinkedInId__c: appId + '_' + r.id
         };
     });
 };
@@ -415,7 +343,8 @@ App.convertLinkedInToCertificationsObj = function(certs) {
             Start_Month__c: !Ember.isNone(c['start-date']) ? c['start-date'].month : null,
             Start_Year__c: !Ember.isNone(c['start-date']) ? c['start-date'].year : null,
             End_Month__c: !Ember.isNone(c['end-date']) ? c['end-date'].month : null,
-            End_Year__c: !Ember.isNone(c['end-date']) ? c['end-date'].year : null
+            End_Year__c: !Ember.isNone(c['end-date']) ? c['end-date'].year : null,
+            LinkedInId__c: appId + '_' + c.id
         };
     });
 };
@@ -426,22 +355,28 @@ App.convertLinkedInToPublicationsObj = function(pubs) {
             Name: p.title,
             Publisher__c: !Ember.isNone(p.publisher) ? p.publisher.name : null,
             Link__c: p.url,
-            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
-            Description__c: p.summary
+            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format('YYYY-MM-DD') : null,
+            Description__c: p.summary,
+            LinkedInId__c: appId + '_' + p.id
         };
     });
 };
 
 App.convertLinkedInToPatentsObj = function(patents) {
+    var patentStatusMap = Object.create(null);
+    patentStatusMap['Application'] = 'Patent Pending';
+    patentStatusMap['Patent'] = 'Patent Issued';
+
     return patents.map(function(p) {
         return {
             Name: p.title,
-            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format() : null,
+            Date__c: !Ember.isNone(p.date) ? moment(p.date.month + '/' + p.date.day + '/' + p.date.year, 'M/D/YYYY').format('YYYY-MM-DD') : null,
             Link__c: p.url,
             Number__c: p.number,
-            Office__c: p.summary,
-            Status__c: !Ember.isNone(p.status) ? p.status.name : null,
-            Summary__c: p.summary
+            Office__c: !Ember.isNone(p.office) ? p.office.name : null,
+            Status__c: !Ember.isNone(p.status) ? patentStatusMap[p.status.name] : null,
+            Summary__c: p.summary,
+            LinkedInId__c: appId + '_' + p.id
         };
     });
 };
@@ -450,7 +385,8 @@ App.convertLinkedInToLanguagesObj = function(languages) {
     return languages.map(function(l) {
         return {
             Name: !Ember.isNone(l.language) ? l.language.name : null,
-            Proficiency_Level__c: !Ember.isNone(l.proficiency) ? l.proficiency.name : null
+            Proficiency_Level__c: !Ember.isNone(l.proficiency) ? l.proficiency.name : null,
+            LinkedInId__c: appId + '_' + l.id
         };
     });
 };
@@ -464,7 +400,8 @@ App.convertLinkedInToVolunteerObj = function(volunteering) {
             Start_Month__c: null,
             Start_Year__c: null,
             End_Month__c: null,
-            End_Year__c: null
+            End_Year__c: null,
+            LinkedInId__c: appId + '_' + v.id
         };
     });
 }
@@ -693,7 +630,7 @@ App.checkForBlankObjectFields = function(objects, allowBlankEndDate) {
 
             // Only check if allowBlankEndDate is not true, or the field is not an end date type.
             if ((allowBlankEndDate !== true && endDateFields.indexOf(field.name) !== -1) || endDateFields.indexOf(field.name) === -1) {
-                if (Ember.isEmpty(field.value) && (field.isDBRequired === true || field.isFieldSetRequired === true)) {
+                if (Ember.isEmpty(field.value)) {
                     hasEmptyField = true;
                 }
             }
@@ -1012,6 +949,7 @@ App.LegallyRequiredView = Ember.View.extend({
 
 // Router
 App.Router.map(function() {
+    this.route('error');
     this.route('application_loading');
     this.resource('onePage');
     this.resource('apply', function() {

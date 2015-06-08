@@ -189,7 +189,7 @@ if (typeof jQuery === "undefined") { throw new Error("JUI's JavaScript requires 
 
     var Modal = function (element, options) {
         this.options        = options
-        this.$body          = $(document.body)
+        this.$body          = $($(element).closest('.scope-container'))
         this.$element       = $(element)
         this.$backdrop      =
             this.isShown        = null
@@ -228,6 +228,7 @@ if (typeof jQuery === "undefined") { throw new Error("JUI's JavaScript requires 
 
         this.checkScrollbar()
         this.$body.addClass('modal-open')
+        $('body').addClass('modal-open')
 
         this.setScrollbar()
         this.escape()
@@ -279,6 +280,7 @@ if (typeof jQuery === "undefined") { throw new Error("JUI's JavaScript requires 
         this.isShown = false
 
         this.$body.removeClass('modal-open')
+        $('body').removeClass('modal-open')
 
         this.resetScrollbar()
         this.escape()

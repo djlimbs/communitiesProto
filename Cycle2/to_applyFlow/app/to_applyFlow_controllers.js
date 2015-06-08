@@ -1,8 +1,11 @@
 // Defining application controller as it automatically comes w/ currentPath which we need for navigation.
 App.ApplicationController = Ember.Controller.extend({});
 
+App.ErrorController = Ember.ObjectController.extend({});
+
 App.OnePageController = Ember.ObjectController.extend({
-    needs: ['apply', 'employmentHistory', 'educationHistory'],
+    needs: ['apply', 'employmentHistory', 'educationHistory', 'projects', 'recommendations', 'recognition', 'certifications',
+            'trainingDevelopment', 'publications', 'patents', 'languages', 'volunteering'],
     isContactInfoIncompleteBinding: 'controllers.apply.isContactInfoIncomplete', 
     isResumeIncompleteBinding: 'controllers.apply.isResumeIncomplete', 
     isSkillsIncompleteBinding: 'controllers.apply.isSkillsIncomplete', 
@@ -16,10 +19,17 @@ App.OnePageController = Ember.ObjectController.extend({
                         || this.get('isSkillsIncomplete') || this.get('isEmploymentHistoryIncomplete')
                         || this.get('isEducationHistoryIncomplete') || this.get('isGeneralIncomplete') 
                         || this.get('isJobSpecificIncomplete') || this.get('isLegallyRequiredIncomplete')
+                        || this.get('isProjectsIncomplete') || this.get('isRecommendationsIncomplete')
+                        || this.get('isRecognitionIncomplete') || this.get('isCertificationsIncomplete')
+                        || this.get('isTrainingDevelopmentIncomplete') || this.get('isPublicationsIncomplete')
+                        || this.get('isPatentsIncomplete') || this.get('isLanguagesIncomplete')
+                        || this.get('isVolunteeringIncomplete')
                         || this.get('showSavingNotification');
     }.property('isContactInfoIncomplete', 'isResumeIncomplete', 'isSkillsIncomplete', 'isEmploymentHistoryIncomplete',
                     'isEducationHistoryIncomplete', 'isGeneralIncomplete', 'isJobSpecificIncomplete', 'isLegallyRequiredIncomplete', 
-                    'showSavingNotification'),
+                    'isProjectsIncomplete', 'isRecommendationsIncomplete', 'isRecognitionIncomplete', 'isCertificationsIncomplete',
+                    'isTrainingDevelopmentIncomplete', 'isPublicationsIncomplete', 'isPatentsIncomplete', 'isLanguagesIncomplete',
+                    'isVolunteeringIncomplete', 'showSavingNotification'),
     actions: {
         clickFinish: function() {
             parent.window.scrollTo(0,0);
@@ -143,6 +153,15 @@ App.OnePageController = Ember.ObjectController.extend({
             var saveObj = {};
             var employmentHistoryController = self.get('controllers.employmentHistory');
             var educationHistoryController = self.get('controllers.educationHistory');
+            var projectsController = self.get('controllers.projects');
+            var recommendationsController = self.get('controllers.recommendations');
+            var recognitionController = self.get('controllers.recognition');
+            var certificationsController = self.get('controllers.certifications');
+            var trainingDevelopmentController = self.get('controllers.trainingDevelopment');
+            var publicationsController = self.get('controllers.publications');
+            var patentsController = self.get('controllers.patents');
+            var languagesController = self.get('controllers.languages');
+            var volunteeringController = self.get('controllers.volunteering');
 
             self.setProperties({
                 errorMessage: null,
@@ -158,6 +177,12 @@ App.OnePageController = Ember.ObjectController.extend({
             if (model.isEmploymentHistoryEnabled) {
                 var employmentHistoryObj = App.buildEmploymentHistorySaveObj(model, employmentHistoryController, errorObj);
 
+                /* NAMESPACE PROTO STUFF */
+                employmentHistoryObj.employmentHistories.forEach(function(eh) {
+                    eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                });
+                /**************************/
+
                 if (employmentHistoryObj !== null) {
                     saveObj.employmentHistory = JSON.stringify(employmentHistoryObj);
                 }
@@ -166,10 +191,108 @@ App.OnePageController = Ember.ObjectController.extend({
             if (model.isEducationHistoryEnabled) {
                 var educationHistoryObj = App.buildEducationHistorySaveObj(model, educationHistoryController, errorObj);
 
+                /* NAMESPACE PROTO STUFF */
+                educationHistoryObj.educationHistories.forEach(function(eh) {
+                    eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                });
+                /**************************/
+
                 if (educationHistoryObj !== null) {
                     saveObj.educationHistory = JSON.stringify(educationHistoryObj);
                 }
             }
+
+            saveObj.additionalInformation = {
+                upsertAdditionalInformation: [],
+                deleteAdditionalInformation: [],
+                applicationId: appId
+            };
+
+            if (model.isProjectsEnabled) {
+                var projectsObj = App.buildAdditionalInfoSaveObj('projects', model, projectsController, errorObj, false);
+
+                if (projectsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(projectsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(projectsObj.deleteAdditionalInformation);
+                }
+            }
+
+            if (model.isRecommendationsEnabled) {
+                var recommendationsObj = App.buildAdditionalInfoSaveObj('recommendations', model, recommendationsController, errorObj, false);
+
+                if (recommendationsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(recommendationsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(recommendationsObj.deleteAdditionalInformation);
+                }
+            }
+
+            if (model.isRecognitionEnabled) {
+                var recognitionObj = App.buildAdditionalInfoSaveObj('recognition', model, recognitionController, errorObj, true);
+
+                if (recognitionObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(recognitionObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(recognitionObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isCertificationsEnabled) {
+                var certificationsObj = App.buildAdditionalInfoSaveObj('certifications', model, certificationsController, errorObj, true);
+
+                if (certificationsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(certificationsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(certificationsObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isTrainingDevelopmentEnabled) {
+                var trainingDevelopmentObj = App.buildAdditionalInfoSaveObj('trainingDevelopment', model, trainingDevelopmentController, errorObj, false);
+
+                if (trainingDevelopmentObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(trainingDevelopmentObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(trainingDevelopmentObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isPublicationsEnabled) {
+                var publicationsObj = App.buildAdditionalInfoSaveObj('publications', model, publicationsController, errorObj, false);
+
+                if (publicationsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(publicationsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(publicationsObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isPatentsEnabled) {
+                var patentsObj = App.buildAdditionalInfoSaveObj('patents', model, patentsController, errorObj, false);
+
+                if (patentsObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(patentsObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(patentsObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isLanguagesEnabled) {
+                var languagesObj = App.buildAdditionalInfoSaveObj('languages', model, languagesController, errorObj, false);
+
+                if (languagesObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(languagesObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(languagesObj.deleteAdditionalInformation);                }
+            }
+
+            if (model.isVolunteeringEnabled) {
+                var volunteeringObj = App.buildAdditionalInfoSaveObj('volunteering', model, volunteeringController, errorObj, false);
+
+                if (volunteeringObj !== null) {
+                    saveObj.additionalInformation.upsertAdditionalInformation.addObjects(volunteeringObj.upsertAdditionalInformation);
+                    saveObj.additionalInformation.deleteAdditionalInformation.addObjects(volunteeringObj.deleteAdditionalInformation);                }
+            }
+
+            /* NAMESPACE PROTO STUFF */
+            saveObj.additionalInformation.upsertAdditionalInformation.forEach(function(ai) {
+                Object.keys(ai).forEach(function(k) {
+                    if (k.indexOf('__c') !== -1 && k.indexOf('namespace_') === -1) {
+                        ai['namespace_' + k] = ai[k];
+                    }
+                });
+            });
+            /**************************/
+
+            saveObj.additionalInformation = JSON.stringify(saveObj.additionalInformation);
 
             if (model.isGeneralEmpty !== true) {  
                 saveObj.generalApplicantResponses = JSON.stringify({
@@ -719,17 +842,17 @@ App.AdditionalInfoMixin = Ember.Mixin.create({
     isOnePageBinding: 'controllers.apply.isOnePage',
     isHistorySection: true,
     aIDidChenge: function() {
-        var currentProjects = this.get('[]');
+        var currentAis = this.get('[]');
         var incompleteFieldName = this.get('incompleteFieldName');
-        var hasEmptyField = App.checkForBlankObjectFields(currentProjects, this.get('allowBlankEndDates'));
+        var hasEmptyField = App.checkForBlankObjectFields(currentAis, this.get('allowBlankEndDates'));
 
         this.get('controllers.apply').set(incompleteFieldName, hasEmptyField);
     }.observes('[]', '[].@each.fields'),
     actions: {
         clickAddAI: function() {
             var blockName = this.get('blockName');
-            var projectBlock = App.getObjectBlock(blockName);
-            this.get('[]').addObject(projectBlock);
+            var aiBlock = App.getObjectBlock(blockName);
+            this.get('[]').addObject(aiBlock);
         },
         clickDeleteAI: function(aIToDelete) {
             var deletedArrayName = this.get('deletedArrayName');

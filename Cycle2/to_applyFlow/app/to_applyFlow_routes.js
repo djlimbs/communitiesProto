@@ -89,6 +89,8 @@ App.setupResumeSection = function(parsedApplyMap, applicationObj, hiringModel, l
 
 App.setupSkillsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.skills.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isSkillsEnabled = true;
         applicationObj.isSkillsIncomplete = false;
 
@@ -101,36 +103,51 @@ App.setupSkillsSection = function(parsedApplyMap, applicationObj, hiringModel, l
         
         // Linkedin
         var linkedInIds = [];
+        var linkedInSkills = [];
 
         if (!Ember.isNone(linkedInMap) && !Ember.isEmpty(linkedInMap.skills)) {
             linkedInMap.skills.values.forEach(function(skill) {
                 skillsArray.addObject(skill.skill.name);
                 linkedInIds.addObject(skill.id);
+                linkedInSkills.addObject(skill.skill.name);
             });
         }
 
         // if we have data
         if (!Ember.isEmpty(parsedApplyMap.skills)) {
-
+            var existingLinkedInSkills = parsedApplyMap.skills.filterBy('IsLinkedIn__c', true);
+            if (!Ember.isEmpty(existingLinkedInSkills)) {
+                linkedInSkills.addObjects(existingLinkedInSkills.getEach('Skill__r').getEach('Name'));
+            }
             skillsArray.addObjects(parsedApplyMap.skills.filter(function(s) {
-                return linkedInIds.indexOf(parseInt(s.LinkedInId__c)) !== -1;
+                return Ember.isEmpty(s.LinkedInId__c) || linkedInIds.indexOf(parseInt(s.LinkedInId__c)) !== -1;
             }).getEach('Skill__r').getEach('Name'));
 
         }
         
+        applicationObj.linkedInSkills = linkedInSkills;
+
         if (!Ember.isEmpty(skillsArray)) {
             applicationObj.isSkillsIncomplete = false;
             applicationObj.skills.selectedSkills = skillsArray.join(',');
         }
+
+        objectsForInitialSave = App.buildSkillsSaveObj(applicationObj);
+
+        return objectsForInitialSave;
     } else {
         applicationObj.isSkillsEnabled = false;
         applicationObj.isSkillsIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupEmploymentHistorySection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     // Employment History section
     if (hiringModel.employmentHistory.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isEmploymentHistoryEnabled = true;
         applicationObj.isEmploymentHistoryIncomplete = true;
         applicationObj.sectionArray.addObject('employmentHistory');
@@ -138,9 +155,30 @@ App.setupEmploymentHistorySection = function(parsedApplyMap, applicationObj, hir
         applicationObj.employmentHistoryYears = hiringModel.employmentHistory.selectedEmploymentHistoryYears;
         applicationObj.employmentHistoryArray = [];
 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.positions) && !Ember.isEmpty(linkedInMap.positions.values)) {
+            var employmentHistoryObjs = App.convertLinkedInToEmploymentHistoryObj(linkedInMap.positions.values);
+            employmentHistoryObjs.forEach(function(eh) {
+                linkedInIds.addObject(eh.LinkedInId__c);
+                eh.Application__c = appId;
+                objectsForInitialSave.addObject(eh);
+                applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock(eh));
+            });
+        }  
+
         if (!Ember.isEmpty(parsedApplyMap.employmentHistories)) {
             parsedApplyMap.employmentHistories.forEach(function(eh) {
-                applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock(eh));
+                if (linkedInIds.indexOf(eh.LinkedInId__c) !== -1) {
+                    applicationObj.employmentHistoryArray.findBy('LinkedInId__c', eh.LinkedInId__c).Employment_History__c = eh.Employment_History__c;
+                    objectsForInitialSave.findBy('LinkedInId__c', eh.LinkedInId__c).Employment_History__c = eh.Employment_History__c;
+                } else {
+                    applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock(eh));
+                    eh.Application__c = appId;
+                    objectsForInitialSave.addObject(eh);
+                }
             });
 
             // Check completeness
@@ -151,26 +189,23 @@ App.setupEmploymentHistorySection = function(parsedApplyMap, applicationObj, hir
 
         }
 
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.positions) && !Ember.isEmpty(linkedInMap.positions.values)) {
-            var employmentHistoryObjs = App.convertLinkedInToEmploymentHistoryObj(linkedInMap.positions.values);
-            employmentHistoryObjs.forEach(function(eh) {
-                applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock(eh));
-            });
-        }  
-
         if (Ember.isEmpty(applicationObj.employmentHistoryArray)) {
             applicationObj.employmentHistoryArray.addObject(App.getEmploymentHistoryBlock());
         }
+
+        return objectsForInitialSave;
     } else {
         applicationObj.isEmploymentHistoryEnabled = false;
         applicationObj.isEmploymentHistoryIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupEducationHistorySection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.educationHistory.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isEducationHistoryEnabled = true;
         applicationObj.isEducationHistoryIncomplete = true;
 
@@ -178,10 +213,31 @@ App.setupEducationHistorySection = function(parsedApplyMap, applicationObj, hiri
 
         applicationObj.educationHistoryArray = [];
 
+        // if we don't have data already but have logged in via linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.educations) && !Ember.isEmpty(linkedInMap.educations.values)) {
+            var educationHistoryObjs = App.convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
+            educationHistoryObjs.forEach(function(eh) {
+                objectsForInitialSave.addObject(eh);
+                eh.Application__c = appId;
+                linkedInIds.addObject(eh.LinkedInId__c);
+                applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
+            });
+        }  
+
         // if we have data already.
         if (!Ember.isEmpty(parsedApplyMap.educationHistories)) {
             parsedApplyMap.educationHistories.forEach(function(eh) {
-                applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
+                if (linkedInIds.indexOf(eh.LinkedInId__c) !== -1) {
+                    applicationObj.educationHistoryArray.findBy('LinkedInId__c', eh.LinkedInId__c).Education_History__c = eh.Education_History__c;
+                    objectsForInitialSave.findBy('LinkedInId__c', eh.LinkedInId__c).Education_History__c = eh.Education_History__c;
+                } else {
+                    applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
+                    eh.Application__c = appId;
+                    objectsForInitialSave.addObject(eh);
+                }
             });
 
             var hasEmptyFields = App.checkForBlankEducationHistoryFields(applicationObj.educationHistoryArray);
@@ -189,22 +245,17 @@ App.setupEducationHistorySection = function(parsedApplyMap, applicationObj, hiri
             applicationObj.isEducationHistoryIncomplete = hasEmptyFields;
         }
 
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.educations) && !Ember.isEmpty(linkedInMap.educations.values)) {
-            var educationHistoryObjs = App.convertLinkedInToEducationHistoryObj(linkedInMap.educations.values);
-            educationHistoryObjs.forEach(function(eh) {
-                applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock(eh));
-            });
-        }  
-
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.educationHistoryArray)) {
             applicationObj.educationHistoryArray.addObject(App.getEducationHistoryBlock());
         }
+
+        return objectsForInitialSave;
     } else {
         applicationObj.isEducationHistoryEnabled = false;
         applicationObj.isEducationHistoryIncomplete = false;
+
+        return [];
     }
 };
 
@@ -313,6 +364,8 @@ App.setupLegallyRequiredSection = function(parsedApplyMap, applicationObj, hirin
 
 App.setupProjectsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.projects.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isProjectsEnabled = true;
         applicationObj.isProjectsIncomplete = true;
 
@@ -326,6 +379,7 @@ App.setupProjectsSection = function(parsedApplyMap, applicationObj, hiringModel,
             if (!Ember.isEmpty(projects)) {
                 projects.forEach(function(p) {
                     applicationObj.projectsArray.addObject(App.getObjectBlock('projects', p));
+                    objectsForInitialSave.addObject(p);
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.projectsArray, true);
@@ -338,14 +392,26 @@ App.setupProjectsSection = function(parsedApplyMap, applicationObj, hiringModel,
         if (Ember.isEmpty(applicationObj.projectsArray)) {
             applicationObj.isProjectsIncomplete = false;
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.projects.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.projects.typeAPIName;
+
+            return o;
+        });
     } else {
         applicationObj.isProjectsEnabled = false;
         applicationObj.isProjectsIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupRecommendationsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.recommendations.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isRecommendationsEnabled = true;
         applicationObj.isRecommendationsIncomplete = true;
 
@@ -353,41 +419,64 @@ App.setupRecommendationsSection = function(parsedApplyMap, applicationObj, hirin
 
         applicationObj.recommendationsArray = [];
 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.recommendationsReceived) && !Ember.isEmpty(linkedInMap.recommendationsReceived.values)) {
+            var recommendationObjs = App.convertLinkedInToRecommendationObj(linkedInMap.recommendationsReceived.values);
+            recommendationObjs.forEach(function(rec) {
+                linkedInIds.addObject(rec.LinkedInId__c);
+                objectsForInitialSave.addObject(rec);
+                applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations', rec));
+            });
+        }
+
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             var recommendations = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Recommendation');
             // if we have data already.
             if (!Ember.isEmpty(recommendations)) {
                 recommendations.forEach(function(r) {
-                    applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations', r));
+                    if (linkedInIds.indexOf(r.LinkedInId__c) !== -1) {
+                        applicationObj.recommendationsArray.findBy('LinkedInId__c', r.LinkedInId__c).Recommendation__c = r.Recommendation__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', r.LinkedInId__c).Recommendation__c = r.Recommendation__c;
+                    } else {
+                        applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations', r));
+                        objectsForInitialSave.addObject(r);
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.recommendationsArray);
 
                 applicationObj.isRecommendationsIncomplete = hasEmptyFields;
             }
-        }
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.recommendationsReceived) && !Ember.isEmpty(linkedInMap.recommendationsReceived.values)) {
-            var recommendationObjs = App.convertLinkedInToRecommendationObj(linkedInMap.recommendationsReceived.values);
-            recommendationObjs.forEach(function(rec) {
-                applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations', rec));
-            });
-        }  
-        
+        }        
+
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.recommendationsArray)) {
             applicationObj.isRecommendationsIncomplete = false;
-            //applicationObj.recommendationsArray.addObject(App.getObjectBlock('recommendations'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.recommendations.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.recommendations.typeAPIName;
+
+            return o;
+        });
     } else {
         applicationObj.isRecommendationsEnabled = false;
         applicationObj.isRecommendationsIncomplete = false;
+
+        return [];
+
     }
 };
 
 App.setupRecognitionSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.recognition.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isRecognitionEnabled = true;
         applicationObj.isRecognitionIncomplete = true;
 
@@ -395,12 +484,31 @@ App.setupRecognitionSection = function(parsedApplyMap, applicationObj, hiringMod
 
         applicationObj.recognitionArray = [];
 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.honorsAwards) && !Ember.isEmpty(linkedInMap.honorsAwards.values)) {
+            var recognitionObjs = App.convertLinkedInToRecognitionObj(linkedInMap.honorsAwards.values);
+            recognitionObjs.forEach(function(rec) {
+                linkedInIds.addObject(rec.LinkedInId__c);
+                objectsForInitialSave.addObject(rec);
+                applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition', rec));
+            });
+        }  
+
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             var recognitions = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Recognition');
             // if we have data already.
             if (!Ember.isEmpty(recognitions)) {
                 recognitions.forEach(function(r) {
-                    applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition', r));
+                    if (linkedInIds.indexOf(r.LinkedInId__c) !== -1) {
+                        applicationObj.recognitionArray.findBy('LinkedInId__c', r.LinkedInId__c).Recognition__c = r.Recognition__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', r.LinkedInId__c).Recognition__c = r.Recognition__c;
+                    } else {
+                        applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition', r));
+                        objectsForInitialSave.addObject(r);
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.recognitionArray);
@@ -409,28 +517,30 @@ App.setupRecognitionSection = function(parsedApplyMap, applicationObj, hiringMod
             }
         }
 
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.honorsAwards) && !Ember.isEmpty(linkedInMap.honorsAwards.values)) {
-            var recognitionObjs = App.convertLinkedInToRecognitionObj(linkedInMap.honorsAwards.values);
-            recognitionObjs.forEach(function(rec) {
-                applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition', rec));
-            });
-        }  
-
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.recognitionArray)) {
             applicationObj.isRecognitionIncomplete = false;
-            //applicationObj.recognitionArray.addObject(App.getObjectBlock('recognition'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.recognition.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.recognition.typeAPIName;
+
+            return o;
+        });
     } else {
         applicationObj.isRecognitionEnabled = false;
         applicationObj.isRecognitionIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.certifications.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isCertificationsEnabled = true;
         applicationObj.isCertificationsIncomplete = true;
 
@@ -438,13 +548,32 @@ App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiring
 
         applicationObj.certificationsArray = [];
 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.certifications) && !Ember.isEmpty(linkedInMap.certifications.values)) {
+            var certificationObjs = App.convertLinkedInToCertificationsObj(linkedInMap.certifications.values);
+            certificationObjs.forEach(function(c) {
+                linkedInIds.addObject(c.LinkedInId__c);
+                objectsForInitialSave.addObject(c);
+                applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications', c));
+            });
+        }  
+
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             // if we have data already.
             var certifications = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Certification');
             // if we have data already.
             if (!Ember.isEmpty(certifications)) {
                 certifications.forEach(function(c) {
-                    applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications', c));
+                    if (linkedInIds.indexOf(c.LinkedInId__c) !== -1) {
+                        applicationObj.certificationsArray.findBy('LinkedInId__c', c.LinkedInId__c).Certification__c = c.Certification__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', c.LinkedInId__c).Certification__c = c.Certification__c;
+                    } else {
+                        applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications', c));
+                        objectsForInitialSave.addObject(c);
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.certificationsArray, true);
@@ -452,29 +581,31 @@ App.setupCertificationsSection = function(parsedApplyMap, applicationObj, hiring
                 applicationObj.isCertificationsIncomplete = hasEmptyFields;
             }
         }
-        
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.certifications) && !Ember.isEmpty(linkedInMap.certifications.values)) {
-            var certificationObjs = App.convertLinkedInToCertificationsObj(linkedInMap.certifications.values);
-            certificationObjs.forEach(function(c) {
-                applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications', c));
-            });
-        }  
 
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.certificationsArray)) {
             applicationObj.isCertificationsIncomplete = false;
-            //applicationObj.certificationsArray.addObject(App.getObjectBlock('certifications'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.certifications.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.certifications.typeAPIName;
+
+            return o;
+        });    
     } else {
         applicationObj.isCertificationsEnabled = false;
         applicationObj.isCertificationsIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupTrainingDevelopmentSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.trainingActivities.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isTrainingDevelopmentEnabled = true;
         applicationObj.isTrainingDevelopmentIncomplete = true;
 
@@ -488,6 +619,7 @@ App.setupTrainingDevelopmentSection = function(parsedApplyMap, applicationObj, h
             if (!Ember.isEmpty(trainingDevelopments)) {
                 trainingDevelopments.forEach(function(t) {
                     applicationObj.trainingDevelopmentArray.addObject(App.getObjectBlock('trainingDevelopment', t));
+                    objectsForInitialSave.addObject(t);
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.trainingDevelopmentArray);
@@ -499,16 +631,27 @@ App.setupTrainingDevelopmentSection = function(parsedApplyMap, applicationObj, h
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.trainingDevelopmentArray)) {
             applicationObj.isTrainingDevelopmentIncomplete = false;
-            //applicationObj.trainingDevelopmentArray.addObject(App.getObjectBlock('trainingDevelopment'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.trainingDevelopment.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.trainingDevelopment.typeAPINam;
+
+            return o;
+        });
     } else {
         applicationObj.isTrainingDevelopmentEnabled = false;
         applicationObj.isTrainingDevelopmentIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupPublicationsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.publications.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isPublicationsEnabled = true;
         applicationObj.isPublicationsIncomplete = true;
 
@@ -516,12 +659,31 @@ App.setupPublicationsSection = function(parsedApplyMap, applicationObj, hiringMo
 
         applicationObj.publicationsArray = [];
 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.publications) && !Ember.isEmpty(linkedInMap.publications.values)) {
+            var publicationObjs = App.convertLinkedInToPublicationsObj(linkedInMap.publications.values);
+            publicationObjs.forEach(function(p) {
+                linkedInIds.addObject(p.LinkedInId__c);
+                objectsForInitialSave.addObject(p);
+                applicationObj.publicationsArray.addObject(App.getObjectBlock('publications', p));
+            });
+        }  
+
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             var publications = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Publication');
             // if we have data already.
             if (!Ember.isEmpty(publications)) {
                 publications.forEach(function(p) {
-                    applicationObj.publicationsArray.addObject(App.getObjectBlock('publications', p));
+                    if (linkedInIds.indexOf(p.LinkedInId__c) !== -1) {
+                        applicationObj.publicationsArray.findBy('LinkedInId__c', p.LinkedInId__c).Publication__c = p.Publication__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', p.LinkedInId__c).Publication__c = p.Publication__c;
+                    } else {
+                        applicationObj.publicationsArray.addObject(App.getObjectBlock('publications', p));
+                        objectsForInitialSave.addObject(p);
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.publicationsArray);
@@ -530,28 +692,30 @@ App.setupPublicationsSection = function(parsedApplyMap, applicationObj, hiringMo
             }
         }
 
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.publications) && !Ember.isEmpty(linkedInMap.publications.values)) {
-            var publicationObjs = App.convertLinkedInToPublicationsObj(linkedInMap.publications.values);
-            publicationObjs.forEach(function(p) {
-                applicationObj.publicationsArray.addObject(App.getObjectBlock('publications', p));
-            });
-        }  
-
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.publicationsArray)) {
             applicationObj.isPublicationsIncomplete = false;
-            //applicationObj.publicationsArray.addObject(App.getObjectBlock('publications'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.publications.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.publications.typeAPIName;
+            
+            return o;
+        });
     } else {
         applicationObj.isPublicationsEnabled = false;
         applicationObj.isPublicationsIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupPatentsSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.patents.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isPatentsEnabled = true;
         applicationObj.isPatentsIncomplete = true;
 
@@ -559,12 +723,31 @@ App.setupPatentsSection = function(parsedApplyMap, applicationObj, hiringModel, 
 
         applicationObj.patentsArray = [];
 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.patents) && !Ember.isEmpty(linkedInMap.patents.values)) {
+            var patentObjs = App.convertLinkedInToPatentsObj(linkedInMap.patents.values);
+            patentObjs.forEach(function(p) {
+                linkedInIds.addObject(p.LinkedInId__c);
+                objectsForInitialSave.addObject(p);
+                applicationObj.patentsArray.addObject(App.getObjectBlock('patents', p));
+            });
+        } 
+
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             var patents = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Patent');
             // if we have data already.
             if (!Ember.isEmpty(patents)) {
                 patents.forEach(function(p) {
-                    applicationObj.patentsArray.addObject(App.getObjectBlock('patents', p));
+                    if (linkedInIds.indexOf(p.LinkedInId__c) !== -1) {
+                        applicationObj.patentsArray.findBy('LinkedInId__c', p.LinkedInId__c).Patent__c = p.Patent__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', p.LinkedInId__c).Patent__c = p.Patent__c;
+                    } else {
+                        applicationObj.patentsArray.addObject(App.getObjectBlock('patents', p));
+                        objectsForInitialSave.addObject(p);
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.patentsArray);
@@ -573,41 +756,62 @@ App.setupPatentsSection = function(parsedApplyMap, applicationObj, hiringModel, 
             }
         }
         
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.patents) && !Ember.isEmpty(linkedInMap.patents.values)) {
-            var patentObjs = App.convertLinkedInToPatentsObj(linkedInMap.patents.values);
-            patentObjs.forEach(function(p) {
-                applicationObj.patentsArray.addObject(App.getObjectBlock('patents', p));
-            });
-        } 
-
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.patentsArray)) {
             applicationObj.isPatentsIncomplete = false;
-            //applicationObj.patentsArray.addObject(App.getObjectBlock('patents'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.patents.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.patents.typeAPIName;
+
+            return o;
+        });
     } else {
         applicationObj.isPatentsEnabled = false;
         applicationObj.isPatentsIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupLanguagesSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.languages.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isLanguagesEnabled = true;
         applicationObj.isLanguagesIncomplete = true;
 
         applicationObj.sectionArray.addObject('languages');
 
         applicationObj.languagesArray = [];
+ 
+        // Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.languages) && !Ember.isEmpty(linkedInMap.languages.values)) {
+            var languageObjs = App.convertLinkedInToLanguagesObj(linkedInMap.languages.values);
+            languageObjs.forEach(function(l) {
+                linkedInIds.addObject(l.LinkedInId__c);
+                objectsForInitialSave.addObject(l);
+                applicationObj.languagesArray.addObject(App.getObjectBlock('languages', l));
+            });
+        } 
 
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             var languages = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Language');
             // if we have data already.
             if (!Ember.isEmpty(languages)) {
                 languages.forEach(function(l) {
-                    applicationObj.languagesArray.addObject(App.getObjectBlock('languages', l));
+                    if (linkedInIds.indexOf(l.LinkedInId__c) !== -1) {
+                        applicationObj.languagesArray.findBy('LinkedInId__c', l.LinkedInId__c).Language__c = l.Language__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', l.LinkedInId__c).Language__c = l.Language__c;
+                    } else {
+                        applicationObj.languagesArray.addObject(App.getObjectBlock('languages', l));
+                        objectsForInitialSave.addObject(l);
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.languagesArray);
@@ -615,42 +819,64 @@ App.setupLanguagesSection = function(parsedApplyMap, applicationObj, hiringModel
                 applicationObj.isLanguagesIncomplete = hasEmptyFields;
             }
         }
-        
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.languages) && !Ember.isEmpty(linkedInMap.languages.values)) {
-            var languageObjs = App.convertLinkedInToLanguagesObj(linkedInMap.languages.values);
-            languageObjs.forEach(function(l) {
-                applicationObj.languagesArray.addObject(App.getObjectBlock('languages', l));
-            });
-        } 
 
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.languagesArray)) {
             applicationObj.isLanguagesIncomplete = false;
-            //applicationObj.languagesArray.addObject(App.getObjectBlock('languages'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.languages.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.languages.typeAPIName;
+            
+            return o;
+        });
     } else {
         applicationObj.isLanguagesEnabled = false;
         applicationObj.isLanguagesIncomplete = false;
+
+        return [];
     }
 };
 
 App.setupVolunteeringSection = function(parsedApplyMap, applicationObj, hiringModel, linkedInMap) {
     if (hiringModel.volunteering.isEnabled === true) {
+        var objectsForInitialSave = [];
+
         applicationObj.isVolunteeringEnabled = true;
         applicationObj.isVolunteeringIncomplete = true;
 
         applicationObj.sectionArray.addObject('volunteering');
 
         applicationObj.volunteeringArray = [];
-        
+
+        // if we don't have data already but have logged in via Linkedin
+        var linkedInIds = [];
+
+        if (!Ember.isNone(linkedInMap) 
+                && !Ember.isEmpty(linkedInMap.volunteer) && !Ember.isEmpty(linkedInMap.volunteer.volunteerExperiences)
+                && !Ember.isEmpty(linkedInMap.volunteer.volunteerExperiences.values)) {
+            var volunteerObjs = App.convertLinkedInToVolunteerObj(linkedInMap.volunteer.volunteerExperiences.values);
+            volunteerObjs.forEach(function(v) {
+                linkedInIds.addObject(v.LinkedInId__c);
+                objectsForInitialSave.addObject(v);
+                applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering', v));
+            });
+        }
+
         if(!Ember.isEmpty(parsedApplyMap.additionalInformation)) {
             var volunteerings = parsedApplyMap.additionalInformation.filterBy('Type__c', 'Volunteer Work');
             // if we have data already.
             if (!Ember.isEmpty(volunteerings)) {
                 volunteerings.forEach(function(v) {
-                    applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering', v));
+                    if (linkedInIds.indexOf(v.LinkedInId__c) !== -1) {
+                        applicationObj.volunteeringArray.findBy('LinkedInId__c', v.LinkedInId__c).Volunteer_Work__c = v.Volunteer_Work__c;
+                        objectsForInitialSave.findBy('LinkedInId__c', v.LinkedInId__c).Volunteer_Work__c = v.Volunteer_Work__c;
+                    } else {
+                        objectsForInitialSave.addObject(v);
+                        applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering', v));
+                    }
                 });
 
                 var hasEmptyFields = App.checkForBlankObjectFields(applicationObj.volunteeringArray, true);
@@ -658,25 +884,25 @@ App.setupVolunteeringSection = function(parsedApplyMap, applicationObj, hiringMo
                 applicationObj.isVolunteeringIncomplete = hasEmptyFields;
             }
         }
-        
-        // if we don't have data already but have logged in via linkedin
-        if (!Ember.isNone(linkedInMap) 
-                && !Ember.isEmpty(linkedInMap.volunteer) && !Ember.isEmpty(linkedInMap.volunteer.volunteeringExperiences)
-                && !Ember.isEmpty(linkedInMap.volunteer.volunteeringExperiences.values)) {
-            var volunteerObjs = App.convertLinkedInToVolunteerObj(linkedInMap.volunteer.volunteeringExperiences.values);
-            volunteerObjs.forEach(function(v) {
-                applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering', v));
-            });
-        }
 
         // if we don't have any data at all.
         if (Ember.isEmpty(applicationObj.volunteeringArray)) {
             applicationObj.isVolunteeringIncomplete = false;
             //applicationObj.volunteeringArray.addObject(App.getObjectBlock('volunteering'));
         }
+
+        return objectsForInitialSave.map(function(o) {
+            o.namespace_Application__c = appId;
+            o.namespace_Type__c = App.Fixtures.sectionToTypeMap.volunteering.type;
+            o.namespace_TypeAPIName__c = App.Fixtures.sectionToTypeMap.volunteering.typeAPIName;
+
+            return o;
+        });
     } else {
         applicationObj.isVolunteeringEnabled = false;
         applicationObj.isVolunteeringIncomplete = false;
+
+        return [];
     }
 };
 
@@ -697,10 +923,18 @@ App.buildContactSaveObj = function(application) {
 App.buildSkillsSaveObj = function(application) {
     var selectedSkillsString = application.skills.selectedSkills;
     var selectedSkills = [];
+    var linkedInSkills = application.linkedInSkills || [];
 
     if (!Ember.isEmpty(selectedSkillsString)) {
         selectedSkills = selectedSkillsString.split(',');
     }
+
+    selectedSkills = selectedSkills.map(function(s) {
+        return {
+            name: s,
+            isLinkedIn: linkedInSkills.indexOf(s) !== -1
+        };
+    });
 
     var skillsObj = {
         applicationId: appId,
@@ -713,7 +947,6 @@ App.buildSkillsSaveObj = function(application) {
 
 App.buildEmploymentHistorySaveObj = function(application, employmentHistoryController, errorObj) {
     var employmentHistoryObjArray = [];
-    //var flattenedEmploymentHistory = '';
     var historyIsLongEnough = false;
     var isValid = true;
 
@@ -754,16 +987,6 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
                     }
                 }
 
-                /*
-                if (isValid === false && errorObj.message.indexOf('Employment History') === -1) {
-                    errorObj.message = '<li><strong>Employment History:</strong><br>';
-                }
-                    errorObj.message += '<ul class="pad--sm--ll"><li><small>'
-                                    + eh.
-                                    + labels.pleaseEnterAYearBetween + ' ' + '1900' + ' ' 
-                                    + labels.and + ' ' + moment().format('YYYY')
-                                    + '</small></li></ul></li>';
-                }*/
             } else {
                 employmentHistoryObj[field.name] = field.value;
             }
@@ -780,21 +1003,6 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
                         + labels.and + ' ' + moment().format('YYYY')
                         + '</small></li></ul></li>';
         }
-
-        // add employment history to flattened string. DON'T NEED
-        /*flattenedEmploymentHistory += employmentHistoryObj.Name + '\n'
-                    + employmentHistoryObj.Job_Title__c + '\n'
-                    + App.Fixtures.numberToMonthMap[employmentHistoryObj.Start_Month__c] + ' ' + employmentHistoryObj.Start_Year__c + ' - ';
-
-        if (employmentHistoryObj.Is_Current__c == true) {
-            employmentHistoryObj.End_Month__c = null;
-            employmentHistoryObj.End_Year__c = null;
-            flattenedEmploymentHistory += labels.present;
-        } else if (!Ember.isNone(employmentHistoryObj.End_Month__c) && !Ember.isNone(employmentHistoryObj.End_Year__c)) {
-            flattenedEmploymentHistory += App.Fixtures.numberToMonthMap[employmentHistoryObj.End_Month__c] + ' ' + employmentHistoryObj.End_Year__c;
-        }
-
-        flattenedEmploymentHistory += '\n\n';*/
 
         employmentHistoryObjArray.addObject(employmentHistoryObj);
     });
@@ -813,7 +1021,6 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
             employmentHistories: employmentHistoryObjArray,
             deletedEmploymentHistories: employmentHistoryController.get('deletedEmploymentHistories'),
             appId: appId
-            //flattenedEmploymentHistory: flattenedEmploymentHistory
         };
 
         return employmentHistoriesObj;
@@ -841,7 +1048,6 @@ App.buildEmploymentHistorySaveObj = function(application, employmentHistoryContr
 
 App.buildEducationHistorySaveObj = function(application, educationHistoryController, errorObj) {
     var educationHistoryObjArray = [];
-    //var flattenedEducationHistory = '';
     var isValid = true;
 
     application.educationHistoryArray.forEach(function(eh) {
@@ -893,19 +1099,6 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
                         + '</small></li></ul></li>';
         }
 
-        // add education history to flattened string. DON'T NEED
-        /*flattenedEducationHistory += educationHistoryObj.Name + '\n'
-                    + educationHistoryObj.Education_Level__c;
-
-        if (!Ember.isNone(educationHistoryObj.Status__c)) {
-            flattenedEducationHistory += ' (' + educationHistoryObj.Status__c + ')';
-        } 
-        
-        flattenedEducationHistory += '\n' 
-                                  + App.Fixtures.numberToMonthMap[educationHistoryObj.Start_Month__c] + ' ' + educationHistoryObj.Start_Year__c + ' - '
-                                  + App.Fixtures.numberToMonthMap[educationHistoryObj.End_Month__c] + ' ' + educationHistoryObj.End_Year__c
-                                  + '\n\n';*/
-
         educationHistoryObjArray.addObject(educationHistoryObj);
     });
 
@@ -913,8 +1106,7 @@ App.buildEducationHistorySaveObj = function(application, educationHistoryControl
         var educationHistoriesObj = {
             educationHistories: educationHistoryObjArray,
             deletedEducationHistories: educationHistoryController.get('deletedEducationHistories'),
-            appId: appId,
-            //flattenedEducationHistory: flattenedEducationHistory
+            appId: appId
         };
 
         return educationHistoriesObj;
@@ -1011,17 +1203,15 @@ App.redirectAfterFinish = function(application) {
 
 App.ApplicationLoadingRoute = Ember.Route.extend({
   renderTemplate: function() {
-    this.render('loading');
+        this.render('loading');
   }
 });
 
 App.ApplicationRoute = Ember.Route.extend({
     model: function(params) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
-            if (Ember.isEmpty(applicationRedirectUrl)) {
+            if (Ember.isEmpty(applicationRedirectUrl) || Ember.isEmpty(parsedApplyMap.application.Status__c)) {
                 var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
-
-                isOnePage = hiringModel.isOnePage;
 
                 var applicationObj = {
                     resume: {
@@ -1033,27 +1223,29 @@ App.ApplicationRoute = Ember.Route.extend({
 
                 };
 
+                var initialSaveObj = {};
+
                 applicationObj.application = parsedApplyMap.application;
 
                 var linkedInMap = parsedApplyMap.linkedInMap;
 
                 App.setupContactInfoFields(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
                 App.setupResumeSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
-                App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                initialSaveObj.skills = App.setupSkillsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);        
+                initialSaveObj.employmentHistory = App.setupEmploymentHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                initialSaveObj.educationHistory = App.setupEducationHistorySection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
 
                 // Extra sections
-
-                App.setupProjectsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupRecommendationsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupRecognitionSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupCertificationsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupTrainingDevelopmentSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupPublicationsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupPatentsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupLanguagesSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
-                App.setupVolunteeringSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
+                initialSaveObj.additionalInformation = [];
+                initialSaveObj.additionalInformation.addObjects(App.setupProjectsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupRecommendationsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupRecognitionSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupCertificationsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupTrainingDevelopmentSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupPublicationsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupPatentsSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupLanguagesSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
+                initialSaveObj.additionalInformation.addObjects(App.setupVolunteeringSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap));
                 //
 
                 App.setupGeneralSection(parsedApplyMap, applicationObj, hiringModel, linkedInMap);
@@ -1064,13 +1256,61 @@ App.ApplicationRoute = Ember.Route.extend({
 
                 console.log('***MODEL');
                 console.log(applicationObj);
-                
-                if (Ember.isEmpty(applicationObj.application.Status__c)) {
-                    cont.setAppToInProgress(appId, function(res, evt) {
+                  
+                if (Ember.isEmpty(parsedApplyMap.application.Status__c)) {
+                    initialSaveObj.contactInfo = JSON.stringify(App.buildContactSaveObj(applicationObj));
+
+                    initialSaveObj.professionalSummary = applicationObj.resume.professionalSummary;
+
+                    /* NAMESPACE PROTO STUFF */
+                    initialSaveObj.additionalInformation.forEach(function(ai) {
+                        Object.keys(ai).forEach(function(k) {
+                            if (k.indexOf('__c') !== -1 && k.indexOf('namespace_') === -1) {
+                                ai['namespace_' + k] = ai[k];
+                            }
+                        });
+                    });
+
+                    initialSaveObj.employmentHistory.forEach(function(eh) {
+                        eh.namespace_Employment_History__c = eh.Employment_History__c;
+                        eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                    });
+
+                    initialSaveObj.educationHistory.forEach(function(eh) {
+                        eh.namespace_Education_History__c = eh.Education_History__c;
+                        eh.namespace_LinkedInId__c = eh.LinkedInId__c;
+                    });
+                    /**************************/
+
+                    initialSaveObj.employmentHistory = JSON.stringify({
+                        employmentHistories: initialSaveObj.employmentHistory,
+                        deletedEmploymentHistories: []
+                    });
+
+                    initialSaveObj.educationHistory = JSON.stringify({
+                        educationHistories: initialSaveObj.educationHistory,
+                        deletedEducationHistories: []
+                    });
+
+                    initialSaveObj.additionalInformation = JSON.stringify({
+                        upsertAdditionalInformation: initialSaveObj.additionalInformation,
+                        deleteAdditionalInformation: []
+                    });
+
+                    initialSaveObj.skills = JSON.stringify(initialSaveObj.skills);
+                    initialSaveObj.appId = appId;
+
+                    cont.saveApplicationInitialState(JSON.stringify(initialSaveObj), function(res, evt) {
                         var parsedResult = parseResult(res);
 
                         if (parsedResult.isSuccess === true) {
-                            resolve(applicationObj);
+                            var currentUrlBase = window.parent.location.href.split('?')[0];
+                            var destinationUrl = currentUrlBase + '?id=' + appId;
+                            window.parent.location.replace(destinationUrl);
+                            //resolve(applicationObj);
+                        } else if (!Ember.isEmpty(parsedResult.errorMessages)) {
+                            applicationObj.errorMessage = parsedResult.errorMessages[0];
+                            reject(applicationObj);
                         }
                     });
                 } else {
@@ -1079,11 +1319,27 @@ App.ApplicationRoute = Ember.Route.extend({
             }
         });
     },
-    afterModel: function(model, transition) {
-        if (isOnePage === true) {
-            this.transitionTo('onePage');
-        } else {
-            this.transitionTo('apply');
+    beforeModel: function(model, transition) {
+        if (parsedApplyMap) {
+            var hiringModel = JSON.parse(parsedApplyMap.hiringModel.Configuration_Json__c);
+
+            isOnePage = hiringModel.isOnePage;
+
+            if (isOnePage === true) {
+                this.transitionTo('onePage');
+            } else {
+                this.transitionTo('apply');
+            }
+        }
+    },
+    actions: {
+        error: function(model, transition) {
+            //transition.abort();
+            this.controllerFor('error').set('model', model);
+            this.render('error', {
+                into: 'application',
+                controller: 'error'
+            });
         }
     }
 });
@@ -1093,7 +1349,6 @@ App.ApplyRoute = Ember.Route.extend( {
         return this.modelFor('application');
     },
     afterModel: function(model, transition) {
-        console.log(model);
         this.transitionTo(model.sectionArray[0]);
     }
 });
