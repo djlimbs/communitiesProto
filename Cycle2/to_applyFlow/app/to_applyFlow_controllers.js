@@ -1,6 +1,8 @@
 // Defining application controller as it automatically comes w/ currentPath which we need for navigation.
 App.ApplicationController = Ember.Controller.extend({});
 
+App.ErrorController = Ember.ObjectController.extend({});
+
 App.OnePageController = Ember.ObjectController.extend({
     needs: ['apply', 'employmentHistory', 'educationHistory', 'projects', 'recommendations', 'recognition', 'certifications',
             'trainingDevelopment', 'publications', 'patents', 'languages', 'volunteering'],
