@@ -61,9 +61,9 @@
             {{#unless isLegalEmpty}}
                 {{render "legallyRequired" legalFormElements}}
             {{/unless}}
-            <div class="content mar--sm--txl pad--md--n mar--sm--bm" data-qa-container="desktopButtons">
+            <div class="content mar--sm--txl pad--md--n mar--sm--bm" data-qa-container="onePageFinishButton">
                 <hr class="show-brkpoint--md"/>
-                    <button {{bind-attr class=":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableFinish:disabled" disabled="disableFinish"}} style="top:0;right:0;" {{action "clickFinish"}} data-qa-button="done"><span class="show-brkpoint--md">Finish</span> <span class="juicon juicon-check"></span> </button>
+                    <button {{bind-attr class=":button :button--primary :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :theme-bg-color disableFinish:disabled" disabled="disableFinish"}} style="top:0;right:0;" {{action "clickFinish"}} data-qa-button="done"><span>Finish</span> <span class="juicon juicon-check"></span> </button>
             </div>
         </div>
 
