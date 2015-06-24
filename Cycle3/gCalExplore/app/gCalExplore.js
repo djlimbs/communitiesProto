@@ -134,14 +134,14 @@ App.MainController = Ember.ObjectController.extend({
         },
         clickExchangeOauth: function() {
             var oauthOptions = {
-                client_id: '640dabb0-8b1b-4ec2-bb83-bda7abb8e5f7',
+                client_id: 'e5e0d681-2624-4077-b78f-a4605e2c376c',
                 redirect_uri: 'https://c.na24.visual.force.com/apex/protoGCal',
-                response_type: 'code',
+                response_type: 'token',
                 prompt: 'admin_consent',
-                resource: encodeURIComponent('https://graph.microsoft.com/')
+                resource: encodeURIComponent('https://outlook.office365.com/')
             };
 
-            var oauthUrl = 'https://login.microsoftonline.com/b678e2cc-6ccc-44a6-9802-176bc170d680/oauth2/authorize?api-version=1.0'
+            var oauthUrl = 'https://login.microsoftonline.com/6dd604e1-c20e-4413-998f-b446d4a15a0c/oauth2/authorize?api-version=1.0'
                             + '&response_type=' + oauthOptions.response_type
                             + '&redirect_uri=' + oauthOptions.redirect_uri
                             + '&client_id=' + oauthOptions.client_id
@@ -183,20 +183,50 @@ App.FreeBusyController = Ember.ObjectController.extend({
 App.MainRoute = Ember.Route.extend({
 
     model: function (){
+        // Outlook TOKEN
+
+        var lochash    = location.hash.substr(1),
+            outlookToken = lochash.substr(lochash.indexOf('access_token='))
+                          .split('&')[0]
+                          .split('=')[1];
+        var calendarDataUrl = 'https://outlook.office365.com/api/v1.0/me/events';
+
+        var reqOptions = {
+
+        };
+
+        $.ajax(
+            {
+                url: calendarDataUrl,
+                type: 'GET',
+                
+                beforeSend: function (xhr){ 
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + outlookToken); 
+                },
+                success: function(json) {
+                    console.log(json);
+                },
+                failure: function(jqXHR, textStatus, err) {
+                    console.log(jqXHR);
+                }
+            }
+        );
+
         // EXCHANGE OAUTH
 
+        /*
         var code = getUrlParameter('code');
 
         if (!Ember.isEmpty(code)) {
             var tokenOptions = {
-                client_id: '640dabb0-8b1b-4ec2-bb83-bda7abb8e5f7',
+                client_id: 'e5e0d681-2624-4077-b78f-a4605e2c376c',
                 redirect_uri: 'https://c.na24.visual.force.com/apex/protoGCal',
-                client_secret: '2dAiHJT2Ia5iv3mjxfnKlQk14R2t2CulXERjVedYkb4=',
+                client_secret: '4PIShvsL9+ZObPMFqk0runOuvhoj8x0zBBcRv/Pl+zA=',
                 code: code,
-                resource: encodeURIComponent('https://graph.microsoft.com/')
+                resource: encodeURIComponent('https://outlook.office365.com/')
             };
 
-            var tokenUrl = 'https://login.microsoftonline.com/b678e2cc-6ccc-44a6-9802-176bc170d680/oauth2/token';
+            var tokenUrl = 'https://login.microsoftonline.com/6dd604e1-c20e-4413-998f-b446d4a15a0c/oauth2/token?api-version=1.0';
 
             $.ajax(
                 {
@@ -215,7 +245,7 @@ App.MainRoute = Ember.Route.extend({
                     success: function(json) {
                         console.log(json);
 
-                        /*
+                        
                         $.ajax(
                             {
                                 url: url,
@@ -230,7 +260,7 @@ App.MainRoute = Ember.Route.extend({
                                     return {};
                                 }
                             }
-                        );*/
+                        );
 
                     },
                     error: function(jqXHR, textStatus, err) {
@@ -239,7 +269,7 @@ App.MainRoute = Ember.Route.extend({
                 }
             );
         }        
-
+        */
       
 
         // REST STYLE
