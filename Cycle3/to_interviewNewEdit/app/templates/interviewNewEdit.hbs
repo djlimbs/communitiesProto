@@ -1,9 +1,9 @@
 <div class="scope-container">
     <div class="content pad--sm--m">
         <nav class="nav-bar--sf1 mar--sm--bn">
-            <button type="button" class="button button--primary js-save-button float--right mar--sm--only--rs mar--md--lxs" {{action "clickSave"}}>Save</button>
+            <button type="button" {{bind-attr class=":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this"}} {{action "clickSave"}}>Save</button>
             <button type="button" class="button button--secondary js-save-button float--right-left mar--sm--only--rs mar--md--lxs" {{action "clickCancel"}}>Cancel</button>
-            <h2 class="nav-bar--sf1__title page__heading">New Interview</h2>
+            <h2 class="nav-bar--sf1__title page__heading">{{#if isEdit}}Edit{{else}}New{{/if}} Interview</h2>
             <hr class="show-brkpoint--md"/>
         </nav>
         <section>
@@ -11,25 +11,23 @@
                 <div class="column--md--3">
                     <h3>Participants</h3>
                     <!--item search input-->
-                    <div class="form__group mar--sm--bn">
+                    <div {{bind-attr class=":form__group mar--sm--bn isSearching:load-this"}}>
                         <label class="sr-only">Add participant</label>
                         <div class="input__wrap has-icon--right">
                     		<div class="input__icon juicon juicon-search"></div>
-                            {{input type="text" class="bg-1" placeholder="Add participants" value=userSearchTerm}}
+                            {{input type="text" class="bg-1" disabled=isAtMaxParticipants placeholder="Add participants" value=userSearchTerm}}
                         </div>
                         <small class="input-error-content">Error.</small>
                     </div>
                     <!--item search results-->
-                    {{#if isSearching}}
-                        <div class="js-empty-state">
-                            <small class="block pad--sm--m text-faded text-center">Searching...</small>   
-                        </div>
-                    {{/if}}
                     {{#if searchResults}}
-                        <ul class="list-group list-group--bordered mar--sm--bn mar--sm--tn">
+                        <ul class="list-group list-group--bordered mar--sm--bn mar--sm--tn" style="max-height: 300px; overflow: scroll;">
                             {{#each searchResult in searchResults}}
                                 <li class="list-group__item item">
-                                    <a {{action "clickSearchResult" searchResult}}><span>{{searchResult.Name}}</span></a>
+                                    <a {{action "clickSearchResult" searchResult}}>
+                                        <span>{{searchResult.Name}}</span>
+                                        <small class="block text-faded dots">{{searchResult.Title}}</small>
+                                    </a>
                                 </li>
                             {{/each}}
                         </ul>
@@ -63,78 +61,32 @@
                     <div class="form__group">
                     	{{select-2 value=interview.topics}}
                     </div>
+                    <h3>Location</h3>
+                    <div class="form__group">
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" content=availableLocations
+                                            optionLabelPath="content.namespace_Location_Name__c"
+                                            optionValuePath="content"
+                                            value=selectedLocation
+                                            prompt=labels.pleaseSelect
+                                            data-qa-input="select"}}
+                        </div>
+                    </div>
+                    <h3>Logistical Details</h3>
+                    <div class="form__group">
+                        {{textarea value=interview.namespace_Logistical_Details__c}}
+                    </div>
                 </div>
                 <div class="column--md--9">
-                	{{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle timeSlots=timeSlots 
-                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars participants=participants participantsDidChange=participantsDidChange}}
+                	{{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle 
+                    isOauthedIntoOutlook=isOauthedIntoOutlook timeSlots=timeSlots 
+                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars participants=participants participantsDidChange=participantsDidChange isEdit=isEdit calendarEl=calendarEl}}
                 </div>
             </div>
         </section>
     </div>
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <h2 class="modal__heading" id="myModalLabel">New item</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="form__group">
-                        <label><span class="juicon juicon-calendar"></span> Day</label>
-                    	<div class="item-day"></div>
-                    </div>
-                    <div class="row">
-                        <div class="column--md--6">
-                            <div class="form__group">
-                                <label><span class="juicon juicon-clock"></span> Time</label>
-                                <div class="select__wrap">
-                                    <select class="item-time">
-                                        <option val="1">1</option>
-                                        <option val="2">2</option>
-                                        <option val="3">3</option>
-                                        <option val="4">4</option>
-                                        <option val="5">5</option>
-                                        <option val="6">6</option>
-                                        <option val="7">7</option>
-                                        <option val="8">8</option>
-                                        <option val="9">9</option>
-                                        <option val="10">10</option>
-                                        <option val="11">11</option>
-                                        <option val="12">12</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column--md--6">
-                            <div class="form__group">
-                                <label>AM/PM</label>
-                                <div class="select__wrap">
-                                    <select class="item-am-pm">
-                                        <option val="a">AM</option>
-                                        <option val="p">PM</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form__group">
-                            <label>Who</label>
-                            <div class="select__wrap">
-                                <select class="item-participant">
-                                    <option val="">Select...</option>
-                                    <option val="George Kenessey">George Kenessey</option>
-                                    <option val="Ross Belmont">Ross Belmont</option>
-                                </select>
-                            </div>
-                        </div>
-                </div>
-                <div class="modal__footer">
-                    <button type="button" class="button button--secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="button button--primary create-item" data-dismiss="modal">Create item</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {{partial "oauthIntoGoogleModal"}}
+    {{partial "updateInvitationModal"}}
+    {{partial "sendCalendarInvitationsModal"}}
 </div>

@@ -1,0 +1,18 @@
+<div class="modal fade" id="oauthIntoGoogleModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading" id="myModalLabel">Google Calendar</h2>
+            </div>
+            <div class="modal__body">
+                To complete this action, you'll need to sign into Google Calendar.
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="button button--primary create-item" data-dismiss="modal" {{action "clickOauthIntoGoogle"}}>Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
