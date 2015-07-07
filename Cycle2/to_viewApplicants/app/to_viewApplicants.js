@@ -11,8 +11,6 @@ App.MainView = Ember.View.extend({
         Ember.run.scheduleOnce('afterRender', this, function() {
             // iPhone CSS mod to handle scrolling with the containing div insted of the iframe
             // When Mobile Safari fixes how it resizes iframes to content, this can go away.
-            console.log('hello');
-            console.log(isSF1);
             if (isSF1) {
                 $('#mobileMainView').css({
                     'max-height' : window.innerHeight,
@@ -452,7 +450,6 @@ App.AppController = Ember.ObjectController.extend({
 
 var processApps = function(parsedResult){
     var emberApps = Ember.A();
-    
     parsedResult.applications.forEach(function(app){
         app.chatterPosts = 0;
         app.localeDate = labels.createdOn + ' ' + moment(app.CreatedDate).format(localeString);

@@ -92,6 +92,8 @@ Ember.Handlebars.helper('displayDate', function(startDate, endDate, text) {
     if(Ember.isEmpty(startDate)){
         return '';
     } else if(Ember.isEmpty(endDate)){
+        console.log('i am here?')
+        console.log(startDate);
         return (moment(startDate).format('MMM DD, YYYY') + ' ' + text + ' Present')
     } else {
         return (moment(startDate).format('MMM DD, YYYY') + ' ' + text + ' ' + moment(startDate).format('MMM DD, YYYY'))
