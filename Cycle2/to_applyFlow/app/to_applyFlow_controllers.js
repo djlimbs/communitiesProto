@@ -895,7 +895,7 @@ App.CertificationsController = Ember.ArrayController.extend(App.AdditionalInfoMi
 });
 
 App.TrainingDevelopmentController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
-    blockName: 'trainingDevelopments',
+    blockName: 'trainingDevelopment',
     deletedArrayName: 'deletedTrainingDevelopments',
     incompleteFieldName: 'isTrainingDevelopmentIncomplete',
     deletedTrainingDevelopments: []
@@ -923,7 +923,7 @@ App.LanguagesController = Ember.ArrayController.extend(App.AdditionalInfoMixin, 
 });
 
 App.VolunteeringController = Ember.ArrayController.extend(App.AdditionalInfoMixin, {
-    blockName: 'volunteerings',
+    blockName: 'volunteering',
     deletedArrayName: 'deletedVolunteerings',
     incompleteFieldName: 'isVolunteeringIncomplete',
     allowBlankEndDates: true,

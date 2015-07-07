@@ -1258,9 +1258,13 @@ App.ApplicationRoute = Ember.Route.extend({
                 console.log(applicationObj);
                   
                 if (Ember.isEmpty(parsedApplyMap.application.Status__c)) {
-                    initialSaveObj.contactInfo = JSON.stringify(App.buildContactSaveObj(applicationObj));
+                    var saveObj = {};
 
-                    initialSaveObj.professionalSummary = applicationObj.resume.professionalSummary;
+                    if (isUserLoggedIn === true || !Ember.isNone(parsedApplyMap.linkedInMap)) {
+                        saveObj.contactInfo = JSON.stringify(App.buildContactSaveObj(applicationObj));
+                    }
+
+                    saveObj.professionalSummary = applicationObj.resume.professionalSummary;
 
                     /* NAMESPACE PROTO STUFF */
                     initialSaveObj.additionalInformation.forEach(function(ai) {
@@ -1282,31 +1286,46 @@ App.ApplicationRoute = Ember.Route.extend({
                     });
                     /**************************/
 
-                    initialSaveObj.employmentHistory = JSON.stringify({
-                        employmentHistories: initialSaveObj.employmentHistory,
-                        deletedEmploymentHistories: []
-                    });
+                    if (!Ember.isEmpty(initialSaveObj.employmentHistory)) {
+                        saveObj.employmentHistory = JSON.stringify({
+                            employmentHistories: initialSaveObj.employmentHistory,
+                            deletedEmploymentHistories: []
+                        });
+                    }
+                    
+                    if (!Ember.isEmpty(initialSaveObj.educationHistory)) {
+                        saveObj.educationHistory = JSON.stringify({
+                            educationHistories: initialSaveObj.educationHistory,
+                            deletedEducationHistories: []
+                        });
+                    }
+                    
+                    if (!Ember.isEmpty(initialSaveObj.additionalInformation)) {
+                        saveObj.additionalInformation = JSON.stringify({
+                            upsertAdditionalInformation: initialSaveObj.additionalInformation,
+                            deleteAdditionalInformation: []
+                        });
+                    }
+                    
 
-                    initialSaveObj.educationHistory = JSON.stringify({
-                        educationHistories: initialSaveObj.educationHistory,
-                        deletedEducationHistories: []
-                    });
+                    if (!Ember.isEmpty(initialSaveObj.skills)) {
+                        saveObj.skills = JSON.stringify(initialSaveObj.skills);
+                    }
 
-                    initialSaveObj.additionalInformation = JSON.stringify({
-                        upsertAdditionalInformation: initialSaveObj.additionalInformation,
-                        deleteAdditionalInformation: []
-                    });
+                    saveObj.appId = appId;
 
-                    initialSaveObj.skills = JSON.stringify(initialSaveObj.skills);
-                    initialSaveObj.appId = appId;
-
-                    cont.saveApplicationInitialState(JSON.stringify(initialSaveObj), function(res, evt) {
+                    cont.saveApplicationInitialState(JSON.stringify(saveObj), function(res, evt) {
                         var parsedResult = parseResult(res);
 
                         if (parsedResult.isSuccess === true) {
                             var currentUrlBase = window.parent.location.href.split('?')[0];
                             var destinationUrl = currentUrlBase + '?id=' + appId;
-                            window.parent.location.replace(destinationUrl);
+
+                            if (isSF1) {
+                                sforce.one.redirectToUrl('/apex/to_applyFlow?id=' + appId);
+                            } else {
+                                window.parent.location.replace(destinationUrl);
+                            }
                             //resolve(applicationObj);
                         } else if (!Ember.isEmpty(parsedResult.errorMessages)) {
                             applicationObj.errorMessage = parsedResult.errorMessages[0];

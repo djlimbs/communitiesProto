@@ -2978,11 +2978,11 @@ function program33(depth0,data) {
   hashContexts = {};
   stack2 = helpers.unless.call(depth0, "isLegalEmpty", {hash:{},inverse:self.noop,fn:self.program(33, program33, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n            <div class=\"content mar--sm--txl pad--md--n mar--sm--bm\" data-qa-container=\"desktopButtons\">\n                <hr class=\"show-brkpoint--md\"/>\n                    <button ");
+  data.buffer.push("\n            <div class=\"content mar--sm--txl pad--md--n mar--sm--bm\" data-qa-container=\"onePageFinishButton\">\n                <hr class=\"show-brkpoint--md\"/>\n                    <button ");
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :button--sf1-nav :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :next :theme-bg-color disableFinish:disabled"),
+    'class': (":button :button--primary :mar--sm--only--ls :mar--sm--only--ts :mar--sm--only--rs :float--right :theme-bg-color disableFinish:disabled"),
     'disabled': ("disableFinish")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
@@ -2990,7 +2990,7 @@ function program33(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickFinish", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"done\"><span class=\"show-brkpoint--md\">Finish</span> <span class=\"juicon juicon-check\"></span> </button>\n            </div>\n        </div>\n\n        <footer>\n            <div class=\"content__section\">\n                <img class=\"mar--sm--txl theme-logo\" data-qa-image=\"logoFooter\" src=\"");
+  data.buffer.push(" data-qa-button=\"done\"><span>Finish</span> <span class=\"juicon juicon-check\"></span> </button>\n            </div>\n        </div>\n\n        <footer>\n            <div class=\"content__section\">\n                <img class=\"mar--sm--txl theme-logo\" data-qa-image=\"logoFooter\" src=\"");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "companyLogoUrl", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));

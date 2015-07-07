@@ -1,0 +1,21 @@
+<div class="modal fade" id="updateInvitationModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading" id="myModalLabel">Update Invitation</h2>
+            </div>
+            <div class="modal__body">
+                If you wish, you can include extra details in the calendar invitations that will be highlighted as a change for the participants.
+                <div class="form__group">
+                    {{textarea value=updatedInformationMessage}}
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="button button--primary js-confirmSave" data-dismiss="modal">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>

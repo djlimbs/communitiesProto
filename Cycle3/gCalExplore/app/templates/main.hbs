@@ -1,0 +1,27 @@
+<div class="scope-container">
+    <div class="content content--readable pad--sm--n pad--md--m">
+        <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
+            {{#if isOauthedIn}}
+                {{#each calendar in freeBusy}}
+                    <h1>{{calendar.summary}} - BUSY TIMES</h1>
+                    <ul>
+                        {{#each item in calendar.items itemController="freeBusy"}}
+                            <li>{{item.timeRange}}</li>
+                        {{/each}}
+                    </ul>
+                {{/each}}
+                {{#each calendar in calendars}}
+                    <h1>{{calendar.summary}}</h1>
+                    <ul>
+                        {{#each item in calendar.items itemController="calendarEvent"}}
+                            <li>{{item.summary}} - {{item.timeRange}}</li>
+                        {{/each}}
+                    </ul>
+                {{/each}}
+            {{else}}
+                <button class="button button--primary dev-oauth" {{action "clickOauth"}}>OAUTH IN</button>
+            {{/if}}
+            <button class="button button--primary dev-oauth" {{action "clickExchangeOauth"}}>EXCHANGE OAUTH IN</button>
+        </div>
+    </div>
+</div>
