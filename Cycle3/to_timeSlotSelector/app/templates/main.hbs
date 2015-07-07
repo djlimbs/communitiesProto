@@ -1,3 +1,135 @@
 <div class="scope-container">
-    asdf
+    <header class="content pad--md--ts">
+        <div class="content__section show-brkpoint--md"><img src="/resource/1435261972000/placeholder_logo" class="mar--sm--bxl theme-logo" />
+
+        </div>
+    </header>
+    <section class="content content--small pad--sm--m">
+        <div class="alert alert--info pad--sm--m mar--sm--bl start-hidden" id="alert-response">
+            <span class="part__left--fixed"><span class="juicon juicon-info-circle"></span></span><span class="part__body">Your response has been captured. Please contact your recruiter for further assistance.</span>
+        </div>
+        <div class="alert alert--success pad--sm--m mar--sm--bl start-hidden" id="alert-thank-you">
+            <span class="part__left--fixed"><span class="juicon juicon-info-circle"></span></span><span class="part__body"><strong>Thank you!</strong> You'll receive the interview details via email shortly.</span>
+        </div>
+        <h2 class="mar--sm--bn">
+            Schedule your interview.
+        </h2>
+        <hr />
+        <div class="row">
+            <section class="column--md--6" id="name">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Name</h3>
+                    <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                        <li class="mar--sm--bxs">
+                            <div class="part__left--fixed pad--sm--n">
+                                <div class="img-container img-container--sm">
+                                    <img src="https://c.na24.content.force.com/profilephoto/005/F" />
+                                </div>
+                            </div>
+                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                <h5 class="mar--sm--bn"><a href="#">Janet Keller</a></h5>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section class="column--md--6" id="job-title">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Job Title</h3>
+                    <h5>Sales Engineer</h5>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <section class="column--md--6" id="interviewers">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Interviewers</h3>
+                    <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                        <li class="mar--sm--bxs">
+                            <div class="part__left--fixed pad--sm--n">
+                                <div class="img-container img-container--sm">
+                                    <img src="https://c.na24.content.force.com/profilephoto/005/F" />
+                                </div>
+                            </div>
+                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                <h5 class="mar--sm--bn"><a href="#">Mitch Bennett</a></h5>
+                            </div>
+                        </li>
+                        <li class="mar--sm--bxs">
+                            <div class="part__left--fixed pad--sm--n">
+                                <div class="img-container img-container--sm">
+                                    <img src="https://c.na24.content.force.com/profilephoto/005/F" />
+                                </div>
+                            </div>
+                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                <h5 class="mar--sm--bn"><a href="#">Len Kirshaw</a></h5>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section class="column--md--6" id="location">
+                <div class="panel__body pad--sm--n">
+                    <h3>Location</h3>
+                    <small>Chicago Office<br />
+                    318 W. Adams, 19th Floor<br />
+                    Chicago, IL 60601<br />
+                    <a href="https://www.google.com/maps/place/318+W+Adams+St,+Chicago,+IL+60606/@41.879517,-87.6361477,17z/data=!3m1!4b1!4m2!3m1!1s0x880e2cbf27043607:0x519801acfc89669e"><span class="juicon juicon-location"></span> View Map</a></small>
+                </div>
+            </section>
+        </div>
+        <hr />
+        <div id="section-container">
+            <section id="select-section">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Time and Date</h3>
+                    {{#each timeSlot in timeSlots itemController="timeSlotSelector"}}
+                        <p><input name="selected-time" type="radio" /><span class="selection-string">{{timeSlot.date}} | {{timeSlot.startTime}}-{{timeSlot.endTime}} {{timeSlot.timeZone}}</span></p>
+                    {{/each}}
+                    <p><input id="decline" name="selected-time" type="radio" />Sorry, none of these work</p>
+                    <div class="alert alert--error pad--sm--m mar--sm--bl start-hidden" id="alert-no-comment">
+                        <span class="part__left--fixed"><span class="juicon juicon-exclamation-circle"></span></span><span class="part__body">Sorry, your response could not be sent. Please comment on why you have declined and try again.</span>
+                    </div>
+                    <label for="comments">Your Comments<span class="text-error start-hidden" id="comment-asterisk">*</span></label>
+                    <textarea id="comments" name="comments"></textarea>
+                    <button class="button button--primary mar--sm--tl" id="submit-button" type="button">Submit</button>
+                </div>
+            </section>
+
+            
+            <section class="start-hidden" id="accepted-section">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Time and Date<span class="status accepted" id="accepted-status">Accepted</span></h3>
+                    <p class="mar--sm--tn"><span class="selected-time-string"></span></p>
+                    <div id="reschedule">
+                    <h3>Need to Reschedule?</h3>
+                        <div class="alert alert--error pad--sm--m mar--sm--bl start-hidden" id="alert-no-comment-accepted">
+                            <span class="part__left--fixed"><span class="juicon juicon-exclamation-circle"></span></span><span class="part__body">Sorry, your response could not be sent. Please comment on why you have declined and try again.</span>
+                        </div>
+                        <label for="comments">Please tell us how we can help<span class="text-error">*</span></label>
+                        <textarea id="decline-comments" name="decline-comments"></textarea>
+                        <button class="button button--primary button--error mar--sm--tl" id="reschedule-button" type="button">Decline this date and time</button>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section class="start-hidden" id="declined-section">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Time and Date<span class="status declined">Declined</span></h3>
+                    <p class="mar--sm--tn"><strike>Tue, Jun 16, 2015&nbsp;&nbsp;|&nbsp;&nbsp;11:00a&#8211;12:30p CDT</strike><br />
+                    <strike>Fri, Jun 19, 2015&nbsp;&nbsp;|&nbsp;&nbsp;1:00p&#8211;2:30p CDT</strike><br />
+                        <strike>Fri, Jun 19, 2015&nbsp;&nbsp;|&nbsp;&nbsp;2:00p&#8211;3:30p CDT</strike></p>
+                </div>
+            </section>
+            
+        </div>
+    </section>
+    <footer class="mar--sm--bxl content"><img src="/resource/1435261972000/placeholder_logo" class="mar--sm--txl theme-logo" />
+        <ul class="inline-list text-left pad--sm--tm fss">
+            <li class="inline-list__item">&copy; 2015</li>
+            <li class="inline-list__item"><a href="#">Privacy</a></li>
+            <li class="inline-list__item"><a href="#">Terms</a></li>
+        </ul>
+    </footer>
 </div>
