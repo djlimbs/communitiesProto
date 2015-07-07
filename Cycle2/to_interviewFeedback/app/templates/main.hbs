@@ -1,0 +1,80 @@
+<div class="scope-container">
+    <div class="content pad--md--tm pad--md--bl pad--sm--only--n offer-letter">
+        <div {{bind-attr class=":alert :alert--error :mar--sm--bm hasValidationError::hide"}}>
+            <button type="button" class="close" data-dismiss="alert">
+                <span class="alert-close-x"></span><span class="sr-only">{{labels.close}}</span>
+            </button>
+            {{#each errorMsg}}
+                {{.}} <br/>
+            {{/each}}
+        </div>
+
+        <div class="feedbackControls">
+            <div class="panel__body pad--sm--bn">
+                <div class="form__group mar--sm--bs">
+                    <label data-qa-label="regarding" class="required-field"{{labels.regarding}}</label>
+                    <div class="select__wrap">
+                        <div class="input__icon juicon juicon-down"></div>
+                        {{view "select"  data-qa-select="interviews" content=selectValues value=selectedType optionLabelPath="content.label" optionValuePath="content.value"}}
+                    </div>
+                    <small class="evalExtra text-faded pad--sm--ts pad--sm--bs block">
+                        <span data-qa-label="interviewers" class="">{{interviewText}}</span>
+                        <span class="errorText hide">You must select something...</span>
+                    </small>
+                </div>
+                <div id="TFcontrols">
+                    <div {{bind-attr class=":form__group feedbackError:has-error"}}>
+                        <label data-qa-label="feedback" class="block required-field">{{labels.feedback}}</label>
+                        <div class="button-group feedbackButtons">
+                            {{#unless selectedFinalOutcome}}
+                                <div class="button-group feedbackButtons">
+                                    <button {{action "selectedFeedback" "Positive_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseLike:bg-2" title=positiveTooltip}} data-qa-button="positive" data-toggle="tooltip">
+                                        <span {{bind-attr class=":juicon :juicon-like chooseLike:text-success"}}></span>
+                                    </button>
+                                    <button {{action "selectedFeedback" "Negative_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDislike:bg-2" title=negativeTooltip}} data-qa-button="negative" data-toggle="tooltip">
+                                        <span {{bind-attr class=":juicon :juicon-dislike chooseDislike:text-warning"}}></span>
+                                    </button>
+                                    {{#if allowNeutral}}
+                                        <button {{action "selectedFeedback" "Neutral__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseUnknown:bg-2" title=neutralTooltip}} data-qa-button="neutral" data-toggle="tooltip">
+                                            <span {{bind-attr class=":juicon :juicon-question-circle chooseUnknown:text-info"}}></span>
+                                        </button>
+                                    {{/if}}
+                                </div>
+                            {{else}}
+                                <div class="button-group feedbackButtons">
+                                    <button {{action "selectedFeedback" "Selected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseSelected:bg-2" title=labels.selectTooltip}} data-qa-button="select" data-toggle="tooltip">
+                                        <span {{bind-attr class=":juicon :juicon-check chooseSelected:text-success"}}></span>
+                                    </button>
+                                    {{#if allowRejection}}
+                                        <button {{action "selectedFeedback" "Rejected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDisqualified:bg-2" title=labels.rejectTooltip}} data-qa-button-"reject" data-toggle="tooltip">
+                                                <span {{bind-attr class=":juicon :juicon-ban chooseDisqualified:text-error"}}></span>
+                                        </button>
+                                    {{/if}}
+                                </div>
+                            {{/unless}}
+                        </div>
+                    </div>
+                    {{#if showDisposition}}
+                        <div id="disposition" class="form__group">
+                            <label data-qa-label="disposition" class="required-field">{{labels.disposition}}</label>
+                            <div class="select__wrap">
+                                <div class="input__icon juicon juicon-down"></div>
+                                {{view "select" data-qa-select="disposition" content=disposition value=model.Disposition__c}}
+                            </div>
+                            <small class="input-error-content">derp</small>
+                        </div>
+                    {{/if}}
+                    {{#unless selectedFinalOutcome}}
+                        <div class="form__group mar--sm--bs">
+                            <label data-qa-label="comment" class="">{{labels.comment}}</label>
+                            {{textarea data-qa-textarea="comment" disabled=isDisabled value=model.Comments__c}}
+                        </div>
+                    {{/unless}}
+                </div>
+            </div>
+            <div class="panel__body pad--sm--tn">
+                <a {{action "saveFeedback"}} data-qa-button="share" href="#" id="shareThis" class="float--right button button--success">{{labels.share}} <span class="juicon juicon-chat"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
