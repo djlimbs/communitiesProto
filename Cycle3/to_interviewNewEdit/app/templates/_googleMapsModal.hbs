@@ -1,0 +1,20 @@
+<div aria-hidden="false" aria-labelledby="googleMapsModalLabel" class="modal fade in" id="googleMapsModal" role="dialog" tabindex="-1">
+    <div class="modal__shell big-modal">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button class="close" data-dismiss="modal" type="button">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading">
+                    Search for a location
+                </h2>
+            </div>
+                <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+                <div id="map-canvas" style="height:300px;"></div>
+            <div class="modal__footer">
+                <button class="button button--secondary" data-dismiss="modal" type="button">Reset map</button>
+                <button class="button button--primary" data-dismiss="modal" type="button" {{action "clickSelectGoogleLocation"}}>Select location</button>
+            </div>
+        </div>
+    </div>
+</div>

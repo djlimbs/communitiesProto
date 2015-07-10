@@ -35,32 +35,32 @@ cert = '-----BEGIN CERTIFICATE-----\n' +
 'au54vQUsbQ9e+mrSfVi2ag==\n' +
 '-----END CERTIFICATE-----';
 
-encryptedKey = '-----BEGIN RSA PRIVATE KEY-----\n' +
-'MIIEogIBAAKCAQEA0i+d8/Y4vAJCSmNJmhFGcei0Vxmwrh8uH3WVY9zPFbv2V9dm\n' +
-'2aWWHzEBpSR3Sgm3+rF/uR42uhchdXMpv8YWW1gpfPAo7YZ1YKcfbf42yEZX6Zvr\n' +
-'tgcWO69wVnq9GfK1izbTFNW/OLaHfHMEdC0+N/gIGgAb3UTIC/yW2BO8SMC+NapB\n' +
-'MYW+8lgYyr3T7h1XPHUpzF9DAXtQjrjMWr54Bxcbst+eDVUtIgk9HqXa88ySuK0s\n' +
-'Bme3ir27Q6Kg1t3UeVORLL+mXOHIgzkgC8e44aKf65zfN9ndkgFByd4sUVn1WHdW\n' +
-'fi0ej+YP0CaE5u+VosQrvKz+wbRZzNhyrXlQ7QIDAQABAoIBAHjeBw/+vHtpNSO/\n' +
-'2thtLLxeXC5mSJKovYY7wM+vb6qI701uQefQ7/Y54T9NLAf4dMMGBXO3qzLyEDyR\n' +
-'ICX2zG500U7WcEK++oq9MDa5ZFlhEjb1geOoSaHC7m/cnxfn2XwX5+RoUlFTra/k\n' +
-'GGCSj9/xkv8Ypu1kG0HBXCEfoDuZCCuwZWvrMADtuZLaEw5biXtCB4T+gil3qDJp\n' +
-'QqAvSmDEHP1sXd51dWWKtysZCcn9MIclWynng6vlKKUiahKauznlzgclSmHRZuVp\n' +
-'5/VhQoTfRjoAhOI8O6u/FZoPM6hfVZbK1EHK4ioJDzYrL0Ay9No7oINVRr8WQViY\n' +
-'Q5Mr54UCgYEA7ZlUvBLFthih8qvuTDmCJ59QUQvGRwjNF+yl5qp0o7reGAmqli98\n' +
-'QagCo7gEAYCabzag0y4NKV5tXtyz23uWNax0LEWvwjtHUN5SVzqE7QCCjOBUXsfF\n' +
-'BrwS/0BftvqYH/RybSOTm8IPejjZQc7q1mpQGGx4Qqn5I6QTxZgm54MCgYEA4nbL\n' +
-'EYue8okKyl290mjiBbegJOm4kddJ1TMhfOZkwImBA0UnV10kXk1SV0EDKC2jRqUU\n' +
-'Vw6OPOGGwsD/eRZCcEWs6ttXo8vFaBOJfVxzWF328z0D1YojRIoXQIaDZg0cGLFd\n' +
-'qnSImOGVVn99iR49RPnjdyP1jDG6MJAhS3DTCs8CgYB/1Qsd1QvCmSYophAjup0o\n' +
-'LDLOKAOZnEacJJptrC/tF1D+pdS90PaNbJNe+lZNaJ+uTjng5Nn38/HsI9owsCF0\n' +
-'5z/pweR6H+KSw8qRW87ApJGYsekyxVBf+zhNVJkqnVDTgHU/+vAj0Rj6rTNWkLkQ\n' +
-'e0p0mYdqdoCwiEqK+P2VeQKBgGvW9cxdGEuWRrUm/oV7vGXMk04AnguU4WvM9V1s\n' +
-'uP2WfQD5pUpM6EyftV4nb0Fquh2h7pWmMMV8/5cuIHmgx/J+u2D7Iji1iEOPSiGQ\n' +
-'LL0fwcEChRjitvikaX4oj9nA1GhNzbSl2YYzpdGS1Ey/QZ3fARpy3TLtWyRU/gXW\n' +
-'rCixAoGANSqeDyZUbD5gycIo6votOscXDx5n1TqXCJxQwautRKytRtbFlyosO1E7\n' +
-'Kz/odru7+1B/P29dS4Vd2Sk4XFhI6MvPjJ1/rUAWOAYNYTUTFC4i7SxvYQ/bcmli\n' +
-'URnvXRLj5uErD2nOvx/IEpETM47Yht+BMSz2U6FSMXI7pyzpeKM=\n' +
+encryptedKey = '-----BEGIN RSA PRIVATE KEY-----' +
+'MIIEogIBAAKCAQEA0i+d8/Y4vAJCSmNJmhFGcei0Vxmwrh8uH3WVY9zPFbv2V9dm' +
+'2aWWHzEBpSR3Sgm3+rF/uR42uhchdXMpv8YWW1gpfPAo7YZ1YKcfbf42yEZX6Zvr' +
+'tgcWO69wVnq9GfK1izbTFNW/OLaHfHMEdC0+N/gIGgAb3UTIC/yW2BO8SMC+NapB' +
+'MYW+8lgYyr3T7h1XPHUpzF9DAXtQjrjMWr54Bxcbst+eDVUtIgk9HqXa88ySuK0s' +
+'Bme3ir27Q6Kg1t3UeVORLL+mXOHIgzkgC8e44aKf65zfN9ndkgFByd4sUVn1WHdW' +
+'fi0ej+YP0CaE5u+VosQrvKz+wbRZzNhyrXlQ7QIDAQABAoIBAHjeBw/+vHtpNSO/' +
+'2thtLLxeXC5mSJKovYY7wM+vb6qI701uQefQ7/Y54T9NLAf4dMMGBXO3qzLyEDyR' +
+'ICX2zG500U7WcEK++oq9MDa5ZFlhEjb1geOoSaHC7m/cnxfn2XwX5+RoUlFTra/k' +
+'GGCSj9/xkv8Ypu1kG0HBXCEfoDuZCCuwZWvrMADtuZLaEw5biXtCB4T+gil3qDJp' +
+'QqAvSmDEHP1sXd51dWWKtysZCcn9MIclWynng6vlKKUiahKauznlzgclSmHRZuVp' +
+'5/VhQoTfRjoAhOI8O6u/FZoPM6hfVZbK1EHK4ioJDzYrL0Ay9No7oINVRr8WQViY' +
+'Q5Mr54UCgYEA7ZlUvBLFthih8qvuTDmCJ59QUQvGRwjNF+yl5qp0o7reGAmqli98' +
+'QagCo7gEAYCabzag0y4NKV5tXtyz23uWNax0LEWvwjtHUN5SVzqE7QCCjOBUXsfF' +
+'BrwS/0BftvqYH/RybSOTm8IPejjZQc7q1mpQGGx4Qqn5I6QTxZgm54MCgYEA4nbL' +
+'EYue8okKyl290mjiBbegJOm4kddJ1TMhfOZkwImBA0UnV10kXk1SV0EDKC2jRqUU' +
+'Vw6OPOGGwsD/eRZCcEWs6ttXo8vFaBOJfVxzWF328z0D1YojRIoXQIaDZg0cGLFd' +
+'qnSImOGVVn99iR49RPnjdyP1jDG6MJAhS3DTCs8CgYB/1Qsd1QvCmSYophAjup0o' +
+'LDLOKAOZnEacJJptrC/tF1D+pdS90PaNbJNe+lZNaJ+uTjng5Nn38/HsI9owsCF0' +
+'5z/pweR6H+KSw8qRW87ApJGYsekyxVBf+zhNVJkqnVDTgHU/+vAj0Rj6rTNWkLkQ' +
+'e0p0mYdqdoCwiEqK+P2VeQKBgGvW9cxdGEuWRrUm/oV7vGXMk04AnguU4WvM9V1s' +
+'uP2WfQD5pUpM6EyftV4nb0Fquh2h7pWmMMV8/5cuIHmgx/J+u2D7Iji1iEOPSiGQ' +
+'LL0fwcEChRjitvikaX4oj9nA1GhNzbSl2YYzpdGS1Ey/QZ3fARpy3TLtWyRU/gXW' +
+'rCixAoGANSqeDyZUbD5gycIo6votOscXDx5n1TqXCJxQwautRKytRtbFlyosO1E7' +
+'Kz/odru7+1B/P29dS4Vd2Sk4XFhI6MvPjJ1/rUAWOAYNYTUTFC4i7SxvYQ/bcmli' +
+'URnvXRLj5uErD2nOvx/IEpETM47Yht+BMSz2U6FSMXI7pyzpeKM=' +
 '-----END RSA PRIVATE KEY-----';
 /*cert = '-----BEGIN CERTIFICATE-----\n' +
 'MIIBfTCCASegAwIBAgIBTDANBgkqhkiG9w0BAQUFADAiMQswCQYDVQQGEwJVUzET\n' +
@@ -89,9 +89,28 @@ function getUrlParameter(sParam) {
 
 App.MainController = Ember.ObjectController.extend({
     loadCalendarData: function() {
+        /*var oauthToken = App.Fixtures.get('googleOauthToken');
+        var url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList?maxResults=5&access_token=' + oauthToken;
+
+        $.ajax(
+            {
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function(json) {
+                    console.log(json);
+                    return {};
+                },
+                error: function(jqXHR, textStatus, err) {
+                    console.log(jqXHR);
+                    return {};
+                }
+            }
+        );*/
+
         var self = this;
 
-        if (App.Fixtures.get('authedIn') === true) {
+        if (!Ember.isEmpty(App.Fixtures.get('googleOauthToken'))) {
             gapi.client.load('calendar', 'v3', getAllCalendars);
             
             function getAllCalendars() {
@@ -170,13 +189,13 @@ App.MainController = Ember.ObjectController.extend({
                 });
             }  
         }
-    }.observes('App.Fixtures.authedIn'),
+    }.observes('App.Fixtures.googleOauthToken'),
     getOutlookData: function() {
         var outlookToken = App.Fixtures.get('outlookToken');
         if (!Ember.isEmpty(outlookToken)) {
             var calendarDataUrl = 'https://outlook.office365.com/api/v1.0/me/calendars';
-            calendarDataUrl = 'https://outlook.office365.com/api/v1.0/users/victor@appiphony.onmicrosoft.com/calendarview?startDateTime=2015-06-15T01:00:00Z&endDateTime=2015-07-10T01:00:00Z';
-            calendarDataUrl = 'https://outlook.office365.com/api/v1.0/users/victor@appiphony.onmicrosoft.com/contacts/';
+            calendarDataUrl = 'https://outlook.office365.com/api/v1.0/users/tyler@marvelpoint13.onmicrosoft.com/calendarview?startDateTime=2015-06-15T01:00:00Z&endDateTime=2015-07-10T01:00:00Z';
+            //calendarDataUrl = 'https://outlook.office365.com/api/v1.0/users/tyler@marvelpoint13.onmicrosoft.com/calendars';
             var reqOptions = {
 
             };
@@ -203,88 +222,15 @@ App.MainController = Ember.ObjectController.extend({
         var outlookCode = App.Fixtures.get('outlookCode');
 
         if (!Ember.isEmpty(outlookCode)) {
-            /*var tokenOptions = {
-                client_id: '4ef594ad-4009-4a5a-a99f-363506bfb342',
-                redirect_uri: 'https://c.na24.visual.force.com/apex/protoGCal',
-                client_secret: 'qh4EkIgocm2MmKhe6zyu9sDf70o+gotRqjyNmx/x6d8=',
-                code: outlookCode,
-                resource: encodeURIComponent('https://outlook.office365.com/')
-            };
-
-            var tokenUrl = 'https://login.microsoftonline.com/4ef594ad-4009-4a5a-a99f-363506bfb342/oauth2/token?api-version=1.0';
-
-            $.ajax(
-                {
-                    url: tokenUrl,
-                    type: 'POST',
-                    contentType: 'application/x-www-form-urlencoded',
-                    data: {
-                        code: tokenOptions.code,
-                        redirect_uri: tokenOptions.redirect_uri,
-                        client_id: tokenOptions.client_id,
-                        client_secret: tokenOptions.client_secret,
-                        grant_type: 'authorization_code',
-                        resource: tokenOptions.resource
-                    },
-                    cache: false,
-                    success: function(json) {
-                        console.log(json);
-
-                        
-                        $.ajax(
-                            {
-                                url: url,
-                                type: 'GET',
-                                cache: false,
-                                success: function(json) {
-                                    console.log(json);
-                                    return {};
-                                },
-                                error: function(jqXHR, textStatus, err) {
-                                    console.log(jqXHR);
-                                    return {};
-                                }
-                            }
-                        );
-
-                    },
-                    error: function(jqXHR, textStatus, err) {
-                        console.log(jqXHR);
-                    }
-                }
-            );*/
-        }
-    }.observes('App.Fixtures.outlookCode'),
-    isOauthedIn: function() {
-        return App.Fixtures.get('authedIn');
-    }.property('App.Fixtures.authedIn'),
-    actions: {
-        clickOauth: function() {
-            gapi.auth.authorize(
-            {
-              'client_id': CLIENT_ID,
-              'scope': SCOPES,
-              'immediate': true
-            }, handleAuthResult);
-
-            // REST
-            /*var oauthOptions = {
-                response_type: 'code',
-                client_id: '691270253096-16dcihcc0fhee29e0krtpkq4kntnisvc.apps.googleusercontent.com',
-                login_hint: 'victor@appiphony.com',
-                redirect_uri: 'https://c.na24.visual.force.com/apex/protoGCal',
-                scope: 'https://www.googleapis.com/auth/calendar'
-            };
-            var oauthUrl = 'https://accounts.google.com/o/oauth2/auth?client_id=' + oauthOptions.client_id
-                            + '&response_type=' + oauthOptions.response_type
-                            + '&login_hint=' + oauthOptions.login_hint
-                            + '&redirect_uri=' + oauthOptions.redirect_uri
-                            + '&scope=' + oauthOptions.scope;
-
-            window.location.href = oauthUrl;*/
-        },
-        clickExchangeOauth: function() {
             var self = this;
+            // For multi-tenant, parse the code to get our client ID
+            var jws = new KJUR.jws.JWS();
+
+            jws.parseJWS(outlookCode);
+
+            var payload = JSON.parse(jws.parsedJWS.payloadS);
+            var clientId = payload.tid;
+
             // get jwt token
 
             var certificate = new X509();
@@ -305,8 +251,8 @@ App.MainController = Ember.ObjectController.extend({
             oPayload.sub = "e5e0d681-2624-4077-b78f-a4605e2c376c";
             oPayload.nbf = tNow;
             oPayload.exp = tEnd;
-            oPayload.jti = "id123456";
-            oPayload.aud = "https://login.microsoftonline.com/6dd604e1-c20e-4413-998f-b446d4a15a0c/oauth2/token";
+            oPayload.jti = 'id123456';
+            oPayload.aud = 'https://login.microsoftonline.com/' + clientId + '/oauth2/token';
             // Sign JWT, password=616161
             var sHeader = JSON.stringify(oHeader);
             var sPayload = JSON.stringify(oPayload);
@@ -321,7 +267,7 @@ App.MainController = Ember.ObjectController.extend({
                 resource: 'https://outlook.office365.com/'
             };
 
-            var tokenUrl = 'https://login.microsoftonline.com/6dd604e1-c20e-4413-998f-b446d4a15a0c/oauth2/token?api-version=1.0';
+            var tokenUrl = 'https://login.microsoftonline.com/' + clientId + '/oauth2/token?api-version=1.0';
 
             $.ajax(
                 {
@@ -345,29 +291,74 @@ App.MainController = Ember.ObjectController.extend({
                     }
                 }
             );
+        }
+    }.observes('App.Fixtures.outlookCode'),
+    isOauthedIn: function() {
+        return App.Fixtures.get('authedIn');
+    }.property('App.Fixtures.authedIn'),
+    actions: {
+        clickOauth: function() {
+            /*gapi.auth.authorize(
+            {
+              'client_id': CLIENT_ID,
+              'scope': SCOPES,
+              'immediate': false,
+              'origin' : 'https://c.na24.visual.force.com'
+            }, handleAuthResult);*/
 
-            /*var oauthOptions = {
-                client_id: '4ef594ad-4009-4a5a-a99f-363506bfb342',
-                redirect_uri: 'https://c.na24.visual.force.com/apex/protoGCal',
-                response_type: 'code id_token',
-                prompt: 'admin_consent',
-                resource: encodeURIComponent('https://c.na24.visual.force.com/apex/protoGCal'),
-                scope: 'openid',
-                nonce: 'a'
+            // REST
+            var oauthOptions = {
+                response_type: 'code',
+                client_id: CLIENT_ID,
+                login_hint: 'victor@appiphony.com',
+                redirect_uri: 'https://na31.salesforce.com/apex/protoGCl',
+                state: 'https://na31.salesforce.com/gohere',
+                scope: SCOPES
             };
 
-            var oauthUrl = 'https://login.microsoftonline.com/6dd604e1-c20e-4413-998f-b446d4a15a0c/oauth2/authorize?api-version=1.0'
+            var oauthUrl = 'https://accounts.google.com/o/oauth2/auth?client_id=' + oauthOptions.client_id
+                            + '&response_type=' + oauthOptions.response_type
+                            //+ '&login_hint=' + oauthOptions.login_hint
+                            + '&redirect_uri=' + oauthOptions.redirect_uri
+                            + '&state=' + oauthOptions.state
+                            + '&scope=' + oauthOptions.scope;
+
+
+            var strWindowFeatures = "menubar=no,location=yes,resizable=yes,scrollbars=no,status=no,height=650,width=600";
+
+            var outlookOauthWindow = window.open(oauthUrl, "Google", strWindowFeatures);
+
+            $(outlookOauthWindow).on('load', function(e){
+                console.log(e);
+            });
+        },
+        clickExchangeOauth: function() {
+            
+
+            var oauthOptions = {
+                client_id: 'e5e0d681-2624-4077-b78f-a4605e2c376c',
+                redirect_uri: 'https://na31.salesforce.com/apex/protoGCal',
+                response_type: 'code id_token',
+                prompt: 'admin_consent',
+                resource: encodeURIComponent('https://outlook.office365.com/'),
+                scope: 'openid',
+                nonce: 'a',
+                state: 'https://gohere.com/'
+            };
+
+            var oauthUrl = 'https://login.microsoftonline.com/common/oauth2/authorize?api-version=1.0'
                             + '&response_type=' + oauthOptions.response_type
                             + '&redirect_uri=' + oauthOptions.redirect_uri
                             + '&client_id=' + oauthOptions.client_id
                             + '&prompt=' + oauthOptions.prompt
                             + '&resource=' + oauthOptions.resource
                             + '&scope=' + oauthOptions.scope
-                            + '&nonce=' + oauthOptions.nonce;
+                            + '&nonce=' + oauthOptions.nonce
+                            + '&state=' + oauthOptions.state;
 
             var strWindowFeatures = "menubar=no,location=yes,resizable=yes,scrollbars=no,status=no,height=650,width=600";
 
-            var outlookOauthWindow = window.open(oauthUrl, "Outlook", strWindowFeatures);*/
+            var outlookOauthWindow = window.open(oauthUrl, "Outlook", strWindowFeatures);
         }
     }
 });
@@ -403,11 +394,10 @@ App.MainRoute = Ember.Route.extend({
 
     model: function (){
         // Outlook TOKEN
-        
         var lochash = location.hash.substr(1);
 
-        if (lochash.indexOf('code') !== -1) {
-            var outlookCode = lochash.substr(lochash.indexOf('code=')).split('&')[0].split('=')[1];
+        if (lochash.indexOf('id_token') !== -1) {
+            var outlookCode = lochash.substr(lochash.indexOf('id_token=')).split('&')[0].split('=')[1];
             if (window.opener) {
                 window.opener.setOutlookOauthCode(outlookCode);
                 //window.close();
@@ -499,14 +489,20 @@ App.MainRoute = Ember.Route.extend({
 
         // REST STYLE
 
-        /*
+        
         var code = getUrlParameter('code');
 
         if (!Ember.isEmpty(code)) {
+            if (window.opener) {
+                window.opener.setGoogleOauthCode(code);
+                //window.close();
+            }
+
+            /*
             var keyUrl = 'https://www.googleapis.com/oauth2/v3/token?code=' + code +
                          '&client_id=691270253096-16dcihcc0fhee29e0krtpkq4kntnisvc.apps.googleusercontent.com' + 
                          '&client_secret=GXxKZ7qW1qJjpW6hXY28EW1E' +
-                         '&redirect_uri=https://c.na24.visual.force.com/apex/protoGCal' +
+                         '&redirect_uri=https://na31.salesforce.com/apex/protoGCal' +
                          '&grant_type=authorization_code';
 
             
@@ -517,24 +513,9 @@ App.MainRoute = Ember.Route.extend({
                     cache: false,
                     success: function(json) {
                         var access_token = json.access_token;
+                        App.Fixtures.set('googleOauthToken', access_token)
                         
-                        var url = 'https://www.googleapis.com/calendar/v3/users/me/calendarList?maxResults=5&access_token=' + access_token;
-
-                        $.ajax(
-                            {
-                                url: url,
-                                type: 'GET',
-                                cache: false,
-                                success: function(json) {
-                                    console.log(json);
-                                    return {};
-                                },
-                                error: function(jqXHR, textStatus, err) {
-                                    console.log(jqXHR);
-                                    return {};
-                                }
-                            }
-                        );
+                        return {};
 
                     },
                     error: function(jqXHR, textStatus, err) {
@@ -542,11 +523,11 @@ App.MainRoute = Ember.Route.extend({
                     }
                 }
             );
-            
+            */
         } else {
             return {};
-        }*/
-        return {};
+        }
+        //return {};
     }
 });
 

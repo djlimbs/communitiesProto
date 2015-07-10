@@ -1,0 +1,23 @@
+<div aria-hidden="false" aria-labelledby="sendICSModalLabel" class="modal fade in" id="sendICSModal" role="dialog" tabindex="-1">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--bn">
+                <button class="close" data-dismiss="modal" type="button">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading">
+                    Send calendar invitations?
+                </h2>
+            </div>
+            <div class="panel__body pad--sm--xl">
+                <p>
+                    Since you've only chosen one time slot, calendar invitations will be sent to all participants now. The applicant does not need to offer their availability and confirm.
+                </p>
+            </div>
+            <div class="modal__footer pad--sm--tn">
+                <button class="button button--secondary js-cancelSendInvitations" {{action "clickCancelModal"}} data-dismiss="modal" type="button">Cancel</button>
+                <button class="button button--primary js-confirmSendInvitations" data-dismiss="modal" type="button">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>
