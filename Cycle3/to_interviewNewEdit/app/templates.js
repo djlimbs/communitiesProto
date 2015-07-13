@@ -71,11 +71,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"sendEmailToApplicantModalLabel\" class=\"modal fade in\" id=\"sendEmailToApplicantModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bn\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Send time slot invitations?\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    Placeholder text about sending a time slot selector email.\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--secondary js-cancelSendEmail\" ");
+  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"sendEmailToApplicantModalLabel\" class=\"modal fade in\" id=\"sendEmailToApplicantModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bn\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-dismiss=\"modal\" type=\"button\">Cancel</button>\n                <button class=\"button button--primary js-justSave\" data-dismiss=\"modal\" type=\"button\">Save, Don't Send Yet</button>\n                <button class=\"button button--primary js-confirmSendEmail\" data-dismiss=\"modal\" type=\"button\">Save and Send</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Notify applicant to choose time?\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    Since interview(s) and time slots have been selected, TalentObjects can send an email to the applicant prompting them to choose the time slot that works best.\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--primary js-justSave\" data-dismiss=\"modal\" type=\"button\">Save, Don't Send Yet</button>\n                <button class=\"button button--primary js-confirmSendEmail\" data-dismiss=\"modal\" type=\"button\">Save and Send</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -86,7 +86,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"sendICSModalLabel\" class=\"modal fade in\" id=\"sendICSModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bn\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Send calendar invitations?\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    Since you've only chosen one time slot, calendar invitations will be sent to all participants now. The applicant does not need to offer their availability and confirm.\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--secondary js-cancelSendInvitations\" ");
+  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"sendICSModalLabel\" class=\"modal fade in\" id=\"sendICSModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bn\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Send calendar invitations?\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    Since you've only chosen one time slot, calendar invitations will be sent to all participants now. The applicant does not need to offer their availability and confirm.\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--secondary js-cancelSendInvitations\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -98,10 +102,14 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["_updateInvitationModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
-  data.buffer.push("<div class=\"modal fade\" id=\"updateInvitationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"discardModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Update Invitation</h2>\n            </div>\n            <div class=\"modal__body\">\n                If you wish, you can include extra details in the calendar invitations that will be highlighted as a change for the participants.\n                <div class=\"form__group\">\n                    ");
+  data.buffer.push("<div class=\"modal fade\" id=\"updateInvitationModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"discardModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Update Invitation</h2>\n            </div>\n            <div class=\"modal__body\">\n                If you wish, you can include extra details in the calendar invitations that will be highlighted as a change for the participants.\n                <div class=\"form__group\">\n                    ");
   hashContexts = {'value': depth0};
   hashTypes = {'value': "ID"};
   options = {hash:{
