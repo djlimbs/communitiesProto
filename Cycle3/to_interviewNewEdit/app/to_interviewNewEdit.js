@@ -43,7 +43,8 @@ function convertGooglePlaceToLocation(place) {
     var locationObj = {
         namespace_Location_Name__c: place.name,
         namespace_Geographical_Location__Latitude__s: place.geometry.location.A,
-        namespace_Geographical_Location__Longitude__s: place.geometry.location.F
+        namespace_Geographical_Location__Longitude__s: place.geometry.location.F,
+        namespace_Google_Place_Id__c: place.place_id
     };
 
     place.address_components.forEach(function(ac) {
@@ -83,31 +84,125 @@ function convertGooglePlaceToLocation(place) {
     return locationObj;
 }
 
+function initializeGoogleMapsAutocomplete(self) {
+    var interview = self.get('interview');
+
+    var defaultLocationCoords = {
+        lat: -33.8688, 
+        lng: 151.2195
+    };
+
+    if (!Ember.isNone(interview.namespace_Geographical_Location__c)) {
+        defaultLocationCoords = {
+            lat: interview.namespace_Geographical_Location__c.latitude,
+            lng: interview.namespace_Geographical_Location__c.longitude
+        };
+    }
+
+    var disablePOIStyles =[
+        {
+            featureType: "poi",
+            elementType: "labels",
+            stylers: [
+                  { visibility: "off" }
+            ]
+        }
+    ];
+
+    var mapOptions = {
+        center: defaultLocationCoords,
+        zoom: 13,
+        styles: disablePOIStyles
+    };
+    var map = new google.maps.Map(document.getElementById('map-canvas'),
+        mapOptions);
+
+    var input = /** @type {HTMLInputElement} */(
+            document.getElementById('pac-input'));
+
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo('bounds', map);
+
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+    var infowindow = new google.maps.InfoWindow();
+    var marker = new google.maps.Marker({
+        map: map
+    });
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map, marker);
+    });
+
+    google.maps.event.addListener(autocomplete, 'place_changed', function() {
+        infowindow.close();
+        var place = autocomplete.getPlace();
+        if (!place.geometry) {
+            return;
+        }
+
+        if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+        } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);
+        }
+
+        // Set the position of the marker using the place ID and location
+        marker.setPlace(/** @type {!google.maps.Place} */ ({
+            placeId: place.place_id,
+            location: place.geometry.location
+        }));
+        marker.setVisible(true);
+
+        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                'Place ID: ' + place.place_id + '<br>' +
+                place.formatted_address);
+        infowindow.open(map, marker);
+    });
+
+    isGoogleMapsInitialized = true;
+}
+
 function initializeGoogleMaps(self) {
+    var interview = self.get('interview');
     var markers = [];
+
+    var defaultLocationCoords = {
+        lat: -33.8688, 
+        lng: 151.2195
+    };
+
+    var defaultZoom = 13;
+
+    if (!Ember.isNone(interview.namespace_Geographical_Location__c)) {
+        defaultLocationCoords = {
+            lat: interview.namespace_Geographical_Location__c.latitude,
+            lng: interview.namespace_Geographical_Location__c.longitude
+        };
+
+        defaultZoom = 17;
+    }
+
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        center: defaultLocationCoords,
+        zoom: defaultZoom
     });
 
     var placesService = new google.maps.places.PlacesService(map);
 
-    var defaultBounds = new google.maps.LatLngBounds(
-        new google.maps.LatLng(-33.8902, 151.1759),
-        new google.maps.LatLng(-33.8474, 151.2631));
-    
-    map.fitBounds(defaultBounds);
-
     // Create the search box and link it to the UI element.
-    var input = /** @type {HTMLInputElement} */(
-        document.getElementById('pac-input'));
+    var input = (document.getElementById('pac-input'));
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
 
-    var searchBox = new google.maps.places.SearchBox(
-    /** @type {HTMLInputElement} */(input));
+    var searchBox = new google.maps.places.SearchBox((input));
 
-    // [START region_getplaces]
-    // Listen for the event fired when the user selects an item from the
-    // pick list. Retrieve the matching places for that item.
+    var infowindow = new google.maps.InfoWindow({
+        pixelOffset: { 
+            height: 0,
+            width: -25
+        }
+    });
+
     google.maps.event.addListener(searchBox, 'places_changed', function() {
         var places = searchBox.getPlaces();
 
@@ -127,7 +222,7 @@ function initializeGoogleMaps(self) {
                 url: place.icon,
                 size: new google.maps.Size(71, 71),
                 origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
+                anchor: new google.maps.Point(0, 0),
                 scaledSize: new google.maps.Size(25, 25)
             };
 
@@ -141,11 +236,16 @@ function initializeGoogleMaps(self) {
             });
 
             google.maps.event.addListener(marker, 'click', function() {
+                var thisMarker = this;
                 
                 placesService.getDetails({
                     placeId: this.place_id
                 }, function(selectedPlace, status) {
                     if (status == google.maps.places.PlacesServiceStatus.OK) {
+                        infowindow.setContent('<div><strong>' + selectedPlace.name + '</strong><br>' +
+                        'Place ID: ' + selectedPlace.place_id + '<br>' +
+                        selectedPlace.formatted_address);
+                        infowindow.open(map, thisMarker);
                         self.set('selectedGooglePlace', selectedPlace);
                     }
                 });   
@@ -694,10 +794,6 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 interview['Topic' + i + '__c'] = null;
             }
 
-            interview.namespace_Geographical_Location__Latitude__s;
-            interview.namespace_Geographical_Location__Longitude__s;
-            delete interview.namespace_Geographical_Location__c;
-
             // format participants
             var userIndex = 1;
             var interviewersString;
@@ -758,6 +854,11 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     Object.keys(selectedLocation).forEach(function(key) { 
                         saveObj.interview[key] = selectedLocation[key];
                     });
+
+                    saveObj.interview.namespace_Geographical_Location__Latitude__s = selectedLocation.namespace_Geographical_Location__Latitude__s;
+                    saveObj.interview.namespace_Geographical_Location__Longitude__s = selectedLocation.namespace_Geographical_Location__Longitude__s;
+
+                    delete saveObj.interview.namespace_Geographical_Location__c;
                 }
 
                 isLocationSelected = true;
@@ -883,23 +984,27 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('#updateInvitationModal').modal();
 
                     $('.js-confirmSave').one('click', function() {
+                        saveObj.emailProxies = [];
+
                         if (!Ember.isEmpty(removedParticipants)) {
                             // Send cancellation ICS to removed interviewer.
-
-                            saveObj.emailProxies = [{
-                                Template__c: 'ICS Remove Interviewer', // MAKE THIS TEMPLATE
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: parsedInterviewNewEditJson.application.Email__c
-                            }];
+                            removedParticipants.forEach(function(rp) {
+                                saveObj.emailProxies.addObject({
+                                    Template__c: 'ICS Remove Interviewer', // MAKE THIS TEMPLATE
+                                    Application__c: parsedInterviewNewEditJson.application.Id,
+                                    Email__c: rp.Email__c
+                                });
+                            });
+                            
                         }
 
                         if (numTimeSlots === 1) {
                             // add applicant's ICS.
-                            saveObj.emailProxies = [{
+                            saveObj.emailProxies.addObject({
                                 Template__c: 'ICS Accepted Applicant',
                                 Application__c: parsedInterviewNewEditJson.application.Id,
                                 Email__c: parsedInterviewNewEditJson.application.Email__c
-                            }];
+                            });
 
                             // add every interviewer's ICS.
 
@@ -918,11 +1023,11 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
 
                         if (numTimeSlots > 1) {
 
-                            saveObj.emailProxies = [{
+                            saveObj.emailProxies.addObject({
                                 Template__c: 'Time Slot Selector',
                                 Application__c: parsedInterviewNewEditJson.application.Id,
                                 Email__c: parsedInterviewNewEditJson.application.Email__c
-                            }];
+                            });
 
                             saveObj.interview.namespace_Status__c = 'Proposed';
                             saveObj.interview.namespace_Status__c = 'Proposed';
@@ -1026,104 +1131,108 @@ App.InterviewNewEditRoute = Ember.Route.extend({
     },
     model: function (){
         return new Ember.RSVP.Promise(function(resolve, reject) {
-        	var interviewNewEditObj = {
-        		interview: parsedInterviewNewEditJson.interview,
-                applicant: parsedInterviewNewEditJson.application
-        	};
+            if (!Ember.isEmpty(parsedInterviewNewEditJson.errorMessage)) {
+                reject(parsedInterviewNewEditJson);
+            } else {
+                var interviewNewEditObj = {
+                    interview: parsedInterviewNewEditJson.interview,
+                    applicant: parsedInterviewNewEditJson.application
+                };
 
-            interviewNewEditObj.originalLogisticalDetails = interviewNewEditObj.interview.namespace_Logistical_Details__c;
+                interviewNewEditObj.originalLogisticalDetails = interviewNewEditObj.interview.namespace_Logistical_Details__c;
 
-            // setup topics
-            if (!Ember.isEmpty(interviewNewEditObj.interview.Topics__c)) {
-        	   interviewNewEditObj.interview.topics = interviewNewEditObj.interview.Topics__c.replace(/; /g, ',');
-            }
-
-            interviewNewEditObj.originalTopics = interviewNewEditObj.interview.topics;
-
-            // setup participants
-            interviewNewEditObj.participants = [];
-            for (var i = 1; i <= 10; i++) {
-                var interviewer = interviewNewEditObj.interview['User' + i + '__r'];
-                if (!Ember.isNone(interviewer)) {
-                    interviewNewEditObj.participants.addObject(interviewer);
+                // setup topics
+                if (!Ember.isEmpty(interviewNewEditObj.interview.Topics__c)) {
+                   interviewNewEditObj.interview.topics = interviewNewEditObj.interview.Topics__c.replace(/; /g, ',');
                 }
-            }
-            interviewNewEditObj.toggleParticipants = !Ember.isEmpty(interviewNewEditObj.participants);
-            interviewNewEditObj.participantsDidChange = false;
 
-            interviewNewEditObj.originalParticipants = interviewNewEditObj.participants.copy(true);
+                interviewNewEditObj.originalTopics = interviewNewEditObj.interview.topics;
 
-            // setup time slots
-            interviewNewEditObj.timeSlots = [];
-            interviewNewEditObj.originalTimeSlots = [];
+                // setup participants
+                interviewNewEditObj.participants = [];
+                for (var i = 1; i <= 10; i++) {
+                    var interviewer = interviewNewEditObj.interview['User' + i + '__r'];
+                    if (!Ember.isNone(interviewer)) {
+                        interviewNewEditObj.participants.addObject(interviewer);
+                    }
+                }
+                interviewNewEditObj.toggleParticipants = !Ember.isEmpty(interviewNewEditObj.participants);
+                interviewNewEditObj.participantsDidChange = false;
 
-            if (!Ember.isEmpty(interviewNewEditObj.interview.namespace_Interview_Time_Slots__r)) {
-                interviewNewEditObj.interview.namespace_Interview_Time_Slots__r.records.forEach(function(ts) {
-                    var fullCalendarEventObj = convertInterviewTimeSlotToEventObject(ts);
+                interviewNewEditObj.originalParticipants = interviewNewEditObj.participants.copy(true);
 
-                    interviewNewEditObj.timeSlots.addObject(fullCalendarEventObj);
+                // setup time slots
+                interviewNewEditObj.timeSlots = [];
+                interviewNewEditObj.originalTimeSlots = [];
+
+                if (!Ember.isEmpty(interviewNewEditObj.interview.namespace_Interview_Time_Slots__r)) {
+                    interviewNewEditObj.interview.namespace_Interview_Time_Slots__r.records.forEach(function(ts) {
+                        var fullCalendarEventObj = convertInterviewTimeSlotToEventObject(ts);
+
+                        interviewNewEditObj.timeSlots.addObject(fullCalendarEventObj);
+                    });
+
+                    interviewNewEditObj.originalTimeSlots = interviewNewEditObj.interview.namespace_Interview_Time_Slots__r.records;
+                }
+
+                // setup locations
+                interviewNewEditObj.availableLocations = [];
+                var applicationLocation = parsedInterviewNewEditJson.jobLocations.findBy('Location__c', parsedInterviewNewEditJson.application.Location__c);
+                var appLocationPicklistOption = convertLocationObjToPicklistOption(applicationLocation.Location__r);
+
+                interviewNewEditObj.availableLocations.addObject(appLocationPicklistOption);
+
+                parsedInterviewNewEditJson.jobLocations.removeObject(applicationLocation);
+                parsedInterviewNewEditJson.jobLocations.forEach(function(jl) {
+                    interviewNewEditObj.availableLocations.addObject(convertLocationObjToPicklistOption(jl.Location__r));
                 });
 
-                interviewNewEditObj.originalTimeSlots = interviewNewEditObj.interview.namespace_Interview_Time_Slots__r.records;
-            }
-
-            // setup locations
-            interviewNewEditObj.availableLocations = [];
-            var applicationLocation = parsedInterviewNewEditJson.jobLocations.findBy('Location__c', parsedInterviewNewEditJson.application.Location__c);
-            var appLocationPicklistOption = convertLocationObjToPicklistOption(applicationLocation.Location__r);
-
-            interviewNewEditObj.availableLocations.addObject(appLocationPicklistOption);
-
-            parsedInterviewNewEditJson.jobLocations.removeObject(applicationLocation);
-            parsedInterviewNewEditJson.jobLocations.forEach(function(jl) {
-                interviewNewEditObj.availableLocations.addObject(convertLocationObjToPicklistOption(jl.Location__r));
-            });
-
-            interviewNewEditObj.customLocations = parsedInterviewNewEditJson.locationTypeValues.map(function(lt) {
-                return {
-                    namespace_Location_Name__c: lt
-                };
-            });
-
-            // if a location is selected
-            var currentLocationName = interviewNewEditObj.interview.namespace_Location_Name__c;
-            if (!Ember.isEmpty(currentLocationName)) {
-                var selectedLocation = interviewNewEditObj.availableLocations.findBy('namespace_Location_Name__c', currentLocationName);
-
-                if (Ember.isNone(selectedLocation)) {
-                    selectedLocation = {
-                        namespace_City__c: interviewNewEditObj.interview.namespace_City__c,
-                        namespace_Country_Region__c: interviewNewEditObj.interview.namespace_Country_Region__c,
-                        namespace_Location_Name__c: interviewNewEditObj.interview.namespace_Location_Name__c,
-                        namespace_State_Province__c: interviewNewEditObj.interview.namespace_State_Province__c,
-                        namespace_Street_Address__c: interviewNewEditObj.interview.namespace_Street_Address__c,
-                        namespace_Zip_Postal_Code__c: interviewNewEditObj.interview.namespace_Zip_Postal_Code__c
+                interviewNewEditObj.customLocations = parsedInterviewNewEditJson.locationTypeValues.map(function(lt) {
+                    return {
+                        namespace_Location_Name__c: lt
                     };
+                });
 
-                    interviewNewEditObj.availableLocations.addObject(selectedLocation);
+                // if a location is selected
+                var currentLocationName = interviewNewEditObj.interview.namespace_Location_Name__c;
+                if (!Ember.isEmpty(currentLocationName)) {
+                    var selectedLocation = interviewNewEditObj.availableLocations.findBy('namespace_Location_Name__c', currentLocationName);
+
+                    if (Ember.isNone(selectedLocation)) {
+                        selectedLocation = {
+                            namespace_City__c: interviewNewEditObj.interview.namespace_City__c,
+                            namespace_Country_Region__c: interviewNewEditObj.interview.namespace_Country_Region__c,
+                            namespace_Location_Name__c: interviewNewEditObj.interview.namespace_Location_Name__c,
+                            namespace_State_Province__c: interviewNewEditObj.interview.namespace_State_Province__c,
+                            namespace_Street_Address__c: interviewNewEditObj.interview.namespace_Street_Address__c,
+                            namespace_Zip_Postal_Code__c: interviewNewEditObj.interview.namespace_Zip_Postal_Code__c
+                        };
+
+                        interviewNewEditObj.availableLocations.addObject(selectedLocation);
+                    }
+
+                    interviewNewEditObj.selectedLocation = selectedLocation;
+
+                    interviewNewEditObj.originalLocationName = selectedLocation.namespace_Location_Name__c;
+                } else if (!Ember.isEmpty(interviewNewEditObj.interview.namespace_Location_Type__c) && interviewNewEditObj.interview.namespace_Location_Type__c !== 'In person') {
+                    interviewNewEditObj.selectedLocation = {
+                        namespace_Location_Name__c: interviewNewEditObj.interview.namespace_Location_Type__c
+                    };
+                } else {
+                    interviewNewEditObj.selectedLocation = interviewNewEditObj.availableLocations[0];
                 }
 
-                interviewNewEditObj.selectedLocation = selectedLocation;
+                interviewNewEditObj.deletedTimeSlots = [];
 
-                interviewNewEditObj.originalLocationName = selectedLocation.namespace_Location_Name__c;
-            } else if (!Ember.isEmpty(interviewNewEditObj.interview.namespace_Location_Type__c) && interviewNewEditObj.interview.namespace_Location_Type__c !== 'In person') {
-                interviewNewEditObj.selectedLocation = {
-                    namespace_Location_Name__c: interviewNewEditObj.interview.namespace_Location_Type__c
-                };
-            } else {
-                interviewNewEditObj.selectedLocation = interviewNewEditObj.availableLocations[0];
+                interviewNewEditObj.calendarEl = null;
+
+                if (Ember.isEmpty(retUrl)) {
+                    retUrl = '/' + interviewNewEditObj.interview.Application__c;
+                }
+                console.log('****MODEL');
+                console.log(interviewNewEditObj);
+                resolve(interviewNewEditObj);
             }
-
-            interviewNewEditObj.deletedTimeSlots = [];
-
-            interviewNewEditObj.calendarEl = null;
-
-            if (Ember.isEmpty(retUrl)) {
-                retUrl = '/' + interviewNewEditObj.interview.Application__c;
-            }
-            console.log('****MODEL');
-            console.log(interviewNewEditObj);
-        	resolve(interviewNewEditObj);
         });
     }
 });

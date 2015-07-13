@@ -41,7 +41,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"googleMapsModalLabel\" class=\"modal fade in\" id=\"googleMapsModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell big-modal\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Search for a location\n                </h2>\n            </div>\n                <input id=\"pac-input\" class=\"controls\" type=\"text\" placeholder=\"Search Box\">\n                <div id=\"map-canvas\" style=\"height:300px;\"></div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\">Reset map</button>\n                <button class=\"button button--primary\" data-dismiss=\"modal\" type=\"button\" ");
+  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"googleMapsModalLabel\" class=\"modal fade in\" id=\"googleMapsModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell big-modal\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Search for a location\n                </h2>\n            </div>\n                <input id=\"pac-input\" class=\"controls\" type=\"text\" placeholder=\"Enter a location\">\n                <div id=\"map-canvas\" style=\"height:300px;\"></div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\">Reset map</button>\n                <button class=\"button button--primary\" data-dismiss=\"modal\" type=\"button\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleLocation", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -109,6 +109,23 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
   data.buffer.push("\n                </div>\n            </div>\n            <div class=\"modal__footer\">\n                <button type=\"button\" class=\"button button--primary js-confirmSave\" data-dismiss=\"modal\">Continue</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["error"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"scope-container\">\n    <div class=\"content content--readable pad--md--tm pad--md--bm pad--sm--only--n pad--sm--tm\">\n        <div class=\"wizardContent\">\n            <div class=\"alert alert--error mar--md--bm\" data-qa-alert=\"errorMessage\">\n                ");
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "errorMessage", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
