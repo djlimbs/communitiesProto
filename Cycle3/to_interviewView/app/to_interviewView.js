@@ -10,7 +10,7 @@ function detectUrl(text) { // Create link HTML if a URL is recognized
         if (!prefixRegex.test(url)) {
             url = 'http://' + url;
         }
-        return '<a href="' + url + '">' + url + '</a>';
+        return "<a href='" + url + "'>" + url + "</a>";
     })
 }
 
@@ -43,9 +43,6 @@ function formatDateTime(timeSlots){
         var formatedTime = sHM + '-' + eHM + toAmPm + ' ' + timeZone;
         timeSlotsObj.formatedDate = formatedDate;
         timeSlotsObj.formatedTime = formatedTime;
-
-        // timeSlotsObj.isDeclined = timeSlot.namespace_Is_Declined__c;
-        //timeSlotsObj.isDeclined = timeSlot.namespace_Status__c == 'Selected' ? false : true;
         
         timeSlotsObj.isAccepted = timeSlot.namespace_Status__c == 'Selected' ? true : false;
         timeSlotsObj.isPossible = timeSlot.namespace_Status__c == 'Possible' ? true : false;        
@@ -53,32 +50,6 @@ function formatDateTime(timeSlots){
         timeSlotsArray.push(timeSlotsObj);
     });
     return timeSlotsArray;
-}
-
-
-function formatInterviewGuidelines(interviewGuidelinesString){
-    var interviewGuidelinesObj = {};
-    var urlPrefix = interviewGuidelinesString.match(/\bhttp|\bftp|\bwww/i);
-
-    if (!Ember.isEmpty(urlPrefix)) {
-        var interviewGuidelines = interviewGuidelinesString.split(urlPrefix)[0].slice(0, -1);
-
-        var restOfinterviewGuidelines = interviewGuidelinesString.split(urlPrefix)[1];
-        var interviewGuidelinesLink = urlPrefix + restOfinterviewGuidelines.split(' ')[0];
-
-        var interviewGuidelinesSecondPart = '';
-        if (restOfinterviewGuidelines.indexOf(' ') != -1) {
-            interviewGuidelinesSecondPart = restOfinterviewGuidelines.substr(restOfinterviewGuidelines.indexOf(' ') + 1);    
-        };
-        
-        interviewGuidelinesObj.interviewGuidelines = interviewGuidelines;
-        interviewGuidelinesObj.interviewGuidelinesLink = interviewGuidelinesLink;
-        interviewGuidelinesObj.interviewGuidelinesSecondPart = interviewGuidelinesSecondPart;
-
-    } else {
-        interviewGuidelinesObj.interviewGuidelines = interviewGuidelinesString;
-    }
-    return interviewGuidelinesObj;
 }
 
 
@@ -124,33 +95,30 @@ App.MainController = Ember.ObjectController.extend({
     }.property('timeSlots'),
 
 
-    interviewStatusDraft: false,
-    interviewStatusProposed: false,
-    interviewStatusAccepted: false,
-    interviewStatusDeclined: false,
-    interviewStatusCanceled: false,
-    interviewStatusCompleted: false,
-
-    interviewStatus: function(){
-        var interviewStatus = this.get('interview.status');
-
-        if (interviewStatus == 'Draft') this.set('interviewStatusDraft', true);
-            else if (interviewStatus == 'Proposed') this.set('interviewStatusProposed', true);
-                else if (interviewStatus == 'Accepted') this.set('interviewStatusAccepted', true);
-                    else if (interviewStatus == 'Declined') this.set('interviewStatusDeclined', true);
-                        else if (interviewStatus == 'Canceled') this.set('interviewStatusCanceled', true);
-                            else this.set('interviewStatusCompleted', true);
-
-    }.observes('interview.status'),
+    interviewStatusDraft: function(){
+        return this.get('interview.status') == 'Draft' ? true : false;
+    }.property('interview.namespace_Status__c'),
+    interviewStatusProposed: function(){
+        return this.get('interview.status') == 'Proposed' ? true : false;
+    }.property('interview.namespace_Status__c'),
+    interviewStatusCanceled: function(){
+        return this.get('interview.status') == 'Canceled' ? true : false;
+    }.property('interview.namespace_Status__c'),
+    interviewStatusDeclined: function(){
+        return this.get('interview.status') == 'Declined' ? true : false;
+    }.property('interview.namespace_Status__c'),
+    interviewStatusAccepted: function(){
+        return this.get('interview.status') == 'Accepted' ? true : false;
+    }.property('interview.namespace_Status__c'),
+    interviewStatusCompleted: function(){
+        return this.get('interview.status') == 'Completed' ? true : false;
+    }.property('interview.namespace_Status__c'),
 
     hasDateAndTime: function(){
         if (this.get('timeSlotsArray')) {
             return this.get('timeSlotsArray').length != 0 ? true : false;
         };
     }.property('timeSlotsArray'),
-    // hasLocation: function(){
-    //     return (!Ember.isNone(this.get('location.name')) && !Ember.isNone(this.get('location.city'))) ? true : false;
-    // }.property('location'),
     hasInterviewers: function(){
         if (this.get('interviewersArray')) {
             return this.get('interviewersArray').length != 0 ? true : false;
@@ -178,36 +146,27 @@ App.MainController = Ember.ObjectController.extend({
     talentProfileObj: function(){
         return this.get('talentProfile');
     }.property('talentProfile'),
-    interviewGuidelinesObj: function(){
+   
+    interviewGuidelines: '',
+    plainInterviewGuidelines: function(){
+        var stringsToReplace = this.get('interviewGuidelines').match(/<a([^>]*)>|<\/a>/g);
+        
+        var plainInterviewGuidelines = this.get('interviewGuidelines');
+        if (plainInterviewGuidelines) {
+            stringsToReplace.forEach(function(string){
+                plainInterviewGuidelines = plainInterviewGuidelines.replace(string, '');
+            });
+        };
+
+        return plainInterviewGuidelines;
+    }.property('interviewGuidelines'),
+    
+    interviewGuidelinesContent: function(){
         if (!Ember.isEmpty(this.get('interview.interviewGuidelines'))) {
-            var interviewGuidelinesString = this.get('interview.interviewGuidelines');
-            var interviewGuidelinesObj = formatInterviewGuidelines(interviewGuidelinesString);
-            // var interviewGuidelinesObj = detectUrl(interviewGuidelinesString);
-            // console.log('INTEVIEW GUIDELNE:   ', interviewGuidelinesObj)
-
-
-            this.set('interviewGuidelines', interviewGuidelinesObj.interviewGuidelines);
-            this.set('interviewGuidelinesLink', interviewGuidelinesObj.interviewGuidelinesLink);
-            this.set('interviewGuidelinesSecondPart', interviewGuidelinesObj.interviewGuidelinesSecondPart);
-
-
-
-            this.set('interviewGuidelinesContent', interviewGuidelinesObj.interviewGuidelines != 'undefined' ?  interviewGuidelinesObj.interviewGuidelines : '' + 
-                                                   interviewGuidelinesObj.interviewGuidelinesLink != 'undefined' ? interviewGuidelinesObj.interviewGuidelinesLink : '' + 
-                                                   interviewGuidelinesObj.interviewGuidelinesSecondPart != 'undefined' ? interviewGuidelinesObj.interviewGuidelinesSecondPart : '');
-
-            //return interviewGuidelinesObj;
-
+            var formatedInterviewGuidelines = detectUrl(this.get('interview.interviewGuidelines'));
+            this.set('interviewGuidelines', formatedInterviewGuidelines);           
         };
     }.observes('interview.interviewGuidelines'),
-    // }.property(),
-
-
-    interviewGuidelines: '',
-    interviewGuidelinesLink: '',
-    interviewGuidelinesSecondPart: '',
-
-    interviewGuidelinesContent: '',
 
     feedbackArray: function(){
         return this.get('feedback');
@@ -219,7 +178,6 @@ App.MainController = Ember.ObjectController.extend({
             $('#deleteModal').modal({
                 show: true,
             });
-            //window.parent.scrollTo(0,0);
 
             $('#modalDelete').click(function() {
                 var interviewId = self.get('interview').id;
@@ -242,7 +200,6 @@ App.MainController = Ember.ObjectController.extend({
 
                 $('#modalYes').unbind('click');
                 window.location.reload();
-                //window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
             });
         },
         clickEdit: function(){
@@ -259,37 +216,22 @@ App.MainController = Ember.ObjectController.extend({
                 $('#saveEdit').unbind('click');
 
                 var interviewGuidelinesString = $('#textareaEdit').val();
-                var interviewGuidelinesObj = formatInterviewGuidelines(interviewGuidelinesString);
-
-                self.set('interviewGuidelines', interviewGuidelinesObj.interviewGuidelines);
-                self.set('interviewGuidelinesLink', interviewGuidelinesObj.interviewGuidelinesLink);
-                self.set('interviewGuidelinesSecondPart', interviewGuidelinesObj.interviewGuidelinesSecondPart);
-
-                this.set('interviewGuidelinesContent', interviewGuidelinesObj.interviewGuidelines != 'undefined' ?  interviewGuidelinesObj.interviewGuidelines : '' + 
-                                                   interviewGuidelinesObj.interviewGuidelinesLink != 'undefined' ? interviewGuidelinesObj.interviewGuidelinesLink : '' + 
-                                                   interviewGuidelinesObj.interviewGuidelinesSecondPart != 'undefined' ? interviewGuidelinesObj.interviewGuidelinesSecondPart : '');
-
+                
+                var formatedInterviewGuidelines = detectUrl(interviewGuidelinesString);
+                self.set('interviewGuidelines', formatedInterviewGuidelines);           
 
                 var interviewGuidelinesObj = {
                     interviewId: self.get('interview.id'),
                     interviewGuidelines: interviewGuidelinesString
                 };
-                $("#interviewGuidelinesLink").attr("href", self.get('interviewGuidelinesLink'));
+                // $("#interviewGuidelinesLink").attr("href", self.get('interviewGuidelinesLink'));
 
                 cont.saveInterviewGuidelines(JSON.stringify(interviewGuidelinesObj), function(result, resultObj){
                 });
             });
            
         },
-        goToInterviewGuidelinesLink: function(){
-            var interviewGuidelinesLink = this.get('interviewGuidelinesLink');
 
-            if (interviewGuidelinesLink.slice(0,4) == 'http') {
-                window.parent.location.href = this.get('interviewGuidelinesLink');
-            } else {
-                window.parent.location.href = 'http://' + this.get('interviewGuidelinesLink');
-            };
-        },
         viewMap: function(){
             var interviewObj = this.get('interviewObj');
             var streetAddress = interviewObj.location.streetAddress.split(' ').join('+');
@@ -309,9 +251,6 @@ App.MainController = Ember.ObjectController.extend({
 
 App.MainRoute = Ember.Route.extend({
     model: function (){
-  //    console.log('////////////////////////////////////////////////////////');
-  //    console.log('INTERVIEW VIEW MAP: ', parsedInterviewViewMap);
-        // console.log('////////////////////////////////////////////////////////');
 
         var interview = parsedInterviewViewMap.interview;
         var interviewObj = {
@@ -337,12 +276,11 @@ App.MainRoute = Ember.Route.extend({
                 zipPostalCode: interview.namespace_Zip_Postal_Code__c,
                 countryRegion: interview.namespace_Country_Region__c,
                 geographicalLocation: {
-                    latitude: interview.namespace_Geographical_Location__c.latitude,
-                    longitude: interview.namespace_Geographical_Location__c.longitude
+                    latitude: !Ember.isEmpty(interview.namespace_Geographical_Location__c) ? interview.namespace_Geographical_Location__c.latitude : '',
+                    longitude: !Ember.isEmpty(interview.namespace_Geographical_Location__c) ? interview.namespace_Geographical_Location__c.longitude : '',
                 },
             },
             interviewGuidelines: interview.namespace_Interview_Guidelines__c,
-            interviewGuidelinesLink: interview.namespace_Interview_Guidelines_Link__c,
             logisticalDetails: interview.namespace_Logistical_Details__c,
 
         };
@@ -409,12 +347,9 @@ App.MainRoute = Ember.Route.extend({
             talentProfileObj = parsedInterviewViewMap.talentProfile;
         };
 
-        // var feedbackObj = {};
         var feedbackArray = [];
-        // var fieldSet = parsedInterviewViewMap.feedback.fieldSet;
         
         if(!Ember.isEmpty(parsedInterviewViewMap.feedbackMap)){
-            // var interviewFeedback = [];
             var fieldSet = parsedInterviewViewMap.feedbackMap.fieldSet;
             var feedbacks = parsedInterviewViewMap.feedbackMap.feedbacks;
 
@@ -437,23 +372,17 @@ App.MainRoute = Ember.Route.extend({
 
                 var fieldSetArray = [];
                 fieldSet.forEach(function(field){
-                    // console.log('MY FIELD:  ', field);
-
                     fieldSetArray.addObject({
                         label: field.label,
                         value: aFeedback[field.name]
                     });
                     feedbackObj.fieldSet = fieldSetArray;
-                    //console.log('THE SET: ', feedbackObj.fieldSet)
                 });
                 
                 feedbackArray.push(feedbackObj);
             });
-
-            // feedbackArray.push(feedbackObj);
         };
 
-        // console.log('FEEDBACK ARRAY::::: ', feedbackArray[0].fieldSet);
 
         return {
             interview: interviewObj,

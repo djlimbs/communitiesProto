@@ -29,7 +29,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {'id': "STRING",'value': "ID",'maxlength': "STRING"};
   options = {hash:{
     'id': ("textareaEdit"),
-    'value': ("interviewGuidelinesContent"),
+    'value': ("plainInterviewGuidelines"),
     'maxlength': ("1000")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
@@ -723,11 +723,13 @@ function program89(depth0,data) {
 
 function program91(depth0,data) {
   
-  var buffer = '', hashTypes, hashContexts;
+  var buffer = '', hashContexts, hashTypes;
   data.buffer.push("\n                                <div class=\"js-edit-text\">\n                                    ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "interviewGuidelinesContent", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "interviewGuidelines", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                                </div>\n                            ");
   return buffer;
   }
@@ -861,7 +863,7 @@ function program95(depth0,data) {
   data.buffer.push("\n\n                            <h3 class=\"js-header mar--sm--n\">Interview Guidelines</h3>\n                            \n                            ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "interviewGuidelinesContent", {hash:{},inverse:self.program(93, program93, data),fn:self.program(91, program91, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "interviewGuidelines", {hash:{},inverse:self.program(93, program93, data),fn:self.program(91, program91, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                        </div>\n                        <div class=\"panel__body pad--sm--tn js-logistics\">\n                            \n                            ");
   hashTypes = {};
