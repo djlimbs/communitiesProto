@@ -27,33 +27,37 @@ function processJobPostings(jobPostings, jobPostingFieldsToDisplay){
     return jobPostings;
 }
 
-function createLocationStrings(locations){
+function createLocationStrings(allLocations){
 
     var firstLocationString = '';
     var otherLocationsString;
     var otherLocationsCount = 0;
 
-    locations.forEach(function(location, i) {
-        location = location.Location__r;
+    if (allLocations) {
+        var locations = allLocations.sortBy('Location__r.City__c');
+    
+        locations.forEach(function(location, i) {
+            location = location.Location__r;
 
-        var locationString = '';
+            var locationString = '';
 
-        locationString = location.City__c + ', ' + location.Standardized_State_Province__c;
+            locationString = location.City__c + ', ' + location.Standardized_State_Province__c;
 
-        if (!Ember.isEmpty(location.Standardized_Country_Region__c) && location.Standardized_Country_Region__c !== 'US') {
-            locationString += ', ' + location.Standardized_Country_Region__c;
-        }
+            if (!Ember.isEmpty(location.Standardized_Country_Region__c) && location.Standardized_Country_Region__c !== 'US') {
+                locationString += ', ' + location.Standardized_Country_Region__c;
+            }
 
-        if (i === 0) {
-            firstLocationString = locationString;
-        } else if (i === 1) {
-            otherLocationsCount++;
-            otherLocationsString = locationString;
-        } else {
-            otherLocationsCount++;
-            otherLocationsString += ' | ' + locationString;
-        }
-    });
+            if (i === 0) {
+                firstLocationString = locationString;
+            } else if (i === 1) {
+                otherLocationsCount++;
+                otherLocationsString = locationString;
+            } else {
+                otherLocationsCount++;
+                otherLocationsString += ' | ' + locationString;
+            }
+        });
+    };
  
     var obj = {
         firstLocationString: firstLocationString,
@@ -434,14 +438,17 @@ App.JobPostingController = Ember.ObjectController.extend({
                     var jobPosting = this.get('content');
                     var linkedInMap = this.get('theLinkedInMap');
 
+                    console.log('JOB POSTING: ', jobPosting);
+
+
                     var jsonString = {
                         Application__c: '',
                         Job_Posting__c: jobPosting.Id,
                         Name: jobPosting.Job_Title__c,
                         Candidate_User__c: self.get('loggedInUser').Id,
                         Expressed_By__c: 'Candidate', // Picklist
-                        Source_Requisition__c: jobPosting.Requisition__c,
-                        Position__c: jobPosting.Requisition__r.Position__c,
+                        Source_Requisition__c: jobPosting.Requisition_Lookup__c,
+                        Position__c: jobPosting.Requisition_Lookup__r.Position__c,
                         Education_History__c: '',
                         Employment_History__c: '',
                         Skills__c: '',
@@ -618,6 +625,10 @@ App.JobSearchRoute = Ember.Route.extend( {
             parsedJobSearchMap.savedJobs.forEach(function(savedJob) {
                 var obj = createLocationStrings(savedJob.locations);
 
+                console.log('SAVED JOB: ', savedJob);
+
+
+
                 var jobObj = {
                     jobPostingId: savedJob.Job_Posting__c,
                     jobTitle: savedJob.Name,
@@ -625,7 +636,7 @@ App.JobSearchRoute = Ember.Route.extend( {
                     otherLocationsString: obj.otherLocationsString,
                     otherLocationsCount: obj.otherLocationsCount,
                     jobPostingUrl: parent.urlPrefix + '/JobListing?id=' + savedJob.Job_Posting__c,
-                    isRemoteAvailable: savedJob.Source_Requisition_Lookup__r.Allow_Remote_Employees__c,
+                    isRemoteAvailable: savedJob.Source_Requisition__r.Allow_Remote_Employees__c,
                     createdDate: savedJob.CreatedDate
                 };
 
@@ -634,7 +645,7 @@ App.JobSearchRoute = Ember.Route.extend( {
         }
 
         var allMyJobsArray = applications.concat(savedJobs).sortBy('createdDate').reverse();
-
+        console.log('AAL JOBS: ', allMyJobsArray);
 
         var locations = [labels.allLocations, labels.near, labels.nearMe];
         if (parsedJobSearchMap.hasRemote) {

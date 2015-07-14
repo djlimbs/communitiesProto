@@ -29,32 +29,36 @@ function processJobPostings(jobPostings, jobPostingFieldsToDisplay){
     };
 }
 
-function createLocationStrings(locations){
+function createLocationStrings(allLocations){
     var firstLocationString = '';
     var otherLocationsString;
     var otherLocationsCount = 0;
 
-    locations.forEach(function(location, i) {
-        location = location.Location__r;
+    if (allLocations) {
+        var locations = allLocations.sortBy('Location__r.City__c');
 
-        var locationString = '';
+        locations.forEach(function(location, i) {
+            location = location.Location__r;
 
-        locationString = location.City__c + ', ' + location.Standardized_State_Province__c;
+            var locationString = '';
 
-        if (!Ember.isEmpty(location.Standardized_Country_Region__c) && location.Standardized_Country_Region__c !== 'US') {
-            locationString += ', ' + location.Standardized_Country_Region__c;
-        }
+            locationString = location.City__c + ', ' + location.Standardized_State_Province__c;
 
-        if (i === 0) {
-            firstLocationString = locationString;
-        } else if (i === 1) {
-            otherLocationsCount++;
-            otherLocationsString = locationString;
-        } else {
-            otherLocationsCount++;
-            otherLocationsString += ' | ' + locationString;
-        }
-    });
+            if (!Ember.isEmpty(location.Standardized_Country_Region__c) && location.Standardized_Country_Region__c !== 'US') {
+                locationString += ', ' + location.Standardized_Country_Region__c;
+            }
+
+            if (i === 0) {
+                firstLocationString = locationString;
+            } else if (i === 1) {
+                otherLocationsCount++;
+                otherLocationsString = locationString;
+            } else {
+                otherLocationsCount++;
+                otherLocationsString += ' | ' + locationString;
+            }
+        });
+    };
  
     var obj = {
         firstLocationString: firstLocationString,
@@ -65,24 +69,8 @@ function createLocationStrings(locations){
     return obj;
 };
 
-var updateHeight = function() {
-    Ember.run.scheduleOnce('afterRender', this, function() {
-        if(parent.resizeIframe){
-            parent.resizeIframe();
-        }
-    });
-};
 
 var globalThis = this;
-
-Ember.View.reopen({
-    willInsertElement: function() {
-        Ember.run.debounce(globalThis, updateHeight, 100);
-    },
-    willDestroyElement: function() {
-        Ember.run.debounce(globalThis, updateHeight, 100);
-    }
-});
 
 App.DirectReportsView = Ember.View.extend({
     templateName: 'directReports',
@@ -95,10 +83,6 @@ App.JobSearchView = Ember.View.extend({
         $('body').tooltip({
             selector: '[data-toggle=tooltip]'
         });
-
-        if (parent && parent.toggleFooter) {
-            parent.toggleFooter();
-        }
     },
     keyPress: function(e) {
         if (e.keyCode === 13 && $('#search').attr('disabled') != 'disabled') {
@@ -107,66 +91,114 @@ App.JobSearchView = Ember.View.extend({
     }
 });
 
-App.SalesforceTwitterComponent = Ember.Component.extend({
-    layoutName: 'components/twitter',
-    didInsertElement: function() {
-        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-        Ember.run.later(this, updateHeight, 1000);
-    }
-});
+
 
 App.JobSearchController = Ember.ObjectController.extend({
     init: function() {
         this._super();
-        // var hasSearchTerm = window.location.href.indexOf('searchTerm') != -1;
-        // var hasNearValue = window.location.href.indexOf('nearValue') != -1;
-        // if(hasSearchTerm || hasNearValue){
-        //     Ember.run.later(this, function() {
-        //         if (!this.get('isDestroyed') && !this.get('isDestroying')) { //For unit test
-        //             this.setProperties({
-        //                 searchResults : [],
-        //                 currentSearchTerm : this.get('searchTerm'),
-        //                 currentLocation : this.get('selectedLocation'),
-        //                 currentCategory : this.get('selectedJobFamily'),
-        //                 currentNearValue : this.get('nearValue'),
-        //                 currentRadius : this.get('selectedRadius'),
-        //                 currentUnit : this.get('selectedUnit'),
-        //                 currentOffSet : 0
-        //             });
+        
+        if(isSF1 && /Android/i.test(navigator.userAgent)) {
+            var params = window.location.href.split('to_jobSearch')[1] + '&';
 
-        //             this.search();
-        //         }
-        //     }, 1000);
-        // };
+            var searchTerm = params.match(/searchTerm=([^&]*)/);
+            var selectedLocation = params.match(/selectedLocation=([^&]*)/);
+            var selectedJobFamily = params.match(/selectedJobFamily=([^&]*)/);
+            var nearValue = params.match(/nearValue=([^&]*)/);
+            var selectedRadius = params.match(/selectedRadius=([^&]*)/);
+            var selectedUnit = params.match(/selectedUnit=([^&]*)/);
+            var currentOffSet = params.match(/currentOffSet=([^&]*)/);
+
+
+            if (searchTerm != (null && 'null')) {
+                this.set('searchTerm', searchTerm[1].replace('+', ' ')); 
+                this.set('currentSearchTerm', this.get('searchTerm'));
+            } else {
+                this.set('searchTerm', '');
+                this.set('currentSearchTerm', this.get('searchTerm'));
+            }
+
+            if (selectedLocation != (null && 'null')) {
+                var thisSelectedLocation = selectedLocation[1];
+                if(thisSelectedLocation.indexOf('+') != -1){
+                    this.set('selectedLocation', thisSelectedLocation.replace('+', ' '));
+                } else if (thisSelectedLocation.indexOf('%2F') != -1) {
+                    this.set('selectedLocation', thisSelectedLocation.replace('%2F', '/'));
+                } else {
+                    this.set('selectedLocation', thisSelectedLocation);
+                }
+                this.set('currentLocation', this.get('selectedLocation'));
+            } else {
+                this.set('selectedLocation', labels.allLocations);
+                this.set('currentLocation', this.get('selectedLocation'));
+            }
+
+            if (selectedJobFamily != (null && 'null')) {
+                this.set('selectedJobFamily', selectedJobFamily[1].replace('+', ' ')); 
+                this.set('currentCategory', this.get('selectedJobFamily'));
+            } else {
+                this.set('selectedJobFamily', labels.allCategories); 
+                this.set('currentCategory', this.get('selectedJobFamily'));
+            }
+
+            if (nearValue != (null && 'null')) {
+                var near = nearValue[1];
+                if (near == (null || 'null')) {
+                    this.set('nearValue', '');
+                } else {
+                    this.set('nearValue', near.replace('+', ''));
+                };
+                this.set('currentNearValue', this.get('nearValue'));
+            } else {
+                this.set('nearValue', '');
+                this.set('currentNearValue', this.get('nearValue'));
+            }
+
+            if (selectedRadius != (null && 'null')) {
+                var radius = selectedRadius[1];
+                if (radius == (null || 'null' || '')) {
+                    this.set('selectedRadius', '50'); 
+                } else {
+                    this.set('selectedRadius', radius); 
+                }
+                this.set('currentRadius', this.get('selectedRadius'));
+            } else {
+                this.set('selectedRadius', '50');
+                this.set('currentRadius', this.get('selectedRadius'));
+            }
+
+            if (selectedUnit != (null && 'null')) {
+                var unit = selectedUnit[1];
+                if (unit == (null || 'null' || 'undefined')) {
+                    this.set('selectedUnit', 'mi'); 
+                } else {
+                    this.set('selectedUnit', unit); 
+                }
+                this.set('currentUnit', this.get('selectedUnit'));
+            } else {
+                this.set('selectedUnit', 'mi');
+                this.set('currentUnit', this.get('selectedUnit'));
+            }
+
+            this.set('currentOffSet', 0); 
+            
+            Ember.run.later(this, function() {
+                this.search('searchButton');
+            }, 0);  
+
+        } else if (isSF1 && window.location.href.indexOf('searchTerm') !== -1 && /iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            window.location.hash = window.location.href.match(/searchTerm=(.*)&?/)[1];
+        }
 
         if (window.location.hash) {
-            var hash = window.location.hash.split('#')[1];
-
-            // this.set('searchTerm', !Ember.isEmpty(hash.split('&')[0].slice(11)) ? hash.split('&')[0].slice(11) : '');
-            // this.set('selectedLocation', !Ember.isEmpty(hash.split('&')[1].slice(17)) ? hash.split('&')[1].slice(17) : '');
-            // this.set('selectedJobFamily', !Ember.isEmpty(hash.split('&')[2].slice(18)) ? hash.split('&')[2].slice(18) : '');
-            // this.set('nearValue', !Ember.isEmpty(hash.split('&')[3].slice(10)) ? hash.split('&')[3].slice(10) : '');
-            // this.set('selectedRadius', !Ember.isEmpty(hash.split('&')[4].slice(15)) ? hash.split('&')[4].slice(15) : '');
-            // this.set('selectedUnit', !Ember.isEmpty(hash.split('&')[5].slice(13)) ? hash.split('&')[5].slice(13) : '');
-            // this.set('currentOffSet', !Ember.isEmpty(hash.split('&')[6].slice(14)) ? hash.split('&')[6].slice(14) : '');
+            var hash = decodeURIComponent(window.location.hash.slice(1)).replace(/\+/g, ' ');
 
             this.set('searchTerm', hash.split('&')[0].slice(11) != ('null' || 'undefined') ? hash.split('&')[0].slice(11) : '');
-            this.set('selectedLocation', hash.split('&')[1].slice(17) != ('null' || 'undefined') ? hash.split('&')[1].slice(17) : 'All Locations');
-            this.set('selectedJobFamily', hash.split('&')[2].slice(18) != ('null' || 'undefined') ? hash.split('&')[2].slice(18) : 'All Categories');
+            this.set('selectedLocation', hash.split('&')[1].slice(17) != ('null' || 'undefined') ? hash.split('&')[1].slice(17) : labels.allLocations);
+            this.set('selectedJobFamily', hash.split('&')[2].slice(18) != ('null' || 'undefined') ? hash.split('&')[2].slice(18) : labels.allCategories);
             this.set('nearValue', hash.split('&')[3].slice(10) != ('null' || 'undefined') ? hash.split('&')[3].slice(10) : '');
-            this.set('selectedRadius', hash.split('&')[4].slice(15) != ('null' || 'undefined') ? hash.split('&')[4].slice(15) : '5');
+            this.set('selectedRadius', hash.split('&')[4].slice(15) != ('null' || 'undefined') ? hash.split('&')[4].slice(15) : '50');
             this.set('selectedUnit', hash.split('&')[5].slice(13) != ('null' || 'undefined') ? hash.split('&')[5].slice(13) : 'mi');
             this.set('currentOffSet', hash.split('&')[6].slice(14) != ('null' || 'undefined') ? hash.split('&')[6].slice(14) : 0);
-
-            console.log('$$$$$$$$$$$$$$$$$$$')
-            console.log(this.get('searchTerm'));
-            console.log(this.get('selectedLocation'));
-            console.log(this.get('selectedJobFamily'));
-            console.log(this.get('nearValue'));
-            console.log(this.get('selectedRadius'));
-            console.log(this.get('selectedUnit'));
-            console.log(this.get('currentOffSet'));
-            console.log('$$$$$$$$$$$$$$$$$$$') 
 
             Ember.run.later(this, function() {
                 this.setProperties({
@@ -176,7 +208,6 @@ App.JobSearchController = Ember.ObjectController.extend({
                     currentNearValue : this.get('nearValue'),
                     currentRadius : this.get('selectedRadius'),
                     currentUnit : this.get('selectedUnit'),
-                    //currentOffSet : parseInt(this.get('currentOffSet'))
                     currentOffSet : 0
 
                 });
@@ -188,7 +219,7 @@ App.JobSearchController = Ember.ObjectController.extend({
     currentOffSet : 0,
     offsetStep : 10,
     selectedJobFamily: null,
-    selectedRadius: null,
+    selectedRadius: '50',
     selectedUnit: null,
     searchDisabled : false,
     showWarning: false,
@@ -205,7 +236,7 @@ App.JobSearchController = Ember.ObjectController.extend({
         Ember.run.debounce(this, this.disableSearchOnNearCallback, 100);
     }.observes('selectedLocation', 'nearValue'),
     disableSearchOnNearCallback : function(){
-        if(this.get('selectedLocation') == 'Near...' && Ember.isEmpty(this.get('nearValue'))){
+        if(this.get('selectedLocation') == labels.near && Ember.isEmpty(this.get('nearValue'))){
             this.set('searchDisabled', true);
         } else {
             this.set('searchDisabled', false);
@@ -218,7 +249,6 @@ App.JobSearchController = Ember.ObjectController.extend({
         if(Ember.isEmpty(this.get('queryJobPostings'))){
             return false;
         }
-
         return (!this.get('showEmptyState') && this.get('queryJobPostings') > this.get('offsetStep'))
     }.property('queryJobPostings', 'showEmptyState'),
     numberOfJobs: function() {
@@ -226,11 +256,10 @@ App.JobSearchController = Ember.ObjectController.extend({
 
         return !Ember.isEmpty(searchResults) ? searchResults.length : 0;
     }.property('searchResults'),
-    isAllLocations: Ember.computed.equal('selectedLocation', 'All Locations'),
-    isNear: Ember.computed.equal('selectedLocation', 'Near...'),
-    isNearMe: Ember.computed.equal('selectedLocation', 'Near Me'),
-    isRemote: Ember.computed.equal('selectedLocation', 'Remote/Telecommute'),
-    messageRecepient: '',
+    isAllLocations: Ember.computed.equal('selectedLocation', labels.allLocations),
+    isNear: Ember.computed.equal('selectedLocation', labels.near),
+    isNearMe: Ember.computed.equal('selectedLocation', labels.nearMe),
+    isRemote: Ember.computed.equal('selectedLocation', labels.remoteTelecommute),
     actions: {
         loadMore : function(){
             this.set('currentOffSet', this.get('currentOffSet') + this.get('offsetStep'));
@@ -248,7 +277,48 @@ App.JobSearchController = Ember.ObjectController.extend({
                 currentUnit : this.get('selectedUnit'),
                 currentOffSet : 0
             });
-            this.search('searchButton');
+
+            // Setting the Hash to Save Search State
+            window.location.hash = '';
+            var myHash = '';
+            if (!(Ember.isEmpty(this.get('searchTerm')) 
+                    && Ember.isEmpty(this.get('selectedLocation')) 
+                        && Ember.isEmpty(this.get('selectedJobFamily')))){
+
+                myHash = 'searchTerm=' + this.get('searchTerm') +'&' +
+                          'selectedLocation=' + this.get('selectedLocation') +'&' +
+                          'selectedJobFamily=' + this.get('selectedJobFamily') +'&' +
+                          'nearValue=' + this.get('nearValue') +'&' +
+                          'selectedRadius=' + this.get('selectedRadius') +'&' +
+                          'selectedUnit=' + this.get('selectedUnit') +'&' +
+                          'currentOffSet=' + 0;
+            };
+            if (isSF1) {
+                if(/Android/i.test(navigator.userAgent)) {
+                    var searchTerm = this.get('searchTerm');
+                    var selectedLocation = this.get('selectedLocation');
+                    var selectedJobFamily = this.get('selectedJobFamily');
+                    var nearValue = this.get('nearValue');
+                    var selectedRadius = this.get('selectedRadius');
+                    var selectedUnit = this.get('selectedUnit');
+                    var currentOffSet = 0;
+
+                    var url = encodeURIComponent('/apex/' + namespace + 'to_jobSearch?searchTerm=' + searchTerm + 
+                                                                        '&selectedLocation=' + selectedLocation + 
+                                                                        '&selectedJobFamily=' + selectedJobFamily + 
+                                                                        '&nearValue=' + nearValue + 
+                                                                        '&selectedRadius=' + selectedRadius + 
+                                                                        '&selectedUnit=' + selectedUnit + 
+                                                                        '&currentOffSet=' + currentOffSet);
+
+                    sforce.one.navigateToURL(url);
+                } else {
+                    sforce.one.navigateToURL('/apex/' + namespace + 'to_jobSearch?searchTerm=' + encodeURIComponent(myHash));
+                }
+            } else {
+                window.location.hash = myHash;
+                this.search('searchButton');
+            }
         },
     },
     findLocation: function(callback, searchTerm){
@@ -264,17 +334,7 @@ App.JobSearchController = Ember.ObjectController.extend({
         self.set('showWarning', false);
 
         var searchObj = self.getProperties('currentSearchTerm', 'currentLocation', 'currentCategory', 
-                                            'currentNearValue', 'currentRadius', 'currentUnit', 'currentOffSet');
-
-        console.log('@@@@@@@@@')
-        console.log(searchObj.currentSearchTerm)
-        console.log(searchObj.currentLocation)
-        console.log(searchObj.currentCategory)
-        console.log(searchObj.currentNearValue)
-        console.log(searchObj.currentRadius)
-        console.log(searchObj.currentUnit)
-        console.log(searchObj.currentOffSet)
-        console.log('@@@@@@@@@')
+                                           'currentNearValue', 'currentRadius', 'currentUnit', 'currentOffSet');
 
         var callback = function(res, evt) {
             // Clear results after new results come back only seach is caled from search button
@@ -291,17 +351,13 @@ App.JobSearchController = Ember.ObjectController.extend({
                 processJobPostings(jobPostings, self.get('jobPostingFieldsToDisplay'));
                 //we will return up to 11 job postings to determine if we need to load more or not. So we only want the first 10.
                 if (jobPostings) {
-                    console.log('###########################');
-                    console.log(searchResults.concat(jobPostings));
-                    console.log('###########################');
-                    
                     self.set('searchResults', searchResults.concat(jobPostings.slice(0, 10)));
                     self.set('queryJobPostings', jobPostings.length);  //used to determine if we need to display loadmore
                 };
             }
         };
 
-        if (searchObj.currentLocation === 'Near Me') {
+        if (searchObj.currentLocation === labels.nearMe) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function(position) {
                     searchObj.latitude = position.coords.latitude;
@@ -310,14 +366,14 @@ App.JobSearchController = Ember.ObjectController.extend({
                     cont.searchJobs(JSON.stringify(searchObj), callback);
                 }, function(err){
                     self.set('isSearching', false);
-                    self.set('selectedLocation', 'Near...');
+                    self.set('selectedLocation', labels.near);
                     self.set('showWarning', true);
-                    self.get('locations').removeObject('Near Me');
+                    self.get('locations').removeObject(labels.nearMe);
                 });
             } else {
                 x.innerHTML = "Geolocation is not supported by this browser.";
             }
-        } else if (searchObj.currentLocation === 'Near...') {
+        } else if (searchObj.currentLocation === labels.near) {
             var googleCallback = function(results) {
                 if(results.status == 'ZERO_RESULTS'){
                     self.set('isSearching', false);
@@ -343,163 +399,53 @@ App.JobSearchController = Ember.ObjectController.extend({
 
 App.JobPostingController = Ember.ObjectController.extend({
     needs: ['jobSearch'],
-    messageRecepientPostsBinding: 'controllers.jobSearch.messageRecepient',
-    messageContentBinding: 'controllers.jobSearch.messageContent',
     othersText : function(){
         return this.get('locations').length == 2 ? 'other' : 'others'
     }.property(''),
-    // showDirectReports: function(){
-    //     return 'display: none;';
-    // }.property(),
-    // showHide: function(){
-    //     return 'Show';
-    // }.property(),
-
-
-    // ********************************************************************
-    // OLD WAY OF LINKING USERS TO ID
-    // hiringManagerId: function(){
-    //     return '/' + this.get('Hiring_Manager_ID__c');
-    // }.property(),
-
-    // recruiterId: function(){
-    //     return '/' + this.get('Recruiter_ID__c');
-    // }.property(),  
-    // reportManagerId: function(){
-    //     return '/' + this.get('recruiter.ManagedUsers.records.Id');
-    // }.property(),    
-    // ********************************************************************
-
-    disableSaveButton: function(){
-        return this.get('disableSave') ? true : false
-    }.property('disableSave'),
-    sendPrivateMessage: function(recepientId){
-        var jobPosting = this.get('content');
-        var messageContent = this.get('messageContent');
-        var addedContent = 'Job Posting:' + '\n' + jobPosting.Name;
-        var url = window.location.origin + '/apex/to_jobListing?id=' + jobPosting.Id;
-        var message = messageContent + '\n\n' + addedContent + '\n' + url;
-
-        cont.sendMessage(message, recepientId, function(results, responseObj){
-        });
-    },
-
-    showDirectReports : false,
-    showReportContent : function(){
-        return this.get('showDirectReports') ? 'Hide direct reports' : 'Show direct reports';
-    }.property('showDirectReports'),
-
-
+    
     jobPostingUrl: function() {
-        return window.location.origin + '/apex/to_jobPostingView?id=' + this.get('Id');
+        return window.location.origin + '/apex/' + namespace + 'to_jobPostingView?id=' + this.get('Id');
     }.property('Id'),
 
     actions: {
-        directReportsToggle: function(id){
-            this.set('showDirectReports', !this.get('showDirectReports'));
-            $('#' + id).slideToggle( "fast", function(){});
-        },
         jobPostingDrillIn: function() {
-            window.location.hash = '';
-            var searchObj = this.get('parentController').getProperties('currentSearchTerm', 'currentLocation', 'currentCategory', 
-                                            'currentNearValue', 'currentRadius', 'currentUnit', 'currentOffSet');
+            var showEdit = userCanEdit == 'true' ? '&preview=true' : '';
 
-            // var searchParamsArray = [searchObj.currentSearchTerm, searchObj.currentLocation, searchObj.currentCategory,
-            //                         searchObj.currentNearValue, searchObj.currentRadius, searchObj.currentUnit, searchObj.currentOffSet];
-
-            // var searchObjJson = JSON.stringify(searchObj);
-            // console.log('%%%%%%%%%%')
-            // console.log(searchObjJson);
-            // console.log('%%%%%%%%%%')
-            if (!(Ember.isEmpty(searchObj.currentSearchTerm) 
-                    && Ember.isEmpty(searchObj.currentLocation) 
-                        && Ember.isEmpty(searchObj.currentCategory))){
-
-                window.location.hash = window.location.hash + 'searchTerm=' + searchObj.currentSearchTerm +'&' +
-                                                          'selectedLocation=' + searchObj.currentLocation +'&' +
-                                                          'selectedJobFamily=' + searchObj.currentCategory +'&' +
-                                                          'nearValue=' + searchObj.currentNearValue +'&' +
-                                                          'selectedRadius=' + searchObj.currentRadius +'&' +
-                                                          'selectedUnit=' + searchObj.currentUnit +'&' +
-                                                          'currentOffSet=' + searchObj.currentOffSet;
+            if (isSF1) {
+                sforce.one.navigateToURL('/apex/' + namespace + 'to_jobPostingView?id=' + this.get('Id') + showEdit);
+            } else {
+                window.parent.location.href = this.get('jobPostingUrl') + showEdit;
             };
-
-            console.log('%%%%%%%%%%')
-            console.log(window.location.hash);
-            console.log('%%%%%%%%%%')
-
-
-            // searchParamsArray.forEach(function(searchParam){
-            //     if (!Ember.isEmpty(searchParam)) {
-            //         window.location.hash = window.location.hash + '/' + searchParam;
-            //     };
-            // });
-
-            window.parent.location.href = this.get('jobPostingUrl');
-            
-            // reload the page on jobTitle click and then drill in to that job posting
-            // location.reload();
         },
-        clickSendMessage: function(recepientId, recepientName){
-            var self = this;
-            self.set('messageContent', '');
-            $('#privateMessageModal').modal({
-                show: true,
-            });
-            // window.parent.scrollTo(0,0);
-
-            self.get('parentController').set('messageRecepient', recepientName);
-            // $('.form__group > .mar--sm--tn').text('Send a private message to ' + recepientName + ' about this job posting.');
-            $('#modalSend').click(function() {
-                $('#modalSend').unbind('click');
-                self.sendPrivateMessage(recepientId);
-            });
-        },
-        // showDirectReportsAction: function(){
-        //     if (this.get('showDirectReports') == 'display: none;') {
-        //         this.set('showDirectReports', 'display: block;');
-        //         this.set('showHide', 'Hide');
-        //     } else {
-        //         this.set('showDirectReports', 'display: none;');
-        //         this.set('showHide', 'Show');
-        //     }
-        // },
     }
 });
 
 // Routes
 App.JobSearchRoute = Ember.Route.extend( {
     model: function(params) {
-        console.log('//////////////////////////////////////');
-        console.log('JOB SERCH MAP: ', parsedJobSearchMap);
-        console.log('//////////////////////////////////////');
-
         // Categories
         var categories = Ember.A();
         if (!Ember.isEmpty(parsedJobSearchMap.categories)) {
             categories.addObjects(parsedJobSearchMap.categories.getEach('value'));
         }
         categories = categories.sort();
-        categories.unshift('All Categories');
+        categories.unshift(labels.allCategories);
 
         // Locations
-        var locations = ['All Locations', 'Near...', 'Near Me'];
+        var locations = [labels.allLocations, labels.near, labels.nearMe];
         if (parsedJobSearchMap.hasRemote) {
-            locations.push('Remote/Telecommute');
+            locations.push(labels.remoteTelecommute);
         }
 
         // Search Results
         var searchResults = [];
         
-        var hasSearchTerm = window.location.href.indexOf('searchTerm') != -1;
-        var hasNearValue = window.location.href.indexOf('nearValue') != -1;
-
-        if(!hasSearchTerm && !hasNearValue){
-            searchResults = processJobPostings(parsedJobSearchMap.recentPosts, parsedJobSearchMap.jobPostingFieldsToDisplay)
+        if (!window.location.hash) {
+            searchResults = processJobPostings(parsedJobSearchMap.recentPosts, parsedJobSearchMap.jobPostingFieldsToDisplay);
         }
 
         return {
-            searchResults : searchResults,
+            searchResults: searchResults,
             radiusOptions: ['5', '10', '25', '50'],
             radiusUnits: ['mi', 'km'],
             locations: locations,
@@ -507,10 +453,10 @@ App.JobSearchRoute = Ember.Route.extend( {
             jobPostingFieldsToDisplay: parsedJobSearchMap.jobPostingFieldsToDisplay,
             apiKey: parsedJobSearchMap.apiKey,
             jobPostings: parsedJobSearchMap.jobPostings,
-            searchTerm : Ember.isEmpty(searchTerm) ? null : searchTerm,
-            selectedLocation : Ember.isEmpty(nearValue) ? null : 'Near...',
-            nearValue : Ember.isEmpty(nearValue) ? null : nearValue,
-            isSearching : !Ember.isEmpty(searchTerm) || !Ember.isEmpty(nearValue),
+            searchTerm: Ember.isEmpty(searchTerm) ? null : searchTerm,
+            selectedLocation: Ember.isEmpty(nearValue) ? null : labels.near,
+            nearValue: Ember.isEmpty(nearValue) ? null : nearValue,
+            isSearching: !Ember.isEmpty(searchTerm) || !Ember.isEmpty(nearValue),
         };
     }
 });
@@ -526,17 +472,7 @@ App.Router.reopen( {
     location: 'none'
 });
 
-// $(document).ready(function() {
-//     console.log('HERE')
-//     console.log(window.location.hash);
-//     console.log('HERE')
-
-
-//     if (window.location.hash) {
-//         console.log('TRUE')
-//     } else {
-//         console.log('FALSE')
-//     };
-// });
-
+Ember.ControllerMixin.reopen({
+   labels: labels,
+});
 

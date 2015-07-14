@@ -1,22 +1,96 @@
 <div class="scope-container">
-    <div class="content content--readable pad--sm--n pad--md--m">
-        <div class="panel js-profile-panel mar--sm--tn no-radius-on-small">
-            <div class="load-block hide">
-                <div class="load-block-icon juicon juicon-loading">
-                </div>
-            </div>
-            <div class="panel__top">
-                <h2 class="panel__heading">
-                    Skills
-                </h2>
-            </div>
-            <div class="panel__body pad--sm--bn">
-                <div class="form__group">
-                    <label class="sr-only">Add skills</label>
-                        {{select-2 value=selectedSkills data-qa-input="select2"}}
-                    <ul class="select2-results"> </ul>
-                </div>
-            </div>
+    <nav class="nav-bar--sf1 mar--sm--bn">
+        {{#if editMode}}
+            <button {{action "clickSave"}} class="button button--primary float--right mar--sm--only--rs mar--md--lxs js-editing js-ok-button" style="display: block;" data-qa-button="ok">OK</button>
+
+            <button {{action "clickCancel"}} class="float--right-left button button--secondary mar--sm--only--ls js-editing js-cancel-button" style="display: block;" data-qa-button="cancel">Cancel</button>
+            <h1 class="nav-bar--sf1__title page__heading" data-qa-label="skills"><span class="js-skill-count" data-qa-label="number">{{numberOfSkills}}</span> {{skillsText}}</h1>
+            <hr class="show-brkpoint--md mar--sm--bn">
+
+        {{else}}
+
+            {{#if noSkills}}
+                {{!-- <section id="skill-collection" class="mar--sm--tm"></section>
+                <div class="text-faded text-center pad--sm--l bg-2 js-empty-state" style="">
+                    <small>
+                        No skills have been added yet. <a href="" class="js-edit-button">Add a Skill</a></small>
+                        No skills have been added yet. <a {{action "clickEdit"}} href="" class="js-edit-button">Add a Skill</a></small>
+                </div> --}}
+            {{else}}
+                <button {{action "clickEdit"}} class="float--right button button--secondary mar--sm--only--ls js-edit-button" data-qa-button="edit"><div class="juicon juicon-pencil"></div></button>
+
+                <h1 class="nav-bar--sf1__title page__heading" data-qa-label="skills"><span class="js-skill-count" data-qa-label="number">{{numberOfSkills}}</span> {{skillsText}}</h1>
+                <hr class="show-brkpoint--md mar--sm--bn">
+            {{/if}}
+
+        {{/if}}
+    </nav>
+
+    <section id="skill-chooser">
+        <div class="js-skill-results-container form__group relative">
+
+            {{#if editMode}}
+
+                {{#add-skills}}
+                    {{input type="text" id="skill-input" placeholder="Add skills" value=searchParam class="js-editing mar--sm--tm" data-qa-input="input"}}
+                {{/add-skills}}
+
+                {{#if showSearchBox}}
+                    <ul id="skill-results" class="list-group list-group--bordered mar--sm--n absolute bg-1" style="display: block;" data-qa-pane="searchBox">
+                        {{#if skillNameDoesNotExist}}
+                            <li class="list-group__item js-skill">
+                                <a class="link" {{action "selectSkill" currentName}} data-qa-link="add">
+                                    Add "<span class="js-skill-name js-create-skill">{{currentName}}</span>"
+                                </a>
+                            </li>
+                        {{/if}}
+
+                        {{#each foundSkill in foundSkills}}
+                            <li class="list-group__item js-skill">
+                                <a class="link" {{action "selectSkill" foundSkill.Name foundSkill.Id}} data-qa-link="skillName">
+                                    <span class="js-skill-name">{{foundSkill.Name}}</span>
+                                </a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{/if}}
+
+                <section id="skill-collection" class="mar--sm--tm">
+                    {{#each selectedSkills}}
+                        <div class="label label--secondary mar--sm--rxs mar--sm--bxs">{{name}}
+                            <span {{action "deleteSkill" id}} class="mar--sm--lxs inline-block juicon juicon-x text-faded pointer js-remove-skill js-editing" style="display: inline-block;" data-qa-pill="skillName">
+                            </span>
+                        </div>
+                    {{/each}}
+                </section>
+
+                {{!-- {{#if noSkills}}
+                    <section id="skill-collection" class="mar--sm--tm"></section>
+                    <div class="text-faded text-center pad--sm--l bg-2 js-empty-state" style="">
+                        <small>
+                            No skills have been added yet. <a {{action "clickEdit"}} href="" class="js-edit-button">Add a Skill</a></small>
+                    </div>
+                {{/if}} --}}
+
+            {{else}}
+                {{#if noSkills}}
+                    <section id="skill-collection" class="mar--sm--tm"></section>
+                    <div class="text-faded text-center pad--sm--l bg-2 js-empty-state" style="">
+                        <small data-qa-pane="emptyState">
+                            {{!-- No skills have been added yet. <a href="" class="js-edit-button">Add a Skill</a></small> --}}
+                            No skills have been added yet. <a {{action "clickEdit"}} href="" class="js-edit-button" data-qa-link="addSkill">Add a Skill</a>
+                        </small>
+                    </div>
+                {{else}}
+                    <section id="skill-collection" class="mar--sm--tm"></section>
+                    {{#each selectedSkills}}
+                        <div class="label label--secondary mar--sm--rxs mar--sm--bxs" data-qa-pill="skillName">{{name}}
+                        </div>
+                    {{/each}}
+                {{/if}}
+
+            {{/if}}
+        
         </div>
-    </div>
+    </section>
 </div>
