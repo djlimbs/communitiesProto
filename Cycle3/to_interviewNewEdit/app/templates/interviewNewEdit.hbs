@@ -1,0 +1,116 @@
+<div class="scope-container">
+    <div class="content pad--sm--m">
+        <nav class="nav-bar--sf1 mar--sm--bn">
+            <button type="button" {{bind-attr class=":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this"}} {{action "clickSave"}}>Save</button>
+            <button type="button" class="button button--secondary js-save-button float--right-left mar--sm--only--rs mar--md--lxs" {{action "clickCancel"}}>Cancel</button>
+            <a href="#" class="block pad--sm--s float--right" data-toggle="modal" data-target="#gettingStartedModal">Help <span class="juicon juicon-question-circle"></span></a>
+            <h2 class="nav-bar--sf1__title page__heading has-subheading has-subtitle">{{#if isEdit}}Edit{{else}}New{{/if}} Interview</h2>
+            <h3 class="nav-bar--sf1__subtitle page__subheading">{{applicant.Job_Posting__r.Job_Title__c}}</h3>
+            <hr class="show-brkpoint--md"/>
+        </nav>
+        <section>
+            <div class="row">
+                <div class="column--md--3">
+                    <h3>Participants</h3>
+                    <!--item search input-->
+                    <div {{bind-attr class=":form__group mar--sm--bn isSearching:load-this"}}>
+                        <label class="sr-only">Add participant</label>
+                        <div class="input__wrap has-icon--right">
+                    		<div class="input__icon juicon juicon-search"></div>
+                            {{input type="text" class="bg-1" disabled=isAtMaxParticipants placeholder="Add participants" value=userSearchTerm}}
+                        </div>
+                        <small class="input-error-content">Error.</small>
+                    </div>
+                    <!--item search results-->
+                    {{#if searchResults}}
+                        <ul class="list-group list-group--bordered mar--sm--bn mar--sm--tn" style="max-height: 300px; overflow: scroll;">
+                            {{#each searchResult in searchResults}}
+                                <li class="list-group__item item">
+                                    <a {{action "clickSearchResult" searchResult}}>
+                                        <span>{{searchResult.Name}}</span>
+                                        <small class="block text-faded dots">{{searchResult.Title}}</small>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                    <ul class="list-group list-group--bordered mar--sm--ts" id="chosenParticipants">
+                        <li class="list-group__item list-group__item--multi has-icon--right js-participant-item">
+                            <div class="input__icon juicon juicon-user-star"></div>
+                            <a>
+                                <span class="block dots">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</span>
+                                <small class="block text-faded">Applicant</small>
+                            </a>
+                        </li>
+                        {{#if participants}}
+                            {{#each participant in participants}}
+                                <li class="list-group__item list-group__item--multi has-icon--right js-participant-item">
+                                    <div class="input__icon juicon juicon-x" {{action "clickRemoveParticipant" participant}}></div>
+                                    <a>
+                                        <span class="block dots">{{participant.Name}}</span>
+                                        <small class="block text-faded dots">{{participant.Title}}</small>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        {{else}}
+                            <div class="js-empty-state">
+                            	<small class="block pad--sm--m text-faded text-center">No participants exist</small>   
+                            </div>
+                        {{/if}}
+                    </ul>
+                    <!--topics multiselect-->
+                    <h3>Topics</h3>
+                    <div class="form__group">
+                    	{{select-2 value=interview.topics}}
+                    </div>
+                    <h3>Where</h3>
+                    <div class="form__group" style="">
+                        <div class="button-group width--full" style="">
+                            <div class="button button--secondary button--dropdown width--full text-left" data-toggle="dropdown">{{selectedLocation.namespace_Location_Name__c}}<span class="caret float--right mar--sm--txs"></span></div>
+                            <ul class="dropdown-menu" style="">
+                                {{#each location in availableLocations itemController="location"}}
+                                    {{#unless location.isSelected}}
+                                        <li class="dropdown-menu__list-item" {{action "clickSelectLocation" location}}><a href="#">{{location.namespace_Location_Name__c}}</a></li>
+                                    {{/unless}}
+                                {{/each}}
+                                <hr class="mar--sm--n">
+                                {{#each customLocation in customLocations itemController="location"}}
+                                    {{#unless customLocation.isSelected}}
+                                        <li class="dropdown-menu__list-item" {{action "clickSelectCustomLocation" customLocation.namespace_Location_Name__c}}><a href="#">{{customLocation.namespace_Location_Name__c}}</a></li>
+                                    {{/unless}}
+                                {{/each}}
+                                <li class="dropdown-menu__list-item" {{action "clickSelectGoogleMaps"}}><a data-target="#googleModal" data-toggle="modal" href="#">Place from google maps</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <h3>Logistical Details</h3>
+                    <div class="form__group">
+                        {{textarea value=interview.namespace_Logistical_Details__c maxlength="1000"}}
+                        <small class="block mar--sm--ts">
+                            <a class="block" data-target="#contactModal" data-toggle="modal" href="#">
+                                <div class="part__left pad--sm--rxs">
+                                    <div class="juicon juicon-user-star"></div>
+                                </div>
+                                <div class="part__body">
+                                    View {{applicant.First_Name__c}} {{applicant.Last_Name__c}}'s contact info
+                                </div>
+                            </a>
+                        </small>
+                    </div>
+                </div>
+                <div class="column--md--9">
+                	{{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle 
+                    isOauthedIntoOutlook=isOauthedIntoOutlook timeSlots=timeSlots 
+                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars participants=participants participantsDidChange=participantsDidChange isEdit=isEdit calendarEl=calendarEl}}
+                </div>
+            </div>
+        </section>
+    </div>
+    {{partial "oauthIntoGoogleModal"}}
+    {{partial "updateInvitationModal"}}
+    {{partial "gettingStartedModal"}}
+    {{partial "googleMapsModal"}}
+    {{partial "sendICSModal"}}
+    {{partial "sendEmailToApplicant"}}
+    {{partial "contactModal"}}
+</div>

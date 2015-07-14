@@ -1,0 +1,175 @@
+<style>
+    #section-container {
+        -webkit-transition: all 250ms ease;
+        -moz-transition: all 250ms ease;
+        -ms-transition: all 250ms ease;
+        -o-transition: all 250ms ease;
+        transition: all 250ms ease;
+        overflow: hidden;
+    }
+    .status {
+        display: inline-block;
+        padding: 1px 4px;
+        border-radius: 5px;
+        font-size: 12px;
+        background-color: #ccc;
+        color: #fff;
+        letter-spacing: 0.25px;
+        vertical-align: 2px;
+        margin-left: 5px;
+    }
+    .status.proposed {
+        background-color: #f3ae4e;
+    }
+    .status.accepted {
+        background-color: #4ab471;
+    }
+    .status.declined {
+        background-color: #cf5c60;
+    }
+</style>
+
+<div class="scope-container">
+    <header class="content pad--md--ts">
+        <div class="content__section show-brkpoint--md">
+            {{#if companyLogoUrl}}
+                <img src="{{unbound companyLogoUrl}}"class="mar--sm--bxl theme-logo" />
+            {{/if}}
+        </div>
+    </header>
+    <section class="content content--small pad--sm--m">
+        {{#if isAccepted}}
+            {{#unless validationError}}
+                <div class="alert alert--success pad--sm--m mar--sm--bl start-hidden" id="alert-thank-you">
+                    <span class="part__left--fixed"><span class="juicon juicon-info-circle"></span></span><span class="part__body"><strong>Thank you!</strong> You'll receive the interview details via email shortly.</span>
+                </div>
+            {{/unless}}
+        {{/if}}
+
+        {{#if isCanceled}}
+        <div class="alert alert--info pad--sm--m mar--sm--bl start-hidden" id="alert-response">
+            <span class="part__left--fixed"><span class="juicon juicon-info-circle"></span></span><span class="part__body">This interview has been canceled.</span>
+        </div>
+        {{/if}}
+        
+        {{#if isDeclined}}
+        <div class="alert alert--info pad--sm--m mar--sm--bl start-hidden" id="alert-response">
+            <span class="part__left--fixed"><span class="juicon juicon-info-circle"></span></span><span class="part__body">Your response has been captured. Please contact your recruiter for further assistance.</span>
+        </div>
+        {{/if}}
+        
+        <h2 class="mar--sm--bn">
+            Schedule your interview.
+        </h2>
+        <hr />
+        <div class="row">
+            <section class="column--md--6" id="name">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Name</h3>
+                    <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                        <li class="mar--sm--bxs">
+                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                <h5 class="mar--sm--bn">{{applicant.Name}}</h5>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            <section class="column--md--6" id="job-title">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Job Title</h3>
+                    <h5>{{applicant.Job_Posting__r.Job_Title__c}}</h5>
+                </div>
+            </section>
+        </div>
+        <div class="row">
+            <section class="column--md--6" id="interviewers">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>Interviewers</h3>
+                    <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                        {{#each interviewer in interviewers}}
+                            <li class="mar--sm--bxs">
+                                <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                    <h5 class="mar--sm--bn">{{interviewer.Name}}</h5>
+                                </div>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </div>
+            </section>
+            <section class="column--md--6" id="location">
+                <div class="panel__body pad--sm--n">
+                    <h3>Where</h3>
+                    <small>{{interview.namespace_Location_Name__c}}<br />
+                    {{interview.namespace_Street_Address__c}}<br />
+                    {{interview.namespace_City__c}}, {{interview.namespace_State_Province__c}} {{interview.namespace_Zip_Postal_Code__c}}<br />
+                    <a target="_blank" {{bind-attr href="gmapLink"}}><span class="juicon juicon-location"></span> View Map</a></small>
+                </div>
+            </section>
+        </div>
+        <hr />
+        <div id="section-container">
+            <section id="select-section">
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+                    <h3>
+                        Time and Date
+                        {{#if isAccepted}}
+                            <span class="status accepted" id="accepted-status"> Accepted</span>
+                        {{/if}}
+                        {{#if isDeclined}}
+                            <span class="status declined">Declined</span>
+                        {{/if}}
+                    </h3>
+                    {{#each timeSlot in timeSlots itemController="timeSlot"}}
+                        <p>
+                            {{#if isProposed}}
+                                {{radio-button name="timeSlotSelector" selection=../applicantChoice value=timeSlot.Id data-qa-input="radio" }}
+                            {{/if}}
+                            <span {{bind-attr class=":selection-string isDeclined:text-strike"}}>{{timeSlot.date}} | {{timeSlot.startTime}}-{{timeSlot.endTime}} {{timeSlot.timeZone}}</span>
+                        </p>
+                    {{/each}}
+                    
+                    {{#if isProposed}}
+                        <p>
+                            {{radio-button name="timeSlotSelector" selection=applicantChoice value="-1" data-qa-input="radio" }}
+                            <span class="selection-string">Sorry, none of these work</span>
+                        </p>
+                    {{/if}}
+                    
+                    {{#if validationError}}
+                        <div class="alert alert--error pad--sm--m mar--sm--bl start-hidden" id="alert-no-comment">
+                            <span class="part__left--fixed">
+                                <span class="juicon juicon-exclamation-circle"></span>
+                            </span>
+                            <span class="part__body">
+                                Sorry, your response could not be sent. Please comment on why you have declined and try again.
+                            </span>
+                        </div>
+                    {{/if}}
+                    {{#unless isDeclined}}
+                        <label for="comments">Your Comments{{#if commentRequired}}<span class="text-error start-hidden" id="comment-asterisk">*</span>{{/if}}</label>
+                        {{textarea componentId=componentId data-qa-input='comments' value=comments}}
+                        
+                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
+                            {{#if isAccepted}}
+                                Decline this date and time
+                            {{else}}
+                                Submit
+                            {{/if}}
+                        </button>
+                    {{/unless}}
+                </div>
+            </section>
+        </div>
+    </section>
+    <footer class="mar--sm--bxl content">
+        {{#if companyLogoUrl}}
+            <img src="{{unbound companyLogoUrl}}" class="mar--sm--bxl theme-logo" />
+        {{/if}}
+        <ul class="inline-list text-left pad--sm--tm fss">
+            <li class="inline-list__item">&copy; 2015</li>
+            <li class="inline-list__item"><a href="#">Privacy</a></li>
+            <li class="inline-list__item"><a href="#">Terms</a></li>
+        </ul>
+    </footer>
+</div>

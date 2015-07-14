@@ -1,0 +1,23 @@
+<div aria-hidden="false" aria-labelledby="sendEmailToApplicantModalLabel" class="modal fade in" id="sendEmailToApplicantModal" role="dialog" tabindex="-1">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--bn">
+                <button class="close" data-dismiss="modal" type="button" {{action "clickCancelModal"}}>
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading">
+                    Notify applicant to choose time?
+                </h2>
+            </div>
+            <div class="panel__body pad--sm--xl">
+                <p>
+                    Since interview(s) and time slots have been selected, TalentObjects can send an email to the applicant prompting them to choose the time slot that works best.
+                </p>
+            </div>
+            <div class="modal__footer pad--sm--tn">
+                <button class="button button--primary js-justSave" data-dismiss="modal" type="button">Save, Don't Send Yet</button>
+                <button class="button button--primary js-confirmSendEmail" data-dismiss="modal" type="button">Save and Send</button>
+            </div>
+        </div>
+    </div>
+</div>

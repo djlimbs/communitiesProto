@@ -2,9 +2,15 @@
     <div class="load-full-icon"></div>
 </div>
 
+      <div class="test" style="width:300px; height: 100px; color:white; background-color:red;" onClick="sforce.one.navigateToSObject('a0Ij0000002OKTQ');">
+          <span> Click Me </span>
+      </div>
+
 <div class="pad--md--bm content pad--md--tm pad--md--bn pad--sm--only--n pad--sm--tm">
     <div data-qa-label='error' {{bind-attr class=":alert :alert--error :mar--sm--bm showAlert::hide"}}>
-        <button type="button" class="close" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">{{labels.close}}</span></button>
+        <button type="button" class="close" data-dismiss="alert">
+            <span class="alert-close-x"></span>
+            <span class="sr-only">{{labels.close}}</span>
         </button>
         {{#each errorMsg}}
             {{.}} <br/>
@@ -12,115 +18,19 @@
     </div>
 
     <nav id="formBuildNav" class="nav-bar--sf1 mar--sm--bn">
-        <button data-qa-button="filter" {{action "saveModalState"}} class="float--right button button--secondary mar--sm--only--rs filterButton" data-toggle="modal" data-target="#myModal"><span class="show-brkpoint--md">{{labels.filter}}</span> <span class="juicon juicon-funnel"></span></button>
-        <button data-qa-button="sort" {{action "saveModalState"}} class="float--right-left button button--secondary mar--sm--ls mar--md--rs sortButton" data-toggle="modal" data-target="#sortModal"><span class="show-brkpoint--md">{{labels.sort}}</span> <span class="juicon juicon-flip"></span></button>
+        <button data-qa-button="filter" {{action "saveModalState"}} class="float--right button button--secondary mar--sm--only--rs filterButton" data-toggle="modal" data-target="#myModal">
+            <span class="show-brkpoint--md">{{labels.filter}}</span> 
+            <span class="juicon juicon-funnel"></span>
+        </button>
+        <button data-qa-button="sort" {{action "saveModalState"}} class="float--right-left button button--secondary mar--sm--ls mar--md--rs sortButton" data-toggle="modal" data-target="#sortModal">
+            <span class="show-brkpoint--md">{{labels.sort}}</span> 
+            <span class="juicon juicon-flip"></span>
+        </button>
 
         <h1 data-qa-label="title" class="nav-bar--sf1__title has-subtitle has-subheading page__heading">{{labels.applicants}}</h1>
         <h2 data-qa-label="jobTitle" class="nav-bar--sf1__subtitle page__subheading">{{jobTitle}}</h2>
     </nav>
-    <!-- Sort Modal -->
-    <div class="modal fade" data-backdrop="static" id="sortModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top">
-                    <button data-qa-button="close" {{action "restoreModalState"}} type="button" class="close" data-dismiss="modal">
-                        <span class="close-modal-x"></span><span class="sr-only">{{labels.close}}</span>
-                    </button>
-                    <h2 data-qa-label="sortApplicants" class="modal__heading" id="sortModalLabel">{{labels.sortApplicants}}</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="form__group">
-                        <label data-qa-label="sortBy" for="filterStage">{{labels.sortBy}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" data-qa-select="sort" content=sortOptions value=selectedSort optionLabelPath="content.label" optionValuePath="content.value"}}
-                        </div>
-                        <small class="input-error-content">You need stuff in this thing</small>
-                    </div>
-                </div>
-                <div class="modal__footer">
-                    <button data-qa-button="cancel" {{action "restoreModalState"}} type="button" class="button button--secondary" data-dismiss="modal">{{labels.cancel}}</button>
-                    <button data-qa-button="ok" {{action "filterApps"}} type="button" class="button button--primary filterOK" data-dismiss="modal">{{labels.ok}}</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Filter Modal -->
-    <div class="modal fade" data-backdrop="static" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top">
-                    <button data-qa-button="close" {{action "restoreModalState"}} type="button" class="close" data-dismiss="modal">
-                        <span class="close-modal-x"></span><span class="sr-only">{{labels.close}}</span>
-                    </button>
-                    <h2 data-qa-label="filterApplicants" class="modal__heading" id="myModalLabel">{{labels.filterApplicants}}</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="form__group">
-                        <label data-qa-label="stage" for="filterStage">{{labels.stageFilter}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" data-qa-select="stage" content=stages value=selectedStage optionLabelPath="content.label" optionValuePath="content.value"}}
-                        </div>
-                        <small class="input-error-content">You need stuff in this thing</small>
-                    </div>
-                    <div class="form__group">
-                        <label data-qa-label="status" for="filterStatus">{{labels.statusFilter}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" data-qa-select="status" content=status value=selectedStatus optionLabelPath="content.label" optionValuePath="content.value"}}
-                        </div>
-                        <small class="input-error-content">You need stuff in this thing</small>
-                    </div>
-                    <div class="form__group">
-                        <label data-qa-label="source" for="filterStatus">{{labels.sourceFilter}}Source</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" data-qa-select="source" content=source value=selectedSource optionLabelPath="content.label" optionValuePath="content.value"}}
-                        </div>
-                        <small class="input-error-content">You need stuff in this thing</small>
-                    </div>
-                    <ul class="form__group list-style-type-none">
-                        <li class="form__group mar--sm--tm">
-                            <label><span class="part__left--fixed pad--sm--rn">{{input type="checkbox" data-qa-checkbox="showRejected" checked=showRejected}}</span><span data-qa-label="showRejected" class="part__body">{{labels.showRejected}}</span></label>
-                        </li>
-                        <li class="form__group mar--sm--tm">
-                            <label><span class="part__left--fixed pad--sm--rn">{{input type="checkbox" data-qa-checkbox="showWithdrew" checked=showWithdrawn}}</span><span data-qa-label="showWithdrew" class="part__body">{{labels.showWithdrew}}</span></label>
-                        </li>
-                    </ul>
-                </div>
-                <div class="modal__footer">
-                    <button {{action "restoreModalState"}} data-qa-button="cancel" type="button" class="button button--secondary" data-dismiss="modal">{{labels.cancel}}</button>
-                    <button {{action "filterApps"}} data-qa-button="ok" type="button" class="button button--primary filterOK" data-dismiss="modal">{{labels.ok}}</button>
-                </div>
-            </div>
-        </div>
-    </div> 
-
-
-    <!-- Applicant Modal -->
-    <div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top pad--sm--m">
-                    <button data-qa-button="close" type="button" class="close" data-dismiss="modal">
-                        <span class="close-modal-x"></span><span class="sr-only">{{labels.close}}</span>
-                    </button>
-                    <h3 data-qa-label="applications" class="modal__heading" id="myModalLabel">{{labels.otherApplications}}</h3>
-                    <h4 data-qa-label="name" class="mar--sm--n"><span class="text-faded ">{{modalApplicantName}}</span></h4>
-                </div>
-                <div class="modal__body pad--sm--n">
-                    {{#each modalAppsToDisplay itemController="app"}}
-                        {{view "modalApplicant"}}
-                    {{/each}}
-                </div>
-                <div class="modal__footer pad--sm--m">
-                    <button type="button" class="button button--secondary" data-dismiss="modal">{{labels.close}}</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <hr class="show-brkpoint--md mar--sm--bn"/>
     <p data-qa-label="emptyState" {{bind-attr class=":text-faded :text-center :ad--md--xl showEmptyState::hide"}}>
@@ -128,10 +38,255 @@
     </p>
     
     <div class="row mar--sm--only--n mar--sm--tm">
+        <div id="ember342" class="ember-view column--md--4 applicant card-height"><!--Candidate-->
+            <div class="card pointer mar--sm--only--n" data-bindattr-343="343">
+                <div class="row mar--sm--n">
+                    <div class="column--sm--9 column--md--12 pad--sm--n">
+                        <div class="card__body pad--sm--bs">
+                            <div class="float--left avatar-container--md">
+                                <img src="/resource/1430255907000/defaultUserPhoto" data-bindattr-344="344" alt="">
+                            </div>
+                            <div class="card__top">
+                                <h4 data-qa-label="name" class="card__heading dots">Stanley DEV3</h4>
+                                <h5 data-qa-label="status" class="card__subheading dots">Status: Application (In Progress)
+                                    
+                                </h5>
+                            </div>
+                        </div>
+                        <div class="content">
+                            <div class="form__group mar--sm--bn">
+                                <small class="block dots" data-qa-label="source"><label>Source:</label> Internal</small>
+                            </div>
+                            <div class="form__group mar--sm--bn">
+                                <small class="block dots" data-qa-label="employment"><label>Employment:</label> asdasdas</small>
+                            </div>
+                            <div class="row mar--sm--ts mar--sm--bs">
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots" data-qa-label="noResume">
+                                        <label>
+                                            
+                                                <span class="juicon">
+                                                    <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="13px" height="16px" viewBox="0 0 13 16" style="enable-background:new 0 0 13 16;" xml:space="preserve">
+                                                    <style type="text/css">
+                                                    
+                                                        .st0{fill:#8d9aa5;}
+                                                    
+                                                    </style>
+                                                    <path class="st0" d="M5.372,11.937c0.065,0.111,0.075,0.246,0.026,0.366c-0.049,0.118-0.152,0.208-0.276,0.239
+                                                        c-1.415,0.364-2.709,0.765-3.252,2.013c-0.102,0.231-0.09,0.498,0.032,0.721c0.122,0.222,0.342,0.376,0.592,0.413
+                                                        C3.801,15.891,5.138,16,6.5,16s2.699-0.109,4.005-0.312c0.252-0.037,0.47-0.191,0.592-0.413s0.136-0.489,0.033-0.721
+                                                        c-0.544-1.25-1.84-1.651-3.258-2.014c-0.124-0.032-0.226-0.119-0.276-0.236c-0.049-0.118-0.042-0.253,0.022-0.363
+                                                        c0.564-0.985,0.927-2.033,0.927-2.487C8.545,8.099,7.856,7,6.5,7C5.145,7,4.454,8.099,4.454,9.454
+                                                        C4.454,10.099,4.812,10.999,5.372,11.937z"></path>
+                                                    <path class="st0" d="M4.65,5.987L4.762,6C5.125,5.829,5.972,5.435,6.5,5.171C7.029,5.435,7.874,5.829,8.237,6L8.35,5.987L8.396,5.88
+                                                        C8.359,5.47,8.267,4.528,8.185,3.917c0.428-0.453,1.037-1.196,1.295-1.513L9.498,2.29L9.415,2.211
+                                                        C9.036,2.124,8.149,1.923,7.556,1.821C7.276,1.25,6.801,0.412,6.597,0.057L6.5,0L6.403,0.057C6.2,0.412,5.725,1.25,5.444,1.821
+                                                        c-0.594,0.103-1.48,0.303-1.86,0.391L3.502,2.29l0.021,0.114C3.78,2.721,4.39,3.464,4.814,3.917C4.732,4.528,4.642,5.47,4.604,5.88
+                                                        L4.65,5.987z"></path>
+                                                    </svg>
+                                                </span>
+                                                <a data-ember-action="371" data-qa-link="talentProfile" href="#"> Talent Profile</a>
+                                            
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label data-qa-label="noProfile">
+                                            <span class="juicon juicon-linkedin"></span>
+                                            
+                                                <a data-qa-link="linkedIn" href="https://www.linkedin.com/pub/dir/?first=Stanley&amp;last=DEV3" data-bindattr-373="373" target="_blank"> Search</a>
+                                            
+                                                
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label data-qa-label="noAddress">
+                                            <span class="juicon juicon-location"></span>
+                                            
+                                                No Address
+                                            
+                                            
+                                            
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label>
+                                            <span class="juicon juicon-calendar"></span>
+                                            <span data-qa-label="createdDate" data-toggle="tooltip" title="Created on 07/01/2015" data-bindattr-355="355">Jul 1</span>
+                                        <a data-qa-link="otherApps" data-ember-action="357" data-bindattr-358="358" data-toggle="tooltip" data-target="#applicantModal"></a>
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots" data-qa-label="noResume">
+                                        <label>
+                                            
+                                                <span class="juicon">
+                                                    <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="13px" height="16px" viewBox="0 0 13 16" style="enable-background:new 0 0 13 16;" xml:space="preserve">
+                                                    <style type="text/css">
+                                                    
+                                                        .st0{fill:#8d9aa5;}
+                                                    
+                                                    </style>
+                                                    <path class="st0" d="M5.372,11.937c0.065,0.111,0.075,0.246,0.026,0.366c-0.049,0.118-0.152,0.208-0.276,0.239
+                                                        c-1.415,0.364-2.709,0.765-3.252,2.013c-0.102,0.231-0.09,0.498,0.032,0.721c0.122,0.222,0.342,0.376,0.592,0.413
+                                                        C3.801,15.891,5.138,16,6.5,16s2.699-0.109,4.005-0.312c0.252-0.037,0.47-0.191,0.592-0.413s0.136-0.489,0.033-0.721
+                                                        c-0.544-1.25-1.84-1.651-3.258-2.014c-0.124-0.032-0.226-0.119-0.276-0.236c-0.049-0.118-0.042-0.253,0.022-0.363
+                                                        c0.564-0.985,0.927-2.033,0.927-2.487C8.545,8.099,7.856,7,6.5,7C5.145,7,4.454,8.099,4.454,9.454
+                                                        C4.454,10.099,4.812,10.999,5.372,11.937z"></path>
+                                                    <path class="st0" d="M4.65,5.987L4.762,6C5.125,5.829,5.972,5.435,6.5,5.171C7.029,5.435,7.874,5.829,8.237,6L8.35,5.987L8.396,5.88
+                                                        C8.359,5.47,8.267,4.528,8.185,3.917c0.428-0.453,1.037-1.196,1.295-1.513L9.498,2.29L9.415,2.211
+                                                        C9.036,2.124,8.149,1.923,7.556,1.821C7.276,1.25,6.801,0.412,6.597,0.057L6.5,0L6.403,0.057C6.2,0.412,5.725,1.25,5.444,1.821
+                                                        c-0.594,0.103-1.48,0.303-1.86,0.391L3.502,2.29l0.021,0.114C3.78,2.721,4.39,3.464,4.814,3.917C4.732,4.528,4.642,5.47,4.604,5.88
+                                                        L4.65,5.987z"></path>
+                                                    </svg>
+                                                </span>
+                                                <a data-ember-action="371" data-qa-link="talentProfile" href="#"> Talent Profile</a>
+                                            
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label data-qa-label="noProfile">
+                                            <span class="juicon juicon-linkedin"></span>
+                                            
+                                                <a data-qa-link="linkedIn" href="https://www.linkedin.com/pub/dir/?first=Stanley&amp;last=DEV3" data-bindattr-373="373" target="_blank"> Search</a>
+                                            
+                                                
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label data-qa-label="noAddress">
+                                            <span class="juicon juicon-location"></span>
+                                            
+                                                No Address
+                                            
+                                            
+                                            
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label>
+                                            <span class="juicon juicon-calendar"></span>
+                                            <span data-qa-label="createdDate" data-toggle="tooltip" title="Created on 07/01/2015" data-bindattr-355="355">Jul 1</span>
+                                        <a data-qa-link="otherApps" data-ember-action="357" data-bindattr-358="358" data-toggle="tooltip" data-target="#applicantModal"></a>
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots" data-qa-label="noResume">
+                                        <label>
+                                            
+                                                <span class="juicon">
+                                                    <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="13px" height="16px" viewBox="0 0 13 16" style="enable-background:new 0 0 13 16;" xml:space="preserve">
+                                                    <style type="text/css">
+                                                    
+                                                        .st0{fill:#8d9aa5;}
+                                                    
+                                                    </style>
+                                                    <path class="st0" d="M5.372,11.937c0.065,0.111,0.075,0.246,0.026,0.366c-0.049,0.118-0.152,0.208-0.276,0.239
+                                                        c-1.415,0.364-2.709,0.765-3.252,2.013c-0.102,0.231-0.09,0.498,0.032,0.721c0.122,0.222,0.342,0.376,0.592,0.413
+                                                        C3.801,15.891,5.138,16,6.5,16s2.699-0.109,4.005-0.312c0.252-0.037,0.47-0.191,0.592-0.413s0.136-0.489,0.033-0.721
+                                                        c-0.544-1.25-1.84-1.651-3.258-2.014c-0.124-0.032-0.226-0.119-0.276-0.236c-0.049-0.118-0.042-0.253,0.022-0.363
+                                                        c0.564-0.985,0.927-2.033,0.927-2.487C8.545,8.099,7.856,7,6.5,7C5.145,7,4.454,8.099,4.454,9.454
+                                                        C4.454,10.099,4.812,10.999,5.372,11.937z"></path>
+                                                    <path class="st0" d="M4.65,5.987L4.762,6C5.125,5.829,5.972,5.435,6.5,5.171C7.029,5.435,7.874,5.829,8.237,6L8.35,5.987L8.396,5.88
+                                                        C8.359,5.47,8.267,4.528,8.185,3.917c0.428-0.453,1.037-1.196,1.295-1.513L9.498,2.29L9.415,2.211
+                                                        C9.036,2.124,8.149,1.923,7.556,1.821C7.276,1.25,6.801,0.412,6.597,0.057L6.5,0L6.403,0.057C6.2,0.412,5.725,1.25,5.444,1.821
+                                                        c-0.594,0.103-1.48,0.303-1.86,0.391L3.502,2.29l0.021,0.114C3.78,2.721,4.39,3.464,4.814,3.917C4.732,4.528,4.642,5.47,4.604,5.88
+                                                        L4.65,5.987z"></path>
+                                                    </svg>
+                                                </span>
+                                                <a data-ember-action="371" data-qa-link="talentProfile" href="#"> Talent Profile</a>
+                                            
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label data-qa-label="noProfile">
+                                            <span class="juicon juicon-linkedin"></span>
+                                            
+                                                <a data-qa-link="linkedIn" href="https://www.linkedin.com/pub/dir/?first=Stanley&amp;last=DEV3" data-bindattr-373="373" target="_blank"> Search</a>
+                                            
+                                                
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label data-qa-label="noAddress">
+                                            <span class="juicon juicon-location"></span>
+                                            
+                                                No Address
+                                            
+                                            
+                                            
+                                        </label>
+                                    </small>
+                                </div>
+                                <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                    <small class="block dots">
+                                        <label>
+                                            <span class="juicon juicon-calendar"></span>
+                                            <span data-qa-label="createdDate" data-toggle="tooltip" title="Created on 07/01/2015" data-bindattr-355="355">Jul 1</span>
+                                        <a data-qa-link="otherApps" data-ember-action="357" data-bindattr-358="358" data-toggle="tooltip" data-target="#applicantModal"></a>
+                                        </label>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column--sm--3 column--md--12 pad--sm--n">
+                        <hr class="mar--sm--bn mar--sm--ts hr-alt dashed show-brkpoint--md">
+                        <small class="card__bottom pad-sm--only-ln pad--sm--only--rm pad--sm--ts pad--sm--bs block">
+                            <div class="row text-faded table mar--sm--n text-center width--full">
+                                <span class="table-cell block-on-small pad--sm--n block text-center-right mar--sm--only--ts" data-bindattr-360="360">
+                                    <span data-qa-tooltip="chatterPosts" data-toggle="tooltip" title="Chatter posts (indicates activity)" data-bindattr-361="361">
+                                        <span data-qa-label="chatterPosts" class="juicon juicon-chat"></span> 0
+                                    </span>
+                                </span>
+                                <span class="table-cell block-on-small pad--sm--n block text-center-right mar--sm--only--ts" data-bindattr-363="363">
+                                    <span data-qa-tooltip="positive" data-toggle="tooltip" title="Positive Feedback" data-bindattr-364="364">
+                                        <span data-qa-label="positive" class="juicon juicon-like"></span> 0
+                                    </span>
+                                </span>
+                                <span class="table-cell block-on-small pad--sm--n block text-center-right mar--sm--only--ts" data-bindattr-366="366">
+                                    <span data-qa-tooltip="negative" data-toggle="tooltip" title="Negative Feedback" data-bindattr-367="367">
+                                        <span data-qa-label="negative" class="juicon juicon-dislike"></span> 0
+                                    </span>
+                                </span>
+                                
+                                    <span class="table-cell block-on-small pad--sm--n block text-center-right mar--sm--only--ts" data-bindattr-378="378">
+                                        <span data-qa-tooltip="inconclusive" data-toggle="tooltip" title="Neutral" data-bindattr-379="379">
+                                            <span data-qa-label="inconclusive" class="juicon juicon-question-circle"></span> 0
+                                        </span>
+                                    </span>
+                                
+                            </div>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    {{!--<div class="row mar--sm--only--n mar--sm--tm">
         {{#each apps itemController="app"}}
             {{view "applicant"}}
         {{/each}}
-    </div>
+    </div>--}}
     <div {{bind-attr class=":pad--sm--only--m hideLoadMore:hide"}}>
         <button {{action loadMore}} data-qa-button="loadMore" type="button" class="button button--secondary width--full--sm--only">{{labels.loadMore}}</button>
     </div>
