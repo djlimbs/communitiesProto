@@ -84,85 +84,6 @@ function convertGooglePlaceToLocation(place) {
     return locationObj;
 }
 
-function initializeGoogleMapsAutocomplete(self) {
-    var interview = self.get('interview');
-
-    var defaultLocationCoords = {
-        lat: -33.8688, 
-        lng: 151.2195
-    };
-
-    if (!Ember.isNone(interview.namespace_Geographical_Location__c)) {
-        defaultLocationCoords = {
-            lat: interview.namespace_Geographical_Location__c.latitude,
-            lng: interview.namespace_Geographical_Location__c.longitude
-        };
-    }
-
-    var disablePOIStyles =[
-        {
-            featureType: "poi",
-            elementType: "labels",
-            stylers: [
-                  { visibility: "off" }
-            ]
-        }
-    ];
-
-    var mapOptions = {
-        center: defaultLocationCoords,
-        zoom: 13,
-        styles: disablePOIStyles
-    };
-    var map = new google.maps.Map(document.getElementById('map-canvas'),
-        mapOptions);
-
-    var input = /** @type {HTMLInputElement} */(
-            document.getElementById('pac-input'));
-
-    var autocomplete = new google.maps.places.Autocomplete(input);
-    autocomplete.bindTo('bounds', map);
-
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
-
-    var infowindow = new google.maps.InfoWindow();
-    var marker = new google.maps.Marker({
-        map: map
-    });
-    google.maps.event.addListener(marker, 'click', function() {
-        infowindow.open(map, marker);
-    });
-
-    google.maps.event.addListener(autocomplete, 'place_changed', function() {
-        infowindow.close();
-        var place = autocomplete.getPlace();
-        if (!place.geometry) {
-            return;
-        }
-
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);
-        }
-
-        // Set the position of the marker using the place ID and location
-        marker.setPlace(/** @type {!google.maps.Place} */ ({
-            placeId: place.place_id,
-            location: place.geometry.location
-        }));
-        marker.setVisible(true);
-
-        infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
-                'Place ID: ' + place.place_id + '<br>' +
-                place.formatted_address);
-        infowindow.open(map, marker);
-    });
-
-    isGoogleMapsInitialized = true;
-}
-
 function initializeGoogleMaps(self) {
     var interview = self.get('interview');
     var markers = [];
@@ -173,13 +94,61 @@ function initializeGoogleMaps(self) {
     };
 
     var defaultZoom = 13;
+    var latitudeOffset = .0005;
+
+    var infowindow = new google.maps.InfoWindow({
+        disableAutoPan: true,
+        pixelOffset: { 
+            height: 0,
+            width: 0
+        }
+    });
 
     if (!Ember.isNone(interview.namespace_Geographical_Location__c)) {
+        var position = new google.maps.LatLng(interview.namespace_Geographical_Location__c.latitude,interview.namespace_Geographical_Location__c.longitude);
+        
+        var marker = new google.maps.Marker({
+            place_id: interview.namespace_Google_Place_Id__c,
+            position: position,
+            title: interview.namespace_Location_Name__c
+        });
+        
         defaultLocationCoords = {
-            lat: interview.namespace_Geographical_Location__c.latitude,
-            lng: interview.namespace_Geographical_Location__c.longitude
+            lat: position.A + latitudeOffset,
+            lng: position.F
         };
-
+        
+        infowindow.setPosition(position);
+        
+        var content = [
+            '<strong>' + interview.namespace_Location_Name__c + '</strong>',
+            '',
+            ''
+        ];
+        
+        if (interview.namespace_Street_Address__c) {
+            content[1] = interview.namespace_Street_Address__c;
+        }
+        if (interview.namespace_City__c && interview.namespace_State_Province__c) {
+            content[2] = interview.namespace_City__c + ' ' + interview.namespace_State_Province__c;
+        }
+        if (interview.namespace_Zip_Postal_Code__c) {
+            if (content[2] != '') {
+                content[2] += ', ';
+            }
+            content[2] += interview.namespace_Zip_Postal_Code__c;
+        }
+        if (interview.namespace_Country_Region__c) {
+            if (content[2] != '') {
+                content[2] += ' ';
+            }
+            content[2] += interview.namespace_Country_Region__c;
+        }
+        
+        infowindow.setContent('<div>' + content.join('<br>') + '</div>');
+        
+        markers.push(marker);
+        
         defaultZoom = 17;
     }
 
@@ -187,7 +156,7 @@ function initializeGoogleMaps(self) {
         center: defaultLocationCoords,
         zoom: defaultZoom
     });
-
+    
     var placesService = new google.maps.places.PlacesService(map);
 
     // Create the search box and link it to the UI element.
@@ -196,12 +165,10 @@ function initializeGoogleMaps(self) {
 
     var searchBox = new google.maps.places.SearchBox((input));
 
-    var infowindow = new google.maps.InfoWindow({
-        pixelOffset: { 
-            height: 0,
-            width: -25
-        }
-    });
+    for (var i = 0, marker; marker = markers[i]; i++) {
+        marker.setMap(map);
+        infowindow.open(map, marker);
+    }
 
     google.maps.event.addListener(searchBox, 'places_changed', function() {
         var places = searchBox.getPlaces();
@@ -229,7 +196,6 @@ function initializeGoogleMaps(self) {
             // Create a marker for each place.
             var marker = new google.maps.Marker({
                 map: map,
-                icon: image,
                 title: place.name,
                 position: place.geometry.location,
                 place_id: place.place_id
@@ -242,9 +208,34 @@ function initializeGoogleMaps(self) {
                     placeId: this.place_id
                 }, function(selectedPlace, status) {
                     if (status == google.maps.places.PlacesServiceStatus.OK) {
-                        infowindow.setContent('<div><strong>' + selectedPlace.name + '</strong><br>' +
-                        'Place ID: ' + selectedPlace.place_id + '<br>' +
-                        selectedPlace.formatted_address);
+                        var content = [
+                            '<strong>' + selectedPlace.name + '</strong>',
+                            '',
+                            ''
+                        ];
+                        
+                        var location = convertGooglePlaceToLocation(selectedPlace);
+                        
+                        if (location.namespace_Street_Address__c) {
+                            content[1] = location.namespace_Street_Address__c;
+                        }
+                        if (location.namespace_City__c && location.namespace_State_Province__c) {
+                            content[2] = location.namespace_City__c + ' ' + location.namespace_State_Province__c;
+                        }
+                        if (location.namespace_Zip_Postal_Code__c) {
+                            if (content[2] != '') {
+                                content[2] += ', ';
+                            }
+                            content[2] += location.namespace_Zip_Postal_Code__c;
+                        }
+                        if (location.namespace_Country_Region__c) {
+                            if (content[2] != '') {
+                                content[2] += ' ';
+                            }
+                            content[2] += location.namespace_Country_Region__c;
+                        }
+                        
+                        infowindow.setContent('<div>' + content.join('<br>') + '</div>');
                         infowindow.open(map, thisMarker);
                         self.set('selectedGooglePlace', selectedPlace);
                     }
@@ -280,19 +271,19 @@ App.Fixtures = Ember.Object.create({
 });
 
 App.FullCalendarComponent = Ember.Component.extend({
-	attributeBindings: ['isOauthedIntoGoogle', 'isOauthedIntoOutlook', 'timeSlots', 'deletedTimeSlots', 'googleCalendars', 'participants', 'participantsDidChange', 'isEdit', 'calendarEl'],
+    attributeBindings: ['isOauthedIntoGoogle', 'isOauthedIntoOutlook', 'timeSlots', 'deletedTimeSlots', 'googleCalendars', 'participants', 'participantsDidChange', 'isEdit', 'calendarEl'],
     classNames: ['relative'],
     currentParticipants: [],
     maxNumberOfTimeSlots: 5,
     nonOutlookUsers: [],
-	afterRenderEvent: function() {
-		var self = this;
+    afterRenderEvent: function() {
+        var self = this;
         var $calendar = this.$();
         var maxNumberOfTimeSlots = this.get('maxNumberOfTimeSlots');
-		var fullCalendarOptions = {
-			defaultView: 'agendaWeek',
-			editable: true,
-			timezone: 'local',
+        var fullCalendarOptions = {
+            defaultView: 'agendaWeek',
+            editable: true,
+            timezone: 'local',
             slotDuration: '00:15:00',
             allDaySlot: false,
             /*businessHours: {
@@ -345,9 +336,9 @@ App.FullCalendarComponent = Ember.Component.extend({
                     $(this).find('.fc-content').find('.juicon').remove();
                 }
             },
-			eventSources: [
+            eventSources: [
                 {
-                	// For timeslots.
+                    // For timeslots.
                     events: self.get('timeSlots')
                 }
             ],
@@ -359,12 +350,12 @@ App.FullCalendarComponent = Ember.Component.extend({
                 }
                 
             }
-		};
+        };
 
         this.set('calendarEl', $calendar);
 
-		$calendar.fullCalendar(fullCalendarOptions);
-	},
+        $calendar.fullCalendar(fullCalendarOptions);
+    },
     pullParticipantsCalendarData: function() {
         var $calendar = this.$();
         Ember.run.debounce(this, function() {
@@ -1116,6 +1107,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             if (!isGoogleMapsInitialized) {
                 initializeGoogleMaps(this);
             }
+            
             $('#googleMapsModal').modal();
 
         },
@@ -1216,6 +1208,7 @@ App.InterviewNewEditRoute = Ember.Route.extend({
 
                 // if a location is selected
                 var currentLocationName = interviewNewEditObj.interview.namespace_Location_Name__c;
+                // replacing a location
                 if (!Ember.isEmpty(currentLocationName)) {
                     var selectedLocation = interviewNewEditObj.availableLocations.findBy('namespace_Location_Name__c', currentLocationName);
 
@@ -1235,12 +1228,30 @@ App.InterviewNewEditRoute = Ember.Route.extend({
                     interviewNewEditObj.selectedLocation = selectedLocation;
 
                     interviewNewEditObj.originalLocationName = selectedLocation.namespace_Location_Name__c;
-                } else if (!Ember.isEmpty(interviewNewEditObj.interview.namespace_Location_Type__c) && interviewNewEditObj.interview.namespace_Location_Type__c !== 'In person') {
-                    interviewNewEditObj.selectedLocation = {
-                        namespace_Location_Name__c: interviewNewEditObj.interview.namespace_Location_Type__c
-                    };
-                } else {
+                }
+                // no location selected yet
+                // set selected location to match first option
+                else {
                     interviewNewEditObj.selectedLocation = interviewNewEditObj.availableLocations[0];
+                    interviewNewEditObj.interview.namespace_City__c = interviewNewEditObj.selectedLocation.namespace_City__c;
+                    interviewNewEditObj.interview.namespace_Country_Region__c = interviewNewEditObj.selectedLocation.namespace_Country_Region__c;
+                    interviewNewEditObj.interview.namespace_Geographical_Location__c = {
+                        latitude: interviewNewEditObj.selectedLocation.namespace_Geographical_Location__Latitude__s,
+                        longitude: interviewNewEditObj.selectedLocation.namespace_Geographical_Location__Longitude__s
+                    };
+                    interviewNewEditObj.interview.namespace_Location_Name__c = interviewNewEditObj.selectedLocation.namespace_Location_Name__c;
+                    interviewNewEditObj.interview.namespace_State_Province__c = interviewNewEditObj.selectedLocation.namespace_State_Province__c;
+                    interviewNewEditObj.interview.namespace_Street_Address__c = interviewNewEditObj.selectedLocation.namespace_Street_Address__c;
+                    interviewNewEditObj.interview.namespace_Zip_Posting_Code__c = interviewNewEditObj.selectedLocation.namespace_Zip_Posting_Code__c;
+                    
+                    // no 'In person' interview?
+                    if (!Ember.isEmpty(interviewNewEditObj.interview.namespace_Location_Type__c) &&
+                        interviewNewEditObj.interview.namespace_Location_Type__c !== 'In person'
+                    ) {
+                        interviewNewEditObj.selectedLocation = {
+                            namespace_Location_Name__c: interviewNewEditObj.interview.namespace_Location_Type__c
+                        };
+                    }
                 }
 
                 interviewNewEditObj.deletedTimeSlots = [];
