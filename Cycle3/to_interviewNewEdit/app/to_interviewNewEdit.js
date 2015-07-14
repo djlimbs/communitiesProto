@@ -23,8 +23,8 @@ function convertLocationObjToPicklistOption(locationObj) {
         namespace_State_Province__c: locationObj.State_Province__c,
         namespace_Street_Address__c: locationObj.Street_Address__c,
         namespace_Zip_Postal_Code__c: locationObj.Zip_Postal_Code__c,
-        namespace_Geographical_Location__Latitude__s: locationObj.Geographical_Location__c.latitude,
-        namespace_Geographical_Location__Longitude__s: locationObj.Geographical_Location__c.longitude
+        namespace_Geographical_Location__Latitude__s: locationObj.Geographical_Location__c ? locationObj.Geographical_Location__c.latitude : null,
+        namespace_Geographical_Location__Longitude__s: locationObj.Geographical_Location__c ? locationObj.Geographical_Location__c.longitude : null
     };
 }
 
@@ -705,6 +705,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                             isSearching: false
                         });
                     } else {
+                        console.log(parsedResult);
                         // UH OH
                     }
                 }
@@ -714,18 +715,33 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
         } 
     },
     saveInterview: function(saveObj) {
-        cont.saveInterview(JSON.stringify(saveObj), function(res, evt) {
-            if (res) {
-                var parsedResult = parseResult(res);
+        this.presaveInterview(saveObj, function(_saveObj) {
+                cont.saveInterview(JSON.stringify(_saveObj), function(res, evt) {
+                if (res) {
+                    var parsedResult = parseResult(res);
 
-                if (Ember.isEmpty(parsedResult.errorMessages)) {
-                    window.location.href = retUrl;
-                } else {
-                    console.log(parsedResult)
-                    // BROKE DAWG
+                    if (Ember.isEmpty(parsedResult.errorMessages)) {
+                        window.location.href = retUrl;
+                    } else {
+                        console.log(parsedResult)
+                        // BROKE DAWG
+                    }
                 }
-            }
+            });
         });
+    },
+    presaveInterview: function(saveObj, callback) {
+        if (saveObj.interview.namespace_Geographical_Location__Latitude__s != null && saveObj.interview.namespace_Geographical_Location__Longitude__s != null) {
+            $.ajax({
+                url:"https://maps.googleapis.com/maps/api/timezone/json?location=" + saveObj.interview.namespace_Geographical_Location__Latitude__s + "," + saveObj.interview.namespace_Geographical_Location__Longitude__s + "&timestamp=" + (Math.round((new Date().getTime())/1000)).toString() + "&sensor=false",
+                success: function(data) {
+                    saveObj.interview.namespace_Location_TimeZone_Offset__c = (data.dstOffset + data.rawOffset) / 3600;
+                    callback(saveObj);
+                }
+            });
+        } else {
+            callback(saveObj);
+        }
     },
     actions: {
         clickSearchResult: function(searchResult) {
@@ -844,11 +860,16 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     saveObj.interview.namespace_Location_Name__c = null;
                     saveObj.interview.namespace_City__c = null;
                     saveObj.interview.namespace_Country_Region__c = null;
+                    saveObj.interview.namespace_Geographical_Location__Latitude__s = null;
+                    saveObj.interview.namespace_Geographical_Location__Longitude__s = null;
                     saveObj.interview.namespace_Location_Name__c = null;
+                    saveObj.interview.namespace_Location_TimeZone_Offset__c = null;
                     saveObj.interview.namespace_State_Province__c = null;
                     saveObj.interview.namespace_Street_Address__c = null;
                     saveObj.interview.namespace_Zip_Postal_Code__c = null;
                     saveObj.interview.namespace_Location_Type__c = selectedLocation.namespace_Location_Name__c;
+                    
+                    delete saveObj.interview.namespace_Geographical_Location__c;
                 } else {
                     saveObj.interview.namespace_Location_Type__c = 'In person';
                     Object.keys(selectedLocation).forEach(function(key) { 

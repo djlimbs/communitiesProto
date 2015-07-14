@@ -337,8 +337,8 @@ App.MainRoute = Ember.Route.extend({
                 zipPostalCode: interview.namespace_Zip_Postal_Code__c,
                 countryRegion: interview.namespace_Country_Region__c,
                 geographicalLocation: {
-                    latitude: interview.namespace_Geographical_Location__c.latitude,
-                    longitude: interview.namespace_Geographical_Location__c.longitude
+                    latitude: interview.namespace_Geographical_Location__c ? interview.namespace_Geographical_Location__c.latitude : null,
+                    longitude: interview.namespace_Geographical_Location__c ? interview.namespace_Geographical_Location__c.longitude : null
                 },
             },
             interviewGuidelines: interview.namespace_Interview_Guidelines__c,
