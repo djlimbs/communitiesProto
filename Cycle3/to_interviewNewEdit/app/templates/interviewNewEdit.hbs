@@ -16,7 +16,7 @@
                     <div {{bind-attr class=":form__group mar--sm--bn isSearching:load-this"}}>
                         <label class="sr-only">Add participant</label>
                         <div class="input__wrap has-icon--right">
-                    		<div class="input__icon juicon juicon-search"></div>
+                            <div class="input__icon juicon juicon-search"></div>
                             {{input type="text" class="bg-1" disabled=isAtMaxParticipants placeholder="Add participants" value=userSearchTerm}}
                         </div>
                         <small class="input-error-content">Error.</small>
@@ -54,14 +54,14 @@
                             {{/each}}
                         {{else}}
                             <div class="js-empty-state">
-                            	<small class="block pad--sm--m text-faded text-center">No participants exist</small>   
+                                <small class="block pad--sm--m text-faded text-center">No participants exist</small>   
                             </div>
                         {{/if}}
                     </ul>
                     <!--topics multiselect-->
                     <h3>Topics</h3>
                     <div class="form__group">
-                    	{{select-2 value=interview.topics}}
+                        {{select-2 value=interview.topics}}
                     </div>
                     <h3>Where</h3>
                     <div class="form__group" style="">

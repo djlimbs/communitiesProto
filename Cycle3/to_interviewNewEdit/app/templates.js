@@ -109,7 +109,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Update Invitation</h2>\n            </div>\n            <div class=\"modal__body\">\n                If you wish, you can include extra details in the calendar invitations that will be highlighted as a change for the participants.\n                <div class=\"form__group\">\n                    ");
+  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Update Invitation</h2>\n            </div>\n            <div class=\"modal__body\">\n                <div class=\"mar--sm--bm\">\n                    If you wish, you can include extra details in the calendar invitations that will be highlighted as a change for the participants.\n                </div>\n                <div class=\"form__group\">\n                    ");
   hashContexts = {'value': depth0};
   hashTypes = {'value': "ID"};
   options = {hash:{
@@ -218,7 +218,7 @@ function program9(depth0,data) {
 function program11(depth0,data) {
   
   
-  data.buffer.push("\n                            <div class=\"js-empty-state\">\n                            	<small class=\"block pad--sm--m text-faded text-center\">No participants exist</small>   \n                            </div>\n                        ");
+  data.buffer.push("\n                            <div class=\"js-empty-state\">\n                                <small class=\"block pad--sm--m text-faded text-center\">No participants exist</small>   \n                            </div>\n                        ");
   }
 
 function program13(depth0,data) {
@@ -304,7 +304,7 @@ function program17(depth0,data) {
     'class': (":form__group mar--sm--bn isSearching:load-this")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">\n                        <label class=\"sr-only\">Add participant</label>\n                        <div class=\"input__wrap has-icon--right\">\n                    		<div class=\"input__icon juicon juicon-search\"></div>\n                            ");
+  data.buffer.push(">\n                        <label class=\"sr-only\">Add participant</label>\n                        <div class=\"input__wrap has-icon--right\">\n                            <div class=\"input__icon juicon juicon-search\"></div>\n                            ");
   hashContexts = {'type': depth0,'class': depth0,'disabled': depth0,'placeholder': depth0,'value': depth0};
   hashTypes = {'type': "STRING",'class': "STRING",'disabled': "ID",'placeholder': "STRING",'value': "ID"};
   options = {hash:{
@@ -333,7 +333,7 @@ function program17(depth0,data) {
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "participants", {hash:{},inverse:self.program(11, program11, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                    </ul>\n                    <!--topics multiselect-->\n                    <h3>Topics</h3>\n                    <div class=\"form__group\">\n                    	");
+  data.buffer.push("\n                    </ul>\n                    <!--topics multiselect-->\n                    <h3>Topics</h3>\n                    <div class=\"form__group\">\n                        ");
   hashContexts = {'value': depth0};
   hashTypes = {'value': "ID"};
   options = {hash:{
