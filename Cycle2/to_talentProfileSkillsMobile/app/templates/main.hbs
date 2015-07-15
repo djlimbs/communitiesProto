@@ -1,46 +1,56 @@
-<div class="scope-container">
-    <div class="content content--readable pad--sm--n pad--md--m">
-        <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
-            <div class="load-block hide">
-                <div class="load-block-icon juicon juicon-loading">
-                </div>
-            </div>
-            <div class="panel__top">
-                <button {{bind-attr class=":float--right :button :button--primary :mar--sm--only--rs isLoading:load-this"}} {{action "clickSave"}} data-qa-button="save">Save</button>
-                <h2 class="panel__heading">
-                    Skills
-                </h2>
-            </div>
-            {{#each skill in currentSkills itemController="items"}}
-                <div class="panel__component panel__component--removable">
-                    <button class="close" type="button">
-                        <span {{action "deleteSkill"}} class="component-remove-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <div class="form__group mar--sm--bn">
-                        <label class="sr-only">New skill</label>
-                        {{input type="text" class="searchThis" data-qa="input" value=skill.Name}}
-                        <small class="input-error-content">Error.</small>
-                    </div>
-                    {{#if skill.showSearchBox}}
-                        <ul class="list-group list-group--bordered searchResults mar--sm--bn">
-                            <li class="list-group__item item">
-                                <a {{action "selectSkill" skill.Name skill.Id}}>Use "<span class="itemName createItem">{{skill.Name}}</span>"</a>
-                            </li>
-                            {{#each foundSkill in skill.foundSkills}}
-                                <li class="list-group__item item">
-                                    <a {{action "selectSkill" foundSkill.Name foundSkill.Id}}><span class="itemName">{{foundSkill.Name}}</span></a>
-                                </li>
-                            {{/each}}
-                        </ul>
-                    {{/if}}
-                </div>
-            {{/each}}
+{{#if isMobile}}
 
-            <div class="panel__component">
-                <button {{action "addSkill"}} class="button button--primary button--ghost mar--sm--tm" type="button">
-                    Add skill <span class="juicon juicon-plus"></span>
-                </button>
+{{else}}
+
+    <div class="scope-container">
+        <div class="content content--readable pad--sm--n pad--md--m">
+            <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
+                <div class="load-block hide">
+                    <div class="load-block-icon juicon juicon-loading">
+                    </div>
+                </div>
+                <div class="panel__top">
+                    <button {{bind-attr class=":float--right :button :button--primary :mar--sm--only--rs isLoading:load-this"}} {{action "clickSave"}} data-qa-button="save">Save</button>
+                    <h2 class="panel__heading">
+                        Skills
+                    </h2>
+                </div>
+                
+                {{#each skill in selectedSkills itemController="items"}}
+                    <div class="panel__component panel__component--removable">
+                        <button class="close" type="button">
+                            <span {{action "deleteSkill"}} class="component-remove-x"></span><span class="sr-only">Close</span>
+                        </button>
+                        <div class="form__group mar--sm--bn">
+                            <label class="sr-only">New skill</label>
+                            {{input type="text" class="searchThis" data-qa="input" value=skill.name}}
+                            <small class="input-error-content">Error.</small>
+                        </div>
+                        {{#if skill.showSearchBox}}
+                            <ul class="list-group list-group--bordered searchResults mar--sm--bn">
+                                {{#if skill.skillNameDoesNotExist}}
+                                    <li class="list-group__item item">
+                                        <a {{action "selectSkill" skill.name}}>Use "<span class="itemName createItem">{{skill.name}}</span>"</a>
+                                    </li>
+                                {{/if}}
+
+                                {{#each foundSkill in skill.foundSkills}}
+                                    <li class="list-group__item item">
+                                        <a {{action "selectSkill" foundSkill.Name foundSkill.Id}}><span class="itemName">{{foundSkill.Name}}</span></a>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        {{/if}}
+                    </div>
+                {{/each}}
+
+                <div class="panel__component">
+                    <button {{action "addSkill"}} class="button button--primary button--ghost mar--sm--tm" type="button">
+                        Add skill <span class="juicon juicon-plus"></span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+{{/if}}

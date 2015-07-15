@@ -1,0 +1,21 @@
+<div aria-hidden="true" aria-labelledby="linkedinModalLabel" class="modal fade" id="editModal" role="dialog" tabindex="-1">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button class="close" data-dismiss="modal" type="button">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading" id="myModalLabel">Edit Interview Guidelines</h2>
+            </div>
+            <div class="modal__body">
+                {{!-- <textarea id="textareaEdit" maxlength="1000">{{unbound "interviewGuidelines"}} {{unbound "interviewGuidelinesLink"}} {{unbound "interviewGuidelinesSecondPart"}}</textarea> --}}
+
+                {{textarea id="textareaEdit" value=plainInterviewGuidelines maxlength="1000"}}
+            </div>
+            <div class="modal__footer">
+                <button class="button button--secondary js-cancel" data-dismiss="modal" type="button" id="cancelEdit">Cancel</button>
+                <button class="button button--primary js-save" data-dismiss="modal" type="button" id="saveEdit">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

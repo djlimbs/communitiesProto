@@ -1,0 +1,53 @@
+<div aria-hidden="false" aria-labelledby="contactModalLabel" class="modal fade in" id="contactModal" role="dialog" tabindex="-1">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button class="close" data-dismiss="modal" type="button">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading">
+                    Contact info
+                </h2>
+            </div>
+            <div class="modal__body">
+                <div class="row">
+                    <div class="column--md--6">
+                        <div class="form__group">
+                            <label>First Name</label>
+                            <div>
+                                {{applicant.First_Name__c}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column--md--6">
+                        <div class="form__group">
+                            <label>Last Name</label>
+                            <div>
+                                {{applicant.Last_Name__c}}
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="column--md--6">
+                        <div class="form__group">
+                            <label>Email</label>
+                            <div>
+                                {{applicant.Email__c}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column--md--6">
+                        <div class="form__group">
+                            <label>Mobile</label>
+                            <div>
+                                {{applicant.Mobile_Phone__c}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button class="button button--primary" data-dismiss="modal" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>

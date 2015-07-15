@@ -1,0 +1,458 @@
+<div class="scope-container">
+    {{view "deleteModal"}}
+    {{view "cancelModal"}}
+    {{view "editModal"}}
+
+    <div class="content content--readable pad--sm--n">
+        <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
+            <div class="panel__top">
+                <div class="js-edit-buttons">
+
+                    {{#unless interviewStatusCompleted}}
+                        {{#unless isSF1}}
+                            <button {{action "clickEdit"}} class="button button--primary float--right mar--sm--ls" type="button">
+                                <span class="juicon juicon-pencil"></span> Edit
+                            </button>
+                        {{/unless}}
+
+                        {{#if interviewStatusDraft}}
+                            <button {{action "clickDelete"}} class="button button--ghost button--error float--right" type="button">
+                                <span class="juicon juicon-trash"></span> Delete
+                            </button>
+                        {{else}}
+                            {{#unless interviewStatusCanceled}}
+                                {{!-- <button {{action "clickCancel"}} class="button button--error float--right" data-target="#discardModal" data-toggle="modal" type="button">
+                                    <span class="juicon juicon-minus-circle"></span> Cancel
+                                </button> --}}
+
+                                <button {{action "clickCancel"}} class="button button--error float--right" type="button">
+                                    <span class="juicon juicon-minus-circle"></span> Cancel<span class="show-brkpoint--md">&nbsp;Interview</span>
+                                </button>
+
+                            {{/unless}}
+                        {{/if}}
+                    {{/unless}}
+                    
+                </div>
+                <h2 class="panel__heading has-subheading">Interview</h2>
+                <h3 class="panel__subheading">{{jobInformationObj.jobPosting.title}}</h3>
+            </div>
+
+            <section id="identity">
+                <div class="panel__body">
+                    <div class="part__left--fixed pad--sm--n">
+                        <div class="img-container img-container--lg">
+                            <img {{bind-attr src="applicant.candidatePhoto"}}>
+                        </div>
+                    </div>
+                    <div class="part__body width--full pad--sm--lm pad--sm--rm">
+
+                        {{!-- take them to application reader view --}}
+                        <h5 class="mar--sm--n relatedPerson"><a href="to_talentProfileView?id={{unbound talentProfileObj.Id}}">{{applicantObj.name}}</a></h5>
+                        <h5 class="text-faded mar--sm--n">
+                            {{applicantObj.candidateTitle}}
+                        </h5>
+                    </div>
+                </div>
+            </section>
+            
+            <div class="list-heading">
+                <h4 class="list-heading__title">Interview Information</h4>
+            </div>
+            <div class="row">
+                <section class="column--md--6" id="date-time">
+                    <div class="panel__body pad--sm--bn">
+                        {{#if hasDateAndTime}}
+                            {{#if interviewStatusDraft}}
+                                <h3>Date and Time <span class="status draft">Draft</span></h3>
+                                {{#each timeSlot in timeSlotsArray}}
+                                    <div class="row mobile-narrow pad--sm--lm">
+                                        <div class="column--sm--5 pad--sm--ln pad--sm--rn line-height-fix">
+                                            <small>{{timeSlot.formatedDate}}</small>
+                                        </div>
+                                        <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
+                                            <small>{{timeSlot.formatedTime}}</small>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if interviewStatusProposed}}
+                                <h3>Date and Time <span class="status proposed">Proposed</span></h3>
+                                {{#each timeSlot in timeSlotsArray}}
+                                    <div class="row mobile-narrow pad--sm--lm">
+                                        <div class="column--sm--5 pad--sm--ln pad--sm--rn line-height-fix">
+                                            {{#if timeSlot.isPossible}}
+                                                <small>{{timeSlot.formatedDate}}</small>
+                                            {{else}}
+                                                <small><strike>{{timeSlot.formatedDate}}</strike></small>
+                                            {{/if}}
+                                        </div>
+                                        <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
+                                            {{#if timeSlot.isPossible}}
+                                                <small>{{timeSlot.formatedTime}}</small>
+                                            {{else}}
+                                                <small><strike>{{timeSlot.formatedTime}}</strike></small>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if interviewStatusAccepted}}
+                                <h3>Date and Time <span class="status accepted">Accepted</span></h3>
+                                {{#each timeSlot in timeSlotsArray}}
+                                    <div class="row mobile-narrow pad--sm--lm">
+                                        <div class="column--sm--5 pad--sm--ln pad--sm--rn line-height-fix">
+                                            {{#if timeSlot.isAccepted}}
+                                                <small class="accepted">{{timeSlot.formatedDate}}</small>
+                                            {{else}}
+                                                {{#if timeSlot.isPossible}}
+                                                    <small>{{timeSlot.formatedDate}}</small>
+                                                {{else}}
+                                                    <small><strike>{{timeSlot.formatedDate}}</strike></small>
+                                                {{/if}}
+                                            {{/if}}
+                                        </div>
+                                        <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
+                                            {{#if timeSlot.isAccepted}}
+                                                <small class="accepted">{{timeSlot.formatedTime}}</small>
+                                            {{else}}
+                                                {{#if timeSlot.isPossible}}
+                                                    <small>{{timeSlot.formatedTime}}</small>
+                                                {{else}}
+                                                    <small><strike>{{timeSlot.formatedTime}}</strike></small>
+                                                {{/if}}
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if interviewStatusDeclined}}
+                                <h3>Date and Time <span class="status declined">Declined</span></h3>
+                                {{#each timeSlot in timeSlotsArray}}
+                                    <div class="row mobile-narrow pad--sm--lm">
+                                        <div class="column--sm--5 pad--sm--ln pad--sm--rn line-height-fix">
+                                            <small><strike>{{timeSlot.formatedDate}}</strike></small>
+                                        </div>
+                                        <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
+                                            <small><strike>{{timeSlot.formatedTime}}</strike></small>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if interviewStatusCanceled}}
+                                <h3>Date and Time <span class="status declined">Canceled</span></h3>
+                                {{#each timeSlot in timeSlotsArray}}
+                                    <div class="row mobile-narrow pad--sm--lm">
+                                        <div class="column--sm--5 pad--sm--ln pad--sm--rn line-height-fix">
+                                            <small><strike>{{timeSlot.formatedDate}}</strike></small>
+                                        </div>
+                                        <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
+                                            <small><strike>{{timeSlot.formatedTime}}</strike></small>
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+
+                            {{#if interviewStatusCompleted}}
+                                <h3>Date and Time <span class="status completed">Completed</span></h3>
+                                {{#each timeSlot in timeSlotsArray}}
+                                    <div class="row mobile-narrow pad--sm--lm">
+                                        <div class="column--sm--5 pad--sm--ln pad--sm--rn line-height-fix">
+                                            {{#if timeSlot.isAccepted}}
+                                                <small class="accepted">{{timeSlot.formatedDate}}</small>
+                                            {{else}}
+                                                {{#if timeSlot.isPossible}}
+                                                    <small>{{timeSlot.formatedDate}}</small>
+                                                {{else}}
+                                                    <small><strike>{{timeSlot.formatedDate}}</strike></small>
+                                                {{/if}}
+                                            {{/if}}
+                                        </div>
+                                        <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
+                                            {{#if timeSlot.isAccepted}}
+                                                <small class="accepted">{{timeSlot.formatedTime}}</small>
+                                            {{else}}
+                                                {{#if timeSlot.isPossible}}
+                                                    <small>{{timeSlot.formatedTime}}</small>
+                                                {{else}}
+                                                    <small><strike>{{timeSlot.formatedTime}}</strike></small>
+                                                {{/if}}
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                {{/each}}
+                            {{/if}}
+
+                        {{else}}
+                            {{#if interviewStatusDraft}}
+                                <h3>Date and Time <span class="status draft">Draft</span></h3>
+                            {{/if}}
+
+                            {{#if interviewStatusProposed}}
+                                <h3>Date and Time <span class="status proposed">Proposed</span></h3>
+                            {{/if}}
+
+                            {{#if interviewStatusAccepted}}
+                                <h3>Date and Time <span class="status accepted">Accepted</span></h3>
+                            {{/if}}
+
+                            {{#if interviewStatusDeclined}}
+                                <h3>Date and Time <span class="status declined">Declined</span></h3>
+                            {{/if}}
+
+                            {{#if interviewStatusCanceled}}
+                                <h3>Date and Time <span class="status declined">Canceled</span></h3>
+                            {{/if}}
+
+                            {{#if interviewStatusCompleted}}
+                                <h3>Date and Time <span class="status completed">Completed</span></h3>
+                            {{/if}}
+                            <h5 class="text-faded">None specified</h5>
+                        {{/if}}
+
+                        {{#if interviewObj.applicantComment}}
+                            <div class="card mar--sm--tm mar--sm--bn">
+                                <div class="card__body">
+                                    <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                                        <li class="mar--sm--bs">
+                                            <div class="part__left--fixed pad--sm--n">
+                                                <div class="img-container img-container--sm">
+                                                    <img {{bind-attr src="applicant.FullPhotoUrl"}}>
+                                                </div>
+                                            </div>
+                                            <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                                <h5 class="mar--sm--bn"><a href="to_talentProfileView?id={{unbound talentProfileObj.Id}}">{{applicantObj.Name}}</a></h5>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    {{interviewObj.applicantComment}}
+                                </div>
+                            </div>
+                        {{/if}}
+
+                    </div>
+                </section>
+
+                <section class="column--md--6 line-height-fix" id="location">
+                    <div class="panel__body pad--sm--bn">
+                        <h3>Where</h3>
+                        {{!-- {{#if hasLocation}} --}}
+                            {{#if interviewObj.location.isInPerson}}
+                                <small>{{interviewObj.location.name}}<br>
+                                {{interviewObj.location.streetAddress}}<br>
+                                {{interviewObj.location.city}}, {{interviewObj.location.stateProvince}} {{interviewObj.location.zipPostalCode}}<br>
+                                
+                                {{#unless isSF1}}
+                                    <a {{action "viewMap"}} href=""><span class="juicon juicon-location"></span> View Map</a></small>
+                                {{/unless}}
+                            {{else}}
+                                <small>{{interviewObj.location.type}}</small>
+                            {{/if}}
+                        {{!-- {{else}}
+                            <h5 class="text-faded">None specified</h5>
+                        {{/if}} --}}
+                    </div>
+                </section>
+            </div>
+            <div class="row">
+                <section class="column--md--6" id="interviewers">
+                    <div class="panel__body">
+                        <h3>Interviewers</h3>
+                        {{#if hasInterviewers}}
+                            <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                                {{#each interviewer in interviewersArray}}
+                                    <li class="mar--sm--bxs">
+                                        <div class="part__left--fixed pad--sm--n">
+                                            <div class="img-container img-container--sm">
+                                                <img {{bind-attr src="interviewer.smallPhotoUrl"}}>
+                                            </div>
+                                        </div>
+                                        <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                            <h5 class="mar--sm--bn"><a href="/{{unbound interviewer.id}}">{{interviewer.name}}</a></h5>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </ul>
+                        {{else}}
+                            <h5 class="text-faded">None specified</h5>
+                        {{/if}}
+                    </div>
+                </section>
+                <section class="column--md--6" id="topics">
+                    <div class="panel__body">
+                        <h3>Topics</h3>
+                        {{#if hasTopics}}
+                            <ul class="mar--sm--n pad--sm--ll">
+                                {{#each topic in topicsArray}}
+                                    <li>{{topic}}</li>
+                                {{/each}}
+                            </ul>
+                        {{else}}
+                            <h5 class="text-faded">None specified</h5>
+                        {{/if}}
+                    </div>
+                </section>
+            </div>
+
+            <section id="key-people">
+                <div class="js-section-view">
+                    <div class="list-heading">
+                        <h4 class="list-heading__title">Key People</h4>
+                    </div>
+                    <div class="row">
+                        <div class="column--md--6">
+                            <div class="panel__body pad--sm--bn">
+                                <h3>Hiring Manager</h3>
+                                <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                                    <li class="mar--sm--bxs">
+                                        <div class="part__left--fixed pad--sm--n">
+                                            <div class="img-container img-container--sm">
+                                                <img {{bind-attr src="jobInformationObj.hiringManager.smallPhotoUrl"}}>
+                                            </div>
+                                        </div>
+                                        <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                            <h5 class="mar--sm--bn"><a href="/{{unbound jobInformationObj.hiringManager.id}}">{{jobInformationObj.hiringManager.name}}</a></h5>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="column--md--6">
+                            <div class="panel__body">
+                                <h3>Recruiter</h3>
+                                <ul class="directReports list-style-type-none mar--sm--tn no-margin-bottom">
+                                    <li class="mar--sm--bxs">
+                                        <div class="part__left--fixed pad--sm--n">
+                                            <div class="img-container img-container--sm">
+                                                <img {{bind-attr src="jobInformationObj.recruiter.smallPhotoUrl"}}>
+                                            </div>
+                                        </div>
+                                        <div class="part__body width--full pad--sm--ls pad--sm--rm">
+                                            <h5 class="mar--sm--bn"><a href="/{{unbound jobInformationObj.recruiter.id}}">{{jobInformationObj.recruiter.name}}</a></h5>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="feedback">
+                <div class="js-section-view">
+                    <div class="list-heading">
+                        <h4 class="list-heading__title">Feedback</h4>
+                    </div>
+                    <div class="panel__body pad--sm--bn pad--sm--tn">
+                        {{#each feedback in feedbackArray}}
+                            <article class="mar--sm--bm">
+                                <div class="card mar--sm--tm mar--sm--bn">
+                                    <div class="card__body">
+                                        {{#if feedback.isPositive}}
+                                            <div class="part__left--fixed">
+                                                <div class="juicon juicon-like text-success"></div>
+                                            </div>
+                                        {{else}}
+                                            {{#if feedback.isNeutral}}
+                                                <div class="part__left--fixed">
+                                                    <div class="juicon juicon-question-circle text-info"></div>
+                                                </div>
+                                            {{else}}
+                                                <div class="part__left--fixed">
+                                                    <div class="juicon juicon-dislike text-error"></div>
+                                                </div>
+                                            {{/if}}
+                                        {{/if}}
+
+                                        <div class="part__body--fixed">
+                                            <h4 class="card__heading dots mar--sm--bm">{{feedback.owner.name}}</h4>
+                                        </div>
+                                        <div class="row pad--sm--lxl">
+                                            {{#each field in feedback.fieldSet}}
+                                                {{#if field.value}}
+                                                    <div class="panel__body column--md--6 pad--sm--tn">
+                                                        <h4>{{field.label}}</h4>
+                                                        {{field.value}}
+                                                    </div>
+                                                {{/if}}
+                                            {{/each}}
+                                            {{!-- <div class="panel__body column--md--6 pad--sm--tn">
+                                                <h4>Technical Skills</h4>
+                                                Average
+                                            </div> --}}
+                                        </div>
+                                        {{#if feedback.comments}}
+                                            <div class="block">
+                                                "{{feedback.comments}}"
+                                            </div>
+                                        {{else}}
+                                            <em class="transparent">No comment provided.</em>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </article>
+                        {{/each}}
+
+                        <div class="js-component-controls">
+                            <button {{action "provideFeedback"}} class="button button--primary button--ghost width--full js-add-component mar--sm--tm mar--sm--bm" type="button">
+                                <span class="juicon juicon-chat"></span> Provide feedback
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {{!-- {{#if showOtherInformation}} --}}
+                <section id="other-info">
+                    <div class="js-section-view">
+                        <div class="list-heading">
+                            <h4 class="list-heading__title">Other Information</h4>
+                        </div>
+                        <div class="panel__body pad--sm--bn js-guidelines">
+                            {{#unless interviewStatusCompleted}}
+                                <button {{action "clickEditInterviewGuidelines"}} class="button button--primary button--ghost float--right js-edit-section mar--sm--lm" type="button">
+                                    <span class="juicon juicon-pencil"></span>
+                                </button>
+                            {{/unless}}
+
+                            <h3 class="js-header mar--sm--n">Interview Guidelines</h3>
+                            {{!-- {{#if interviewGuidelines}}
+                                <div class="js-edit-text">
+                                    {{interviewGuidelines}} 
+                                    {{#if interviewGuidelinesLink}}
+                                        <a {{action "goToInterviewGuidelinesLink"}} id="interviewGuidelinesLink" href=""> 
+                                            {{interviewGuidelinesLink}}
+                                        </a>
+                                    {{/if}}
+                                    {{interviewGuidelinesSecondPart}}
+                                </div>
+                            {{else}}
+                                <em class="transparent">Provide additional guidelines for those conducting the interview.</em>
+                            {{/if}} --}}
+                            {{#if interviewGuidelines}}
+                                <div class="js-edit-text">
+                                    {{{interviewGuidelines}}}
+                                </div>
+                            {{else}}
+                                <em class="transparent">Provide additional guidelines for those conducting the interview.</em>
+                            {{/if}}
+                        </div>
+                        <div class="panel__body pad--sm--tn js-logistics">
+                            {{!-- <button {{action "clickEditOtherInformation"}} class="button button--primary button--ghost float--right js-edit-section mar--sm--lm" type="button">
+                                <span class="juicon juicon-pencil"></span>
+                            </button> --}}
+                            {{#if interviewObj.logisticalDetails}}
+                                <h3 class="js-header mar--sm--tm">Logistical Details</h3>
+                                <div class="js-edit-text">{{interviewObj.logisticalDetails}}</div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </section>
+            {{!-- {{/if}} --}}
+        </div>
+    </div>
+</div>
