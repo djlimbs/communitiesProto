@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      '/Volumes/s3.amazonaws.com/toprototype1/Cycle2/to_interviewFeedback.pck.js': 'app/to_interviewFeedback_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle3/to_interviewFeedback.pck.js': 'app/to_interviewFeedback_compiler.js'
     },
 
     /*

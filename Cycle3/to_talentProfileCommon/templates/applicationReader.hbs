@@ -1,0 +1,213 @@
+<div id="mobileMainView" class="scope-container">
+    <div class="content content--readable pad--sm--n">
+        <button id="back-to-top" class="button button--primary" style="border-top-left-radius: 0; border-bottom-left-radius: 0; position: fixed; display: none"><span class="juicon juicon-upward"></span></button>
+        <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
+            <div class="panel__top">
+                <div class="js-edit-buttons">
+                    <button class="button button--secondary float--right mar--sm--ls" data-toggle="modal" data-target="#status-modal" type="button">
+                        Change Status
+                    </button>
+                </div>
+                <h2 class="panel__heading has-subheading">
+                    Application
+                </h2>
+                <h3 class="panel__subheading">
+                    Sr. Sales Engineer
+                </h3>
+            </div>
+            <!-- Identity section only appears in sf1 -->
+            <section id="identity" class="part">
+                <div class="panel__body pad--sm--bs">
+                    <div class="part__left--fixed avatar-container--md">
+                        <img src="https://randomuser.me/api/portraits/med/men/15.jpg" alt=""/>
+                    </div>
+                    <div class="part__body--fixed">
+                        <h4 class="card__heading dots"><a href="#">Freddie George</a></h4>
+                        <h5 class="card__subheading dots" style="display: inline-block">Status: Offer (in progress)</h5>
+                    </div>
+                </div>
+                <div class="content">
+                    <div class="form__group mar--sm--bn">
+                        <small class="block dots"><label>Source:</label> Internal</small>
+                    </div>
+                    <div class="form__group mar--sm--bn">
+                        <small class="block dots"><label>Employment:</label> Customer Service Rep, CalTech</small>
+                    </div>
+                    
+                    <div class="row mar--sm--ts mar--sm--bs">
+                        <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                            <small class="block dots"><label><span class="juicon juicon-document"></span><a href="#"> Resume (35k)</a></label></small>
+                        </div>
+                        <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                            <small class="block dots"><label><span class="juicon juicon-linkedin"></span><a href="#"> Profile</a></label></small>
+                        </div>
+                        <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                            <small class="block dots"><label><span class="juicon juicon-location"></span></label> Chicago, IL</small>
+                        </div>
+                        <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                            <small class="block dots"><label><span class="juicon juicon-calendar"></span></label> Dec 20</small>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="summary">
+                <div class="list-heading">
+                    <h4 class="list-heading__title">Summary</h4>
+                </div>
+                <div class="panel__body pad--sm--bn">
+                    <p class="mar--sm--tn">
+                        This is typically a paragraph or two that gives an overview of the person’s value as an employee. Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.
+                    </p>
+                    <p class="mar--sm--tn">
+                        Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.
+                    </p>
+                </div>
+            </section>
+            <section id="interview">
+                <div class="list-heading">
+                    <h4 class="list-heading__title">Interview</h4>
+                </div>
+                <div class="panel__body pad--sm--bn pad--sm--tn">
+                    <article class="mar--sm--bm">
+                    {{#each interviews itemController="interview"}}
+                        <div class="card mar--sm--tm">
+                            <div class="card__body">
+                                <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rm"></span>
+                                    <a href="/{{unbound Id}}">{{formattedStartDate}} <span class="text-faded">{{otherText}}</span></a>
+                                </div>
+                                <div class="row pad--sm--lxl">
+                                    <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
+                                        <h4>Interviewers</h4>
+                                        {{Interviewers__c}}
+                                    </div>
+                                    <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
+                                        <h4>Topics</h4>
+                                        {{#if Topics__c}}
+                                            {{Topics__c}}
+                                        {{else}}
+                                            <span class="text-faded">Not Provided</span>
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                    </article>
+                    <div class="js-component-controls">
+                        <button {{action "addInterview"}} type="button" class="button button--primary button--ghost width--full js-add-component mar--sm--bm">
+                            <span class="juicon juicon-plus"></span> Add
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <section id="feedback">
+                <div class="list-heading">
+                    <h4 class="list-heading__title">Feedback</h4>
+                </div>
+                <div class="panel__body pad--sm--bn pad--sm--tn">
+                    <article class="mar--sm--bm">
+                        {{#each evaluations itemController="feedback"}}
+                            <div class="card mar--sm--tm">
+                                <div {{bind-attr class=":card__body displayPanelBottom::pad--sm--bn"}}>
+                                    <div {{bind-attr class=":row displayPanelBottom:panel__top :pad--sm--n displayPanelBottom:pad--sm--txs displayPanelBottom:mar--sm--bm"}} style="height: auto">
+                                        <div class="column--md--8">
+                                            <div class="part__left--fixed" style="display: inline-block; line-height: 0;">
+                                                <div {{bind-attr class=":juicon icon iconColor"}}></div>
+                                            </div>
+                                            <div class="part__body--fixed pad--md--bm pad--sm--only--bs" style="display: inline-block; max-width:88%;">
+                                                <h4 class="card__heading dots">
+                                                    {{headerText}}
+                                                </h4>
+                                                {{#unless hasFinal}}
+                                                    {{#if Interview__r.Topics__c}}
+                                                        <div class="text-faded dots"><small>Interview with {{Interview__r.Interviewers__c}}</small></div>
+                                                    {{/if}}
+                                                {{/unless}}
+                                            </div>
+                                        </div>
+                                        <div class="column--md--4 text-right-left mar--sm--only--bm" style="line-height: 16px">
+                                            <small class="text-faded mar--sm--only--lxl pad--sm--only--lxs mar--sm--only--bm">{{CreatedBy.Name}} &bull; {{formattedDate}}</small>
+                                        </div>
+                                    </div>
+                                    {{#unless hasFinal}}
+                                        {{#if criteriaFields}}
+                                            <div class="row pad--sm--lxl">
+                                                {{#each criteriaFields}}
+                                                    <div class="panel__body column--md--6 pad--sm--tn">
+                                                        <h4>{{label}}</h4>
+                                                        {{#if value}}
+                                                            {{value}}
+                                                        {{else}}
+                                                            <span class="text-faded">Not Provided</span>
+                                                        {{/if}}
+                                                    </div>
+                                                {{/each}}
+                                            </div>
+                                        {{/if}}
+                                    {{/unless}}
+                                    <div class="block">
+                                        {{#if Comments__c}}
+                                            "{{Comments__c}}"
+                                        {{/if}}
+                                        {{#if namespace_Disposition__c}}
+                                            "{{namespace_Disposition__c}}"
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        {{/each}}
+                    </article>
+                    <div class="js-component-controls">
+                        <button {{action "provideFeedback"}} type="button" class="button button--primary button--ghost width--full js-add-component mar--sm--bm">
+                            <span  class="juicon juicon-chat"></span> Provide feedback
+                        </button>
+                    </div>
+                </div>
+            </section>
+            {{#with talentProfile}}
+                {{partial "childrenObjects"}}
+            {{/with}}
+        </div>
+    </div>
+
+    <!--CHANGE STATUS MODAL -->
+    <div aria-hidden="true" aria-labelledby="none" class="modal fade" id="status-modal" role="dialog" tabindex="-1">
+        <div class="modal__shell">
+            <div class="modal__content">
+                <div class="modal__top pad--sm--bm">
+                    <button class="close" data-dismiss="modal" type="button">
+                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                    </button>
+                    <h2 class="modal__heading" id="myModalLabel">Update Status</h2>
+                </div>
+                <div class="modal__body">
+                    <div class="mar--sm--bm">
+                        Stage
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            <select>
+                                <option value="option1">Option 1</option>
+                                <option value="option2">Option 2</option>
+                                <option value="option3">Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mar--sm--bn">
+                        Status
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            <select>
+                                <option value="option1">Option 1</option>
+                                <option value="option2">Option 2</option>
+                                <option value="option3">Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal__footer">
+                    <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
