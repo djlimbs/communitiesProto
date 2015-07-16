@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Test to_creds</title>
+        <link rel="stylesheet" href="../../lib/qunit/qunit-1.14.0.css">
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+        <script>
+            function init() {
+                rawPageDataObj = {
+                    isSuccess : true,
+                    errorMessages : ["errorMessage"],
+                    data : {
+                        channelData : "{\"_embedded\":{\"channels\": [{\"name\":\"Integration Hub\",\"id\":\"1\",\"type\":\"Default\"}]}}"
+                    }
+                };
+            
+                rawPageData = JSON.stringify(rawPageDataObj);
+                icSettings = []
+                errorParam = "";
+                jobPostingDescribe = [];
+                token1Param = "";
+                token2Param = "";
+                typeParam ="";
+                userId = "";
+                nameParam = "nameParam";
+                isSystemPage = true;
+                returnUrl = "returnUrl";
+                labels = {
+                    connectionError: "connectionError",
+                    connectionNotEstablished: "connectionNotEstablished",
+                    connectionSuccessfullyEstablished: "connectionSuccessfullyEstablished",
+                    reconnectStatus: "reconnectStatus"
+                };
+
+                cont = {
+                    checkHealth: function(callback) {
+                        var res = "{\"errorMessages\":[],\"data\":{\"response\":\"{\\\"status\\\":\\\"UP\\\"}\"}}";
+                        var resObj;
+
+                        callback(res, resObj);
+                    },
+                    getIntegrationHubSetting: function(integrationHubSettingName, callback) {
+                        var res = "{\"errorMessages\":[],\"data\":{\"iHSettingObj\":{\"iHSetting\":{\"Name\":\"name\",\"Field1__c\":\"A\",\"Field2__c\":\"B\"}}}}";
+                        var resObj;
+                    
+                        callback(res, resObj);
+                    },
+                    removeIntegrationHubSetting: function(name, callback) {
+                        var res, resObj;
+                        
+                        callback(res, resObj);
+                    },
+                    verify: function(verifyObj, callback) {
+                        var res = "{\"errorMessages\":[]}";
+                        var resObj;
+                        
+                        callback(res, resObj);
+                    },
+                    verifyAndSave: function(verifyObj, shouldVerify, callback) {
+                        var res = "{\"errorMessages\":[],\"data\":{\"integrationCredential\":{\"Id\":\"Id\"}}}";
+                        var resObj;
+                        
+                        callback(res, resObj);
+                    }
+                };
+            }
+        </script>
+        
+        <script src="../../lib/jquery/jquery-1.11.1.min.js"></script>
+        <script src="../../lib/handlebars/handlebars-v1.3.0.js"></script>
+        <script src="../../lib/emberjs/ember.js"></script>
+        <script src="../../lib/qunit/qunit-1.14.0.js"></script>
+        <script src="../../lib/moment/moment.js"></script>
+        <script src="../../lib/dist/globals/main.js"></script>
+        <script src="../../js/jui.js"></script>
+        <script src="../../js/toHelpers.js"></script>
+        <script src="../to_creds.js"></script>
+        <script src="./to_credsTest.js"></script>
+    </body>
+</html>
