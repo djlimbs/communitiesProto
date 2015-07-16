@@ -21,14 +21,9 @@
                             </button>
                         {{else}}
                             {{#unless interviewStatusCanceled}}
-                                {{!-- <button {{action "clickCancel"}} class="button button--error float--right" data-target="#discardModal" data-toggle="modal" type="button">
-                                    <span class="juicon juicon-minus-circle"></span> Cancel
-                                </button> --}}
-
                                 <button {{action "clickCancel"}} class="button button--error float--right" type="button">
                                     <span class="juicon juicon-minus-circle"></span> Cancel<span class="show-brkpoint--md">&nbsp;Interview</span>
                                 </button>
-
                             {{/unless}}
                         {{/if}}
                     {{/unless}}
@@ -46,8 +41,6 @@
                         </div>
                     </div>
                     <div class="part__body width--full pad--sm--lm pad--sm--rm">
-
-                        {{!-- take them to application reader view --}}
                         <h5 class="mar--sm--n relatedPerson"><a href="to_talentProfileView?id={{unbound talentProfileObj.Id}}">{{applicantObj.name}}</a></h5>
                         <h5 class="text-faded mar--sm--n">
                             {{applicantObj.candidateTitle}}
@@ -107,22 +100,14 @@
                                             {{#if timeSlot.isAccepted}}
                                                 <small class="accepted">{{timeSlot.formatedDate}}</small>
                                             {{else}}
-                                                {{#if timeSlot.isPossible}}
-                                                    <small>{{timeSlot.formatedDate}}</small>
-                                                {{else}}
-                                                    <small><strike>{{timeSlot.formatedDate}}</strike></small>
-                                                {{/if}}
+                                                <small><strike>{{timeSlot.formatedDate}}</strike></small>
                                             {{/if}}
                                         </div>
                                         <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
                                             {{#if timeSlot.isAccepted}}
                                                 <small class="accepted">{{timeSlot.formatedTime}}</small>
                                             {{else}}
-                                                {{#if timeSlot.isPossible}}
-                                                    <small>{{timeSlot.formatedTime}}</small>
-                                                {{else}}
-                                                    <small><strike>{{timeSlot.formatedTime}}</strike></small>
-                                                {{/if}}
+                                                <small><strike>{{timeSlot.formatedTime}}</strike></small>
                                             {{/if}}
                                         </div>
                                     </div>
@@ -165,22 +150,14 @@
                                             {{#if timeSlot.isAccepted}}
                                                 <small class="accepted">{{timeSlot.formatedDate}}</small>
                                             {{else}}
-                                                {{#if timeSlot.isPossible}}
-                                                    <small>{{timeSlot.formatedDate}}</small>
-                                                {{else}}
-                                                    <small><strike>{{timeSlot.formatedDate}}</strike></small>
-                                                {{/if}}
+                                                <small><strike>{{timeSlot.formatedDate}}</strike></small>
                                             {{/if}}
                                         </div>
                                         <div class="column--sm--7 pad--sm--ln pad--sm--rn line-height-fix">
                                             {{#if timeSlot.isAccepted}}
                                                 <small class="accepted">{{timeSlot.formatedTime}}</small>
                                             {{else}}
-                                                {{#if timeSlot.isPossible}}
-                                                    <small>{{timeSlot.formatedTime}}</small>
-                                                {{else}}
-                                                    <small><strike>{{timeSlot.formatedTime}}</strike></small>
-                                                {{/if}}
+                                                <small><strike>{{timeSlot.formatedTime}}</strike></small>
                                             {{/if}}
                                         </div>
                                     </div>
@@ -211,7 +188,7 @@
                             {{#if interviewStatusCompleted}}
                                 <h3>Date and Time <span class="status completed">Completed</span></h3>
                             {{/if}}
-                            <h5 class="text-faded">None specified</h5>
+                            <h5 class="text-faded">None provided</h5>
                         {{/if}}
 
                         {{#if interviewObj.applicantComment}}
@@ -240,21 +217,17 @@
                 <section class="column--md--6 line-height-fix" id="location">
                     <div class="panel__body pad--sm--bn">
                         <h3>Where</h3>
-                        {{!-- {{#if hasLocation}} --}}
-                            {{#if interviewObj.location.isInPerson}}
-                                <small>{{interviewObj.location.name}}<br>
-                                {{interviewObj.location.streetAddress}}<br>
-                                {{interviewObj.location.city}}, {{interviewObj.location.stateProvince}} {{interviewObj.location.zipPostalCode}}<br>
-                                
-                                {{#unless isSF1}}
-                                    <a {{action "viewMap"}} href=""><span class="juicon juicon-location"></span> View Map</a></small>
-                                {{/unless}}
-                            {{else}}
-                                <small>{{interviewObj.location.type}}</small>
-                            {{/if}}
-                        {{!-- {{else}}
-                            <h5 class="text-faded">None specified</h5>
-                        {{/if}} --}}
+                        {{#if interviewObj.location.isInPerson}}
+                            <small>{{interviewObj.location.name}}<br>
+                            {{interviewObj.location.streetAddress}}<br>
+                            {{interviewObj.location.city}}, {{interviewObj.location.stateProvince}} {{interviewObj.location.zipPostalCode}}<br>
+                            
+                            {{#unless isSF1}}
+                                <a {{action "viewMap"}} href=""><span class="juicon juicon-location"></span> View Map</a></small>
+                            {{/unless}}
+                        {{else}}
+                            <small>{{interviewObj.location.type}}</small>
+                        {{/if}}
                     </div>
                 </section>
             </div>
@@ -278,7 +251,7 @@
                                 {{/each}}
                             </ul>
                         {{else}}
-                            <h5 class="text-faded">None specified</h5>
+                            <h5 class="text-faded">None provided</h5>
                         {{/if}}
                     </div>
                 </section>
@@ -292,7 +265,7 @@
                                 {{/each}}
                             </ul>
                         {{else}}
-                            <h5 class="text-faded">None specified</h5>
+                            <h5 class="text-faded">None provided</h5>
                         {{/if}}
                     </div>
                 </section>
@@ -380,10 +353,6 @@
                                                     </div>
                                                 {{/if}}
                                             {{/each}}
-                                            {{!-- <div class="panel__body column--md--6 pad--sm--tn">
-                                                <h4>Technical Skills</h4>
-                                                Average
-                                            </div> --}}
                                         </div>
                                         {{#if feedback.comments}}
                                             <div class="block">
@@ -406,53 +375,36 @@
                 </div>
             </section>
 
-            {{!-- {{#if showOtherInformation}} --}}
-                <section id="other-info">
-                    <div class="js-section-view">
-                        <div class="list-heading">
-                            <h4 class="list-heading__title">Other Information</h4>
-                        </div>
-                        <div class="panel__body pad--sm--bn js-guidelines">
-                            {{#unless interviewStatusCompleted}}
-                                <button {{action "clickEditInterviewGuidelines"}} class="button button--primary button--ghost float--right js-edit-section mar--sm--lm" type="button">
-                                    <span class="juicon juicon-pencil"></span>
-                                </button>
-                            {{/unless}}
-
-                            <h3 class="js-header mar--sm--n">Interview Guidelines</h3>
-                            {{!-- {{#if interviewGuidelines}}
-                                <div class="js-edit-text">
-                                    {{interviewGuidelines}} 
-                                    {{#if interviewGuidelinesLink}}
-                                        <a {{action "goToInterviewGuidelinesLink"}} id="interviewGuidelinesLink" href=""> 
-                                            {{interviewGuidelinesLink}}
-                                        </a>
-                                    {{/if}}
-                                    {{interviewGuidelinesSecondPart}}
-                                </div>
-                            {{else}}
-                                <em class="transparent">Provide additional guidelines for those conducting the interview.</em>
-                            {{/if}} --}}
-                            {{#if interviewGuidelines}}
-                                <div class="js-edit-text">
-                                    {{{interviewGuidelines}}}
-                                </div>
-                            {{else}}
-                                <em class="transparent">Provide additional guidelines for those conducting the interview.</em>
-                            {{/if}}
-                        </div>
-                        <div class="panel__body pad--sm--tn js-logistics">
-                            {{!-- <button {{action "clickEditOtherInformation"}} class="button button--primary button--ghost float--right js-edit-section mar--sm--lm" type="button">
-                                <span class="juicon juicon-pencil"></span>
-                            </button> --}}
-                            {{#if interviewObj.logisticalDetails}}
-                                <h3 class="js-header mar--sm--tm">Logistical Details</h3>
-                                <div class="js-edit-text">{{interviewObj.logisticalDetails}}</div>
-                            {{/if}}
-                        </div>
+            <section id="other-info">
+                <div class="js-section-view">
+                    <div class="list-heading">
+                        <h4 class="list-heading__title">Other Information</h4>
                     </div>
-                </section>
-            {{!-- {{/if}} --}}
+                    <div class="panel__body pad--sm--bn js-guidelines">
+                        {{#unless interviewStatusCompleted}}
+                            <button {{action "clickEditInterviewGuidelines"}} class="button button--primary button--ghost float--right js-edit-section mar--sm--lm" type="button">
+                                <span class="juicon juicon-pencil"></span>
+                            </button>
+                        {{/unless}}
+
+                        <h3 class="js-header mar--sm--n">Interview Guidelines</h3>
+
+                        {{#if interviewGuidelines}}
+                            <div class="js-edit-text">
+                                {{{interviewGuidelines}}}
+                            </div>
+                        {{else}}
+                            <em class="transparent">Provide additional guidelines for those conducting the interview.</em>
+                        {{/if}}
+                    </div>
+                    <div class="panel__body pad--sm--tn js-logistics">
+                        {{#if interviewObj.logisticalDetails}}
+                            <h3 class="js-header mar--sm--tm">Logistical Details</h3>
+                            <div class="js-edit-text">{{interviewObj.logisticalDetails}}</div>
+                        {{/if}}
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
 </div>
