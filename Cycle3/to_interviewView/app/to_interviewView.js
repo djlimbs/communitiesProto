@@ -14,9 +14,9 @@ function detectUrl(text) { // Create link HTML if a URL is recognized
     })
 }
 
-
-function formatDateTime(timeSlots){
+function formatDateTime(timeSlots, locationTimeZone, locationType){
     var timeSlotsArray = [];
+    var interviewIsInPerson = locationType == 'In person' ? true : false;
 
     timeSlots.forEach(function(timeSlot){
         var timeSlotsObj = {};
@@ -25,25 +25,29 @@ function formatDateTime(timeSlots){
         startTime = timeSlot.namespace_Start_Time__c;
         endTime = timeSlot.namespace_End_Time__c;
 
-        var startTimeZone = moment(startTime).zone(userTimeZone).format();
-        var endTimeZone = moment(endTime).zone(userTimeZone).format();
-        var timeZone = String(String(moment(endTime).zone(userTimeZone)._d).match(/\(([^)]+)\)/g)).slice(1,4);
 
-        var fullStartTime = moment(startTimeZone).format('llll');
-        var fullEndTime = moment(endTimeZone).format('llll');
+        var date;
+        var formatedStartTime;
+        var formatedEndTime;
+        var timeZone;
 
-        var formatedDate = fullStartTime.slice(11)[0] == ',' ? fullStartTime.slice(0, 17) : fullStartTime.slice(0, 16);
-        var sHM = fullStartTime.split(' ')[4][1] == ':' ? fullStartTime.split(' ')[4].slice(0, 4) : fullStartTime.split(' ')[4].slice(0, 5);
-        var fromAmPm = fullStartTime.split(' ')[5][0] == 'A' ? 'a' : 'p';
+        if (interviewIsInPerson) {
+            date = moment(startTime).tz(locationTimeZone).format('ddd, MMM DD, YYYY');
+            formatedStartTime = moment(startTime).tz(locationTimeZone).format('h:mma').replace(/(a|p)m/, '$1');
+            formatedEndTime = moment(endTime).tz(locationTimeZone).format('h:mma').replace(/(a|p)m/, '$1');
+            timeZone = moment(endTime).tz(locationTimeZone).format('z');
 
-        // var eDMDY = fullEndTime.slice(11)[0] == ',' ? fullEndTime.slice(0, 17) : fullEndTime.slice(0, 16);
-        var eHM = fullEndTime.split(' ')[4][1] == ':' ? fullEndTime.split(' ')[4].slice(0, 4) : fullEndTime.split(' ')[4].slice(0, 5);
-        var toAmPm = fullEndTime.split(' ')[5][0] == 'A' ? 'a' : 'p';
+        } else {
+            date = moment(startTime).tz(userTimeZone).format('ddd, MMM DD, YYYY');
+            formatedStartTime = moment(startTime).tz(userTimeZone).format('h:mma').replace(/(a|p)m/, '$1');
+            formatedEndTime = moment(endTime).tz(userTimeZone).format('h:mma').replace(/(a|p)m/, '$1');;
+            timeZone = moment(endTime).tz(userTimeZone).format('z');
+        };
 
-        var formatedTime = sHM + '-' + eHM + toAmPm + ' ' + timeZone;
-        timeSlotsObj.formatedDate = formatedDate;
-        timeSlotsObj.formatedTime = formatedTime;
-        
+
+        timeSlotsObj.formatedDate = date;
+        timeSlotsObj.formatedTime = formatedStartTime + '-' + formatedEndTime + ' ' + timeZone;
+
         timeSlotsObj.isAccepted = timeSlot.namespace_Status__c == 'Selected' ? true : false;
         timeSlotsObj.isPossible = timeSlot.namespace_Status__c == 'Possible' ? true : false;        
      
@@ -94,7 +98,6 @@ App.MainController = Ember.ObjectController.extend({
         };
     }.property('timeSlots'),
 
-
     interviewStatusDraft: function(){
         return this.get('interview.status') == 'Draft' ? true : false;
     }.property('interview.namespace_Status__c'),
@@ -129,7 +132,6 @@ App.MainController = Ember.ObjectController.extend({
             return this.get('topicsArray').length != 0 ? true : false;
         };
     }.property('topicsArray'),
-
     interviewersArray: function(){
         if (this.get('interviewers')) {
             return this.get('interviewers').sortBy('name');
@@ -146,7 +148,7 @@ App.MainController = Ember.ObjectController.extend({
     talentProfileObj: function(){
         return this.get('talentProfile');
     }.property('talentProfile'),
-   
+
     interviewGuidelines: '',
     plainInterviewGuidelines: function(){
         var stringsToReplace = this.get('interviewGuidelines').match(/<a([^>]*)>|<\/a>/g);
@@ -178,6 +180,7 @@ App.MainController = Ember.ObjectController.extend({
             $('#deleteModal').modal({
                 show: true,
             });
+            //window.parent.scrollTo(0,0);
 
             $('#modalDelete').click(function() {
                 var interviewId = self.get('interview').id;
@@ -200,6 +203,7 @@ App.MainController = Ember.ObjectController.extend({
 
                 $('#modalYes').unbind('click');
                 window.location.reload();
+                //window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
             });
         },
         clickEdit: function(){
@@ -215,8 +219,7 @@ App.MainController = Ember.ObjectController.extend({
             $('#saveEdit').click(function() {
                 $('#saveEdit').unbind('click');
 
-                var interviewGuidelinesString = $('#textareaEdit').val();
-                
+                var interviewGuidelinesString = $('#textareaEdit').val();                
                 var formatedInterviewGuidelines = detectUrl(interviewGuidelinesString);
                 self.set('interviewGuidelines', formatedInterviewGuidelines);           
 
@@ -231,7 +234,6 @@ App.MainController = Ember.ObjectController.extend({
             });
            
         },
-
         viewMap: function(){
             var interviewObj = this.get('interviewObj');
             var streetAddress = interviewObj.location.streetAddress.split(' ').join('+');
@@ -251,6 +253,9 @@ App.MainController = Ember.ObjectController.extend({
 
 App.MainRoute = Ember.Route.extend({
     model: function (){
+        // console.log('////////////////////////////////////////////////////////');
+        // console.log('INTERVIEW VIEW MAP: ', parsedInterviewViewMap);
+        // console.log('////////////////////////////////////////////////////////');
 
         var interview = parsedInterviewViewMap.interview;
         var interviewObj = {
@@ -282,12 +287,13 @@ App.MainRoute = Ember.Route.extend({
             },
             interviewGuidelines: interview.namespace_Interview_Guidelines__c,
             logisticalDetails: interview.namespace_Logistical_Details__c,
-
+            locationTimeZone: interview.namespace_Location_Time_Zone__c,
+            locationType: interview.namespace_Location_Type__c,
         };
 
         var timeSlots;
         if(!Ember.isEmpty(interview.namespace_Interview_Time_Slots__r)){
-            timeSlots = formatDateTime(interview.namespace_Interview_Time_Slots__r.records);
+            timeSlots = formatDateTime(interview.namespace_Interview_Time_Slots__r.records, interview.namespace_Location_Time_Zone__c, interview.namespace_Location_Type__c);
         };
 
         var interviewers = Ember.A();
@@ -382,7 +388,6 @@ App.MainRoute = Ember.Route.extend({
                 feedbackArray.push(feedbackObj);
             });
         };
-
 
         return {
             interview: interviewObj,

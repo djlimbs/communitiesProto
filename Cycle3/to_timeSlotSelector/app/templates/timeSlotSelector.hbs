@@ -100,10 +100,14 @@
             <section class="column--md--6" id="location">
                 <div class="panel__body pad--sm--n">
                     <h3>Where</h3>
-                    <small>{{interview.namespace_Location_Name__c}}<br />
-                    {{interview.namespace_Street_Address__c}}<br />
-                    {{interview.namespace_City__c}}, {{interview.namespace_State_Province__c}} {{interview.namespace_Zip_Postal_Code__c}}<br />
-                    <a target="_blank" {{bind-attr href="gmapLink"}}><span class="juicon juicon-location"></span> View Map</a></small>
+                    {{#if interviewIsInPerson}}
+                        <small>{{interview.namespace_Location_Name__c}}<br />
+                        {{interview.namespace_Street_Address__c}}<br />
+                        {{interview.namespace_City__c}}, {{interview.namespace_State_Province__c}} {{interview.namespace_Zip_Postal_Code__c}}<br />
+                        <a target="_blank" {{bind-attr href="gmapLink"}}><span class="juicon juicon-location"></span> View Map</a></small>
+                    {{else}}
+                        {{locationType}}
+                    {{/if}}
                 </div>
             </section>
         </div>
