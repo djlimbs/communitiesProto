@@ -518,7 +518,9 @@ App.Select2Component = Ember.TextField.extend({
 
 App.InterviewNewEditView = Ember.View.extend({
     afterRenderEvent: function() {
-        //$('#gettingStartedModal').modal();
+        if (!visited) {
+            $('#gettingStartedModal').modal();
+        }
     }
 });
 
