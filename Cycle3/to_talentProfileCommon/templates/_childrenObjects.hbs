@@ -1,0 +1,265 @@
+{{#with Projects__r}}
+    <section id="projects">
+        <div class="list-heading">
+            <h4 data-qa-label="projects" class="list-heading__title">{{../labels.projects}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="projectName">{{Name}}</h3>
+                    <small data-qa-label="projectDate" class="text-faded">{{displayDate Start_Date__c End_Date__c "to"}}</small>
+                    <p data-qa-label="projectDescription">
+                        {{convertNewLinesToBreaks Description__c}}
+                    </p>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Recognition__r}}
+    <section id="recognition">
+        <div class="list-heading">
+            <h4 data-qa-recognition="recognition" class="list-heading__title">{{../labels.recognition}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="recognitionName">
+                        {{#if Link__c}}
+                            <a data-qa-link="recognitionNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
+                        {{else}}
+                            {{Name}}
+                        {{/if}}
+                    </h3>
+                    <small data-qa-label="recognitionIssuer" class="text-faded block">{{Issuer__c}}</small>
+                    <small data-qa-label="recognitionDate" class="text-faded">{{displayMonthYear Month__c Year__c}}</small>
+                    <p data-qa-label="recognitionDescription">
+                        {{convertNewLinesToBreaks Description__c}}
+                    </p>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Training_Activities__r}}
+    <section id="traning">
+        <div class="list-heading">
+            <h4 class="list-heading__title">{{../labels.trainingAndDevelopment}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="trainingName">
+                        {{#if Link__c}}
+                            <a data-qa-link="trainingNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
+                        {{else}}
+                            {{Name}}
+                        {{/if}}
+                    </h3>
+                    <small data-qa-label="trainingSource" class="text-faded block">{{Source__c}}</small>
+                    <small data-qa-label="trainingDate" class="text-faded">{{formatDate Date__c}}</small>
+                    <p data-qa-label="trainingDescription">
+                        {{convertNewLinesToBreaks Description__c}}
+                    </p>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Skill_Assertions__r}}
+    <section id="otherSkills">
+        <div class="list-heading">
+            <h4 data-qa-label="skills" class="list-heading__title">{{../labels.skills}}</h4>
+        </div>
+        <div class="panel__body">
+            {{#each records}}
+                <span data-qa-label="skillNames" class="label label--secondary inline-block mar--sm--bxs">{{Skill__r.Name}}</span>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Publications__r}}
+    <section id="publications">
+        <div class="list-heading">
+            <h4 data-qa-label="publications" class="list-heading__title">{{../labels.publications}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="publicationName">
+                        {{#if Link__c}}
+                            <a data-qa-link="publicationNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
+                        {{else}}
+                            {{Name}}
+                        {{/if}}
+                    </h3>
+                    <small data-qa-label="publicationDate" class="text-faded">{{formateDateWithPartition Date__c Publisher__c "●"}}</small>
+                    <p data-qa-label="publicationDescription">
+                        {{convertNewLinesToBreaks Description__c}}
+                    </p>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Patents__r}}
+    <section id="patents">
+        <div class="list-heading">
+            <h4 data-qa-label="patents" class="list-heading__title">{{../labels.patents}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="patentName">
+                        {{#if Link__c}}
+                            <a data-qa-link="patentNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
+                        {{else}}
+                            {{Name}}
+                        {{/if}}
+                    </h3>
+                    <small data-qa-label="patentNumberAndOffice" class="text-faded block">
+                        {{#if Number__c}}
+                            {{Number__c}} {{#if Office__c}}({{Office__c}}){{/if}}
+                        {{else}}
+                            {{Office__c}}
+                        {{/if}}
+                    </small>
+                    <small data-qa-label="patentDateAndStatus" class="text-faded">
+                        {{#if Date__c}}
+                            {{formatDate Date__c}} {{#if Status__c}}({{Status__c}}){{/if}}
+                        {{else}}
+                            {{Status__c}}
+                        {{/if}}
+                    </small>
+                    <p data-qa-label="patentSummary">
+                        {{convertNewLinesToBreaks Summary__c}}
+                    </p>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Recommendations__r}}
+    <section id="recommendations">
+        <div class="list-heading">
+            <h4 data-qa-label="recommendations" class="list-heading__title">{{../labels.recommendations}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <div class="card mar--sm--tm">
+                        <div class="card__body">
+                            <p data-qa-label="recommendationText" class="mar--sm--n">
+                                {{#if Recommendation_Text__c}}
+                                    "{{convertNewLinesToBreaks Recommendation_Text__c}}"
+                                {{/if}}
+                            </p>
+                            <div data-qa-label="recommendationTitle" class="text-right">
+                                <p data-qa-label="recommendationName" class="mar--sm--bn">
+                                    {{Name}}
+                                </p>
+                                {{Recommender_Title__c}}
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Certifications__r}}
+    <section id="certifications">
+        <div class="list-heading">
+            <h4 data-qa-label="certifications" class="list-heading__title">{{../labels.certifications}}</h4>
+        </div>
+        <div class="test panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="certificationName">{{Name}}</h3>
+                    <small data-qa-label="certificationIssuer" class="text-faded block">{{Issuer__c}} 
+                        {{#if Issuer__c}}
+                            {{#if Number__c}}({{Number__c}}){{/if}}
+                        {{else}}
+                            {{Number__c}}
+                        {{/if}}
+                    </small>
+                    <small data-qa-label="certificationDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Employment_Histories__r}}
+    <section id="employment">
+        <div class="list-heading">
+            <h4 data-qa-label="employment" class="list-heading__title">{{../labels.employment}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="employmentTitle">{{Job_Title__c}}</h3>
+                    <small data-qa-label="employmentName" class="text-faded block">{{Name}}</small>
+                    <small data-qa-label="employmentDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
+                    <p data-qa-label="employmentDate" >{{convertNewLinesToBreaks Description__c}}</p>
+                    <hr class="hr-alt"/>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Education_Histories__r}}
+    <section id="educations">
+        <div class="list-heading">
+            <h4 data-qa-label="education" class="list-heading__title">{{../labels.education}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="educationName">{{Name}}</h3>
+                    <small data-qa-label="educationLevel" class="text-faded block">{{Education_Level__c}}</small>
+                    <small data-qa-label="educationDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}
+{{#with Languages__r}}
+    <section id="languages">
+        <div class="list-heading">
+            <h4 data-qa-label="languages" class="list-heading__title">{{../labels.languages}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            <ul class="mar--sm--tn">
+                {{#each records}}
+                    <li data-qa-label="languageName">{{Name}} {{#if Proficiency_Level__c}}({{Proficiency_Level__c}}){{/if}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </section>
+{{/with}}
+{{#with Volunteer_Work__r}}
+    <section id="volunteering">
+        <div class="list-heading">
+            <h4 data-qa-label="volunteering" class="list-heading__title">{{../labels.volunteering}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            {{#each records}}
+                <article class="mar--sm--bm">
+                    <h3 data-qa-label="volunteeringName">{{Name}}</h3>
+                    <small data-qa-label="volunteeringRole" class="text-faded block">{{Role__c}}</small>
+                    <small data-qa-label="volunteeringDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
+                    <p data-qa-label="volunteeringDescription">
+                        {{convertNewLinesToBreaks Description__c}}
+                    </p>
+                </article>
+            {{/each}}
+        </div>
+    </section>
+{{/with}}

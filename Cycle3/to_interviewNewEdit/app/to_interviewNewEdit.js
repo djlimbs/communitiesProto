@@ -31,7 +31,7 @@ function convertLocationObjToPicklistOption(locationObj) {
 function convertInterviewTimeSlotToEventObject(interviewTimeSlotObj) {
     return {
         id: interviewTimeSlotObj.Id,
-        title: interviewTimeSlotObj.namespace_Status__c === 'Not possible' ? 'Not possible' : 'Available',
+        title: interviewTimeSlotObj.namespace_Status__c === 'Not possible' ? 'Not possible' : interviewTimeSlotObj.namespace_Status__c == 'Selected' ? 'Accepted' : 'Available',
         start: moment(interviewTimeSlotObj.namespace_Start_Time__c).zone(userTimeZone),
         end: moment(interviewTimeSlotObj.namespace_End_Time__c).zone(userTimeZone),
         className: interviewTimeSlotObj.namespace_Status__c === 'Not possible' ? 'fc-declined' : 'fc-available',
@@ -286,14 +286,6 @@ App.FullCalendarComponent = Ember.Component.extend({
             timezone: 'local',
             slotDuration: '00:15:00',
             allDaySlot: false,
-            /*businessHours: {
-                start: '9:00', // a start time (10am in this example)
-                end: '17:00', // an end time (6pm in this example)
-
-                dow: [ 1, 2, 3, 4, 5 ]
-                // days of week. an array of zero-based day of week integers (0=Sunday)
-                // (Monday-Thursday in this example)
-            },*/
             scrollTime: '09:00:00',
             timezone: userTimeZone, 
             dayClick: function(day, event, element) {
@@ -322,10 +314,13 @@ App.FullCalendarComponent = Ember.Component.extend({
                     }
                 }
             },
+            eventDrop: function(event, delta, revertFunc) {
+                event.title = 'Available';
+            },
             eventResize: function(event, delta, revertFunc, jsEvent, ui, view) {
                 self.set('durationMilliseconds', event.end.diff(event.start, 'milliseconds'));
-                console.log(event);
             },
+            // X button for time slots
             eventMouseover: function(event, jsEvent, view) {
                 if (event.editable === true) {
                     $(this).find('.fc-content').prepend('<div class="juicon juicon-x fc-event-x"></div>');
@@ -523,7 +518,9 @@ App.Select2Component = Ember.TextField.extend({
 
 App.InterviewNewEditView = Ember.View.extend({
     afterRenderEvent: function() {
-        //$('#gettingStartedModal').modal();
+        if (!visited) {
+            $('#gettingStartedModal').modal();
+        }
     }
 });
 
@@ -726,7 +723,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             $.ajax({
                 url:"https://maps.googleapis.com/maps/api/timezone/json?location=" + saveObj.interview.namespace_Geographical_Location__Latitude__s + "," + saveObj.interview.namespace_Geographical_Location__Longitude__s + "&timestamp=" + (Math.round((new Date().getTime())/1000)).toString() + "&sensor=false",
                 success: function(data) {
-                    saveObj.interview.namespace_Location_TimeZone_Offset__c = (data.dstOffset + data.rawOffset) / 3600;
+                    saveObj.interview.namespace_Location_Time_Zone__c = data.timeZoneId;
                     callback(saveObj);
                 }
             });
@@ -836,7 +833,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     namespace_Interview__c: interview.Id,
                     namespace_Start_Time__c: moment(ts.start).format().substring(0,19) + userTimeZone,
                     namespace_End_Time__c: moment(ts.end).format().substring(0,19) + userTimeZone,
-                    namespace_Status__c: 'Possible' 
+                    namespace_Status__c: ts.title == 'Accepted' ? 'Selected' : 'Possible'
                 };
             });
 
@@ -854,7 +851,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     saveObj.interview.namespace_Geographical_Location__Latitude__s = null;
                     saveObj.interview.namespace_Geographical_Location__Longitude__s = null;
                     saveObj.interview.namespace_Location_Name__c = null;
-                    saveObj.interview.namespace_Location_TimeZone_Offset__c = null;
+                    saveObj.interview.namespace_Location_Time_Zone__c = null;
                     saveObj.interview.namespace_State_Province__c = null;
                     saveObj.interview.namespace_Street_Address__c = null;
                     saveObj.interview.namespace_Zip_Postal_Code__c = null;
@@ -977,9 +974,10 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                                 Email__c: p.Email
                             });
                         });
-                        saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                        saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                        // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                        // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
                         saveObj.interview.namespace_Status__c = 'Accepted';
+                        saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         self.saveInterview(saveObj);
                     });
                 } else {
@@ -1019,7 +1017,6 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                             });
 
                             // add every interviewer's ICS.
-
                             participants.forEach(function(p) {
                                 saveObj.emailProxies.addObject({
                                     Template__c: 'ICS Accepted Interviewer',
@@ -1027,22 +1024,25 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                                     Email__c: p.Email
                                 });
                             });
-                            saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                            saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-
+                            // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                            // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
                             saveObj.interview.namespace_Status__c = 'Accepted';
-                        }
-
-                        if (numTimeSlots > 1) {
-
+                            saveObj.timeSlots[0].namespace_Status__c = 'Selected';
+                        } else if (numTimeSlots > 1) {
                             saveObj.emailProxies.addObject({
                                 Template__c: 'Time Slot Selector',
                                 Application__c: parsedInterviewNewEditJson.application.Id,
                                 Email__c: parsedInterviewNewEditJson.application.Email__c
                             });
 
-                            saveObj.interview.namespace_Status__c = 'Proposed';
-                            saveObj.interview.namespace_Status__c = 'Proposed';
+                            var acceptedTimeSlot;
+                            if (acceptedTimeSlot = saveObj.timeSlots.findBy('namespace_Status__c', 'Selected')) {
+                                // saveObj.interview.namespace_Start_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                                // saveObj.interview.namespace_End_Time__c = moment(acceptedTimeSlot.namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                                saveObj.interview.namespace_Status__c = 'Accepted';
+                            } else {
+                                saveObj.interview.namespace_Status__c = 'Proposed';
+                            }
                         }
 
                         self.saveInterview(saveObj);
