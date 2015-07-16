@@ -21,14 +21,14 @@
     <div class="mar--md--ts">
         {{#if canDisable}}
             <div class="form__group" data-qa-container="enable">
-                {{input type="checkbox" checked=isEnabled data-qa-checkbox="enable"}}<label for="cbEnableCredentials">{{labels.enablePostingTo}} {{name}}</label>
+                {{input type="checkbox" checked=isEnabled data-qa-checkbox="enable"}}<label for="cbEnableCredentials">{{enablePostingTo}}</label>
             </div>
         {{/if}}
         {{#if showAuthFields}}
             {{#each field in authFields}}
                 <div class="form__group" data-qa-container="field">
                     <label for="" {{bind-attr class="field.isRequired:required-field"}}>{{field.label}}{{#if field.hasTooltip}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound field.tooltip}}"></span>{{/if}}</label>
-                    {{#if field.content}}
+                    {{#if field.isSelect}}
                         <div class="select__wrap">
                             <div class="input__icon juicon juicon-down"></div>
                             {{view "select" content=field.content optionLabelPath='content.name' optionValuePath='content.value' value=field.value prompt=labels.select }}
