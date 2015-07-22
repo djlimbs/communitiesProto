@@ -134,7 +134,7 @@ function program20(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "timeSlot.startTime", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("-");
+  data.buffer.push(" - ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "timeSlot.endTime", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -206,7 +206,7 @@ function program27(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "ID"};
   options = {hash:{
-    'class': (":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled"),
+    'class': (":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmiting:load-this"),
     'disabled': ("disabled")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
