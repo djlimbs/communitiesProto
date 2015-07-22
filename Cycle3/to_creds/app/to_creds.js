@@ -24,6 +24,9 @@ App.MainController = Ember.ObjectController.extend({
     systemSearchEngineChannels: Ember.computed.filter('channelData', function(item, index, array) {
         return item.type == 'Search Engine' && item.configurationPage == 'System';
     }),
+    systemCustomChannels: Ember.computed.filter('channelData', function(item, index, array) {
+        return item.type == 'Custom' && item.configurationPage == 'System';
+    }),
     
     jobPostingJobBoardChannels: Ember.computed.filter('channelData', function(item, index, array) {
         return item.type == 'Job Board' && item.configurationPage == 'Job Posting';
@@ -410,7 +413,26 @@ App.MainRoute = Ember.Route.extend({
                 
                 jobPostingDescribe = jobPostingDescribe.sortBy('name');
                 chatterGroups = chatterGroups.sortBy('name');
-
+                
+                // CUSTOM CHANNEL (HARD-CODED)
+                
+                // hard-coded channel
+                pageData.channelData.push({
+                    id: "0",
+                    name: "Calendar",
+                    type: "Custom",
+                    canVerify: false,
+                    canDisable: true,
+                    hubRequired: false,
+                    authParams: [{
+                        name: "PROVIDER",
+                        inputType: "PICKLIST",
+                        required: true,
+                        tooltip: false
+                    }],
+                    configurationPage: "System"
+                });
+                
                 // Iterate through each channel data to properly format the required fields,
                 // and populated them if a stored value is found from the custom settings
                 pageData.channelData.forEach(function(cd) {
@@ -427,7 +449,16 @@ App.MainRoute = Ember.Route.extend({
                     }
                     else if (cd.name == 'Chatter') {
                         selectValues = chatterGroups;
+                    } else if (cd.name == 'Calendar') {
+                        selectValues = [{
+                            "name" : "Google Calendar",
+                            "value" : "Google Calendar"
+                        }, {
+                            "name" : "Microsoft Exchange Server",
+                            "value" : "Microsoft Exchange Server"
+                        }];
                     }
+                    
                     cd.authParams.forEach(function(ap, index) {
                         // Values in the custom setting are stored as Field1, Field2, Field3, Field4, Field5, Field6, Field7 so we can use the iterator to create the key.
                         var fieldKey = 'Field' + parseInt(index + 1) + '__c';
@@ -459,7 +490,7 @@ App.MainRoute = Ember.Route.extend({
                     }
                     
                 });
-
+                
                 resolve(pageData); // This is the object.
             });
         });
@@ -501,7 +532,6 @@ App.IntegrationRoute = Ember.Route.extend({
     model: function(params) {
         var self = this;
         return new Ember.RSVP.Promise(function(resolve, reject) {
-
             var integration = self.modelFor('main').channelData.findBy('id', params.id);
 
             if (errorParam === 'access_denied') {
@@ -828,7 +858,30 @@ App.IntegrationRoute = Ember.Route.extend({
 App.Router.map(function(){
     this.resource('main', {path: '/'}, function() {
         this.resource('integration', { path: '/:id' });
+        this.resource('calendar', { path: '/' });
     });
+});
+
+App.CalendarRoute = Ember.Route.extend({
+    model: function(params) {
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            var calendar = {
+                selectContent: [
+                    {
+                        "name" : "Google Calendar",
+                        "value" : "Google Calendar"
+                    },
+                    {
+                        "name" : "Microsoft Exchange Online",
+                        "value" : "Microsoft Exchange Online"
+                    }
+                ],
+                isEnabled: true
+            };
+            
+            resolve(calendar);
+        });
+    }
 });
 
 // This setting disables the detail routing from showing up in the navbar.

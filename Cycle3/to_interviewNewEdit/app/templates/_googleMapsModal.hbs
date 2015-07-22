@@ -12,8 +12,8 @@
                 <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
                 <div id="map-canvas" style="height:300px;"></div>
             <div class="modal__footer">
-                <button class="button button--secondary" data-dismiss="modal" type="button">Reset map</button>
-                <button class="button button--primary" data-dismiss="modal" type="button" {{action "clickSelectGoogleLocation"}}>Select location</button>
+                <button id="center-button" class="button button--secondary" type="button">My Location</button>
+                <button {{bind-attr class=":button :button--primary disableLocationSave:disabled"}} data-dismiss="modal" type="button" {{action "clickSelectGoogleLocation"}}>Select location</button>
             </div>
         </div>
     </div>

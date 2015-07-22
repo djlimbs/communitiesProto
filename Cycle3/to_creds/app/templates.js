@@ -36,6 +36,44 @@ function program1(depth0,data) {
   
 });
 
+Ember.TEMPLATES["_customLink"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n    <a href=\"\" class=\"setupNav__item__link\" ");
+  hashContexts = {'disabled': depth0};
+  hashTypes = {'disabled': "STRING"};
+  options = {hash:{
+    'disabled': ("shouldDisableLink")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n    </a>\n");
+  return buffer;
+  }
+
+  hashContexts = {'tagName': depth0,'classNames': depth0,'disabled': depth0,'data-qa-button': depth0};
+  hashTypes = {'tagName': "STRING",'classNames': "STRING",'disabled': "ID",'data-qa-button': "STRING"};
+  options = {hash:{
+    'tagName': ("li"),
+    'classNames': ("list-group__item setupNav__item"),
+    'disabled': ("shouldDisableLink"),
+    'data-qa-button': ("custom")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "integration", "id", options) : helperMissing.call(depth0, "link-to", "integration", "id", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["integration"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -641,12 +679,12 @@ function program7(depth0,data) {
   data.buffer.push("\n                <div class=\"column--md--3\">\n                    <div class=\"content__section\" data-qa-container=\"sidebar\">\n                        <nav>\n                            <ul id=\"setupNav\" class=\"list-group mar--sm--tn\">\n                                ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isSystemPage", {hash:{},inverse:self.program(11, program11, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "isSystemPage", {hash:{},inverse:self.program(13, program13, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                            </ul>\n                        </nav>\n                    </div>\n                </div>\n                <div class=\"column--md--6\" data-qa-container=\"main\">\n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "connectionMessage", {hash:{},inverse:self.program(16, program16, data),fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "connectionMessage", {hash:{},inverse:self.program(18, program18, data),fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                </div>\n            ");
   return buffer;
@@ -689,6 +727,13 @@ function program8(depth0,data) {
     'itemController': ("channelNav")
   },inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                    ");
+  hashContexts = {'itemController': depth0};
+  hashTypes = {'itemController': "STRING"};
+  stack1 = helpers.each.call(depth0, "systemCustomChannels", {hash:{
+    'itemController': ("channelNav")
+  },inverse:self.noop,fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                                ");
   return buffer;
   }
@@ -706,6 +751,18 @@ function program9(depth0,data) {
 
 function program11(depth0,data) {
   
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                        ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "customLink", options) : helperMissing.call(depth0, "partial", "customLink", options))));
+  data.buffer.push("\n                                    ");
+  return buffer;
+  }
+
+function program13(depth0,data) {
+  
   var buffer = '', stack1, hashContexts, hashTypes;
   data.buffer.push("\n                                    ");
   hashContexts = {'itemController': depth0};
@@ -719,14 +776,14 @@ function program11(depth0,data) {
   hashTypes = {'itemController': "ID"};
   stack1 = helpers.each.call(depth0, "jobPostingAggregatorChannels", {hash:{
     'itemController': ("channelNav")
-  },inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  },inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                                    ");
   hashContexts = {'itemController': depth0};
   hashTypes = {'itemController': "ID"};
   stack1 = helpers.each.call(depth0, "jobPostingInternalSocialChannels", {hash:{
     'itemController': ("channelNav")
-  },inverse:self.noop,fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  },inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                                    ");
   hashContexts = {'itemController': depth0};
@@ -738,7 +795,7 @@ function program11(depth0,data) {
   data.buffer.push("\n                                ");
   return buffer;
   }
-function program12(depth0,data) {
+function program14(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n                                      ");
@@ -750,7 +807,7 @@ function program12(depth0,data) {
   return buffer;
   }
 
-function program14(depth0,data) {
+function program16(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
   data.buffer.push("\n                        <div class=\"alert alert--error mar--sm--bm\" data-qa-alert=\"errorMessage\">\n                            <strong>");
@@ -761,7 +818,7 @@ function program14(depth0,data) {
   return buffer;
   }
 
-function program16(depth0,data) {
+function program18(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
   data.buffer.push("\n                        ");

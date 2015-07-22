@@ -291,7 +291,7 @@ function program34(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "interviewIsInPerson", {hash:{},inverse:self.program(14, program14, data),fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                </div>\n            </section>\n        </div>\n        <hr />\n        <div id=\"section-container\">\n            <section id=\"select-section\">\n                <div class=\"panel__body pad--sm--ln pad--sm--rn pad--sm--tn\">\n                    <h3>\n                        Time and Date\n                        ");
+  data.buffer.push("\n                </div>\n            </section>\n        </div>\n        <div id=\"section-container\" class=\"mar--sm--tm\">\n            <section id=\"select-section\" class=\"panel__body bg-2\">\n                <div class=\"panel__body pad--sm--ln pad--sm--rn pad--sm--n\">\n                    <h3>\n                        Time and Date\n                        ");
   hashTypes = {};
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "isAccepted", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
