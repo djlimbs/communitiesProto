@@ -1,7 +1,7 @@
 <div class="scope-container">
     <div class="content pad--sm--m">
         <nav class="nav-bar--sf1 mar--sm--bn">
-            <button type="button" {{bind-attr class=":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this"}} {{action "clickSave"}}>Save</button>
+            <button type="button" {{bind-attr class=":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this isDisabled:disabled" disabled="isDisabled"}} {{action "clickSave"}}>Save</button>
             <button type="button" class="button button--secondary js-save-button float--right-left mar--sm--only--rs mar--md--lxs" {{action "clickCancel"}}>Cancel</button>
             <a href="#" class="block pad--sm--s float--right" data-toggle="modal" data-target="#gettingStartedModal">Help <span class="juicon juicon-question-circle"></span></a>
             <h2 class="nav-bar--sf1__title page__heading has-subheading has-subtitle">{{#if isEdit}}Edit{{else}}New{{/if}} Interview</h2>
@@ -35,7 +35,7 @@
                         </ul>
                     {{/if}}
                     <ul class="list-group list-group--bordered mar--sm--ts" id="chosenParticipants">
-                        <li class="list-group__item list-group__item--multi has-icon--right js-participant-item">
+                        <li class="list-group__item list-group__item--multi has-icon--right js-participant-item" style="cursor: default">
                             <div class="input__icon juicon juicon-user-star"></div>
                             <a>
                                 <span class="block dots">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</span>
@@ -44,8 +44,8 @@
                         </li>
                         {{#if participants}}
                             {{#each participant in participants}}
-                                <li class="list-group__item list-group__item--multi has-icon--right js-participant-item">
-                                    <div class="input__icon juicon juicon-x" {{action "clickRemoveParticipant" participant}}></div>
+                                <li class="list-group__item list-group__item--multi has-icon--right js-participant-item" style="cursor: default">
+                                    <div class="input__icon juicon juicon-x" style="cursor: pointer" {{action "clickRemoveParticipant" participant}}></div>
                                     <a>
                                         <span class="block dots">{{participant.Name}}</span>
                                         <small class="block text-faded dots">{{participant.Title}}</small>
@@ -58,6 +58,7 @@
                             </div>
                         {{/if}}
                     </ul>
+                    
                     <!--topics multiselect-->
                     <h3>Topics</h3>
                     <div class="form__group">
@@ -65,23 +66,31 @@
                     </div>
                     <h3>Where</h3>
                     <div class="form__group" style="">
-                        <div class="button-group width--full" style="">
-                            <div class="button button--secondary button--dropdown width--full text-left" data-toggle="dropdown">{{selectedLocation.namespace_Location_Name__c}}<span class="caret float--right mar--sm--txs"></span></div>
-                            <ul class="dropdown-menu" style="">
-                                {{#each location in availableLocations itemController="location"}}
-                                    {{#unless location.isSelected}}
-                                        <li class="dropdown-menu__list-item" {{action "clickSelectLocation" location}}><a href="#">{{location.namespace_Location_Name__c}}</a></li>
-                                    {{/unless}}
-                                {{/each}}
-                                <hr class="mar--sm--n">
-                                {{#each customLocation in customLocations itemController="location"}}
-                                    {{#unless customLocation.isSelected}}
-                                        <li class="dropdown-menu__list-item" {{action "clickSelectCustomLocation" customLocation.namespace_Location_Name__c}}><a href="#">{{customLocation.namespace_Location_Name__c}}</a></li>
-                                    {{/unless}}
-                                {{/each}}
-                                <li class="dropdown-menu__list-item" {{action "clickSelectGoogleMaps"}}><a data-target="#googleModal" data-toggle="modal" href="#">Place from google maps</a></li>
-                            </ul>
-                        </div>
+                        {{#if googlePlaceSelected}}
+                            <div class="list-group__item list-group__item--multi has-icon--right js-participant-item bg-1">
+                                <div class="input__icon juicon juicon-x" {{action "clickRemoveLocation"}}></div>
+                                <div class="block dots">{{selectedLocation.namespace_Location_Name__c}}</div>
+                            </div>
+                            <div><a href="#" {{action "clickSelectGoogleMaps"}}>Edit using Google Maps</a></div>
+                        {{else}}
+                            <div class="button-group width--full" style="">
+                                <div class="button button--secondary button--dropdown width--full text-left" data-toggle="dropdown">{{selectedLocation.namespace_Location_Name__c}}<span class="caret float--right"></span></div>
+                                <ul class="dropdown-menu" style="">
+                                    {{#each location in availableLocations itemController="location"}}
+                                        {{#unless location.isSelected}}
+                                            <li class="dropdown-menu__list-item" {{action "clickSelectLocation" location}}><a href="#">{{location.namespace_Location_Name__c}}</a></li>
+                                        {{/unless}}
+                                    {{/each}}
+                                    <hr class="mar--sm--n">
+                                    {{#each customLocation in customLocations itemController="location"}}
+                                        {{#unless customLocation.isSelected}}
+                                            <li class="dropdown-menu__list-item" {{action "clickSelectCustomLocation" customLocation.namespace_Location_Name__c}}><a href="#">{{customLocation.namespace_Location_Name__c}}</a></li>
+                                        {{/unless}}
+                                    {{/each}}
+                                    <li class="dropdown-menu__list-item" {{action "clickSelectGoogleMaps"}}><a data-target="#googleModal" data-toggle="modal" href="#">Place from google maps</a></li>
+                                </ul>
+                            </div>
+                        {{/if}}
                     </div>
                     <h3>Logistical Details</h3>
                     <div class="form__group">
@@ -99,9 +108,11 @@
                     </div>
                 </div>
                 <div class="column--md--9">
-                    {{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle 
-                    isOauthedIntoOutlook=isOauthedIntoOutlook timeSlots=timeSlots 
-                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars participants=participants participantsDidChange=participantsDidChange isEdit=isEdit calendarEl=calendarEl}}
+                    {{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle
+                    isOauthedIntoOutlook=isOauthedIntoOutlook timeSlots=timeSlots
+                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars
+                    participants=participants participantsDidChange=participantsDidChange
+                    isEdit=isEdit calendarEl=calendarEl numberOfTimeSlots=numberOfTimeSlots}}
                 </div>
             </div>
         </section>

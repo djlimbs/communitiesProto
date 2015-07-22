@@ -38,6 +38,9 @@
                                     {{#each systemSearchEngineChannels itemController="channelNav"}}
                                         {{partial "channelLink"}}
                                     {{/each}}
+                                    {{#each systemCustomChannels itemController="channelNav"}}
+                                        {{partial "customLink"}}
+                                    {{/each}}
                                 {{else}}
                                     {{#each jobPostingJobBoardChannels itemController="channelNav"}}
                                         {{partial "channelLink"}}

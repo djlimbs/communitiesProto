@@ -49,53 +49,80 @@ App.TimeSlotController = Ember.ObjectController.extend({
 App.TimeSlotSelectorController = Ember.ObjectController.extend({
     actions: {
         submit: function() {
-            if (!Ember.isEmpty(this.get('comments'))) {
-                cont.saveApplicantComment(this.get('interview.Id'), JSON.stringify(this.get('comments')), function(result, resultObj) {
+            var self = this;
+            
+            if (!Ember.isEmpty(self.get('comments'))) {
+                cont.saveApplicantComment(self.get('interview.Id'), JSON.stringify(self.get('comments')), function(result, resultObj) {
                     // TODO: read response
                 });
             };
 
             // declining single selection
             // current state is accepted
-            if (this.get('isAccepted')) {
+            if (self.get('isAccepted')) {
                 // comments required
-                if (Ember.isEmpty(this.get('comments'))) {
-                    this.set('validationError', true);
+                if (Ember.isEmpty(self.get('comments'))) {
+                    self.set('validationError', true);
                 } else {
-                    this.set('validationError', false);
-                    cont.declineTimeSlotsById([this.get('applicantChoice')] , this.get('interview.Id'), function(data) {
+                    self.set('validationError', false);
+                    cont.declineTimeSlotsById([self.get('applicantChoice')] , self.get('interview.Id'), function(data) {
                         // TODO: read response
+                        var parsedResult = parseResult(data);
                         
-                        window.location.reload();
+                        if (parsedResult.isSuccess) {
+                            window.location.reload();
+                        } else {
+                            console.log(parsedResult.errorMessages);
+                        }
                     });
                 }
             }
-            else if (this.get('isProposed') && !this.get('disabled')) {
+            else if (self.get('isProposed') && !self.get('disabled')) {
                 // decline all proposed
-                if (this.get('applicantChoice') == -1) {
+                if (self.get('applicantChoice') == -1) {
                     // comments required
-                    if (Ember.isEmpty(this.get('comments'))) {
-                        this.set('validationError', true);
+                    if (Ember.isEmpty(self.get('comments'))) {
+                        self.set('validationError', true);
                     } else {
-                        this.set('validationError', false);
+                        self.set('validationError', false);
                         
                         // get id list
                         var timeSlotIds = [];
-                        for (i in this.get('timeSlots')) {
-                            timeSlotIds.push(this.get('timeSlots')[i].Id);
-                        }
+                        self.get('timeSlots').forEach(function(timeSlot) {
+                            timeSlotIds.push(timeSlot.Id);
+                        });
                         
-                        cont.declineTimeSlotsById(timeSlotIds, this.get('intervie.Id'), function(data) {
+                        cont.declineTimeSlotsById(timeSlotIds, self.get('interview.Id'), function(data) {
                             // TODO: read response
+                            var parsedResult = parseResult(data);
                             
-                            window.location.reload();
+                            if (parsedResult.isSuccess) {
+                                window.location.reload();
+                            } else {
+                                console.log(parsedResult.errorMessages);
+                            }
                         });
                     }
-                } else {
-                    cont.selectTimeSlotById(this.get('applicantChoice'), this.get('interview.Id'), function(data) {
+                }
+                // accepting
+                else {
+                    cont.selectTimeSlotById(self.get('applicantChoice'), self.get('interview.Id'), function(data) {
                         // TODO: read response
+                        var parsedResult = parseResult(data);
                         
-                        window.location.reload();
+                        if (parsedResult.isSuccess) {
+                            cont.sendEmail(self.get('interview.Id'), function(data2) {
+                                var parsedResult2 = parseResult(data2);
+                                
+                                if (parsedResult2.isSuccess) {
+                                    window.location.reload();
+                                } else {
+                                    console.log(parsedResult2.errorMessages);
+                                }
+                            });
+                        } else {
+                            console.log(parsedResult.errorMessages);
+                        }
                     });
                 }
             }
