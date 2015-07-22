@@ -38,10 +38,17 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["_googleMapsModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"googleMapsModalLabel\" class=\"modal fade in\" id=\"googleMapsModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell big-modal\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Search for a location\n                </h2>\n            </div>\n                <input id=\"pac-input\" class=\"controls\" type=\"text\" placeholder=\"Enter a location\">\n                <div id=\"map-canvas\" style=\"height:300px;\"></div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\">Reset map</button>\n                <button class=\"button button--primary\" data-dismiss=\"modal\" type=\"button\" ");
+  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"googleMapsModalLabel\" class=\"modal fade in\" id=\"googleMapsModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell big-modal\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Search for a location\n                </h2>\n            </div>\n                <input id=\"pac-input\" class=\"controls\" type=\"text\" placeholder=\"Enter a location\">\n                <div id=\"map-canvas\" style=\"height:300px;\"></div>\n            <div class=\"modal__footer\">\n                <button id=\"center-button\" class=\"button button--secondary\" type=\"button\">My Location</button>\n                <button ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--primary disableLocationSave:disabled")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-dismiss=\"modal\" type=\"button\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleLocation", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -75,7 +82,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Notify applicant to choose time?\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    Since interview(s) and time slots have been selected, TalentObjects can send an email to the applicant prompting them to choose the time slot that works best.\n                </p>\n                <p>\n                    Would you like to send this email now?\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--secondary js-justSave\" data-dismiss=\"modal\" type=\"button\">Save, Don't Send Yet</button>\n                <button class=\"button button--primary js-confirmSendEmail\" data-dismiss=\"modal\" type=\"button\">Save and Send</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Notify applicant to choose time?\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    Since interviewer(s) and time slots have been selected, TalentObjects can send an email to the applicant prompting them to choose the time slot that works best.\n                </p>\n                <p>\n                    Would you like to send this email now?\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--secondary js-justSave\" data-dismiss=\"modal\" type=\"button\">Save, Don't Send Yet</button>\n                <button class=\"button button--primary js-confirmSendEmail\" data-dismiss=\"modal\" type=\"button\">Save and Send</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -199,7 +206,7 @@ function program8(depth0,data) {
 function program9(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                <li class=\"list-group__item list-group__item--multi has-icon--right js-participant-item\">\n                                    <div class=\"input__icon juicon juicon-x\" ");
+  data.buffer.push("\n                                <li class=\"list-group__item list-group__item--multi has-icon--right js-participant-item\" style=\"cursor: default\">\n                                    <div class=\"input__icon juicon juicon-x\" style=\"cursor: pointer\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRemoveParticipant", "participant", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -223,19 +230,66 @@ function program11(depth0,data) {
 
 function program13(depth0,data) {
   
-  var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                                    ");
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                            <div class=\"list-group__item list-group__item--multi has-icon--right js-participant-item bg-1\">\n                                <div class=\"input__icon juicon juicon-x\" ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.unless.call(depth0, "location.isSelected", {hash:{},inverse:self.noop,fn:self.program(14, program14, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                                ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRemoveLocation", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("></div>\n                                <div class=\"block dots\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "selectedLocation.namespace_Location_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</div>\n                            </div>\n                            <div><a href=\"#\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleMaps", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Edit using Google Maps</a></div>\n                        ");
   return buffer;
   }
-function program14(depth0,data) {
+
+function program15(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                            <div class=\"button-group width--full\" style=\"\">\n                                <div class=\"button button--secondary button--dropdown width--full text-left\" data-toggle=\"dropdown\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "selectedLocation.namespace_Location_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("<span class=\"caret float--right\"></span></div>\n                                <ul class=\"dropdown-menu\" style=\"\">\n                                    ");
+  hashContexts = {'itemController': depth0};
+  hashTypes = {'itemController': "STRING"};
+  stack1 = helpers.each.call(depth0, "location", "in", "availableLocations", {hash:{
+    'itemController': ("location")
+  },inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                    <hr class=\"mar--sm--n\">\n                                    ");
+  hashContexts = {'itemController': depth0};
+  hashTypes = {'itemController': "STRING"};
+  stack1 = helpers.each.call(depth0, "customLocation", "in", "customLocations", {hash:{
+    'itemController': ("location")
+  },inverse:self.noop,fn:self.program(19, program19, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                    <li class=\"dropdown-menu__list-item\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleMaps", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("><a data-target=\"#googleModal\" data-toggle=\"modal\" href=\"#\">Place from google maps</a></li>\n                                </ul>\n                            </div>\n                        ");
+  return buffer;
+  }
+function program16(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "location.isSelected", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                                    ");
+  return buffer;
+  }
+function program17(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                        <li class=\"dropdown-menu__list-item\" ");
+  data.buffer.push("\n                                            <li class=\"dropdown-menu__list-item\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectLocation", "location", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -243,25 +297,25 @@ function program14(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "location.namespace_Location_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                                    ");
+  data.buffer.push("</a></li>\n                                        ");
   return buffer;
   }
 
-function program16(depth0,data) {
+function program19(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                                    ");
+  data.buffer.push("\n                                        ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.unless.call(depth0, "customLocation.isSelected", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.unless.call(depth0, "customLocation.isSelected", {hash:{},inverse:self.noop,fn:self.program(20, program20, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                                ");
+  data.buffer.push("\n                                    ");
   return buffer;
   }
-function program17(depth0,data) {
+function program20(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                                        <li class=\"dropdown-menu__list-item\" ");
+  data.buffer.push("\n                                            <li class=\"dropdown-menu__list-item\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectCustomLocation", "customLocation.namespace_Location_Name__c", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -269,15 +323,16 @@ function program17(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "customLocation.namespace_Location_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></li>\n                                    ");
+  data.buffer.push("</a></li>\n                                        ");
   return buffer;
   }
 
   data.buffer.push("<div class=\"scope-container\">\n    <div class=\"content pad--sm--m\">\n        <nav class=\"nav-bar--sf1 mar--sm--bn\">\n            <button type=\"button\" ");
-  hashContexts = {'class': depth0};
-  hashTypes = {'class': "STRING"};
+  hashContexts = {'class': depth0,'disabled': depth0};
+  hashTypes = {'class': "STRING",'disabled': "STRING"};
   options = {hash:{
-    'class': (":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this")
+    'class': (":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this isDisabled:disabled"),
+    'disabled': ("isDisabled")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
   data.buffer.push(" ");
@@ -320,7 +375,7 @@ function program17(depth0,data) {
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "searchResults", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                    <ul class=\"list-group list-group--bordered mar--sm--ts\" id=\"chosenParticipants\">\n                        <li class=\"list-group__item list-group__item--multi has-icon--right js-participant-item\">\n                            <div class=\"input__icon juicon juicon-user-star\"></div>\n                            <a>\n                                <span class=\"block dots\">");
+  data.buffer.push("\n                    <ul class=\"list-group list-group--bordered mar--sm--ts\" id=\"chosenParticipants\">\n                        <li class=\"list-group__item list-group__item--multi has-icon--right js-participant-item\" style=\"cursor: default\">\n                            <div class=\"input__icon juicon juicon-user-star\"></div>\n                            <a>\n                                <span class=\"block dots\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "applicant.First_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -333,36 +388,19 @@ function program17(depth0,data) {
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "participants", {hash:{},inverse:self.program(11, program11, data),fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                    </ul>\n                    <!--topics multiselect-->\n                    <h3>Topics</h3>\n                    <div class=\"form__group\">\n                        ");
+  data.buffer.push("\n                    </ul>\n                    \n                    <!--topics multiselect-->\n                    <h3>Topics</h3>\n                    <div class=\"form__group\">\n                        ");
   hashContexts = {'value': depth0};
   hashTypes = {'value': "ID"};
   options = {hash:{
     'value': ("interview.topics")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['select-2'] || (depth0 && depth0['select-2'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "select-2", options))));
-  data.buffer.push("\n                    </div>\n                    <h3>Where</h3>\n                    <div class=\"form__group\" style=\"\">\n                        <div class=\"button-group width--full\" style=\"\">\n                            <div class=\"button button--secondary button--dropdown width--full text-left\" data-toggle=\"dropdown\">");
+  data.buffer.push("\n                    </div>\n                    <h3>Where</h3>\n                    <div class=\"form__group\" style=\"\">\n                        ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "selectedLocation.namespace_Location_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("<span class=\"caret float--right mar--sm--txs\"></span></div>\n                            <ul class=\"dropdown-menu\" style=\"\">\n                                ");
-  hashContexts = {'itemController': depth0};
-  hashTypes = {'itemController': "STRING"};
-  stack2 = helpers.each.call(depth0, "location", "in", "availableLocations", {hash:{
-    'itemController': ("location")
-  },inverse:self.noop,fn:self.program(13, program13, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "googlePlaceSelected", {hash:{},inverse:self.program(15, program15, data),fn:self.program(13, program13, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                                <hr class=\"mar--sm--n\">\n                                ");
-  hashContexts = {'itemController': depth0};
-  hashTypes = {'itemController': "STRING"};
-  stack2 = helpers.each.call(depth0, "customLocation", "in", "customLocations", {hash:{
-    'itemController': ("location")
-  },inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                                <li class=\"dropdown-menu__list-item\" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleMaps", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("><a data-target=\"#googleModal\" data-toggle=\"modal\" href=\"#\">Place from google maps</a></li>\n                            </ul>\n                        </div>\n                    </div>\n                    <h3>Logistical Details</h3>\n                    <div class=\"form__group\">\n                        ");
+  data.buffer.push("\n                    </div>\n                    <h3>Logistical Details</h3>\n                    <div class=\"form__group\">\n                        ");
   hashContexts = {'value': depth0,'maxlength': depth0};
   hashTypes = {'value': "ID",'maxlength': "STRING"};
   options = {hash:{
@@ -379,8 +417,8 @@ function program17(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "applicant.Last_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("'s contact info\n                                </div>\n                            </a>\n                        </small>\n                    </div>\n                </div>\n                <div class=\"column--md--9\">\n                    ");
-  hashContexts = {'isOauthedIntoGoogle': depth0,'isOauthedIntoOutlook': depth0,'timeSlots': depth0,'deletedTimeSlots': depth0,'googleCalendars': depth0,'participants': depth0,'participantsDidChange': depth0,'isEdit': depth0,'calendarEl': depth0};
-  hashTypes = {'isOauthedIntoGoogle': "ID",'isOauthedIntoOutlook': "ID",'timeSlots': "ID",'deletedTimeSlots': "ID",'googleCalendars': "ID",'participants': "ID",'participantsDidChange': "ID",'isEdit': "ID",'calendarEl': "ID"};
+  hashContexts = {'isOauthedIntoGoogle': depth0,'isOauthedIntoOutlook': depth0,'timeSlots': depth0,'deletedTimeSlots': depth0,'googleCalendars': depth0,'participants': depth0,'participantsDidChange': depth0,'isEdit': depth0,'calendarEl': depth0,'numberOfTimeSlots': depth0};
+  hashTypes = {'isOauthedIntoGoogle': "ID",'isOauthedIntoOutlook': "ID",'timeSlots': "ID",'deletedTimeSlots': "ID",'googleCalendars': "ID",'participants': "ID",'participantsDidChange': "ID",'isEdit': "ID",'calendarEl': "ID",'numberOfTimeSlots': "ID"};
   options = {hash:{
     'isOauthedIntoGoogle': ("isOauthedIntoGoogle"),
     'isOauthedIntoOutlook': ("isOauthedIntoOutlook"),
@@ -390,7 +428,8 @@ function program17(depth0,data) {
     'participants': ("participants"),
     'participantsDidChange': ("participantsDidChange"),
     'isEdit': ("isEdit"),
-    'calendarEl': ("calendarEl")
+    'calendarEl': ("calendarEl"),
+    'numberOfTimeSlots': ("numberOfTimeSlots")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['full-calendar'] || (depth0 && depth0['full-calendar'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "full-calendar", options))));
   data.buffer.push("\n                </div>\n            </div>\n        </section>\n    </div>\n    ");

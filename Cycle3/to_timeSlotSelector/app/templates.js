@@ -1,7 +1,7 @@
 Ember.TEMPLATES["timeSlotSelector"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
 
 function program1(depth0,data) {
   
@@ -102,22 +102,28 @@ function program14(depth0,data) {
 function program16(depth0,data) {
   
   
-  data.buffer.push("\n                            <span class=\"status accepted\" id=\"accepted-status\"> Accepted</span>\n                        ");
+  data.buffer.push("\n            <hr>\n        ");
   }
 
 function program18(depth0,data) {
   
   
-  data.buffer.push("\n                            <span class=\"status declined\">Declined</span>\n                        ");
+  data.buffer.push("\n                            <span class=\"status accepted\" id=\"accepted-status\"> Accepted</span>\n                        ");
   }
 
 function program20(depth0,data) {
+  
+  
+  data.buffer.push("\n                            <span class=\"status declined\">Declined</span>\n                        ");
+  }
+
+function program22(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n                        <p>\n                            ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isProposed", {hash:{},inverse:self.noop,fn:self.programWithDepth(21, program21, data, depth0),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "isProposed", {hash:{},inverse:self.noop,fn:self.programWithDepth(23, program23, data, depth0),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                            <span ");
   hashContexts = {'class': depth0};
@@ -145,7 +151,7 @@ function program20(depth0,data) {
   data.buffer.push("</span>\n                        </p>\n                    ");
   return buffer;
   }
-function program21(depth0,data,depth1) {
+function program23(depth0,data,depth1) {
   
   var buffer = '', stack1, hashContexts, hashTypes, options;
   data.buffer.push("\n                                ");
@@ -162,7 +168,7 @@ function program21(depth0,data,depth1) {
   return buffer;
   }
 
-function program23(depth0,data) {
+function program25(depth0,data) {
   
   var buffer = '', stack1, hashContexts, hashTypes, options;
   data.buffer.push("\n                        <p>\n                            ");
@@ -179,19 +185,19 @@ function program23(depth0,data) {
   return buffer;
   }
 
-function program25(depth0,data) {
+function program27(depth0,data) {
   
   
   data.buffer.push("\n                        <div class=\"alert alert--error pad--sm--m mar--sm--bl start-hidden\" id=\"alert-no-comment\">\n                            <span class=\"part__left--fixed\">\n                                <span class=\"juicon juicon-exclamation-circle\"></span>\n                            </span>\n                            <span class=\"part__body\">\n                                Sorry, your response could not be sent. Please comment on why you have declined and try again.\n                            </span>\n                        </div>\n                    ");
   }
 
-function program27(depth0,data) {
+function program29(depth0,data) {
   
   var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
   data.buffer.push("\n                        <label for=\"comments\">Your Comments");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "commentRequired", {hash:{},inverse:self.noop,fn:self.program(28, program28, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "commentRequired", {hash:{},inverse:self.noop,fn:self.program(30, program30, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("</label>\n                        ");
   hashContexts = {'componentId': depth0,'data-qa-input': depth0,'value': depth0};
@@ -206,7 +212,7 @@ function program27(depth0,data) {
   hashContexts = {'class': depth0,'disabled': depth0};
   hashTypes = {'class': "STRING",'disabled': "ID"};
   options = {hash:{
-    'class': (":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmiting:load-this"),
+    'class': (":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmitting:load-this"),
     'disabled': ("disabled")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
@@ -219,30 +225,30 @@ function program27(depth0,data) {
   data.buffer.push(">\n                            ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "isAccepted", {hash:{},inverse:self.program(32, program32, data),fn:self.program(30, program30, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "isAccepted", {hash:{},inverse:self.program(34, program34, data),fn:self.program(32, program32, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                        </button>\n                    ");
   return buffer;
   }
-function program28(depth0,data) {
+function program30(depth0,data) {
   
   
   data.buffer.push("<span class=\"text-error start-hidden\" id=\"comment-asterisk\">*</span>");
   }
 
-function program30(depth0,data) {
+function program32(depth0,data) {
   
   
   data.buffer.push("\n                                Decline this date and time\n                            ");
   }
 
-function program32(depth0,data) {
+function program34(depth0,data) {
   
   
   data.buffer.push("\n                                Submit\n                            ");
   }
 
-function program34(depth0,data) {
+function program36(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
   data.buffer.push("\n            <img src=\"");
@@ -291,43 +297,55 @@ function program34(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "interviewIsInPerson", {hash:{},inverse:self.program(14, program14, data),fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                </div>\n            </section>\n        </div>\n        <div id=\"section-container\" class=\"mar--sm--tm\">\n            <section id=\"select-section\" class=\"panel__body bg-2\">\n                <div class=\"panel__body pad--sm--ln pad--sm--rn pad--sm--n\">\n                    <h3>\n                        Time and Date\n                        ");
+  data.buffer.push("\n                </div>\n            </section>\n        </div>\n        ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isAccepted", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers.unless.call(depth0, "isAccepted", {hash:{},inverse:self.noop,fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        <div id=\"section-container\" class=\"mar--sm--tm\">\n            <section id=\"select-section\" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":panel__body isAccepted:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                <div class=\"panel__body pad--sm--ln pad--sm--rn pad--sm--n\">\n                    <h3>\n                        Time and Date\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isAccepted", {hash:{},inverse:self.noop,fn:self.program(18, program18, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                        ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isDeclined", {hash:{},inverse:self.noop,fn:self.program(18, program18, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers['if'].call(depth0, "isDeclined", {hash:{},inverse:self.noop,fn:self.program(20, program20, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    </h3>\n                    ");
   hashContexts = {'itemController': depth0};
   hashTypes = {'itemController': "STRING"};
-  stack1 = helpers.each.call(depth0, "timeSlot", "in", "timeSlots", {hash:{
+  stack2 = helpers.each.call(depth0, "timeSlot", "in", "timeSlots", {hash:{
     'itemController': ("timeSlot")
-  },inverse:self.noop,fn:self.program(20, program20, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  },inverse:self.noop,fn:self.program(22, program22, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    \n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "isProposed", {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers['if'].call(depth0, "isProposed", {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    \n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "validationError", {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers['if'].call(depth0, "validationError", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers.unless.call(depth0, "isDeclined", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers.unless.call(depth0, "isDeclined", {hash:{},inverse:self.noop,fn:self.program(29, program29, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                </div>\n            </section>\n        </div>\n    </section>\n    <footer class=\"mar--sm--bxl content\">\n        ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "companyLogoUrl", {hash:{},inverse:self.noop,fn:self.program(34, program34, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  stack2 = helpers['if'].call(depth0, "companyLogoUrl", {hash:{},inverse:self.noop,fn:self.program(36, program36, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n        <ul class=\"inline-list text-left pad--sm--tm fss\">\n            <li class=\"inline-list__item\">&copy; 2015</li>\n            <li class=\"inline-list__item\"><a href=\"#\">Privacy</a></li>\n            <li class=\"inline-list__item\"><a href=\"#\">Terms</a></li>\n        </ul>\n    </footer>\n</div>");
   return buffer;
   

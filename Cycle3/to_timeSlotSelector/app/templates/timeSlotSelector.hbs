@@ -111,8 +111,11 @@
                 </div>
             </section>
         </div>
+        {{#unless isAccepted}}
+            <hr>
+        {{/unless}}
         <div id="section-container" class="mar--sm--tm">
-            <section id="select-section" class="panel__body bg-2">
+            <section id="select-section" {{bind-attr class=":panel__body isAccepted:bg-2"}}>
                 <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--n">
                     <h3>
                         Time and Date
@@ -153,7 +156,7 @@
                         <label for="comments">Your Comments{{#if commentRequired}}<span class="text-error start-hidden" id="comment-asterisk">*</span>{{/if}}</label>
                         {{textarea componentId=componentId data-qa-input='comments' value=comments}}
                         
-                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmiting:load-this" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
+                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmitting:load-this" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
                             {{#if isAccepted}}
                                 Decline this date and time
                             {{else}}

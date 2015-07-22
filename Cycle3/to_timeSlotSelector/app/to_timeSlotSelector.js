@@ -51,12 +51,12 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
         submit: function() {
             var self = this;
             
-            if (!Ember.isEmpty(self.get('comments'))) {
-                cont.saveApplicantComment(self.get('interview.Id'), JSON.stringify(self.get('comments')), function(result, resultObj) {
-                    // TODO: read response
-                });
-            };
-            this.set('isSubmiting', true);
+            // if (!Ember.isEmpty(self.get('comments'))) {
+            //     cont.saveApplicantComment(self.get('interview.Id'), JSON.stringify(self.get('comments')), function(result, resultObj) {
+            //         // TODO: read response
+            //     });
+            // };
+            this.set('isSubmitting', true);
 
             // declining single selection
             // current state is accepted
@@ -64,6 +64,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
                 // comments required
                 if (Ember.isEmpty(self.get('comments'))) {
                     self.set('validationError', true);
+                    self.set('isSubmitting', false);
                 } else {
                     self.set('validationError', false);
                     cont.declineTimeSlotsById([self.get('applicantChoice')] , self.get('interview.Id'), function(data) {
@@ -71,7 +72,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
                         var parsedResult = parseResult(data);
                         
                         if (parsedResult.isSuccess) {
-                            window.location.reload();
+                            self.sendEmail();
                         } else {
                             console.log(parsedResult.errorMessages);
                         }
@@ -112,15 +113,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
                         var parsedResult = parseResult(data);
                         
                         if (parsedResult.isSuccess) {
-                            cont.sendEmail(self.get('interview.Id'), function(data2) {
-                                var parsedResult2 = parseResult(data2);
-                                
-                                if (parsedResult2.isSuccess) {
-                                    window.location.reload();
-                                } else {
-                                    console.log(parsedResult2.errorMessages);
-                                }
-                            });
+                            self.sendEmail();
                         } else {
                             console.log(parsedResult.errorMessages);
                         }
@@ -129,8 +122,22 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
             }
         }
     },
-
-    isSubmiting: false,
+    
+    sendEmail: function() {
+        var self = this;
+        
+        cont.sendEmail(self.get('interview.Id'), function(data) {
+            var parsedResult = parseResult(data);
+            
+            if (parsedResult.isSuccess) {
+                alert(parsedResult.data.message);
+                window.location.reload();
+            } else {
+                console.log(parsedResult.errorMessages);
+            }
+        });
+    },
+    isSubmitting: false,
     locationTimeZone: function(){
         return this.get('interview.namespace_Location_Time_Zone__c');
     }.property('interview.namespace_Location_Time_Zone__c'),

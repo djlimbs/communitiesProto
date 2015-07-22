@@ -751,7 +751,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     
                     if (Ember.isEmpty(parsedResult.errorMessages)) {
                         self.sendEmail({
-                            interviewId : self.get('interview.Id'),
+                            interviewId : parsedResult.data.interview.Id,
                             message : self.get('updatedInformationMessage'),
                             removedParticipants : self.get('removedParticipants'),
                             topicsChanged : false
@@ -765,7 +765,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
         });
     },
     sendEmail: function(jsonData) {
-        cont.sendEmail(jsonData, function(res, evt) {
+        cont.sendEmail(JSON.stringify(jsonData), function(res, evt) {
             if (res) {
                 var parsedResult = parseResult(res);
                 
@@ -991,11 +991,6 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('.js-justSave').off('click');
 
                     $('.js-confirmSendEmail').one('click', function() {
-                        saveObj.emailProxies = [{
-                            Template__c: 'Time Slot Selector',
-                            Application__c: parsedInterviewNewEditJson.application.Id,
-                            Email__c: parsedInterviewNewEditJson.application.Email__c
-                        }];
                         saveObj.interview.namespace_Status__c = 'Proposed';
                         self.saveInterview(saveObj);
                     });
@@ -1009,22 +1004,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('#sendICSModal').modal();
                     $('.js-confirmSendInvitations').off('click');
                     $('.js-confirmSendInvitations').one('click', function() {
-                        // do the ICS invite stuff.
-                        saveObj.emailProxies = [{
-                            Template__c: 'ICS Accepted Applicant',
-                            Application__c: parsedInterviewNewEditJson.application.Id,
-                            Email__c: parsedInterviewNewEditJson.application.Email__c
-                        }];
-                        // add every interviewer's ICS.
-                        participants.forEach(function(p) {
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'ICS Accepted Interviewer',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: p.Email
-                            });
-                        });
-                        // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                        // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                        saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_Status__c = 'Accepted';
                         saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         self.saveInterview(saveObj);
@@ -1040,22 +1021,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('#sendICSModal').modal();
                     $('.js-confirmSendInvitations').off('click');
                     $('.js-confirmSendInvitations').one('click', function() {
-                        // do the ICS invite stuff.
-                        saveObj.emailProxies = [{
-                            Template__c: 'ICS Accepted Applicant',
-                            Application__c: parsedInterviewNewEditJson.application.Id,
-                            Email__c: parsedInterviewNewEditJson.application.Email__c
-                        }];
-                        // add every interviewer's ICS.
-                        participants.forEach(function(p) {
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'ICS Accepted Interviewer',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: p.Email
-                            });
-                        });
-                        // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                        // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                        saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_Status__c = 'Accepted';
                         saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         self.saveInterview(saveObj);
@@ -1068,51 +1035,16 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('#updateInvitationModal').modal();
 
                     $('.js-confirmSave').one('click', function() {
-                        saveObj.emailProxies = [];
-
-                        if (!Ember.isEmpty(self.get('removedParticipants'))) {
-                            // Send cancellation ICS to removed interviewer.
-                            self.get('removedParticipants').forEach(function(rp) {
-                                saveObj.emailProxies.addObject({
-                                    Template__c: 'ICS Remove Interviewer', // MAKE THIS TEMPLATE
-                                    Application__c: parsedInterviewNewEditJson.application.Id,
-                                    Email__c: rp.Email__c
-                                });
-                            });
-                            
-                        }
-
                         if (numTimeSlots === 1) {
-                            // add applicant's ICS.
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'ICS Accepted Applicant',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: parsedInterviewNewEditJson.application.Email__c
-                            });
-
-                            // add every interviewer's ICS.
-                            participants.forEach(function(p) {
-                                saveObj.emailProxies.addObject({
-                                    Template__c: 'ICS Accepted Interviewer',
-                                    Application__c: parsedInterviewNewEditJson.application.Id,
-                                    Email__c: p.Email
-                                });
-                            });
-                            // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                            // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                            saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                            saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                             saveObj.interview.namespace_Status__c = 'Accepted';
                             saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         } else if (numTimeSlots > 1) {
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'Time Slot Selector',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: parsedInterviewNewEditJson.application.Email__c
-                            });
-
                             var acceptedTimeSlot;
                             if (acceptedTimeSlot = saveObj.timeSlots.findBy('namespace_Status__c', 'Selected')) {
-                                // saveObj.interview.namespace_Start_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                                // saveObj.interview.namespace_End_Time__c = moment(acceptedTimeSlot.namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                                saveObj.interview.namespace_Date_and_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                                saveObj.interview.namespace_End_Time__c = moment(acceptedTimeSlot.namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                                 acceptedTimeSlot.namespace_Status__c = 'Possible';
                             }
                             saveObj.interview.namespace_Status__c = 'Proposed';
