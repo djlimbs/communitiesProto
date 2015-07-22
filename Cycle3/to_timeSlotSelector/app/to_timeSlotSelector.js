@@ -20,18 +20,18 @@ App.TimeSlotController = Ember.ObjectController.extend({
     startTime: function() {
         var startTime;
         if (this.get('interviewIsInPerson')) {
-            startTime = moment(this.get('namespace_Start_Time__c')).tz(this.get('locationTimeZone')).format('h:mma').replace(/(a|p)m/, '$1');
+            startTime = moment(this.get('namespace_Start_Time__c')).tz(this.get('locationTimeZone')).format('h:mm A').replace(/(AM|PM)/, '$1');
         } else {
-            startTime = moment(this.get('namespace_Start_Time__c')).format('h:mma').replace(/(a|p)m/, '$1');
+            startTime = moment(this.get('namespace_Start_Time__c')).format('h:mm A').replace(/(AM|PM)/, '$1');
         };
         return startTime;
     }.property('Start_Time__c'),
     endTime: function() {
         var endTime;
         if (this.get('interviewIsInPerson')) {
-            endTime = moment(this.get('namespace_End_Time__c')).tz(this.get('locationTimeZone')).format('h:mma').replace(/(a|p)m/, '$1');
+            endTime = moment(this.get('namespace_End_Time__c')).tz(this.get('locationTimeZone')).format('h:mm A').replace(/(AM|PM)/, '$1');
         } else {
-            endTime = moment(this.get('namespace_End_Time__c')).format('h:mma').replace(/(a|p)m/, '$1');;
+            endTime = moment(this.get('namespace_End_Time__c')).format('h:mm A').replace(/(AM|PM)/, '$1');;
         };
         return endTime;
     }.property('End_Time__c'),
@@ -56,6 +56,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
                     // TODO: read response
                 });
             };
+            this.set('isSubmiting', true);
 
             // declining single selection
             // current state is accepted
@@ -129,6 +130,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
         }
     },
 
+    isSubmiting: false,
     locationTimeZone: function(){
         return this.get('interview.namespace_Location_Time_Zone__c');
     }.property('interview.namespace_Location_Time_Zone__c'),

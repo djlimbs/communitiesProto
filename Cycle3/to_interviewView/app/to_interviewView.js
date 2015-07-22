@@ -33,20 +33,20 @@ function formatDateTime(timeSlots, locationTimeZone, locationType){
 
         if (interviewIsInPerson) {
             date = moment(startTime).tz(locationTimeZone).format('ddd, MMM DD, YYYY');
-            formatedStartTime = moment(startTime).tz(locationTimeZone).format('h:mma').replace(/(a|p)m/, '$1');
-            formatedEndTime = moment(endTime).tz(locationTimeZone).format('h:mma').replace(/(a|p)m/, '$1');
+            formatedStartTime = moment(startTime).tz(locationTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
+            formatedEndTime = moment(endTime).tz(locationTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
             timeZone = moment(endTime).tz(locationTimeZone).format('z');
 
         } else {
             date = moment(startTime).tz(userTimeZone).format('ddd, MMM DD, YYYY');
-            formatedStartTime = moment(startTime).tz(userTimeZone).format('h:mma').replace(/(a|p)m/, '$1');
-            formatedEndTime = moment(endTime).tz(userTimeZone).format('h:mma').replace(/(a|p)m/, '$1');;
+            formatedStartTime = moment(startTime).tz(userTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
+            formatedEndTime = moment(endTime).tz(userTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');;
             timeZone = moment(endTime).tz(userTimeZone).format('z');
         };
 
 
         timeSlotsObj.formatedDate = date;
-        timeSlotsObj.formatedTime = formatedStartTime + '-' + formatedEndTime + ' ' + timeZone;
+        timeSlotsObj.formatedTime = formatedStartTime + ' - ' + formatedEndTime + ' ' + timeZone;
 
         timeSlotsObj.isAccepted = timeSlot.namespace_Status__c == 'Selected' ? true : false;
         timeSlotsObj.isPossible = timeSlot.namespace_Status__c == 'Possible' ? true : false;        
@@ -246,7 +246,9 @@ App.MainController = Ember.ObjectController.extend({
             win.focus();
         },
         provideFeedback: function(){
-            window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id');
+            // window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id');
+            var currentUrl = '/apex/to_interviewView?Id=' + encodeURIComponent(this.get('interview.id'));
+            window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&retUrl=' + currentUrl;
         }
     } 
 });

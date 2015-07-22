@@ -4,7 +4,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 
 
-  data.buffer.push("<div aria-hidden=\"true\" aria-labelledby=\"discardModalLabel\" class=\"modal fade\" id=\"cancelModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Cancel Interview</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p>You are about to cancel this interview. Do you wish to continue?</p>\n            </div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\" id=\"modalNo\">No</button>\n                <button class=\"button button--error\" data-dismiss=\"modal\" type=\"button\" id=\"modalYes\">Yes</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push("<div aria-hidden=\"true\" aria-labelledby=\"discardModalLabel\" class=\"modal fade\" id=\"cancelModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Cancel Interview?</h2>\n            </div>\n            <div class=\"modal__body\">\n                <p>Are you sure you want to cancel this interview? If so, you can still edit it and propose new times later.</p>\n            </div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\" id=\"modalNo\">No, Don't Cancel</button>\n                <button class=\"button button--error\" data-dismiss=\"modal\" type=\"button\" id=\"modalYes\">Yes, Cancel It</button>\n            </div>\n        </div>\n    </div>\n</div>");
   
 });
 
@@ -368,7 +368,7 @@ function program36(depth0,data) {
   hashContexts = {};
   stack1 = helpers['if'].call(depth0, "interviewStatusCompleted", {hash:{},inverse:self.noop,fn:self.program(47, program47, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n                            <h5 class=\"text-faded\">None provided</h5>\n                        ");
+  data.buffer.push("\n                            <h5 class=\"text-faded\">None Provided</h5>\n                        ");
   return buffer;
   }
 function program37(depth0,data) {
@@ -522,7 +522,7 @@ function program57(depth0,data) {
 function program59(depth0,data) {
   
   
-  data.buffer.push("\n                            <h5 class=\"text-faded\">None provided</h5>\n                        ");
+  data.buffer.push("\n                            <h5 class=\"text-faded\">None Provided</h5>\n                        ");
   }
 
 function program61(depth0,data) {
@@ -598,7 +598,7 @@ function program68(depth0,data) {
 function program70(depth0,data) {
   
   
-  data.buffer.push("\n                                                <div class=\"part__left--fixed\">\n                                                    <div class=\"juicon juicon-dislike text-error\"></div>\n                                                </div>\n                                            ");
+  data.buffer.push("\n                                                <div class=\"part__left--fixed\">\n                                                    <div class=\"juicon juicon-dislike text-warning\"></div>\n                                                </div>\n                                            ");
   }
 
 function program72(depth0,data) {

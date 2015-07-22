@@ -128,7 +128,7 @@
                             {{#if isProposed}}
                                 {{radio-button name="timeSlotSelector" selection=../applicantChoice value=timeSlot.Id data-qa-input="radio" }}
                             {{/if}}
-                            <span {{bind-attr class=":selection-string isDeclined:text-strike"}}>{{timeSlot.date}} | {{timeSlot.startTime}}-{{timeSlot.endTime}} {{timeSlot.timeZone}}</span>
+                            <span {{bind-attr class=":selection-string isDeclined:text-strike"}}>{{timeSlot.date}} | {{timeSlot.startTime}} - {{timeSlot.endTime}} {{timeSlot.timeZone}}</span>
                         </p>
                     {{/each}}
                     
@@ -153,7 +153,7 @@
                         <label for="comments">Your Comments{{#if commentRequired}}<span class="text-error start-hidden" id="comment-asterisk">*</span>{{/if}}</label>
                         {{textarea componentId=componentId data-qa-input='comments' value=comments}}
                         
-                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
+                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmiting:load-this" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
                             {{#if isAccepted}}
                                 Decline this date and time
                             {{else}}
