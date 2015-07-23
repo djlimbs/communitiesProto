@@ -72,7 +72,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
                         var parsedResult = parseResult(data);
                         
                         if (parsedResult.isSuccess) {
-                            self.sendEmail();
+                            self.sendEmails();
                         } else {
                             console.log(parsedResult.errorMessages);
                         }
@@ -113,7 +113,7 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
                         var parsedResult = parseResult(data);
                         
                         if (parsedResult.isSuccess) {
-                            self.sendEmail();
+                            self.sendEmails();
                         } else {
                             console.log(parsedResult.errorMessages);
                         }
@@ -123,10 +123,10 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
         }
     },
     
-    sendEmail: function() {
+    sendEmails: function() {
         var self = this;
         
-        cont.sendEmail(self.get('interview.Id'), function(data) {
+        cont.sendEmails(self.get('interview.Id'), function(data) {
             var parsedResult = parseResult(data);
             
             if (parsedResult.isSuccess) {

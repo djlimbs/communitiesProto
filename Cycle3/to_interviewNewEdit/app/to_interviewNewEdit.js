@@ -750,10 +750,10 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     var parsedResult = parseResult(res);
                     
                     if (Ember.isEmpty(parsedResult.errorMessages)) {
-                        self.sendEmail({
+                        self.sendEmails({
                             interviewId : parsedResult.data.interview.Id,
-                            message : self.get('updatedInformationMessage'),
-                            removedParticipants : self.get('removedParticipants'),
+                            message : self.get('updatedInformationMessage') ? self.get('updatedInformationMessage') : '',
+                            removedInterviewers : self.get('removedParticipants'),
                             topicsChanged : false
                         });
                     } else {
@@ -764,8 +764,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             });
         });
     },
-    sendEmail: function(jsonData) {
-        cont.sendEmail(JSON.stringify(jsonData), function(res, evt) {
+    sendEmails: function(jsonData) {
+        cont.sendEmails(JSON.stringify(jsonData), function(res, evt) {
             if (res) {
                 var parsedResult = parseResult(res);
                 
@@ -987,10 +987,10 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
 
                     $('#sendEmailToApplicantModal').modal();
 
-                    $('.js-confirmSendEmail').off('click');
+                    $('.js-confirmsendEmails').off('click');
                     $('.js-justSave').off('click');
 
-                    $('.js-confirmSendEmail').one('click', function() {
+                    $('.js-confirmsendEmails').one('click', function() {
                         saveObj.interview.namespace_Status__c = 'Proposed';
                         self.saveInterview(saveObj);
                     });
