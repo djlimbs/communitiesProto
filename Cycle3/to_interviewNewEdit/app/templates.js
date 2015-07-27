@@ -41,7 +41,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"googleMapsModalLabel\" class=\"modal fade in\" id=\"googleMapsModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell big-modal\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Search for a location\n                </h2>\n            </div>\n                <input id=\"pac-input\" class=\"controls\" type=\"text\" placeholder=\"Enter a location\">\n                <div id=\"map-canvas\" style=\"height:300px;\"></div>\n            <div class=\"modal__footer\">\n                <button id=\"center-button\" class=\"button button--secondary\" type=\"button\">My Location</button>\n                <button ");
+  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"googleMapsModalLabel\" class=\"modal fade in\" id=\"googleMapsModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell big-modal\" style=\"max-width: 80%\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Where will the interview be held?\n                </h2>\n            </div>\n                <input id=\"pac-input\" class=\"controls\" type=\"text\" placeholder=\"Enter a location\">\n                <div id=\"map-canvas\" style=\"height:60vh;\"></div>\n            <div class=\"modal__footer\">\n                <button id=\"center-button\" class=\"button button--secondary\" type=\"button\">\n                    Go to My Location\n                </button>\n                <button ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
@@ -52,7 +52,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleLocation", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(">Select location</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push(">\n                    Use This Place\n                </button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });

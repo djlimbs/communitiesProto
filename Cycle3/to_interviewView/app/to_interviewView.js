@@ -184,10 +184,16 @@ App.MainController = Ember.ObjectController.extend({
 
             $('#modalDelete').click(function() {
                 var interviewId = self.get('interview').id;
-                cont.deleteInterview(interviewId, function(result, resultObj){});
-
-                $('#modalDelete').unbind('click');
-                window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
+                cont.deleteInterview(interviewId, function(result, resultObj) {
+                    var parsedResult = parseResult(result);
+                    
+                    if (parsedResult.isSuccess) {
+                        window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
+                    } else {
+                        // TODO: ERROR MESSAGE FOR FAIL DELETE
+                        $('#modalDelete').unbind('click');
+                    }
+                });
             });
         },
         clickCancel: function(){
@@ -199,12 +205,31 @@ App.MainController = Ember.ObjectController.extend({
 
             $('#modalYes').click(function() {
                 var interviewId = self.get('interview').id;
-                cont.cancelInterview(interviewId, function(result, resultObj){});
-
-                $('#modalYes').unbind('click');
-                window.location.reload();
-                //window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
+                cont.cancelInterview(interviewId, function(result, resultObj) {
+                    var parsedResult = parseResult(result);
+                    
+                    if (parsedResult.isSuccess) {
+                        self.sendEmail();
+                    } else {
+                        // TODO: ERROR MESSAGE FOR FAIL CANCEL
+                        $('#modalYes').unbind('click');
+                    }
+                });
             });
+        },
+        sendEmail: function() {
+            var interviewId = self.get('interview').id;
+            
+            cont.sendEmail(interviewId, function(result, resultObj) {
+                var parsedResult = parseResult(result);
+                
+                if (parsedResult.isSuccess) {
+                    window.location.reload();
+                } else {
+                    // TODO: ERROR MESSAGE FOR FAIL EMAIL
+                    $('#modalYes').unbind('click');
+                }
+            }
         },
         clickEdit: function(){
             window.location.href = window.location.origin + '/apex/to_interviewNewEdit?id=' + this.get('interview.id') + "&retURL=" + encodeURIComponent(window.location.href);

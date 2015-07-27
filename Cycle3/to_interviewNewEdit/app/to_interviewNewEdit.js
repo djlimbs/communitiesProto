@@ -149,12 +149,70 @@ function initializeGoogleMaps(self) {
         
         markers.push(marker);
         
+        google.maps.event.addListener(marker, 'click', function() {
+            var thisMarker = this;
+            
+            placesService.getDetails({
+                placeId: this.place_id
+            }, function(selectedPlace, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var content = [
+                        '<strong>' + selectedPlace.name + '</strong>',
+                        '',
+                        ''
+                    ];
+                    
+                    var location = convertGooglePlaceToLocation(selectedPlace);
+                    
+                    if (location.namespace_Street_Address__c) {
+                        content[1] = location.namespace_Street_Address__c;
+                    }
+                    if (location.namespace_City__c && location.namespace_State_Province__c) {
+                        content[2] = location.namespace_City__c + ' ' + location.namespace_State_Province__c;
+                    }
+                    if (location.namespace_Zip_Postal_Code__c) {
+                        if (content[2] != '') {
+                            content[2] += ', ';
+                        }
+                        content[2] += location.namespace_Zip_Postal_Code__c;
+                    }
+                    if (location.namespace_Country_Region__c) {
+                        if (content[2] != '') {
+                            content[2] += ' ';
+                        }
+                        content[2] += location.namespace_Country_Region__c;
+                    }
+                    
+                    infowindow.setContent('<div>' + content.join('<br>') + '</div>');
+                    infowindow.open(map, thisMarker);
+                    
+                    var markerPosition = thisMarker.getPosition();
+                    map.setCenter(new google.maps.LatLng(markerPosition.lat() + latitudeOffset, markerPosition.lng()));
+                    map.setZoom(defaultZoom);
+                    
+                    self.set('selectedGooglePlace', selectedPlace);
+                    self.set('disableLocationSave', false);
+                }
+            });   
+        });
+        
         defaultZoom = 17;
     }
 
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: defaultLocationCoords,
-        zoom: defaultZoom
+        zoom: defaultZoom,
+        styles: [{
+            featureType: "poi",
+            stylers: [{
+                visibility: "off"
+            }]
+        }, {
+            featureType: "transit.station",
+            stylers: [{
+                visibility: "off"
+            }]
+        }]
     });
     
     var placesService = new google.maps.places.PlacesService(map);
@@ -179,6 +237,8 @@ function initializeGoogleMaps(self) {
             navigator.geolocation.getCurrentPosition(function(position) {
                 var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
                 map.setCenter(pos);
+                map.setZoom(defaultZoom);
+                
                 $self.removeClass('load-this');
                 $self.removeClass('disabled');
             }, function() {
@@ -270,6 +330,11 @@ function initializeGoogleMaps(self) {
             markers.push(marker);
 
             bounds.extend(place.geometry.location);
+        }
+        
+        // select marker if only 1
+        if (markers.length == 1) {
+            google.maps.event.trigger(markers[0], 'click');
         }
 
         map.fitBounds(bounds);
