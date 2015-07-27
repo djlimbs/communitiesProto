@@ -32,13 +32,13 @@ function formatDateTime(timeSlots, locationTimeZone, locationType){
         var timeZone;
 
         if (interviewIsInPerson) {
-            date = moment(startTime).tz(locationTimeZone).format('ddd, MMM DD, YYYY');
+            date = moment(startTime).tz(locationTimeZone).format('ddd, MMM D, YYYY');
             formatedStartTime = moment(startTime).tz(locationTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
             formatedEndTime = moment(endTime).tz(locationTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
             timeZone = moment(endTime).tz(locationTimeZone).format('z');
 
         } else {
-            date = moment(startTime).tz(userTimeZone).format('ddd, MMM DD, YYYY');
+            date = moment(startTime).tz(userTimeZone).format('ddd, MMM D, YYYY');
             formatedStartTime = moment(startTime).tz(userTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
             formatedEndTime = moment(endTime).tz(userTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');;
             timeZone = moment(endTime).tz(userTimeZone).format('z');
@@ -229,7 +229,7 @@ App.MainController = Ember.ObjectController.extend({
                     // TODO: ERROR MESSAGE FOR FAIL EMAIL
                     $('#modalYes').unbind('click');
                 }
-            }
+            })
         },
         clickEdit: function(){
             window.location.href = window.location.origin + '/apex/to_interviewNewEdit?id=' + this.get('interview.id') + "&retURL=" + encodeURIComponent(window.location.href);
