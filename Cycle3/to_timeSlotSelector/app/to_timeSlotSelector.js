@@ -51,11 +51,11 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
         submit: function() {
             var self = this;
             
-            // if (!Ember.isEmpty(self.get('comments'))) {
-            //     cont.saveApplicantComment(self.get('interview.Id'), JSON.stringify(self.get('comments')), function(result, resultObj) {
-            //         // TODO: read response
-            //     });
-            // };
+            if (!Ember.isEmpty(self.get('comments'))) {
+                cont.saveApplicantComment(self.get('interview.Id'), JSON.stringify(self.get('comments')), function(result, resultObj) {
+                    // TODO: read response
+                });
+            };
             this.set('isSubmitting', true);
 
             // declining single selection
