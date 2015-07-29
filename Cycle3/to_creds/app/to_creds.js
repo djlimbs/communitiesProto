@@ -400,7 +400,7 @@ App.CalendarController = Ember.ObjectController.extend({
         clickConnectToMicrosoftExchange: function() {
             var oauthOptions = {
                 client_id: MICROSOFT_CLIENT_ID,
-                redirect_uri: 'https://na24.salesforce.com/apex/to_creds',
+                redirect_uri: 'https://' + sfInstance + '.salesforce.com/apex/' + extnamespace + 'to_creds',
                 response_type: 'code id_token',
                 prompt: 'admin_consent',
                 resource: encodeURIComponent('https://outlook.office365.com/'),
