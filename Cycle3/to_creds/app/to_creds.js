@@ -371,6 +371,7 @@ App.CalendarController = Ember.ObjectController.extend({
                     if (parsedResult.isSuccess === true) {
                         self.set('isConnected', true);
                         self.set('successfulSaveMessage', labels.connectionSuccessfullyEstablished);
+                        self.set('customSettingId', parsedResult.data.integrationCredential.Id);
                     } else {
                         console.log(res);
                         // error handling
