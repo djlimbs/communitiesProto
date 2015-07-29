@@ -41,6 +41,11 @@
                                     {{#each systemCustomChannels itemController="channelNav"}}
                                         {{partial "customLink"}}
                                     {{/each}}
+                                    {{#link-to "calendar" tagName="li" classNames="list-group__item setupNav__item" disabled=disableCalendarLink data-qa-button="custom"}}
+                                        <a href="" class="setupNav__item__link" {{bind-attr disabled="disableCalendarLink"}}>
+                                            Calendar
+                                        </a>
+                                    {{/link-to}}
                                 {{else}}
                                     {{#each jobPostingJobBoardChannels itemController="channelNav"}}
                                         {{partial "channelLink"}}

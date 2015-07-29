@@ -2,6 +2,10 @@ App = Ember.Application.create({
     rootElement: '#application'
 });
 
+App.Fixtures = Ember.Object.create({
+    payloadString: null    
+});
+
 // Controllers 
 
 App.MainController = Ember.ObjectController.extend({
@@ -40,9 +44,12 @@ App.MainController = Ember.ObjectController.extend({
 	jobPostingAggregatorChannels: Ember.computed.filter('channelData', function(item, index, array) {
 		return item.type == 'Aggregator' && item.configurationPage == 'Job Posting';
 	}),
-  jobPostingInternalSocialChannels: Ember.computed.filter('channelData', function(item, index, array) {
-    return item.type == 'Internal Social' && item.configurationPage == 'Job Posting';
-  })
+    jobPostingInternalSocialChannels: Ember.computed.filter('channelData', function(item, index, array) {
+        return item.type == 'Internal Social' && item.configurationPage == 'Job Posting';
+    }),
+    disableCalendarLink: function() {
+        return this.get('isHubConnected') !== true ? 'Disabled' : false;
+    }.property('isHubConnected')
 });
 
 // determine if link is disabled
@@ -343,6 +350,181 @@ App.IntegrationController = Ember.ObjectController.extend({
     }
 });
 
+App.CalendarController = Ember.ObjectController.extend({
+    settingsChanged: function() {
+        if (!Ember.isEmpty(this.get('successfulSaveMessage'))) {
+            this.set('successfulSaveMessage', null);
+        }
+    }.observes('isEnabled', 'selectedProvider'),
+    isMicrosoftExchangeSelected: function() {
+        return this.get('selectedProvider') === MICROSOFT_EXCHANGE_NAME;
+    }.property('selectedProvider'),
+    payloadStringDidChange: function() {
+        var payloadString = App.Fixtures.get('payloadString');
+        var self = this;
+
+        if (!Ember.isEmpty(payloadString)) {
+            cont.parseJWSAndSaveClientId(payloadString, function(res, evt) {
+                if (res) {
+                    var parsedResult = parseResult(res);
+
+                    if (parsedResult.isSuccess === true) {
+                        self.set('isConnected', true);
+                        self.set('successfulSaveMessage', labels.connectionSuccessfullyEstablished);
+                        self.set('customSettingId', parsedResult.data.integrationCredential.Id);
+                    } else {
+                        console.log(res);
+                        // error handling
+                    }
+                } else {
+                    console.log(evt);
+                    // error handling
+                }
+            });
+        }
+    }.observes('App.Fixtures.payloadString'),
+    connectionStatus: function() {
+        return this.get('isConnected') === true ? labels.connectionSuccessfullyEstablished : this.get('hasICSettings') ? labels.reconnectStatus : labels.connectionNotEstablished;
+    }.property('isConnected', 'hasICSettings'),
+    hideSaveButton: function() {
+        return this.get('selectedProvider') === MICROSOFT_EXCHANGE_NAME && this.get('isEnabled') === true;
+    }.property('selectedProvider', 'isEnabled'),
+    hideConnectionButton: function() {
+        return this.get('isEnabled') !== true || this.get('selectedProvider') !== MICROSOFT_EXCHANGE_NAME;
+    }.property('isEnabled', 'selectedProvider'),
+    actions: {
+        clickSave: function() {
+            this.saveCalendarSetting()
+                .then(undefined, this.handleError);
+        },
+        clickConnectToMicrosoftExchange: function() {
+            var oauthOptions = {
+                client_id: MICROSOFT_CLIENT_ID,
+                redirect_uri: 'https://' + sfInstance + '.salesforce.com/apex/' + extnamespace + 'to_creds',
+                response_type: 'code id_token',
+                prompt: 'admin_consent',
+                resource: encodeURIComponent('https://outlook.office365.com/'),
+                scope: 'openid',
+                nonce: 'uid-' + moment().valueOf()
+            };
+
+            var oauthUrl = 'https://login.microsoftonline.com/common/oauth2/authorize?api-version=1.0'
+                            + '&response_type=' + oauthOptions.response_type
+                            + '&redirect_uri=' + oauthOptions.redirect_uri
+                            + '&client_id=' + oauthOptions.client_id
+                            + '&prompt=' + oauthOptions.prompt
+                            + '&resource=' + oauthOptions.resource
+                            + '&scope=' + oauthOptions.scope
+                            + '&nonce=' + oauthOptions.nonce
+                            + '&state=' + oauthOptions.state;
+
+            var strWindowFeatures = "menubar=no,location=yes,resizable=yes,scrollbars=no,status=no,height=650,width=600";
+
+            var outlookOauthWindow = window.open(oauthUrl, "Outlook", strWindowFeatures);
+        },
+        clickDisconnectFromMicrosoftExchange: function() {
+            this.disconnectFromMicrosoftExchange()
+                .then(undefined, this.handleError);
+        }
+    },
+    saveCalendarSetting: function() {
+        var self = this;
+        self.set('isSaving', true);
+        self.set('showStatus', null);
+        
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            // Build object to send to backend for verification + saving
+            var verifyAndSaveObj = {};
+            var selectedProvider = self.get('selectedProvider');
+            var isEnabled = self.get('isEnabled');
+
+            // Build custom setting object
+            var saveObj = {
+                Id: self.get('customSettingId'),
+                Name: 'Calendar',
+                Field1__c: selectedProvider,
+                Enabled__c: isEnabled,
+                User__c: 'Default'
+            };
+
+            if (selectedProvider === GOOGLE_NAME) {
+                saveObj.Field2__c = null;
+            }
+
+            if (isEnabled !== true) {
+                saveObj.Field1__c = null;
+                saveObj.Field2__c = null;
+            }
+
+            verifyAndSaveObj.saveObj = saveObj;
+
+            cont.verifyAndSave(JSON.stringify(verifyAndSaveObj), false, function(res, resObj) {
+                if (res) {
+                    var parsedResult = parseResult(res);
+
+                    if (parsedResult.isSuccess !== true) {
+                        self.setProperties({
+                            error: parsedResult.errorMessages[0],
+                            isConnected: false,
+                            isSaving: false,
+                            showStatus: true
+                        });
+                        reject(self);
+                    } else {
+                        self.setProperties({
+                            isConnected: selectedProvider === GOOGLE_NAME ? false : self.get('isEnabled'),
+                            customSettingId: parsedResult.data.integrationCredential.Id,
+                            errorMessage: null,
+                            tempModel: JSON.parse(JSON.stringify(self.get('model')))
+                        });                        
+
+                        self.set('successfulSaveMessage', labels.yourChangesHaveBeenSaved);
+                        self.set('isSaving', false);
+                        self.set('showStatus', true);
+                        resolve(self);
+                    }
+                } else {
+                    self.setProperties({
+                        error: resObj.message,
+                        isConnected: false,
+                        isSaving: false,
+                        showStatus: true
+                    });
+
+                    reject(self);
+                }
+            });
+        });
+    },
+    disconnectFromMicrosoftExchange: function() {
+        var self = this;
+        
+        return new Ember.RSVP.Promise(function(resolve, reject) {
+            cont.removeIntegrationHubSetting('Calendar',  function(removeRes, removeResObj) {
+                self.setProperties({
+                    isEnabled: false,
+                    isConnected: false,
+                    selectedProvider: null
+                });
+
+                if (removeRes) {
+                    icSettings = icSettings.removeObject(icSettings.findBy("Name", 'Calendar'));
+                    resolve(self);
+                } else {
+                    self.set('errorMessage', labels.pleaseContactTechnicalSupport);
+                    reject(self);
+                }
+
+            });
+        });
+    },
+    handleError: function(self) {
+        var error = self.get('error');
+
+        self.set('errorMessage', error);
+    }
+});
+
 // Views
 
 App.MainView = Ember.View.extend({
@@ -356,6 +538,20 @@ App.MainView = Ember.View.extend({
 // Routes
 
 App.MainRoute = Ember.Route.extend({
+    beforeModel: function() {
+        var lochash = location.hash.substr(1);
+
+        if (lochash.indexOf('id_token') !== -1) {
+            var outlookCode = lochash.substr(lochash.indexOf('id_token=')).split('&')[0].split('=')[1];
+            if (window.opener) {
+                var payloadString = outlookCode.split('.')[1];
+                window.opener.setOutlookPayloadString(payloadString);
+                
+                //window.opener.setOutlookOauthCode(outlookCode);
+                window.close();
+            }
+        }
+    },
     model: function () {
         var self = this;
 
@@ -417,13 +613,15 @@ App.MainRoute = Ember.Route.extend({
                 // CUSTOM CHANNEL (HARD-CODED)
                 
                 // hard-coded channel
-                pageData.channelData.push({
+                /*pageData.channelData.push({
                     id: "0",
                     name: "Calendar",
                     type: "Custom",
                     canVerify: false,
                     canDisable: true,
                     hubRequired: false,
+                    oauth: true,
+                    socialAccounts: false,
                     authParams: [{
                         name: "PROVIDER",
                         inputType: "PICKLIST",
@@ -431,7 +629,7 @@ App.MainRoute = Ember.Route.extend({
                         tooltip: false
                     }],
                     configurationPage: "System"
-                });
+                });*/
                 
                 // Iterate through each channel data to properly format the required fields,
                 // and populated them if a stored value is found from the custom settings
@@ -449,14 +647,6 @@ App.MainRoute = Ember.Route.extend({
                     }
                     else if (cd.name == 'Chatter') {
                         selectValues = chatterGroups;
-                    } else if (cd.name == 'Calendar') {
-                        selectValues = [{
-                            "name" : "Google Calendar",
-                            "value" : "Google Calendar"
-                        }, {
-                            "name" : "Microsoft Exchange Server",
-                            "value" : "Microsoft Exchange Server"
-                        }];
                     }
                     
                     cd.authParams.forEach(function(ap, index) {
@@ -865,19 +1055,26 @@ App.Router.map(function(){
 App.CalendarRoute = Ember.Route.extend({
     model: function(params) {
         return new Ember.RSVP.Promise(function(resolve, reject) {
+            var calendarIc = icSettings.findBy('Name', 'Calendar');
             var calendar = {
                 selectContent: [
                     {
-                        "name" : "Google Calendar",
-                        "value" : "Google Calendar"
+                        "name" : GOOGLE_NAME,
+                        "value" : GOOGLE_NAME
                     },
                     {
-                        "name" : "Microsoft Exchange Online",
-                        "value" : "Microsoft Exchange Online"
+                        "name" : MICROSOFT_EXCHANGE_NAME,
+                        "value" : MICROSOFT_EXCHANGE_NAME
                     }
-                ],
-                isEnabled: true
+                ]
             };
+
+            if (!Ember.isNone(calendarIc)) {
+                calendar.isEnabled = calendarIc.Enabled__c;
+                calendar.selectedProvider = calendarIc.Field1__c;
+                calendar.isConnected = calendarIc.Field1__c === MICROSOFT_EXCHANGE_NAME && !Ember.isEmpty(calendarIc.Field2__c);
+                calendar.customSettingId = calendarIc.Id;
+            }
             
             resolve(calendar);
         });
