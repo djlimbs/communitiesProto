@@ -548,14 +548,16 @@ App.FullCalendarComponent = Ember.Component.extend({
                         var liIndex = i+1;
                         var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('box-shadow');
                         var liColor = liCss.match(/rgb\(.+\)/)[0];
-
-                        var eventSourceToAdd = {
+                        var emailComponents = p.Email.split('@');
+                        var email = emailComponents[0].replace('.', '').replace(/\+.+/g, '') + '@' + emailComponents[1];
+                        
+                        var eventSourceToAdd = {    
                             events: function(start, end, timezone, callback) {
                                 var reqBody = {
                                     timeMin: start,
                                     timeMax: end,
                                     items: [{
-                                        id: p.Email
+                                        id: email
                                     }]
                                 };
 
@@ -643,7 +645,6 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
     }.property('participantsDidChange', 'numberOfTimeSlots'),
     pullGoogleCalendarData: function() {
         var self = this;
-        var calendarColors = ['blue', 'green', 'orange'];
 
         var isOauthedIntoGoogle = self.get('isOauthedIntoGoogle');
         var toggleParticipants = self.get('toggleParticipants');
