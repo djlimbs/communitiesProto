@@ -130,7 +130,6 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
             var parsedResult = parseResult(data);
             
             if (parsedResult.isSuccess) {
-                alert(parsedResult.data.message);
                 window.location.reload();
             } else {
                 console.log(parsedResult.errorMessages);

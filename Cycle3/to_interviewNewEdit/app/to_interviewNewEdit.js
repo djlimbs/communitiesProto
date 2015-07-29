@@ -1052,10 +1052,10 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
 
                     $('#sendEmailToApplicantModal').modal();
 
-                    $('.js-confirmsendEmails').off('click');
+                    $('.js-confirmSendEmail').off('click');
                     $('.js-justSave').off('click');
 
-                    $('.js-confirmsendEmails').one('click', function() {
+                    $('.js-confirmSendEmail').one('click', function() {
                         saveObj.interview.namespace_Status__c = 'Proposed';
                         self.saveInterview(saveObj);
                     });
