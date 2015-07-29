@@ -259,7 +259,7 @@ App.MainController = Ember.ObjectController.extend({
         provideFeedback: function(){
             // window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id');
             var currentUrl = '/apex/to_interviewView?Id=' + encodeURIComponent(this.get('interview.id'));
-            window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&retUrl=' + currentUrl;
+            window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id') + '&retUrl=' + currentUrl;
         }
     },
     sendEmails: function() {
