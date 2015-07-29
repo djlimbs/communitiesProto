@@ -1,0 +1,82 @@
+<div class="content__section">
+    {{#unless errorMessage}}
+        {{#unless successfulSaveMessage}}
+            {{#if isMicrosoftExchangeSelected}}
+                <div {{bind-attr class=":alert isConnected:alert--success:alert--warning :mar--sm--bm"}} data-qa-alert="connectionStatus">
+                    <strong>{{connectionStatus}}</strong>
+                </div>
+            {{/if}}
+        {{else}}
+            <div class="alert alert--success mar--sm--bm" data-qa-alert="saveStatus">
+                <strong>{{successfulSaveMessage}}</strong>{{#if isConnected}}{{#if isMyLink}}{{#if returnUrl}} <a {{bind-attr href=returnUrl}}>{{labels.returnLink}}</a>{{/if}}{{/if}}{{/if}}
+            </div>
+        {{/unless}}
+    {{else}}
+        <div class="alert alert--error mar--sm--bm"}} data-qa-alert="errorMessage">
+            <strong>{{errorMessage}}</strong>
+        </div>
+    {{/unless}}
+    <div class="mar--md--ts">
+        <div class="form__group" data-qa-container="enable">
+            {{input type="checkbox" checked=isEnabled data-qa-checkbox="enable"}}<label for="cbEnableCredentials">Enabled</label>
+        </div>
+
+        {{#if isEnabled}}
+            <div class="form__group" data-qa-container="field">
+                <label for="" class="required-field">Provider </label>
+                <div class="select__wrap">
+                    <div class="input__icon juicon juicon-down"></div>
+                    {{view "select" content=selectContent optionLabelPath='content.name' optionValuePath='content.value' value=selectedProvider prompt=labels.select }}
+                </div>
+                <small class="input-error-content"></small>
+            </div>
+        {{/if}}
+
+        {{#unless hideConnectionButton}}
+            {{#if isConnected}}
+                <button {{bind-attr class=":button :button--error :button--ghost isSaving:load-this" }} data-toggle="modal" data-target="#disconnectModal" data-qa-button="disconnect">
+                    {{#if isSaving}}
+                        {{labels.loading}}
+                    {{else}}
+                        {{labels.disconnect}}
+                    {{/if}}
+                </button>
+                <!-- Disconnect Modal -->
+                <div class="modal fade" id="disconnectModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                    <div class="modal__shell">
+                        <div class="modal__content">
+                            <div class="modal__top">
+                                <button type="button" class="close" data-dismiss="modal" data-qa-button="close">
+                                    <span class="close-modal-x"></span>
+                                    <span class="sr-only" data-qa-label="close">{{labels.close}}</span>
+                                </button>
+                                <h2 class="modal__heading" id="myModalLabel" data-qa-label="title">{{labels.modal_disconnect_title}}</h2>
+                            </div>
+                            <div class="modal__body" data-qa-label="body">
+                                {{labels.modal_disconnect_body}}
+                            </div>
+                            <div class="modal__footer">
+                                <button type="button" class="button button--secondary"  data-dismiss="modal" data-qa-button="cancel">{{labels.cancel}}</button>
+                                <button {{action "clickDisconnectFromMicrosoftExchange"}} type="button" class="button button--error" data-dismiss="modal" data-qa-button="ok">{{labels.disconnect}}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <button {{bind-attr class=":button :button--primary :button--ghost isButtonDisabled:disabled isSaving:load-this" disabled="isButtonDisabled"}} {{action "clickConnectToMicrosoftExchange"}} data-qa-button="connect">                
+                    {{labels.connect}}
+                </button>
+            {{/if}}
+        {{/unless}}
+
+        {{#unless hideSaveButton}}
+            <button {{bind-attr class=":button :button--primary :button--ghost isButtonDisabled:disabled isSaving:load-this" disabled="isButtonDisabled"}} {{action "clickSave"}} data-qa-button="save">
+                {{#if isSaving}}
+                    {{labels.loading}}
+                {{else}}
+                    {{labels.save}}
+                {{/if}}
+            </button>
+        {{/unless}}
+    </div>
+</div>

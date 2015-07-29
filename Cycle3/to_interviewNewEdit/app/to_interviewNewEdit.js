@@ -544,7 +544,7 @@ App.FullCalendarComponent = Ember.Component.extend({
                 // add back participants
 
                 participants.forEach(function(p, i) {
-                    if (!Ember.isNone(googleCalendars.findBy('id', p.Email))) {
+                    //if (!Ember.isNone(googleCalendars.findBy('id', p.Email))) {
                         var liIndex = i+1;
                         var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('box-shadow');
                         var liColor = liCss.match(/rgb\(.+\)/)[0];
@@ -589,7 +589,7 @@ App.FullCalendarComponent = Ember.Component.extend({
                         currentParticipants.addObject(newParticipant);
 
                         $calendar.fullCalendar('addEventSource', newParticipant.eventSource);
-                    }
+                    //}
                 });
             }
         }, 500);
@@ -652,7 +652,11 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             gapi.client.load('calendar', 'v3', getAllCalendars);
                     
             function getAllCalendars() {
-                var allCalRequest = gapi.client.calendar.calendarList.list({
+                if (self.get('toggleParticipants') === true) {
+                    self.toggleProperty('participantsDidChange');
+                    self.set('toggleParticipants', false);
+                }
+                /*var allCalRequest = gapi.client.calendar.calendarList.list({
                     calendarId: 'primary',
                     timeMin: moment().format(),
                     showDeleted: false,
@@ -671,84 +675,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                             self.toggleProperty('participantsDidChange');
                             self.set('toggleParticipants', false);
                         }
-
-                        // get interview scheduler calendar
-                        /*
-                        var interviewCalRequest = gapi.client.calendar.events.list({
-                            calendarId: 'appiphony.com_q08ipq97c0fl6spr7b48hpq4ss@group.calendar.google.com',
-                            timeMin: moment().format(),
-                            showDeleted: false,
-                            singleEvents: true,
-                            maxResults: 10,
-                            orderBy: 'startTime'
-                        });
-
-                        interviewCalRequest.execute(function(interviewResponse) {
-                            console.log(interviewResponse);
-                        });
-
-                        
-                        var updatedEvent = {
-                            'summary': 'Google I/O 2015',
-                            'location': '800 Howard St., San Francisco, CA 94103',
-                            'description': 'A chance to hear more about Google\'s developer products.',
-                            'start': {
-                                'dateTime': '2015-07-06T09:00:00-05:00',
-                                'timeZone': 'America/Chicago'
-                            },
-                            'end': {
-                                'dateTime': '2015-07-06T10:00:00-05:00',
-                                'timeZone': 'America/Chicago'
-                            },
-                            'attendees': [
-                                {'email': 'victor@appiphony.com'}
-                            ]
-                        };
-
-                        var moveEventReq = gapi.client.calendar.events.update({
-                            calendarId: 'appiphony.com_q08ipq97c0fl6spr7b48hpq4ss@group.calendar.google.com',
-                            eventId: 'u2576abt5udhc863j4nvpo2ej4',
-                            sendNotifications: true,
-                            resource: updatedEvent
-                        });
-
-                        moveEventReq.execute(function(event) {
-                            console.log(event);
-                            console.log('Event updated: ' + event.htmlLink);
-                        });
-                        */
-                        /*
-                        var event = {
-                          'summary': 'Google I/O 2015',
-                          'location': '800 Howard St., San Francisco, CA 94103',
-                          'description': 'A chance to hear more about Google\'s developer products.',
-                          'start': {
-                            'dateTime': '2015-07-04T09:00:00-05:00',
-                            'timeZone': 'America/Chicago'
-                          },
-                          'end': {
-                            'dateTime': '2015-07-04T10:00:00-05:00',
-                            'timeZone': 'America/Chicago'
-                          },
-                          'attendees': [
-                            {'email': 'victor@appiphony.com'},
-                            {'email': 'burhan@appiphony.com'}
-                          ]
-                        };
-
-                        var addEventToInterviewReq = gapi.client.calendar.events.insert({
-                            calendarId: 'appiphony.com_q08ipq97c0fl6spr7b48hpq4ss@group.calendar.google.com',
-                            sendNotifications: true,
-                            supportsAttachments: true,
-                            resource: event
-                        });
-
-                        addEventToInterviewReq.execute(function(event) {
-                            console.log(event);
-                            console.log('Event created: ' + event.htmlLink);
-                        }); */
                     }
-                });
+                });*/
             }
         } else if (toggleParticipants === true) {
 
