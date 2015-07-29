@@ -98,7 +98,7 @@ function program7(depth0,data) {
   data.buffer.push("\n                                <button ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancel", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelInterview", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" class=\"button button--error float--right\" type=\"button\">\n                                    <span class=\"juicon juicon-minus-circle\"></span> Cancel<span class=\"show-brkpoint--md\">&nbsp;Interview</span>\n                                </button>\n                            ");
   return buffer;
   }

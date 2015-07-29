@@ -196,7 +196,7 @@ App.MainController = Ember.ObjectController.extend({
                 });
             });
         },
-        clickCancel: function(){
+        clickCancelInterview: function(){
             var self = this;
 
             $('#cancelModal').modal({
@@ -209,27 +209,13 @@ App.MainController = Ember.ObjectController.extend({
                     var parsedResult = parseResult(result);
                     
                     if (parsedResult.isSuccess) {
-                        self.sendEmail();
+                        self.sendEmails();
                     } else {
                         // TODO: ERROR MESSAGE FOR FAIL CANCEL
                         $('#modalYes').unbind('click');
                     }
                 });
             });
-        },
-        sendEmail: function() {
-            var interviewId = self.get('interview').id;
-            
-            cont.sendEmail(interviewId, function(result, resultObj) {
-                var parsedResult = parseResult(result);
-                
-                if (parsedResult.isSuccess) {
-                    window.location.reload();
-                } else {
-                    // TODO: ERROR MESSAGE FOR FAIL EMAIL
-                    $('#modalYes').unbind('click');
-                }
-            }
         },
         clickEdit: function(){
             window.location.href = window.location.origin + '/apex/to_interviewNewEdit?id=' + this.get('interview.id') + "&retURL=" + encodeURIComponent(window.location.href);
@@ -275,7 +261,21 @@ App.MainController = Ember.ObjectController.extend({
             var currentUrl = '/apex/to_interviewView?Id=' + encodeURIComponent(this.get('interview.id'));
             window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&retUrl=' + currentUrl;
         }
-    } 
+    },
+    sendEmails: function() {
+        var interviewId = this.get('interview').id;
+        
+        cont.sendEmails(interviewId, function(result, resultObj) {
+            var parsedResult = parseResult(result);
+            
+            if (parsedResult.isSuccess) {
+                window.location.reload();
+            } else {
+                // TODO: ERROR MESSAGE FOR FAIL EMAIL
+                $('#modalYes').unbind('click');
+            }
+        });
+    }
 });
 
 App.MainRoute = Ember.Route.extend({

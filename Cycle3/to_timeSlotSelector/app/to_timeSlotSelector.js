@@ -11,9 +11,9 @@ App.TimeSlotController = Ember.ObjectController.extend({
     date: function() {
         var date;
         if (this.get('interviewIsInPerson')) {
-            date = moment(this.get('namespace_Start_Time__c')).tz(this.get('locationTimeZone')).format('ddd, MMM DD, YYYY');
+            date = moment(this.get('namespace_Start_Time__c')).tz(this.get('locationTimeZone')).format('ddd, MMM D, YYYY');
         } else {
-            date = moment(this.get('namespace_Start_Time__c')).format('ddd, MMM DD, YYYY');
+            date = moment(this.get('namespace_Start_Time__c')).format('ddd, MMM D, YYYY');
         };
         return date;
     }.property('Start_Time__c'),
@@ -130,7 +130,6 @@ App.TimeSlotSelectorController = Ember.ObjectController.extend({
             var parsedResult = parseResult(data);
             
             if (parsedResult.isSuccess) {
-                alert(parsedResult.data.message);
                 window.location.reload();
             } else {
                 console.log(parsedResult.errorMessages);
