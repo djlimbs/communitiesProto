@@ -759,17 +759,21 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
         });
     },
     sendEmails: function(jsonData) {
-        cont.sendEmails(JSON.stringify(jsonData), function(res, evt) {
-            if (res) {
-                var parsedResult = parseResult(res);
+        if (this.get('scheduleDidChange')) {
+            cont.sendEmails(JSON.stringify(jsonData), function(res, evt) {
+                if (res) {
+                    var parsedResult = parseResult(res);
                 
-                if (Ember.isEmpty(parsedResult.errorMessages)) {
-                    window.location.href = retUrl;
-                } else {
-                    console.log(parsedResult);
+                    if (Ember.isEmpty(parsedResult.errorMessages)) {
+                        window.location.href = retUrl;
+                    } else {
+                        console.log(parsedResult);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            window.location.href = retUrl;
+        }
     },
     presaveInterview: function(saveObj, callback) {
         if (saveObj.interview.namespace_Geographical_Location__Latitude__s != null && saveObj.interview.namespace_Geographical_Location__Longitude__s != null) {
@@ -824,7 +828,6 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             var originalParticipants = this.get('originalParticipants');
             var originalLocationName = this.get('originalLocationName');
             var originalLogisticalDetails = this.get('originalLogisticalDetails');
-            var scheduleDidChange = false;
             var areParticipantsSelected = false;
             var areTopicsSelected = false;
             var isLocationSelected = false;
@@ -929,6 +932,9 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
 
             // check for topic changes
             this.set('topicsChanged', $(topics).not(originalTopics).length !== 0 || $(originalTopics).not(topics).length !== 0);
+            if (this.get('topicsChanged')) {
+                this.set('scheduleDidChange', true);
+            }
 
             // check if interview has removed participants
             self.set('removedParticipants', []);
@@ -947,19 +953,19 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             });
 
             if (!Ember.isEmpty(self.get('removedParticipants')) || !Ember.isEmpty(addedParticipants)) {
-                scheduleDidChange = true;
+                this.set('scheduleDidChange', true);
             }
 
             // check for time slot changes
             if (timeSlots.length !== originalTimeSlots.length) {
-                scheduleDidChange = true;
+                this.set('scheduleDidChange', true);
             } else {
                 originalTimeSlots.forEach(function(ots) {
                     if (Ember.isEmpty(saveObj.timeSlots.filter(function(ts) {
                         return moment(ots.namespace_Start_Time__c).valueOf() === moment(ts.namespace_Start_Time__c).valueOf()
                                 && moment(ots.namespace_End_Time__c).valueOf() === moment(ts.namespace_End_Time__c).valueOf();
                     }))) { 
-                        scheduleDidChange = true;
+                        this.set('scheduleDidChange', true);
                     }
                 });
             }
@@ -967,7 +973,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             // check for location changes and logistical detail changes
             if (saveObj.interview.namespace_Location_Name__c !== originalLocationName ||
                 saveObj.interview.namespace_Logistical_Details__c !== originalLogisticalDetails) {
-                scheduleDidChange = true;
+                this.set('scheduleDidChange', true);
             }
 
             if (Ember.isEmpty(interview.namespace_Status__c) || interview.namespace_Status__c === 'Draft') {
@@ -1022,7 +1028,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     this.saveInterview(saveObj);
                 }
             } else if (interview.namespace_Status__c === 'Accepted' || interview.namespace_Status__c === 'Declined' || interview.namespace_Status__c === 'Canceled') {
-                if (scheduleDidChange === true && numTimeSlots > 0 && areParticipantsSelected && isLocationSelected) {
+                if (this.get('scheduleDidChange') === true && numTimeSlots > 0 && areParticipantsSelected && isLocationSelected) {
                     $('#updateInvitationModal').modal();
 
                     $('.js-confirmSave').one('click', function() {
