@@ -748,6 +748,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                             interviewId : parsedResult.data.interview.Id,
                             message : self.get('updatedInformationMessage') ? self.get('updatedInformationMessage') : '',
                             removedInterviewers : self.get('removedParticipants'),
+                            scheduleChanged : self.get('scheduleDidChange'),
                             topicsChanged : self.get('topicsChanged')
                         });
                     } else {
@@ -759,21 +760,17 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
         });
     },
     sendEmails: function(jsonData) {
-        if (this.get('scheduleDidChange')) {
-            cont.sendEmails(JSON.stringify(jsonData), function(res, evt) {
-                if (res) {
-                    var parsedResult = parseResult(res);
-                
-                    if (Ember.isEmpty(parsedResult.errorMessages)) {
-                        window.location.href = retUrl;
-                    } else {
-                        console.log(parsedResult);
-                    }
+        cont.sendEmails(JSON.stringify(jsonData), function(res, evt) {
+            if (res) {
+                var parsedResult = parseResult(res);
+            
+                if (Ember.isEmpty(parsedResult.errorMessages)) {
+                    window.location.href = retUrl;
+                } else {
+                    console.log(parsedResult);
                 }
-            });
-        } else {
-            window.location.href = retUrl;
-        }
+            }
+        });
     },
     presaveInterview: function(saveObj, callback) {
         if (saveObj.interview.namespace_Geographical_Location__Latitude__s != null && saveObj.interview.namespace_Geographical_Location__Longitude__s != null) {
@@ -817,13 +814,12 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             var participants = this.get('participants');
             var $calendar = this.get('calendarEl');
             var allCalendarEvents = $calendar.fullCalendar('clientEvents');
-            var topics = interview.topics.split(',');
+            var topics = Ember.isEmpty(interview.topics) ? [] : interview.topics.split(',');
             var timeSlots = allCalendarEvents.filterBy('editable', true);
             var selectedLocation = this.get('selectedLocation');
             var applicant = this.get('applicant');
-
             var isEdit = this.get('isEdit');
-            var originalTopics = this.get('originalTopics').split(',');
+            var originalTopics = Ember.isEmpty(this.get('originalTopics')) ? [] : this.get('originalTopics').split(',');
             var originalTimeSlots = this.get('originalTimeSlots');
             var originalParticipants = this.get('originalParticipants');
             var originalLocationName = this.get('originalLocationName');
@@ -834,6 +830,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             var numTimeSlotss = 0;
 
             this.set('isSaving', true);
+            this.set('scheduleDidChange', false);
 
             // format topics
             var topicIndex = 1;
@@ -932,10 +929,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
 
             // check for topic changes
             this.set('topicsChanged', $(topics).not(originalTopics).length !== 0 || $(originalTopics).not(topics).length !== 0);
-            if (this.get('topicsChanged')) {
-                this.set('scheduleDidChange', true);
-            }
-
+            
             // check if interview has removed participants
             self.set('removedParticipants', []);
             originalParticipants.forEach(function(op){
