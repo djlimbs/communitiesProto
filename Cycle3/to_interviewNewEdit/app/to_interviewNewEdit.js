@@ -1025,6 +1025,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 if (this.get('scheduleChanged') === true && numTimeSlots > 0 && areParticipantsSelected && isLocationSelected) {
                     $('#updateInvitationModal').modal();
 
+                    $('.js-confirmSave').off('click');
                     $('.js-confirmSave').one('click', function() {
                         if (numTimeSlots === 1) {
                             saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
@@ -1040,6 +1041,13 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                             }
                             saveObj.interview.namespace_Status__c = 'Proposed';
                         }
+                        self.saveInterview(saveObj);
+                    });
+                } else if (interview.namespace_Status__c === 'Accepted' && this.get('topicsChanged') === true) {
+                    $('#topicsChangedModal').modal();
+
+                    $('.js-confirmSendTopicsChanged').off('click');
+                    $('.js-confirmSendTopicsChanged').one('click', function() {
                         self.saveInterview(saveObj);
                     });
                 } else {
