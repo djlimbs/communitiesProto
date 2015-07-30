@@ -37,7 +37,11 @@
                 <div class="panel__body">
                     <div class="part__left--fixed pad--sm--n">
                         <div class="img-container img-container--lg">
-                            <img {{bind-attr src="applicant.candidatePhoto"}}>
+                            {{#if applicantObj.candidatePhoto}}
+                                <img {{bind-attr src="applicantObj.candidatePhoto"}}>
+                            {{else}}
+                                <img src="https://c.na24.content.force.com/profilephoto/005/F">
+                            {{/if}}
                         </div>
                     </div>
                     <div class="part__body width--full pad--sm--lm pad--sm--rm">
@@ -198,11 +202,15 @@
                                         <li class="mar--sm--bs">
                                             <div class="part__left--fixed pad--sm--n">
                                                 <div class="img-container img-container--sm">
-                                                    <img {{bind-attr src="applicant.FullPhotoUrl"}}>
+                                                    {{#if applicantObj.candidatePhoto}}
+                                                        <img {{bind-attr src="applicantObj.candidatePhoto"}}>
+                                                    {{else}}
+                                                        <img src="https://c.na24.content.force.com/profilephoto/005/F">
+                                                    {{/if}}
                                                 </div>
                                             </div>
                                             <div class="part__body width--full pad--sm--ls pad--sm--rm">
-                                                <h5 class="mar--sm--bn"><a href="to_talentProfileView?id={{unbound talentProfileObj.Id}}">{{applicantObj.Name}}</a></h5>
+                                                <h5 class="mar--sm--bn"><a href="to_applicationReader?id={{unbound applicantObj.id}}">{{applicantObj.name}}</a></h5>
                                             </div>
                                         </li>
                                     </ul>
@@ -241,7 +249,11 @@
                                     <li class="mar--sm--bxs">
                                         <div class="part__left--fixed pad--sm--n">
                                             <div class="img-container img-container--sm">
-                                                <img {{bind-attr src="interviewer.smallPhotoUrl"}}>
+                                                {{#if interviewer.smallPhotoUrl}}
+                                                    <img {{bind-attr src="interviewer.smallPhotoUrl"}}>
+                                                {{else}}
+                                                    <img src="https://c.na24.content.force.com/profilephoto/005/F">
+                                                {{/if}}
                                             </div>
                                         </div>
                                         <div class="part__body width--full pad--sm--ls pad--sm--rm">
@@ -284,7 +296,11 @@
                                     <li class="mar--sm--bxs">
                                         <div class="part__left--fixed pad--sm--n">
                                             <div class="img-container img-container--sm">
-                                                <img {{bind-attr src="jobInformationObj.hiringManager.smallPhotoUrl"}}>
+                                                {{#if applicantObj.candidatePhoto}}
+                                                    <img {{bind-attr src="jobInformationObj.hiringManager.smallPhotoUrl"}}>
+                                                {{else}}
+                                                    <img src="https://c.na24.content.force.com/profilephoto/005/F">
+                                                {{/if}}
                                             </div>
                                         </div>
                                         <div class="part__body width--full pad--sm--ls pad--sm--rm">
@@ -301,7 +317,11 @@
                                     <li class="mar--sm--bxs">
                                         <div class="part__left--fixed pad--sm--n">
                                             <div class="img-container img-container--sm">
-                                                <img {{bind-attr src="jobInformationObj.recruiter.smallPhotoUrl"}}>
+                                                {{#if applicantObj.candidatePhoto}}
+                                                    <img {{bind-attr src="jobInformationObj.recruiter.smallPhotoUrl"}}>
+                                                {{else}}
+                                                    <img src="https://c.na24.content.force.com/profilephoto/005/F">
+                                                {{/if}}
                                             </div>
                                         </div>
                                         <div class="part__body width--full pad--sm--ls pad--sm--rm">

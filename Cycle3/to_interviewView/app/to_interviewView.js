@@ -25,7 +25,6 @@ function formatDateTime(timeSlots, locationTimeZone, locationType){
         startTime = timeSlot.namespace_Start_Time__c;
         endTime = timeSlot.namespace_End_Time__c;
 
-
         var date;
         var formatedStartTime;
         var formatedEndTime;
@@ -77,9 +76,6 @@ App.EditModalView = Ember.View.extend({
 
 
 App.MainController = Ember.ObjectController.extend({
-    isSF1: function(){
-        return isSF1;
-    }.property(),
     applicantObj: function(){
         return this.get('applicant');
     }.property('applicant'),
@@ -151,6 +147,7 @@ App.MainController = Ember.ObjectController.extend({
 
     interviewGuidelines: '',
     plainInterviewGuidelines: function(){
+        // Refactor this (replace in one line)
         var stringsToReplace = this.get('interviewGuidelines').match(/<a([^>]*)>|<\/a>/g);
         
         var plainInterviewGuidelines = this.get('interviewGuidelines');
@@ -257,7 +254,6 @@ App.MainController = Ember.ObjectController.extend({
             win.focus();
         },
         provideFeedback: function(){
-            // window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id');
             var currentUrl = '/apex/to_interviewView?Id=' + encodeURIComponent(this.get('interview.id'));
             window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id') + '&retUrl=' + currentUrl;
         }
