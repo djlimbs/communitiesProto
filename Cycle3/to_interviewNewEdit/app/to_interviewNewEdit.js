@@ -746,8 +746,10 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     if (Ember.isEmpty(parsedResult.errorMessages)) {
                         self.sendEmails({
                             interviewId : parsedResult.data.interview.Id,
-                            message : self.get('updatedInformationMessage') ? self.get('updatedInformationMessage') : '',
+                            message : !Ember.isEmpty(self.get('updatedInformationMessage')) ? self.get('updatedInformationMessage') : '',
                             removedInterviewers : self.get('removedParticipants'),
+                            previousStatus : self.get('previousStatus'),
+                            interviewersChanged : self.get('interviewersChanged'),
                             scheduleChanged : self.get('scheduleChanged'),
                             topicsChanged : self.get('topicsChanged')
                         });
@@ -946,10 +948,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 }
             });
 
-            if (!Ember.isEmpty(self.get('removedParticipants')) || !Ember.isEmpty(addedParticipants)) {
-                this.set('scheduleChanged', true);
-            }
-
+            this.set('interviewersChanged', !Ember.isEmpty(self.get('removedParticipants')) || !Ember.isEmpty(addedParticipants));
+            
             // check for time slot changes
             if (timeSlots.length !== originalTimeSlots.length) {
                 this.set('scheduleChanged', true);
@@ -969,6 +969,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 saveObj.interview.namespace_Logistical_Details__c !== originalLogisticalDetails) {
                 this.set('scheduleChanged', true);
             }
+            
+            this.set('previousStatus', interview.namespace_Status__c);
 
             if (Ember.isEmpty(interview.namespace_Status__c) || interview.namespace_Status__c === 'Draft') {
                 // Saving a new or draft interview.
