@@ -106,6 +106,21 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["_topicsChangedModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div aria-hidden=\"false\" aria-labelledby=\"topicsChangedModal\" class=\"modal fade in\" id=\"topicsChangedModal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bn\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancelModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\">\n                    Interviewers will be notified of topic change\n                </h2>\n            </div>\n            <div class=\"panel__body pad--sm--xl\">\n                <p>\n                    The interviewers will be notified by email that the discussion topics have changed, though their calendar invitations will not be affected.\n                </p>\n            </div>\n            <div class=\"modal__footer pad--sm--tn\">\n                <button class=\"button button--primary js-confirmSendTopicsChanged\" data-dismiss=\"modal\" type=\"button\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["_updateInvitationModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -467,6 +482,11 @@ function program20(depth0,data) {
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "contactModal", options) : helperMissing.call(depth0, "partial", "contactModal", options))));
+  data.buffer.push("\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "topicsChangedModal", options) : helperMissing.call(depth0, "partial", "topicsChangedModal", options))));
   data.buffer.push("\n</div>");
   return buffer;
   
