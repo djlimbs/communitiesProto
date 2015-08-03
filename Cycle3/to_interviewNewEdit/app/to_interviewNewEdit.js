@@ -277,6 +277,7 @@ function initializeGoogleMaps(self) {
                 $self.removeClass('load-this');
                 $self.removeClass('disabled');
             }, function() {
+                $('.geolocation-alert').addClass('visible');
                 $self.removeClass('load-this');
                 $self.removeClass('disabled');
             });
@@ -1183,6 +1184,9 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 this.set('selectedLocation', convertGooglePlaceToLocation(selectedGooglePlace));
                 this.set('googlePlaceSelected', true);
             }
+        },
+        clickGeoLocationClose: function() {
+            $('.geolocation-alert').removeClass('visible');
         }
     }
 });
