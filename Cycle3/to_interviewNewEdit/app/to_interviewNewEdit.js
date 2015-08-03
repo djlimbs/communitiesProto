@@ -42,44 +42,79 @@ function convertInterviewTimeSlotToEventObject(interviewTimeSlotObj) {
 function convertGooglePlaceToLocation(place) { 
     var locationObj = {
         namespace_Location_Name__c: place.name,
-        namespace_Geographical_Location__Latitude__s: place.geometry.location.A,
-        namespace_Geographical_Location__Longitude__s: place.geometry.location.F,
+        namespace_Geographical_Location__Latitude__s: place.geometry.location.lat(),
+        namespace_Geographical_Location__Longitude__s: place.geometry.location.lng(),
         namespace_Google_Place_Id__c: place.place_id
     };
 
-    place.address_components.forEach(function(ac) {
-        if (isStringInArray(ac.types, 'street_number')) {
-            if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
-                locationObj.namespace_Street_Address__c = ac.long_name;
-            } else {
-                locationObj.namespace_Street_Address__c += ' ' + ac.long_name;
-            }
-        }
-
-        if (isStringInArray(ac.types, 'route')) {
-            if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
-                locationObj.namespace_Street_Address__c = ac.long_name;
-            } else {
-                locationObj.namespace_Street_Address__c += ' ' + ac.long_name;
-            }
-        }
-
-        if (isStringInArray(ac.types, 'locality')) {
-            locationObj.namespace_City__c = ac.long_name;
-        }
-
-        if (isStringInArray(ac.types, 'administrative_area_level_1')) {
-            locationObj.namespace_State_Province__c = ac.short_name;
-        }
-
-        if (isStringInArray(ac.types, 'country')) {
-            locationObj.namespace_Country_Region__c = ac.short_name;
-        }
-
-        if (isStringInArray(ac.types, 'postal_code')) {
-            locationObj.namespace_Zip_Postal_Code__c = ac.long_name;
-        }
+    // Street Address field
+    var streetNumber = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'street_number');
     });
+
+    if (!Ember.isNone(streetNumber)) {
+        locationObj.namespace_Street_Address__c = streetNumber.long_name;
+    }
+
+    var streetName = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'route');
+    });
+
+    if (!Ember.isNone(streetName)) {
+        if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
+            locationObj.namespace_Street_Address__c = streetName.long_name;
+        } else {
+            locationObj.namespace_Street_Address__c += ' ' + streetName.long_name;
+        }
+    }
+
+    var unitNumber = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'subpremise');
+    });
+
+    if (!Ember.isNone(unitNumber)) {
+        if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
+            locationObj.namespace_Street_Address__c = unitNumber.long_name;
+        } else {
+            locationObj.namespace_Street_Address__c += ' #' + unitNumber.long_name;
+        }
+    }
+
+    // City field
+    var city = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'locality');
+    });
+
+    if (!Ember.isNone(city)) {
+        locationObj.namespace_City__c = city.long_name;
+    }
+
+    // State/Province field
+    var stateProvince = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'administrative_area_level_1');
+    });
+
+    if (!Ember.isNone(stateProvince)) {
+        locationObj.namespace_State_Province__c = stateProvince.short_name;
+    }
+
+    // Country field
+    var country = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'country');
+    });
+
+    if (!Ember.isNone(country)) {
+        locationObj.namespace_Country_Region__c = country.short_name;
+    }
+
+    // Zip/Postal Code field
+    var zipPostalCode = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'postal_code');
+    });
+
+    if (!Ember.isNone(zipPostalCode)) {
+        locationObj.namespace_Zip_Postal_Code__c = zipPostalCode.long_name;
+    }
 
     return locationObj;
 }
@@ -114,8 +149,8 @@ function initializeGoogleMaps(self) {
         });
         
         defaultLocationCoords = {
-            lat: position.A + latitudeOffset,
-            lng: position.F
+            lat: position.lat() + latitudeOffset,
+            lng: position.lng()
         };
         
         infowindow.setPosition(position);
