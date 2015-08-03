@@ -351,6 +351,9 @@ App.IntegrationController = Ember.ObjectController.extend({
 });
 
 App.CalendarController = Ember.ObjectController.extend({
+    isButtonDisabled: function() {
+        return this.get('isEnabled') === true && Ember.isNone(this.get('selectedProvider'));
+    }.property('isEnabled', 'selectedProvider'),
     settingsChanged: function() {
         if (!Ember.isEmpty(this.get('successfulSaveMessage'))) {
             this.set('successfulSaveMessage', null);

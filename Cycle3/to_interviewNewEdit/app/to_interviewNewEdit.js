@@ -997,7 +997,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('#sendICSModal').modal();
                     $('.js-confirmSendInvitations').off('click');
                     $('.js-confirmSendInvitations').one('click', function() {
-                        saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_Status__c = 'Accepted';
                         saveObj.timeSlots[0].namespace_Status__c = 'Selected';
@@ -1014,7 +1014,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('#sendICSModal').modal();
                     $('.js-confirmSendInvitations').off('click');
                     $('.js-confirmSendInvitations').one('click', function() {
-                        saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_Status__c = 'Accepted';
                         saveObj.timeSlots[0].namespace_Status__c = 'Selected';
@@ -1030,14 +1030,14 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('.js-confirmSave').off('click');
                     $('.js-confirmSave').one('click', function() {
                         if (numTimeSlots === 1) {
-                            saveObj.interview.namespace_Date_and_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                            saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                             saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                             saveObj.interview.namespace_Status__c = 'Accepted';
                             saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         } else if (numTimeSlots > 1) {
                             var acceptedTimeSlot;
                             if (acceptedTimeSlot = saveObj.timeSlots.findBy('namespace_Status__c', 'Selected')) {
-                                saveObj.interview.namespace_Date_and_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                                saveObj.interview.namespace_Start_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                                 saveObj.interview.namespace_End_Time__c = moment(acceptedTimeSlot.namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                                 acceptedTimeSlot.namespace_Status__c = 'Possible';
                             }
