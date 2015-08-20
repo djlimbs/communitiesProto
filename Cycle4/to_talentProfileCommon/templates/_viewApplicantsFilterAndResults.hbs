@@ -27,7 +27,7 @@
             </div>
             <ul id="contentNav" class="list-group list-group--bordered mar--sm--bn bg-1 applicant-list-group">
                 {{#each application in results.viewableApplications itemController="result"}}
-                    {{#link-to "applicationView" application.Id tagName="li" class="list-group__item applicant-entry alertStatusClass"}}
+                    {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="list-group__item applicant-entry alertStatusClass"}}
                         <a href="#candidate1" class="pad--sm--m">
                             <h4 class="card__heading dots">{{application.First_Name__c}} {{application.Last_Name__c}}</h4>
                             <h5 class="card__subheading dots">Rating: <span class="text-success">10</span> (out of 10)</h5>

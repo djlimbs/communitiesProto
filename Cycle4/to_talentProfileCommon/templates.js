@@ -584,6 +584,22 @@ function program51(depth0,data,depth3) {
   
 });
 
+Ember.TEMPLATES["_applicationView"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"content pad--sm--n\">\n    <div class=\"panel js-profile-panel mar--sm--tn\">\n        <div class=\"panel__top\">\n            <div class=\"float--left\">\n                <div class=\"part__body--fixed pad--sm--txs\">\n                    <h4 class=\"card__heading dots\"><a href=\"#\">Lynn Shaw</a></h4>\n                    <h5 class=\"card__subheading dots\" style=\"display: inline-block\">Status: Application (In progress)&nbsp;<a href=\"#\" class=\"js-status-button js-tooltip\">Update</a></h5>\n                </div>\n            </div>\n            <button type=\"button\" class=\"button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button js-tooltip float--right-left\">\n                <span class=\"juicon juicon-chat\"></span> Provide feedback\n            </button>\n        </div>\n        <!-- Identity section only appears in sf1 -->\n        <section id=\"identity1\" class=\"part\">\n            <div class=\"panel__body pad--sm--bs\">\n                <div class=\"row\">\n                    <div class=\"column--md--6\">\n                        <small class=\"block dots mar--sm--bxs\"><label>Source:</label> Internal</small>\n                        <small class=\"block dots mar--sm--bxs\"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a href=\"#\">2 more</a>)</small>\n                        <small class=\"block dots mar--sm--bxs\"><label>Employment:</label> Developer at Appiphony, LLC</small>\n                    </div>\n                    <div class=\"column--md--2\">\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-list\" data-toggle=\"tooltip\" title=\"Application Rating\"></span></label> <span class=\"text-success\">10</span> (out of 10)</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-like\" data-toggle=\"tooltip\" title=\"Positive Interview Feedback\"></span></label> 1 Positive</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-dislike\" data-toggle=\"tooltip\" title=\"Negative Interview Feedback\"></span></label> 0 Negative</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-question-circle\" data-toggle=\"tooltip\" title=\"Neutral Interview Feedback\"></span></label> 0 Neutral</small>\n                    </div>\n                    <div class=\"column--md--4\">\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-envelope\" data-toggle=\"tooltip\" title=\"Email\"></span></label> <a href=\"#\">lynn.shaw@gmail.com</a></small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-phone\" data-toggle=\"tooltip\" title=\"Phone\"></span></label> Not requested</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-location\" data-toggle=\"tooltip\" title=\"Location\"></label> <a href=\"http://maps.google.com\" target=\"maps\">Chicago, IL</a></small>\n                    </div>\n                </div>\n            </div>\n        </section>\n        <section class=\"button-switch-container pad--sm--m pad--sm--bn\">\n            <span class=\"button-group--collapse button-switch\">\n                <div class=\"button button--success\" data-trigger=\"application\" data-group=\"view\">Application</div>\n                <div class=\"button button--success disabled\" data-trigger=\"resume\" data-group=\"view\">Resume</div>\n                <div class=\"button button--success disabled\" data-trigger=\"linkedin\" data-group=\"view\">LinkedIn</div>\n            </span>\n        </section>\n        <div class=\"mar--sm--tm\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "applicationDetails", options) : helperMissing.call(depth0, "partial", "applicationDetails", options))));
+  data.buffer.push("\n        </div>\n        <div class=\"hide\">\n            <section id=\"resume1\">\n                <div class=\"panel__body pad--sm--bs\">\n                    <iframe src=\"https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8\"></iframe>\n                </div>\n            </section>\n        </div>\n        <div class=\"hide\">\n            <section id=\"linkedin1\">\n                <div class=\"panel__body pad--sm--bs\">\n                    <img src=\"../docs/linkedin-csa.png\">\n                </div>\n            </section>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["_childrenObjects"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -1446,7 +1462,7 @@ function program1(depth0,data) {
     'tagName': ("li"),
     'class': ("list-group__item applicant-entry alertStatusClass")
   },inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "applicationView", "application.Id", options) : helperMissing.call(depth0, "link-to", "applicationView", "application.Id", options));
+  stack2 = ((stack1 = helpers['link-to'] || (depth0 && depth0['link-to'])),stack1 ? stack1.call(depth0, "viewApplicantsApplicationReader", "application.Id", options) : helperMissing.call(depth0, "link-to", "viewApplicantsApplicationReader", "application.Id", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                ");
   return buffer;
@@ -2486,22 +2502,6 @@ function program80(depth0,data,depth3) {
   
 });
 
-Ember.TEMPLATES["applicationView"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
-
-
-  data.buffer.push("<div class=\"content pad--sm--n\">\n    <div class=\"panel js-profile-panel mar--sm--tn\">\n        <div class=\"panel__top\">\n            <div class=\"float--left\">\n                <div class=\"part__body--fixed pad--sm--txs\">\n                    <h4 class=\"card__heading dots\"><a href=\"#\">Lynn Shaw</a></h4>\n                    <h5 class=\"card__subheading dots\" style=\"display: inline-block\">Status: Application (In progress)&nbsp;<a href=\"#\" class=\"js-status-button js-tooltip\">Update</a></h5>\n                </div>\n            </div>\n            <button type=\"button\" class=\"button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button js-tooltip float--right-left\">\n                <span class=\"juicon juicon-chat\"></span> Provide feedback\n            </button>\n        </div>\n        <!-- Identity section only appears in sf1 -->\n        <section id=\"identity1\" class=\"part\">\n            <div class=\"panel__body pad--sm--bs\">\n                <div class=\"row\">\n                    <div class=\"column--md--6\">\n                        <small class=\"block dots mar--sm--bxs\"><label>Source:</label> Internal</small>\n                        <small class=\"block dots mar--sm--bxs\"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a href=\"#\">2 more</a>)</small>\n                        <small class=\"block dots mar--sm--bxs\"><label>Employment:</label> Developer at Appiphony, LLC</small>\n                    </div>\n                    <div class=\"column--md--2\">\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-list\" data-toggle=\"tooltip\" title=\"Application Rating\"></span></label> <span class=\"text-success\">10</span> (out of 10)</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-like\" data-toggle=\"tooltip\" title=\"Positive Interview Feedback\"></span></label> 1 Positive</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-dislike\" data-toggle=\"tooltip\" title=\"Negative Interview Feedback\"></span></label> 0 Negative</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-question-circle\" data-toggle=\"tooltip\" title=\"Neutral Interview Feedback\"></span></label> 0 Neutral</small>\n                    </div>\n                    <div class=\"column--md--4\">\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-envelope\" data-toggle=\"tooltip\" title=\"Email\"></span></label> <a href=\"#\">lynn.shaw@gmail.com</a></small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-phone\" data-toggle=\"tooltip\" title=\"Phone\"></span></label> Not requested</small>\n                        <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-location\" data-toggle=\"tooltip\" title=\"Location\"></label> <a href=\"http://maps.google.com\" target=\"maps\">Chicago, IL</a></small>\n                    </div>\n                </div>\n            </div>\n        </section>\n        <section class=\"button-switch-container pad--sm--m pad--sm--bn\">\n            <span class=\"button-group--collapse button-switch\">\n                <div class=\"button button--success\" data-trigger=\"application\" data-group=\"view\">Application</div>\n                <div class=\"button button--success disabled\" data-trigger=\"resume\" data-group=\"view\">Resume</div>\n                <div class=\"button button--success disabled\" data-trigger=\"linkedin\" data-group=\"view\">LinkedIn</div>\n            </span>\n        </section>\n        <div class=\"mar--sm--tm\">\n            ");
-  hashTypes = {};
-  hashContexts = {};
-  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "applicationDetails", options) : helperMissing.call(depth0, "partial", "applicationDetails", options))));
-  data.buffer.push("\n        </div>\n        <div class=\"hide\">\n            <section id=\"resume1\">\n                <div class=\"panel__body pad--sm--bs\">\n                    <iframe src=\"https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8\"></iframe>\n                </div>\n            </section>\n        </div>\n        <div class=\"hide\">\n            <section id=\"linkedin1\">\n                <div class=\"panel__body pad--sm--bs\">\n                    <img src=\"../docs/linkedin-csa.png\">\n                </div>\n            </section>\n        </div>\n    </div>\n</div>");
-  return buffer;
-  
-});
-
 Ember.TEMPLATES["components/_searchFilterApplicationRating"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -3207,5 +3207,18 @@ function program1(depth0,data) {
   data.buffer.push(escapeExpression(((stack1 = helpers['applicant-totals'] || (depth0 && depth0['applicant-totals'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "applicant-totals", options))));
   data.buffer.push("\n    </div>\n\n</div>");
   return buffer;
+  
+});
+
+Ember.TEMPLATES["viewApplicantsApplicationReader"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var stack1, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+
+
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "applicationView", options) : helperMissing.call(depth0, "partial", "applicationView", options))));
   
 });

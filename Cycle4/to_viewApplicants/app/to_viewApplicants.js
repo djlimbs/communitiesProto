@@ -515,13 +515,14 @@ App.ViewApplicantsRoute = Ember.Route.extend({
     }
 });
 
-App.ApplicationViewRoute = Ember.Route.extend({
+App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 	model: function(params) {
 		var self = this;
 		return new Ember.RSVP.Promise(function(resolve, reject) {
 			var resolveObj = {
 				application: self.modelFor('viewApplicants').results.viewableApplications.findBy('Id', params.id)
 			};
+
 
 			resolve(resolveObj);
 
@@ -532,7 +533,7 @@ App.ApplicationViewRoute = Ember.Route.extend({
 // Router
 App.Router.map(function() {
     this.resource('viewApplicants', { path: '/' }, function() {
-    	this.resource('applicationView', { path: '/:id' });
+    	this.resource('viewApplicantsApplicationReader', { path: '/:id' });
     });
 });
 
