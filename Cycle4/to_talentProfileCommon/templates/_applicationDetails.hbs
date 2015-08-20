@@ -1,17 +1,15 @@
-{{#with talentProfile}}
-    {{#if Summary__c}}
-        <section id="summary">
-            <div class="list-heading">
-                <h4 data-qa-label="summary" class="list-heading__title">{{../labels.summary}}</h4>
-            </div>
-            <div class="panel__body pad--sm--bn">
-                <p data-qa-label="summaryValue" class="mar--sm--tn">
-                    {{convertNewLinesToBreaks Summary__c}}
-                </p>
-            </div>
-        </section>
-    {{/if}}
-{{/with}}
+{{#if talentProfile.Summary__c}}
+    <section id="summary">
+        <div class="list-heading">
+            <h4 data-qa-label="summary" class="list-heading__title">{{labels.summary}}</h4>
+        </div>
+        <div class="panel__body pad--sm--bn">
+            <p data-qa-label="summaryValue" class="mar--sm--tn">
+                {{convertNewLinesToBreaks talentProfile.Summary__c}}
+            </p>
+        </div>
+    </section>
+{{/if}}
 <section id="interview">
     <div class="list-heading">
         <h4 class="list-heading__title">{{labels.interviews}}</h4>
@@ -22,13 +20,13 @@
                 <div data-qa-card="interview" class="card mar--sm--tm">
                     <div class="card__body">
                         <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rs pad--sm--rxs"></span>
-                            <a data-qa-link="interview" href="{{unbound interviewUrl}}">{{formattedStartDate}} {{#unless isSF1}}<span class="text-faded"> {{otherText}}</span>{{/unless}}</a>
-                            <span data-qa-label="interviewStatus" class="status {{unbound statusColor}}">{{Status__c}}</span>
+                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}} {{#unless isSF1}}<span class="text-faded"> {{otherText}}</span>{{/unless}}</a>
+                            <span data-qa-label="interviewStatus" {{bind-attr class=":status statusColor"}}>{{Status__c}}</span>
                         </div>
                         <div class="row pad--sm--lxl">
                             <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
                                 <h4 data-qa-label="interviewers" class="mar--sm--n">{{labels.interviewers}}</h4>
-                                {{#if Interviewers__c}}
+                                {{#if model.Interviewers__c}}
                                     {{Interviewers__c}}
                                 {{else}}
                                     <span data-qa-label="noInterviews" class="text-faded">{{labels.notProvided}}</span>
@@ -36,7 +34,7 @@
                             </div>
                             <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
                                 <h4 data-qa-label="topics" class="mar--sm--n">{{labels.topics}}</h4>
-                                {{#if Topics__c}}
+                                {{#if model.Topics__c}}
                                     {{Topics__c}}
                                 {{else}}
                                     <span data-qa-label="noTopics"class="text-faded">{{labels.notProvided}}</span>
@@ -109,7 +107,7 @@
                                 </div>
                             {{/if}}
                         {{/unless}}
-                        {{#if Disposition__c}}
+                        {{#if model.Disposition__c}}
                             <div class="row pad--sm--lxl">
                                 <div data-qa-label="disposition" class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
                                     <h4 data-qa-label="dispositionTitle" class="mar--sm--n">{{labels.disposition}}</h4>
@@ -117,7 +115,7 @@
                                 </div>
                             </div>
                         {{/if}}
-                        {{#if Comments__c}}
+                        {{#if model.Comments__c}}
                             <div data-qa-label="comments" class="block">
                                 "{{convertNewLinesToBreaks Comments__c}}"
                             </div>
@@ -133,7 +131,7 @@
         </div>
     </div>
 </section>
-{{#with talentProfile}}
+{{#with talentProfile as tp}}
     {{partial "childrenObjects"}}
 {{/with}}
 <section id="application-form">
@@ -143,7 +141,7 @@
     <div class="panel__body pad--sm--bn">
         <p class="mar--sm--tn">
             {{#if application.hasScore}}
-                <strong data-qa-label="score" class="{{unbound application.ratingColor}}">{{labels.rating}} {{application.score}}</strong>
+                <strong data-qa-label="score" {{bind-attr class="application.ratingColor"}}>{{labels.rating}} {{application.score}}</strong>
                 {{#if application.showMax}}<span data-qa-label="maxScore" class="text-faded"> ({{labels.outOf}} {{application.Maximum_Score__c}}){{/if}}</span>
             {{else}}
                 <strong data-qa-label="noRating" class="text-faded">{{labels.rating}} N/A</strong>
@@ -190,7 +188,7 @@
                         {{#if value}}
                             {{{value}}}
                         {{else}}
-                            <div data-qa-label="rowNotProvided" class="text-faded">{{../../../labels.notProvided}}</div>
+                            <div data-qa-label="rowNotProvided" class="text-faded">{{labels.notProvided}}</div>
                         {{/if}}
                     </div> 
                 {{/each}}

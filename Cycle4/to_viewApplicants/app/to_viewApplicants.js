@@ -21,6 +21,84 @@ offset : self.get('offset')
 };
 */
 
+// PUT THESE IN A COMMON FILE
+var monthMap = null;
+
+Ember.Handlebars.helper('convertNewLinesToBreaks', function(text, name) {
+    if(text){
+        return new Ember.Handlebars.SafeString(text.replace(/\n/g, '<br/>'));
+    } else {
+        return '';
+    }
+});
+
+Ember.Handlebars.helper('formateDateWithPartition', function(date, secondPart, text) {
+    if(Ember.isEmpty(date) && Ember.isEmpty(secondPart)){
+        return '';
+    } else if(Ember.isEmpty(date)){
+        return secondPart;
+    } else if(Ember.isEmpty(secondPart)){
+        return moment(date).format('MMM DD, YYYY');
+    } else {
+        return moment(date).format('MMM DD, YYYY') + ' ' + text + ' ' + secondPart;
+    }
+});
+
+Ember.Handlebars.helper('formatDate', function(date) {
+    if(Ember.isEmpty(date)){
+        return '';
+    } else {
+        return moment(date).format('MMM DD, YYYY');
+    }
+});
+
+Ember.Handlebars.helper('displayDate', function(startDate, endDate, text) {
+    if(Ember.isEmpty(startDate)){
+        return '';
+    } else if(Ember.isEmpty(endDate)){
+        return (moment(startDate).format('MMM DD, YYYY') + ' ' + text + ' ' + labels.present)
+    } else {
+        return (moment(startDate).format('MMM DD, YYYY') + ' ' + text + ' ' + moment(endDate).format('MMM DD, YYYY'))
+    }
+});
+
+Ember.Handlebars.helper('displayMonthYear', function(month, year) {
+    if(Ember.isEmpty(month) || Ember.isEmpty(year)){
+        return '';
+    } else {
+        formattedMonth = monthMap[month] ? monthMap[month].slice(0, 3) : '';
+        return formattedMonth + ' ' + year;
+    }
+});
+
+Ember.Handlebars.helper('displayMonthYearRange', function(startMonth, startYear, endMonth, endYear, text) {
+    if(Ember.isEmpty(startMonth) || Ember.isEmpty(startYear)){
+        return '';
+    } else if(Ember.isEmpty(endMonth) || Ember.isEmpty(endYear)){
+        formattedStartMonth = monthMap[startMonth] ? monthMap[startMonth].slice(0, 3) : '';
+        return (formattedStartMonth + ' ' + startYear + ' ' + text + ' ' + labels.present);
+    } else {
+        formattedStartMonth = monthMap[startMonth] ? monthMap[startMonth].slice(0, 3) : '';
+        formattedEndMonth = monthMap[endMonth] ? monthMap[endMonth].slice(0, 3) : '';
+
+        return formattedStartMonth + ' ' + startYear + ' ' + text + ' ' + formattedEndMonth + ' ' + endYear ;
+    }
+});
+
+Ember.Handlebars.helper('formatSize', function(size) {
+    var formattedSize = '';
+    if(size >= 1000){
+        formattedSize = '(' + Math.floor(size/1000) + 'KB)';
+    } else if (size >= 100000){
+        formattedSize = '(' + Math.floor(size/100000) + 'MB)';
+    } else if (size > 0) {
+        formattedSize = '(' + size + 'B)';
+    }
+
+    return formattedSize;
+});
+
+
 // Kick off Ember
 App = Ember.Application.create({
     rootElement: '#application'
@@ -72,6 +150,7 @@ App.formatResults = function(obj, res, params) {
 };
 
 App.Fixtures = Ember.Object.create({
+	initData: null,
 	emptyParams: {
 		reqId: reqId,
 		stage : null,
@@ -444,74 +523,101 @@ App.ResultController = Ember.ObjectController.extend({
 	}.property()
 });
 
+App.InterviewController = Ember.ObjectController.extend({
+
+});
+
+App.AdditionalInfoController = Ember.ObjectController.extend({
+	camelizedModel: function() {
+		var model = this.get('model');
+		var camelizedModel = {};
+
+		Object.keys(model).forEach(function(key) {
+			camelizedModel[key.replace('__c','').camelize()] = model[key];
+		});
+
+		return camelizedModel;
+	}.property('model')
+});
+
 App.ViewApplicantsRoute = Ember.Route.extend({
     model: function (){
         return new Ember.RSVP.Promise(function(resolve, reject) {
-        	// Empty params
-        	var params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
+        	var initData = App.Fixtures.get('initData');
 
-        	params.noOutcome = true;
-        	params.allOutcomes = false;
-        	params.sortType = scoreSort;
-        	// When all hired/withdrawn/rejected false, no outcome
+        	if (!Ember.isNone(initData)) {
+        		resolve(initData);
+        	} else {
+        		console.log('run');
+        		// Empty params
+	        	var params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
 
-        	cont.getFilteredApplicants(params, function(res, evt) {
-        		if (res) {
-        			res = parseResult(res);
+	        	params.noOutcome = true;
+	        	params.allOutcomes = false;
+	        	params.sortType = scoreSort;
+	        	// When all hired/withdrawn/rejected false, no outcome
 
-        			if (res.isSuccess) {
-        				console.log(res);
-        				var resolveObj = {
-        					applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
-        					applicationSources: res.data.sourceCounts.getEach('name'),
-        					sortOptions: App.Fixtures.get('sortOptions'),
-        					sortType: scoreSort,
-        					locations: [],
-        					filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
-        					filters: []
-        				};
+	        	cont.getFilteredApplicants(params, function(res, evt) {
+	        		if (res) {
+	        			res = parseResult(res);
 
-        				App.formatHeaderNumbers(resolveObj, res);
-        				App.formatResults(resolveObj, res, params);
-        				// Format locations
-        				if (!Ember.isNone(res.data.requisition.Job_Locations__r)) {
-        					res.data.requisition.Job_Locations__r.records.forEach(function(location) {
-        						resolveObj.locations.addObject({
-        							geolocation: !Ember.isNone(location.Location__r.Geographical_Location__c) ? 
-        											location.Location__r.Geographical_Location__c.latitude + ', ' + location.Location__r.Geographical_Location__c.longitude :
-        											null,
-        							name: location.Location__r.Name,
-        							label: location.Location__r.Name
-        						});
-        					});
-        				}
+	        			if (res.isSuccess) {
+	        				console.log(res);
+	        				var resolveObj = {
+	        					applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
+	        					applicationSources: res.data.sourceCounts.getEach('name'),
+	        					sortOptions: App.Fixtures.get('sortOptions'),
+	        					sortType: scoreSort,
+	        					locations: [],
+	        					filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
+	        					filters: []
+	        				};
 
-        				// Format filters
-        				if (params.showHired === false && params.showWithdrew === false && params.showRejected === false) {
-        					resolveObj.filters.addObject({
-        						name: 'outcome',
-        						text: 'No outcome',
-        						params: {
-        							showHired: false,
-        							showWithdrew: false,
-        							showRejected: false,
-        							noOutcome: true
-        						}
-        					});
-        				}
+	        				App.formatHeaderNumbers(resolveObj, res);
+	        				App.formatResults(resolveObj, res, params);
+	        				// Format locations
+	        				if (!Ember.isNone(res.data.requisition.Job_Locations__r)) {
+	        					res.data.requisition.Job_Locations__r.records.forEach(function(location) {
+	        						resolveObj.locations.addObject({
+	        							geolocation: !Ember.isNone(location.Location__r.Geographical_Location__c) ? 
+	        											location.Location__r.Geographical_Location__c.latitude + ', ' + location.Location__r.Geographical_Location__c.longitude :
+	        											null,
+	        							name: location.Location__r.Name,
+	        							label: location.Location__r.Name
+	        						});
+	        					});
+	        				}
 
-        				console.log(resolveObj);
+	        				// Format filters
+	        				if (params.showHired === false && params.showWithdrew === false && params.showRejected === false) {
+	        					resolveObj.filters.addObject({
+	        						name: 'outcome',
+	        						text: 'No outcome',
+	        						params: {
+	        							showHired: false,
+	        							showWithdrew: false,
+	        							showRejected: false,
+	        							noOutcome: true
+	        						}
+	        					});
+	        				}
 
-        				resolve(resolveObj);
-        			} else {
-        				reject(res);
-        			}
+	        				console.log(resolveObj);
+	        				App.Fixtures.set('initData', resolveObj);
+	        				resolve(resolveObj);
+	        			} else {
+	        				reject(res);
+	        			}
 
-        		} else {
-        			reject({});
-        		}
-        	});
+	        		} else {
+	        			reject({});
+	        		}
+	        	});
+        	}
         });
+    },
+    afterModel: function(model, transition) {
+    	this.transitionTo('viewApplicantsApplicationReader', model.results.viewableApplications[0].Id);
     }
 });
 
@@ -523,9 +629,25 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 				application: self.modelFor('viewApplicants').results.viewableApplications.findBy('Id', params.id)
 			};
 
+			cont.getApplicantData(params.id, function(res, evt) {
+				if (res) {
+					res = parseResult(res);
 
-			resolve(resolveObj);
-
+					if (res.isSuccess) {
+						if (Ember.isNone(monthMap)) {
+							monthMap = res.data.monthMap;
+						}
+						console.log(res.data);
+						resolve(res.data);
+					} else {
+						reject({});
+						// ERRROR
+					}
+				} else {
+					reject({});
+					// ERROR
+				}
+			});
 		});
 	}
 });
