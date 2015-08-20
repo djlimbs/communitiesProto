@@ -98,12 +98,6 @@ Ember.Handlebars.helper('formatSize', function(size) {
     return formattedSize;
 });
 
-
-// Kick off Ember
-App = Ember.Application.create({
-    rootElement: '#application'
-});
-
 App.formatHeaderNumbers = function(obj, res) {
 	obj.totalApplicants = {
         					stageCounts: [],
@@ -514,6 +508,10 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     		}
     	});
     }
+});
+
+App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
+
 });
 
 App.ResultController = Ember.ObjectController.extend({
