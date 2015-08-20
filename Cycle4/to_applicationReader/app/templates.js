@@ -831,6 +831,30 @@ function program21(depth0,data) {
 function program23(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n        <div class=\"mar--sm--tm\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "applicationDetails", options) : helperMissing.call(depth0, "partial", "applicationDetails", options))));
+  data.buffer.push("\n        </div>\n    ");
+  return buffer;
+  }
+
+function program25(depth0,data) {
+  
+  
+  data.buffer.push("\n        <section id=\"resume1\">\n            <div class=\"panel__body pad--sm--bs\">\n                <iframe src=\"https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8\"></iframe>\n            </div>\n        </section>\n    ");
+  }
+
+function program27(depth0,data) {
+  
+  
+  data.buffer.push("\n        <section id=\"linkedin1\">\n            <div class=\"panel__body pad--sm--bs\">\n                <img src=\"../docs/linkedin-csa.png\">\n            </div>\n        </section>\n    ");
+  }
+
+function program29(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
   data.buffer.push("\n                    ");
   hashTypes = {};
   hashContexts = {};
@@ -919,115 +943,55 @@ function program23(depth0,data) {
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "hasAddress", {hash:{},inverse:self.program(21, program21, data),fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                    </small>\n                </div>\n            </div>\n        </div>\n    </section>\n    <section class=\"button-switch-container pad--sm--m pad--sm--bn\">\n        <span class=\"button-group--collapse button-switch\">\n            <div class=\"button button--success\" data-trigger=\"application\" data-group=\"view\">Application</div>\n            <div class=\"button button--success disabled\" data-trigger=\"resume\" data-group=\"view\">Resume</div>\n            <div class=\"button button--success disabled\" data-trigger=\"linkedin\" data-group=\"view\">LinkedIn</div>\n        </span>\n    </section>\n    <div class=\"mar--sm--tm\">\n        ");
+  data.buffer.push("\n                    </small>\n                </div>\n            </div>\n        </div>\n    </section>\n    <section class=\"button-switch-container pad--sm--m pad--sm--bn\">\n        <span class=\"button-group--collapse button-switch\">\n            <div ");
   hashTypes = {};
   hashContexts = {};
-  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "applicationDetails", options) : helperMissing.call(depth0, "partial", "applicationDetails", options))));
-  data.buffer.push("\n    </div>\n    <div class=\"hide\">\n        <section id=\"resume1\">\n            <div class=\"panel__body pad--sm--bs\">\n                <iframe src=\"https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8\"></iframe>\n            </div>\n        </section>\n    </div>\n    <div class=\"hide\">\n        <section id=\"linkedin1\">\n            <div class=\"panel__body pad--sm--bs\">\n                <img src=\"../docs/linkedin-csa.png\">\n            </div>\n        </section>\n    </div>\n</div>\n\n<div class=\"modal fade\" id=\"applicantModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--m\">\n                <button data-qa-button=\"close\" type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                    <span class=\"close-modal-x\"></span>\n                </button>\n                <h3 data-qa-label=\"applications\" class=\"modal__heading\" id=\"myModalLabel\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.otherApplications", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</h3>\n                <h4 data-qa-label=\"name\" class=\"mar--sm--n\"><span class=\"text-faded \">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span></h4>\n            </div>\n            <div class=\"modal__body pad--sm--n\">\n                ");
-  hashContexts = {'itemController': depth0};
-  hashTypes = {'itemController': "STRING"};
-  stack2 = helpers.each.call(depth0, "otherApps", {hash:{
-    'itemController': ("otherApps")
-  },inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n            </div>\n            <div class=\"modal__footer pad--sm--m\">\n                <button type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.close", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</button>\n            </div>\n        </div>\n    </div>\n</div><div class=\"panel js-profile-panel mar--sm--tn\">\n    <div class=\"panel__top\">\n        <div class=\"float--left\">\n            <div class=\"part__body--fixed pad--sm--txs\">\n                <h4 class=\"card__heading dots\"><a ");
-  hashContexts = {'href': depth0};
-  hashTypes = {'href': "STRING"};
-  options = {hash:{
-    'href': ("application.Id")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.First_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "selectTab", "application", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(" ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Last_Name__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></h4>\n                <h5 class=\"card__subheading dots\" style=\"display: inline-block\">Status: ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "statusText", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "hasOutcome", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n            </div>\n        </div>\n        <button type=\"button\" class=\"button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button js-tooltip float--right-left\">\n            <span class=\"juicon juicon-chat\"></span> Provide feedback\n        </button>\n    </div>\n    <!-- Identity section only appears in sf1 -->\n    <section>\n        <div class=\"panel__body pad--sm--bs\">\n            <div class=\"row\">\n                <div class=\"column--md--6\">\n                    <small class=\"block dots mar--sm--bxs\"><label>Source:</label> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Source__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</small>\n                    <small class=\"block dots mar--sm--bxs\"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.action.call(depth0, "openApplicationModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" href=\"#\" >");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "otherAppsLength", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" more</a>)</small>\n                    <small class=\"block dots mar--sm--bxs\"><label>Employment:</label> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "employmentText", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</small>\n                </div>\n                <div class=\"column--md--2\">\n                    <small class=\"block dots mar--sm--bxs\">\n                        <label>\n                            <span class=\"juicon juicon-list\" data-toggle=\"tooltip\" title=\"Application Rating\"></span>\n                        </label> \n                        ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "application.hasScore", {hash:{},inverse:self.program(8, program8, data),fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                    </small>\n                    <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-like\" data-toggle=\"tooltip\" title=\"Positive Interview Feedback\"></span></label> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "positiveFeedback", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Positive</small>\n                    <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-dislike\" data-toggle=\"tooltip\" title=\"Negative Interview Feedback\"></span></label> ");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "negativeFeedback", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" Negative</small>\n                    ");
-  hashTypes = {};
-  hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "allowNeutral", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                </div>\n                <div class=\"column--md--4\">\n                    <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-envelope\" data-toggle=\"tooltip\" title=\"Email\"></span></label> <a ");
-  hashContexts = {'href': depth0};
-  hashTypes = {'href': "STRING"};
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
   options = {hash:{
-    'href': ("mailto:application.Email__c")
+    'class': (":button :button--success showApplicationDetails::disabled")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(">");
+  data.buffer.push(" data-trigger=\"application\" data-group=\"view\">Application</div>\n            <div ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Email__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</a></small>\n                    <small class=\"block dots mar--sm--bxs\"><label><span class=\"juicon juicon-phone\" data-toggle=\"tooltip\" title=\"Phone\"></span></label> \n                            ");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "selectTab", "resume", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--success showResume::disabled")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-trigger=\"resume\" data-group=\"view\">Resume</div>\n            <div ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "application.Mobile_Phone__c", {hash:{},inverse:self.program(14, program14, data),fn:self.program(12, program12, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "selectTab", "linkedin", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--success showLinkedIn::disabled")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-trigger=\"linkedin\" data-group=\"view\">LinkedIn</div>\n        </span>\n    </section>\n    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "showApplicationDetails", {hash:{},inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("</small>\n                    <small class=\"block dots mar--sm--bxs\">\n                        <label>\n                            <span class=\"juicon juicon-location\" data-toggle=\"tooltip\" title=\"Location\">\n                        </label>\n                        ");
+  data.buffer.push("\n    ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "hasAddress", {hash:{},inverse:self.program(21, program21, data),fn:self.program(16, program16, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "showResume", {hash:{},inverse:self.noop,fn:self.program(25, program25, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n                    </small>\n                </div>\n            </div>\n        </div>\n    </section>\n    <section class=\"button-switch-container pad--sm--m pad--sm--bn\">\n        <span class=\"button-group--collapse button-switch\">\n            <div class=\"button button--success\" data-trigger=\"application\" data-group=\"view\">Application</div>\n            <div class=\"button button--success disabled\" data-trigger=\"resume\" data-group=\"view\">Resume</div>\n            <div class=\"button button--success disabled\" data-trigger=\"linkedin\" data-group=\"view\">LinkedIn</div>\n        </span>\n    </section>\n    <div class=\"mar--sm--tm\">\n        ");
+  data.buffer.push("\n    ");
   hashTypes = {};
   hashContexts = {};
-  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "applicationDetails", options) : helperMissing.call(depth0, "partial", "applicationDetails", options))));
-  data.buffer.push("\n    </div>\n    <div class=\"hide\">\n        <section id=\"resume1\">\n            <div class=\"panel__body pad--sm--bs\">\n                <iframe src=\"https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8\"></iframe>\n            </div>\n        </section>\n    </div>\n    <div class=\"hide\">\n        <section id=\"linkedin1\">\n            <div class=\"panel__body pad--sm--bs\">\n                <img src=\"../docs/linkedin-csa.png\">\n            </div>\n        </section>\n    </div>\n</div>\n\n<div class=\"modal fade\" id=\"applicantModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--m\">\n                <button data-qa-button=\"close\" type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                    <span class=\"close-modal-x\"></span>\n                </button>\n                <h3 data-qa-label=\"applications\" class=\"modal__heading\" id=\"myModalLabel\">");
+  stack2 = helpers['if'].call(depth0, "showLinkedIn", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n</div>\n\n<div class=\"modal fade\" id=\"applicantModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--m\">\n                <button data-qa-button=\"close\" type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                    <span class=\"close-modal-x\"></span>\n                </button>\n                <h3 data-qa-label=\"applications\" class=\"modal__heading\" id=\"myModalLabel\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.otherApplications", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1040,7 +1004,7 @@ function program23(depth0,data) {
   hashTypes = {'itemController': "STRING"};
   stack2 = helpers.each.call(depth0, "otherApps", {hash:{
     'itemController': ("otherApps")
-  },inverse:self.noop,fn:self.program(23, program23, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  },inverse:self.noop,fn:self.program(29, program29, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n            </div>\n            <div class=\"modal__footer pad--sm--m\">\n                <button type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\">");
   hashTypes = {};

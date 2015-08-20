@@ -260,7 +260,19 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
     otherAppsLength : function(){
         return this.get('otherApps').length;
     }.property(),
+    showApplicationDetails : function(){
+    	return this.get('selectedTab') == 'application';
+    }.property('selectedTab'),
+    showResume : function(){
+    	return this.get('selectedTab') == 'resume';
+    }.property('selectedTab'),
+    showLinkedIn : function(){
+    	return this.get('selectedTab') == 'linkedin';
+    }.property('selectedTab'),
     actions : {
+    	selectTab : function(tab){
+    		this.set('selectedTab', tab);
+    	},
         navigation : function(link){
             if (link.search(/^http[s]?\:\/\//) == -1) {
                 link = 'http://' + link;
@@ -396,7 +408,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
             }
         },
         openApplicationModal : function(){
-            if(!isSF1){
+            if(isSF1){
                 $('#applicantModal').modal();
             } else {
                 window.location.href = '/_ui/search/ui/UnifiedSearchResults?searchType=2&str=' + this.get('application').get('Name');

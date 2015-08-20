@@ -286,23 +286,10 @@ function applicationReaderProcesser(parsedJson){
         }
     }
 
+    parsedJson.selectedTab = 'application';
     parsedJson.application = Ember.Object.create(parsedJson.application);
-
-    var tabButtons = [
-        {
-            name : 'Application',
-        },
-        {
-            name : 'Resume',
-        },
-        {
-            name : 'LinkedIn'
-        }
-    ];
-
     //helper function defined in toHelpers allows us to get a list of dependent picklists to use.
     parsedJson.statusOptions = getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace);
-    parsedJson.tabButtons = tabButtons;
     parsedJson.jobQuestions = jobQuestions;
     parsedJson.generalQuestions = generalQuestions;
     parsedJson.selectedStage = parsedJson.application.Stage__c;
