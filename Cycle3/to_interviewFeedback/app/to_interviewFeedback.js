@@ -51,8 +51,14 @@ App.MainRoute = Ember.Route.extend({
         var interviews = parsedResult.app.Interviews__r;
         var interviewers = {}
         var selectValues = new Ember.A();
+        var hasSelectedInterview = false;
+
         if(!Ember.isEmpty(interviews)){
             interviews.records.forEach(function(interview){
+                if(interview.Id == parsedResult.interviewId){
+                    hasSelectedInterview = true;
+                }
+
                 var obj = {
                     value : interview.Id + '|Interview',
                     label : Ember.isEmpty(interview.Topics__c) ? 'Interview: ' + interview.Interviewers__c : interview.Topics__c
@@ -79,6 +85,7 @@ App.MainRoute = Ember.Route.extend({
         )
 
         var options = getDependentOptions(apiKey, 'Application__c', 'Outcome__c', 'Disposition__c', namespace);
+
         return Ember.Object.create({
             isSF1 : isSF1,
             interviewers : interviewers,
@@ -101,7 +108,8 @@ App.MainRoute = Ember.Route.extend({
             interviewRTId : parsedResult.interviewRTId,
             additionalCriteriaFields : parsedResult.additionalCriteriaFields,
             applicantName : (parsedResult.app.First_Name__c + ' ' + parsedResult.app.Last_Name__c),
-            retUrl : parsedResult.retUrl
+            retUrl : parsedResult.retUrl,
+            selectedType : hasSelectedInterview ? (parsedResult.interviewId + '|Interview') : ('null|' + labels.miscellaneous)
         });
     }
 });
@@ -128,6 +136,13 @@ App.MainController = Ember.ObjectController.extend({
     showDisposition: function(){
         return this.get('Rejected__c')
     }.property('Rejected__c'),
+    isResumeReview : function(){
+        if(!Ember.isEmpty(this.get('selectedType'))){
+            return this.get('selectedType').split('|')[1] == labels.miscellaneous;
+        }
+
+        return false;
+    }.property('selectedType'),
     selectedFinalOutcome : function(){
         this.set('Rejected__c', false)
         
@@ -180,7 +195,7 @@ App.MainController = Ember.ObjectController.extend({
                 this.set('feedbackError', true);
                 return;
             }
-            console.log('hello');
+
             if(this.get('Rejected__c') == true || this.get('Selected__c') == true){
 
                 var alertChoice = confirm('Are you sure you want to ' + (this.get('Rejected__c') ? 'reject' : 'select') + ' this applicant?');
@@ -217,15 +232,15 @@ App.MainController = Ember.ObjectController.extend({
             
                 if(retUrl){
                     if(isSF1){
-                        sforce.one.back();
-                    } else {
-                        window.history.back();
-                    }
-                } else {
-                    if(isSF1){
                         sforce.one.navigateToURL(retUrl);
                     } else {
                         window.location.href = retUrl;
+                    }
+                } else {
+                    if(isSF1){
+                        sforce.one.back();
+                    } else {
+                        window.history.back();
                     }
                 }   
             }

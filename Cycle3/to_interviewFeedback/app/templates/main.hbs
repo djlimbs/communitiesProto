@@ -35,7 +35,7 @@
                 </div>
                 <div id="TFcontrols">
                     <div {{bind-attr class=":form__group feedbackError:has-error"}}>
-                        <label data-qa-label="feedback" class="block required-field">{{labels.feedback}}</label>
+                        <label data-qa-label="feedback" class="block required-field">Overall&nbsp;{{labels.feedback}}</label>
                         <div class="button-group feedbackButtons">
                             {{#unless selectedFinalOutcome}}
                                 <div class="button-group feedbackButtons">
@@ -66,20 +66,20 @@
                         </div>
                     </div>
                     {{#unless selectedFinalOutcome}}
-                        <div class="form__group ">
-                            <label class="block mar--sm--bs">Questions</label>
+                        {{#unless isResumeReview}}
                             {{#if additionalCriteriaFields}}
-                                    {{#each additionalCriteriaFields}}
-                                        <h5 class="block">{{#if helpText}}{{helpText}}{{else}}{{label}}{{/if}}</h5>
-                                        <div class="select__wrap mar--sm--bm">
-                                            <div class="input__icon juicon juicon-down"></div>
-                                            {{view "select" prompt="Select..." data-qa-select="fieldSetQuestions" content=values value=selectedValue optionLabelPath="content.label" optionValuePath="content.value"}}
-                                        </div>
-                                    {{/each}}
-                            {{else}}
-                                <small class="block text-faded">No additional criteria have been set.</small>
+                                <div class="form__group ">
+                                    <label class="block mar--sm--bs">Questions</label>
+                                        {{#each additionalCriteriaFields}}
+                                            <h5 class="block">{{#if helpText}}{{helpText}}{{else}}{{label}}{{/if}}</h5>
+                                            <div class="select__wrap mar--sm--bm">
+                                                <div class="input__icon juicon juicon-down"></div>
+                                                {{view "select" prompt="Select..." data-qa-select="fieldSetQuestions" content=values value=selectedValue optionLabelPath="content.label" optionValuePath="content.value"}}
+                                            </div>
+                                        {{/each}}
+                                </div>
                             {{/if}}
-                        </div>
+                        {{/unless}}
                     {{/unless}}
 
                     {{#if showDisposition}}

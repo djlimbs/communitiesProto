@@ -23,13 +23,13 @@
                     </div>
                 {{/if}}
                 <nav id="jobNav" class="relative">
-                    <div class="button-group float--right show-brkpoint--md">
+                    <button class="button-group float--right show-brkpoint--md">
                         <a  data-qa-button="actionButton" {{bind-attr href=redirectUrl class=":button actionButtonColor :theme-bg-color disableApplyButton:disabled" disabled="disableApplyButton" data-toggle=toggleDropdown}} target="_top">{{{actionButtonText}}}</a>
                         <ul class="dropdown-menu">
                             <li data-qa-button="applyEmail"class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "email"}}><span class="juicon juicon-envelope"></span> {{labels.applyWithEmail}}</a></li>
                             <li data-qa-button="applyLinkedIn" class="dropdown-menu__list-item"><a href="#" {{action "displayLocationModal" "linkedIn"}}><span class="juicon juicon-linkedin"></span> {{labels.applyWithLinkedIn}}</a></li>
                         </ul>
-                    </div>
+                    </button>
                     <h1 data-qa-label="postName" class="has-subheading page__heading">{{jobPosting.Job_Title__c}}</h1>
                     <h2 data-qa-label="locations" class="page__subheading wsn">{{locationString}}{{#if isRemoteAvailable}} | <small>{{labels.remoteAvailable}}</small>{{/if}}</h2>
                 </nav>

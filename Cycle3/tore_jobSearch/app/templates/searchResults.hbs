@@ -1,0 +1,77 @@
+<div class="scope-container">
+    <div class="content pad--md--txl pad--md--bl">
+        <div class="row">            
+            <div class="column--md--8">
+                {{#if showEmptyState}}
+                    <div>
+                        <div class="panel">
+                            <p data-qa-label="emptyState" class="text-faded text-center pad--sm--xl">
+                                {{labels.emptyState}}
+                            </p>
+                        </div>
+                    </div>
+                {{/if}}
+                {{#if showWarning}}
+                    <div class="alert alert--warning mar--md--bm">
+                        <button data-qa-label="warning" type="button" class="close show-brkpoint--sm--only" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">{{labels.close}}</span></button>
+                        <strong>{{labels.warning}}</strong>
+                    </div>
+                {{/if}}
+
+                {{#each searchResult in searchResults itemController="jobPosting"}}
+                    <div class="card">
+                        <div class="card__body">
+                            {{#if searchResult.isJobAppliedCompleted}}
+                                <button class="float--right button button--secondary mar--md--lxs show-brkpoint--md" disabled="disabled" data-qa-button="applied">{{labels.applied}}</button>
+                            {{else}}
+                                {{#if searchResult.isJobAppliedInProgress}}
+                                    <a class="float--right button button--success mar--md--lxs show-brkpoint--md" {{action "finishApplication"}} data-qa-link="finish">{{labels.finish}}</a>
+                                {{else}}
+                                    {{#if searchResult.isJobSaved}}
+                                        <a class="float--right button button--success  mar--md--lxs show-brkpoint--md" data-qa-link="saved">{{labels.saved}}</a>
+                                    {{else}}
+                                        <button {{action "saveJob"}} {{bind-attr disabled=searchResult.disableSaveButton class=":float--right :button :button--primary :theme-bg-color :mar--md--lxs :theme-bg-color :show-brkpoint--md"}}  data-qa-button="save">{{labels.save}}</button>
+                                    {{/if}}
+                                {{/if}}
+                            {{/if}}
+                            
+                            <div class="row">
+                                <div class="column--md--8">
+                                    <h1 data-qa-link="jobTitle" class="page__heading has-subheading"><a class="theme-link-color" href="#" {{action "jobPostingDrillIn"}}>{{searchResult.Job_Title__c}}</a></h1>
+                                    <h2 data-qa-label="primaryLocation" class="page__subheading">
+                                        {{searchResult.firstLocationString}} 
+                                        {{#if searchResult.otherLocationsString}} &amp; 
+                                            <a data-qa-link="otherLocations" data-toggle="tooltip" title="" class="pointer text-primary theme-link-color" data-original-title="{{unbound searchResult.otherLocationsString}}">
+                                                {{searchResult.otherLocationsCount}} {{searchResult.othersText}}</a>
+                                        {{/if}}
+                                        {{#if searchResult.allowRemote}}
+                                            &nbsp;<small data-qa-label="remoteAvailable">({{labels.remoteAvailable}})</small>
+                                        {{/if}}
+                                    </h2>
+                                </div>
+                            </div>
+                            <div data-qa-label="fieldSetLabels" class="card__text">
+                                {{#each field in searchResult.fieldsToDisplay}}
+                                    {{#if field.value}}
+                                        <div class="job-field">
+                                            <h4 {{bind-attr data-qa-label=field.label}} class="job-field-label">{{field.label}}</h4>
+                                            {{field.value}}
+                                        </div>
+                                    {{/if}}
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+                {{#if showLoadMore}}
+                    <button {{action "loadMore"}} data-qa-button="loadMore" type="button" class="width--full button button--secondary">
+                        {{labels.loadMore}}
+                    </button>
+                {{/if}}
+            </div>
+
+            {{partial "sideBar"}}
+
+        </div>
+    </div>
+</div>
