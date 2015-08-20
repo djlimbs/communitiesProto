@@ -1375,7 +1375,7 @@ function program26(depth0,data) {
   data.buffer.push(" ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "model.Office__c", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "camelizedModel.office", {hash:{},inverse:self.noop,fn:self.program(27, program27, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                        ");
   return buffer;
@@ -1413,7 +1413,7 @@ function program31(depth0,data) {
   data.buffer.push(" ");
   hashTypes = {};
   hashContexts = {};
-  stack2 = helpers['if'].call(depth0, "Status__c", {hash:{},inverse:self.noop,fn:self.program(32, program32, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack2 = helpers['if'].call(depth0, "camelizedModel.status", {hash:{},inverse:self.noop,fn:self.program(32, program32, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                        ");
   return buffer;
@@ -1535,7 +1535,7 @@ function program42(depth0,data) {
   data.buffer.push("\n                            ");
   hashTypes = {};
   hashContexts = {};
-  stack1 = helpers['if'].call(depth0, "Number__c", {hash:{},inverse:self.noop,fn:self.program(43, program43, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  stack1 = helpers['if'].call(depth0, "camelizedModel.number", {hash:{},inverse:self.noop,fn:self.program(43, program43, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n                        ");
   return buffer;
@@ -2753,6 +2753,16 @@ function program1(depth0,data) {
   data.buffer.push(escapeExpression(((stack1 = helpers['applicant-totals'] || (depth0 && depth0['applicant-totals'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "applicant-totals", options))));
   data.buffer.push("\n    </div>\n\n</div>");
   return buffer;
+  
+});
+
+Ember.TEMPLATES["viewApplicants/loading"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  
+
+
+  data.buffer.push("<div class=\"scope-container\">\n    <div class=\"content pad--md--ts pad--sm--only--n pad--sm--tm\">\n        <div class=\"content__section\">\n            <div class=\"load-block\">\n                <div class=\"load-block-icon\"></div>\n            </div>\n        </div>\n    </div>\n</div>");
   
 });
 
