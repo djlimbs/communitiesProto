@@ -1,4 +1,4 @@
-{{#if talentProfile.Summary__c}}
+{{#if talentProfile.camelizedModel.summary}}
     <section id="summary">
         <div class="list-heading">
             <h4 data-qa-label="summary" class="list-heading__title">{{labels.summary}}</h4>
@@ -26,7 +26,7 @@
                         <div class="row pad--sm--lxl">
                             <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
                                 <h4 data-qa-label="interviewers" class="mar--sm--n">{{labels.interviewers}}</h4>
-                                {{#if model.Interviewers__c}}
+                                {{#if camelizedModel.interviewers}}
                                     {{Interviewers__c}}
                                 {{else}}
                                     <span data-qa-label="noInterviews" class="text-faded">{{labels.notProvided}}</span>
@@ -34,7 +34,7 @@
                             </div>
                             <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
                                 <h4 data-qa-label="topics" class="mar--sm--n">{{labels.topics}}</h4>
-                                {{#if model.Topics__c}}
+                                {{#if camelizedModel.topics}}
                                     {{Topics__c}}
                                 {{else}}
                                     <span data-qa-label="noTopics"class="text-faded">{{labels.notProvided}}</span>
@@ -81,14 +81,14 @@
                                         {{headerText}}
                                     </h4>
                                     {{#unless hasFinal}}
-                                        {{#if Interview__r.Topics__c}}
-                                            <div data-qa-label="feedbackInterviewers" class="text-faded dots"><small>{{labels.interviewWith}} {{Interview__r.Interviewers__c}}</small></div>
+                                        {{#if camelizedModel.interviewR.camelizedModel.topics}}
+                                            <div data-qa-label="feedbackInterviewers" class="text-faded dots"><small>{{labels.interviewWith}} {{#with Interview__r}}{{Interviewers__c}}{{/with}}</small></div>
                                         {{/if}}
                                     {{/unless}}
                                 </div>
                             </div>
                             <div class="column--md--4 text-right-left mar--sm--only--bm" style="line-height: 16px">
-                                <small data-qa-label="createdByDate" class="text-faded mar--sm--only--lxl mar--sm--only--bm">{{CreatedBy.Name}} &bull; {{formattedDate}}</small>
+                                <small data-qa-label="createdByDate" class="text-faded mar--sm--only--lxl mar--sm--only--bm">{{#with CreatedBy}}{{Name}}{{/with}} &bull; {{formattedDate}}</small>
                             </div>
                         </div>
                         {{#unless hasFinal}}
@@ -107,7 +107,7 @@
                                 </div>
                             {{/if}}
                         {{/unless}}
-                        {{#if model.Disposition__c}}
+                        {{#if camelizedModel.disposition}}
                             <div class="row pad--sm--lxl">
                                 <div data-qa-label="disposition" class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
                                     <h4 data-qa-label="dispositionTitle" class="mar--sm--n">{{labels.disposition}}</h4>
@@ -115,7 +115,7 @@
                                 </div>
                             </div>
                         {{/if}}
-                        {{#if model.Comments__c}}
+                        {{#if camelizedModel.comments}}
                             <div data-qa-label="comments" class="block">
                                 "{{convertNewLinesToBreaks Comments__c}}"
                             </div>

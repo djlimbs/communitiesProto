@@ -29,10 +29,6 @@ function applicationReaderProcesser(parsedJson){
     var jobQuestions = Ember.A();
     var generalQuestions = Ember.A();
 
-    if(Ember.isEmpty(parsedJson.photoUrl)){
-        parsedJson.photoUrl = defaultIconUrl;
-    }
-
     contactRows = Ember.A();
     contactRow = Ember.A();
 
@@ -77,6 +73,9 @@ function applicationReaderProcesser(parsedJson){
         })
     }
 
+    // camelize talent profile fields
+    parsedJson.talentProfile.camelizedModel = camelizeObj(parsedJson.talentProfile);
+
     //if we have questions split them up into jobQuestions and generalQuestions
     if(parsedJson.application.Applicant_Responses__r && parsedJson.application.Applicant_Responses__r.records){
         parsedJson.application.Applicant_Responses__r.records.forEach(function(resp){
@@ -112,6 +111,8 @@ function applicationReaderProcesser(parsedJson){
                 } else {
                     parsedJson.neutralFeedback += 1
                 }
+
+                evaluation.Interview__r.camelizedModel = camelizeObj(evaluation.Interview__r);
             }
         })
     }
@@ -238,6 +239,23 @@ Ember.Handlebars.helper('formatSize', function(size) {
     }
 
     return formattedSize;
+});
+
+function camelizeObj(obj) {
+	var camelizedObj = {};
+
+	Object.keys(obj).forEach(function(key) {
+		camelizedObj[key.replace('__c','').camelize()] = obj[key];
+	});
+
+	return camelizedObj;
+};
+
+App.CamelizeModelMixin = Ember.Mixin.create({
+	camelizedModel: function() {
+		var model = this.get('model');
+		camelizeObj(model);
+	}.property('model')
 });
 
 App.formatHeaderNumbers = function(obj, res) {
@@ -663,9 +681,11 @@ App.ResultController = Ember.ObjectController.extend({
 	}.property()
 });
 
-App.InterviewController = Ember.ObjectController.extend({
+App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin);
 
-});
+App.FeedbackController = Ember.ObjectController.extend(App.FeedbackMixin, App.CamelizeModelMixin);
+
+App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.CamelizeModelMixin);
 
 App.AdditionalInfoController = Ember.ObjectController.extend({
 	camelizedModel: function() {
@@ -778,7 +798,7 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 							monthMap = res.data.monthMap;
 						}
 						console.log(res.data);
-						resolve(res.data);
+						resolve(applicationReaderProcesser(res.data));
 					} else {
 						reject({});
 						// ERRROR
