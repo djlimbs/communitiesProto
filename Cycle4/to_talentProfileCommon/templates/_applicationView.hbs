@@ -1,62 +1,231 @@
-<div class="content pad--sm--n">
-    <div class="panel js-profile-panel mar--sm--tn">
-        <div class="panel__top">
-            <div class="float--left">
-                <div class="part__body--fixed pad--sm--txs">
-                    <h4 class="card__heading dots"><a href="#">Lynn Shaw</a></h4>
-                    <h5 class="card__subheading dots" style="display: inline-block">Status: Application (In progress)&nbsp;<a href="#" class="js-status-button js-tooltip">Update</a></h5>
+<div class="panel js-profile-panel mar--sm--tn">
+    <div class="panel__top">
+        <div class="float--left">
+            <div class="part__body--fixed pad--sm--txs">
+                <h4 class="card__heading dots"><a {{bind-attr href="application.Id"}}>{{application.First_Name__c}} {{application.Last_Name__c}}</a></h4>
+                <h5 class="card__subheading dots" style="display: inline-block">Status: {{statusText}}
+                    {{#if hasOutcome}}
+                        &nbsp;<small data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{application.Outcome__c}}</small>
+                    {{else}}
+                        &nbsp;<a href="#" class="js-status-button js-tooltip">Update</a></h5>
+                    {{/if}}
+            </div>
+        </div>
+        <button type="button" class="button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button js-tooltip float--right-left">
+            <span class="juicon juicon-chat"></span> Provide feedback
+        </button>
+    </div>
+    <!-- Identity section only appears in sf1 -->
+    <section>
+        <div class="panel__body pad--sm--bs">
+            <div class="row">
+                <div class="column--md--6">
+                    <small class="block dots mar--sm--bxs"><label>Source:</label> {{application.Source__c}}</small>
+                    <small class="block dots mar--sm--bxs"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>)</small>
+                    <small class="block dots mar--sm--bxs"><label>Employment:</label> {{employmentText}}</small>
+                </div>
+                <div class="column--md--2">
+                    <small class="block dots mar--sm--bxs">
+                        <label>
+                            <span class="juicon juicon-list" data-toggle="tooltip" title="Application Rating"></span>
+                        </label> 
+                        {{#if application.hasScore}}
+                            <span {{bind-attr class="application.ratingColor"}}>{{application.score}}</span> {{#if application.showMax}}(out of {{application.Maximum_Score__c}}){{/if}}
+                        {{else}}
+                            <span class="text-faded"> N/A</span>
+                        {{/if}}
+                    </small>
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-like" data-toggle="tooltip" title="Positive Interview Feedback"></span></label> {{positiveFeedback}} Positive</small>
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="Negative Interview Feedback"></span></label> {{negativeFeedback}} Negative</small>
+                    {{#if allowNeutral}}
+                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="Neutral Interview Feedback"></span></label> {{neutralFeedback}} Neutral</small>
+                    {{/if}}
+                </div>
+                <div class="column--md--4">
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-envelope" data-toggle="tooltip" title="Email"></span></label> <a {{bind-attr href="mailto:application.Email__c"}}>{{application.Email__c}}</a></small>
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-phone" data-toggle="tooltip" title="Phone"></span></label> 
+                            {{#if application.Mobile_Phone__c}}
+                                {{application.Mobile_Phone__c}}
+                            {{else}}
+                                <span data-qa-label="noPhone" class="text-faded">{{labels.notProvided}}</span>
+                            {{/if}}</small>
+                    <small class="block dots mar--sm--bxs">
+                        <label>
+                            <span class="juicon juicon-location" data-toggle="tooltip" title="Location">
+                        </label>
+                        {{#if hasAddress}}
+                            {{#if isSF1}}
+                                <span data-qa-label="location"> {{application.City__c}}, {{application.State_Province__c}}</span>
+                            {{else}}
+                                <a data-qa-link="address" {{action "loadGoogleMaps"}} href="#">{{application.City__c}}, {{application.State_Province__c}}</a>
+                            {{/if}}
+                        {{else}}
+                            {{labels.cardNoAddress}}
+                        {{/if}}
+                    </small>
                 </div>
             </div>
-            <button type="button" class="button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button js-tooltip float--right-left">
-                <span class="juicon juicon-chat"></span> Provide feedback
-            </button>
         </div>
-        <!-- Identity section only appears in sf1 -->
-        <section id="identity1" class="part">
+    </section>
+    <section class="button-switch-container pad--sm--m pad--sm--bn">
+        <span class="button-group--collapse button-switch">
+            <div class="button button--success" data-trigger="application" data-group="view">Application</div>
+            <div class="button button--success disabled" data-trigger="resume" data-group="view">Resume</div>
+            <div class="button button--success disabled" data-trigger="linkedin" data-group="view">LinkedIn</div>
+        </span>
+    </section>
+    <div class="mar--sm--tm">
+        {{partial "applicationDetails"}}
+    </div>
+    <div class="hide">
+        <section id="resume1">
             <div class="panel__body pad--sm--bs">
-                <div class="row">
-                    <div class="column--md--6">
-                        <small class="block dots mar--sm--bxs"><label>Source:</label> Internal</small>
-                        <small class="block dots mar--sm--bxs"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a href="#">2 more</a>)</small>
-                        <small class="block dots mar--sm--bxs"><label>Employment:</label> Developer at Appiphony, LLC</small>
-                    </div>
-                    <div class="column--md--2">
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-list" data-toggle="tooltip" title="Application Rating"></span></label> <span class="text-success">10</span> (out of 10)</small>
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-like" data-toggle="tooltip" title="Positive Interview Feedback"></span></label> 1 Positive</small>
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="Negative Interview Feedback"></span></label> 0 Negative</small>
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="Neutral Interview Feedback"></span></label> 0 Neutral</small>
-                    </div>
-                    <div class="column--md--4">
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-envelope" data-toggle="tooltip" title="Email"></span></label> <a href="#">lynn.shaw@gmail.com</a></small>
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-phone" data-toggle="tooltip" title="Phone"></span></label> Not requested</small>
-                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-location" data-toggle="tooltip" title="Location"></label> <a href="http://maps.google.com" target="maps">Chicago, IL</a></small>
-                    </div>
-                </div>
+                <iframe src="https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8"></iframe>
             </div>
         </section>
-        <section class="button-switch-container pad--sm--m pad--sm--bn">
-            <span class="button-group--collapse button-switch">
-                <div class="button button--success" data-trigger="application" data-group="view">Application</div>
-                <div class="button button--success disabled" data-trigger="resume" data-group="view">Resume</div>
-                <div class="button button--success disabled" data-trigger="linkedin" data-group="view">LinkedIn</div>
-            </span>
+    </div>
+    <div class="hide">
+        <section id="linkedin1">
+            <div class="panel__body pad--sm--bs">
+                <img src="../docs/linkedin-csa.png">
+            </div>
         </section>
-        <div class="mar--sm--tm">
-            {{partial "applicationDetails"}}
+    </div>
+</div>
+
+<div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--m">
+                <button data-qa-button="close" type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h3 data-qa-label="applications" class="modal__heading" id="myModalLabel">{{labels.otherApplications}}</h3>
+                <h4 data-qa-label="name" class="mar--sm--n"><span class="text-faded ">{{application.Name}}</span></h4>
+            </div>
+            <div class="modal__body pad--sm--n">
+                {{#each otherApps itemController="otherApps"}}
+                    {{partial "applicationReaderModalApplicant"}}
+                {{/each}}
+            </div>
+            <div class="modal__footer pad--sm--m">
+                <button type="button" class="button button--secondary" data-dismiss="modal">{{labels.close}}</button>
+            </div>
         </div>
-        <div class="hide">
-            <section id="resume1">
-                <div class="panel__body pad--sm--bs">
-                    <iframe src="https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8"></iframe>
-                </div>
-            </section>
+    </div>
+</div><div class="panel js-profile-panel mar--sm--tn">
+    <div class="panel__top">
+        <div class="float--left">
+            <div class="part__body--fixed pad--sm--txs">
+                <h4 class="card__heading dots"><a {{bind-attr href="application.Id"}}>{{application.First_Name__c}} {{application.Last_Name__c}}</a></h4>
+                <h5 class="card__subheading dots" style="display: inline-block">Status: {{statusText}}
+                    {{#if hasOutcome}}
+                        &nbsp;<small data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{application.Outcome__c}}</small>
+                    {{else}}
+                        &nbsp;<a href="#" class="js-status-button js-tooltip">Update</a></h5>
+                    {{/if}}
+            </div>
         </div>
-        <div class="hide">
-            <section id="linkedin1">
-                <div class="panel__body pad--sm--bs">
-                    <img src="../docs/linkedin-csa.png">
+        <button type="button" class="button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button js-tooltip float--right-left">
+            <span class="juicon juicon-chat"></span> Provide feedback
+        </button>
+    </div>
+    <!-- Identity section only appears in sf1 -->
+    <section>
+        <div class="panel__body pad--sm--bs">
+            <div class="row">
+                <div class="column--md--6">
+                    <small class="block dots mar--sm--bxs"><label>Source:</label> {{application.Source__c}}</small>
+                    <small class="block dots mar--sm--bxs"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>)</small>
+                    <small class="block dots mar--sm--bxs"><label>Employment:</label> {{employmentText}}</small>
                 </div>
-            </section>
+                <div class="column--md--2">
+                    <small class="block dots mar--sm--bxs">
+                        <label>
+                            <span class="juicon juicon-list" data-toggle="tooltip" title="Application Rating"></span>
+                        </label> 
+                        {{#if application.hasScore}}
+                            <span {{bind-attr class="application.ratingColor"}}>{{application.score}}</span> {{#if application.showMax}}(out of {{application.Maximum_Score__c}}){{/if}}
+                        {{else}}
+                            <span class="text-faded"> N/A</span>
+                        {{/if}}
+                    </small>
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-like" data-toggle="tooltip" title="Positive Interview Feedback"></span></label> {{positiveFeedback}} Positive</small>
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="Negative Interview Feedback"></span></label> {{negativeFeedback}} Negative</small>
+                    {{#if allowNeutral}}
+                        <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="Neutral Interview Feedback"></span></label> {{neutralFeedback}} Neutral</small>
+                    {{/if}}
+                </div>
+                <div class="column--md--4">
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-envelope" data-toggle="tooltip" title="Email"></span></label> <a {{bind-attr href="mailto:application.Email__c"}}>{{application.Email__c}}</a></small>
+                    <small class="block dots mar--sm--bxs"><label><span class="juicon juicon-phone" data-toggle="tooltip" title="Phone"></span></label> 
+                            {{#if application.Mobile_Phone__c}}
+                                {{application.Mobile_Phone__c}}
+                            {{else}}
+                                <span data-qa-label="noPhone" class="text-faded">{{labels.notProvided}}</span>
+                            {{/if}}</small>
+                    <small class="block dots mar--sm--bxs">
+                        <label>
+                            <span class="juicon juicon-location" data-toggle="tooltip" title="Location">
+                        </label>
+                        {{#if hasAddress}}
+                            {{#if isSF1}}
+                                <span data-qa-label="location"> {{application.City__c}}, {{application.State_Province__c}}</span>
+                            {{else}}
+                                <a data-qa-link="address" {{action "loadGoogleMaps"}} href="#">{{application.City__c}}, {{application.State_Province__c}}</a>
+                            {{/if}}
+                        {{else}}
+                            {{labels.cardNoAddress}}
+                        {{/if}}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="button-switch-container pad--sm--m pad--sm--bn">
+        <span class="button-group--collapse button-switch">
+            <div class="button button--success" data-trigger="application" data-group="view">Application</div>
+            <div class="button button--success disabled" data-trigger="resume" data-group="view">Resume</div>
+            <div class="button button--success disabled" data-trigger="linkedin" data-group="view">LinkedIn</div>
+        </span>
+    </section>
+    <div class="mar--sm--tm">
+        {{partial "applicationDetails"}}
+    </div>
+    <div class="hide">
+        <section id="resume1">
+            <div class="panel__body pad--sm--bs">
+                <iframe src="https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8"></iframe>
+            </div>
+        </section>
+    </div>
+    <div class="hide">
+        <section id="linkedin1">
+            <div class="panel__body pad--sm--bs">
+                <img src="../docs/linkedin-csa.png">
+            </div>
+        </section>
+    </div>
+</div>
+
+<div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--m">
+                <button data-qa-button="close" type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h3 data-qa-label="applications" class="modal__heading" id="myModalLabel">{{labels.otherApplications}}</h3>
+                <h4 data-qa-label="name" class="mar--sm--n"><span class="text-faded ">{{application.Name}}</span></h4>
+            </div>
+            <div class="modal__body pad--sm--n">
+                {{#each otherApps itemController="otherApps"}}
+                    {{partial "applicationReaderModalApplicant"}}
+                {{/each}}
+            </div>
+            <div class="modal__footer pad--sm--m">
+                <button type="button" class="button button--secondary" data-dismiss="modal">{{labels.close}}</button>
+            </div>
         </div>
     </div>
 </div>

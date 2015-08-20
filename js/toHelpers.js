@@ -13,13 +13,12 @@ function parseResult(result) {
 }
 
 /*
-	getDepndentOptions will make a describe call to SF and return an object with the fields the dependent picklist
-	is dependent on. The function needs the VF page to have the following scripts to work
+    getDepndentOptions will make a describe call to SF and return an object with the fields the dependent picklist
+    is dependent on. The function needs the VF page to have the following scripts to work
 
-	<apex:includeScript value="/soap/ajax/30.0/connection.js"/>
-	<apex:includeScript value="/soap/ajax/30.0/apex.js"/>
+    <apex:includeScript value="/soap/ajax/30.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/30.0/apex.js"/>
 */
-
 function getDependentOptions (apiKey, objName, ctrlFieldName, depFieldName, namespace) {
 	sforce.connection.sessionId = apiKey
     if(namespace){
