@@ -127,14 +127,14 @@
                     </h3>
                     <small data-qa-label="patentNumberAndOffice" class="text-faded block">
                         {{#if camelizedModel.number}}
-                            {{Number__c}} {{#if model.Office__c}}({{Office__c}}){{/if}}
+                            {{Number__c}} {{#if camelizedModel.office}}({{Office__c}}){{/if}}
                         {{else}}
                             {{Office__c}}
                         {{/if}}
                     </small>
                     <small data-qa-label="patentDateAndStatus" class="text-faded">
                         {{#if camelizedModel.date}}
-                            {{formatDate Date__c}} {{#if this.Status__c}}({{Status__c}}){{/if}}
+                            {{formatDate Date__c}} {{#if camelizedModel.status}}({{Status__c}}){{/if}}
                         {{else}}
                             {{Status__c}}
                         {{/if}}
@@ -188,7 +188,7 @@
                     <h3 class="mar--sm--n" data-qa-label="certificationName">{{Name}}</h3>
                     <small data-qa-label="certificationIssuer" class="text-faded block">{{Issuer__c}} 
                         {{#if camelizedModel.issuer}}
-                            {{#if this.Number__c}}({{Number__c}}){{/if}}
+                            {{#if camelizedModel.number}}({{Number__c}}){{/if}}
                         {{else}}
                             {{Number__c}}
                         {{/if}}
