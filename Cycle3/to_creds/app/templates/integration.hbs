@@ -1,0 +1,126 @@
+<div class="content__section">
+    {{#unless errorMessage}}
+        {{#unless successfulSaveMessage}}
+            {{#if showStatus}}
+                {{#if canVerify}}
+                    <div {{bind-attr class=":alert isConnected:alert--success:alert--warning :mar--sm--bm"}} data-qa-alert="connectionStatus">
+                        <strong>{{connectionStatus}}</strong>{{#if isConnected}}{{#if isMyLink}}{{#if returnUrl}} <a {{bind-attr href=returnUrl}}>{{labels.returnLink}}</a>{{/if}}{{/if}}{{/if}}
+                    </div>
+                {{/if}}
+            {{/if}}
+        {{else}}
+            <div class="alert alert--success mar--sm--bm" data-qa-alert="saveStatus">
+                <strong>{{successfulSaveMessage}}</strong>{{#if isConnected}}{{#if isMyLink}}{{#if returnUrl}} <a {{bind-attr href=returnUrl}}>{{labels.returnLink}}</a>{{/if}}{{/if}}{{/if}}
+            </div>
+        {{/unless}}
+    {{else}}
+        <div class="alert alert--error mar--sm--bm"}} data-qa-alert="errorMessage">
+            <strong>{{errorMessage}}</strong>
+        </div>
+    {{/unless}}
+    <div class="mar--md--ts">
+        {{#if canDisable}}
+            <div class="form__group" data-qa-container="enable">
+                {{input type="checkbox" checked=isEnabled data-qa-checkbox="enable"}}<label for="cbEnableCredentials">{{enablePostingTo}}</label>
+            </div>
+        {{/if}}
+        {{#if showAuthFields}}
+            {{#each field in authFields}}
+                <div class="form__group" data-qa-container="field">
+                    <label for="" {{bind-attr class="field.isRequired:required-field"}}>{{field.label}}{{#if field.hasTooltip}} <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle mar--sm--rxs" data-original-title="{{unbound field.tooltip}}"></span>{{/if}}</label>
+                    {{#if field.isSelect}}
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" content=field.content optionLabelPath='content.name' optionValuePath='content.value' value=field.value prompt=labels.select }}
+                        </div>
+                    {{else}}
+                        {{input type=field.inputType placeholder="" value=field.value data-qa-input="field" disabled=disableIntegrationHubInput}}
+                    {{/if}}
+                    <small class="input-error-content"></small>
+                </div>
+            {{/each}}
+        {{/if}}
+        {{#unless isIntegrationHubAndIsConnected}}
+            {{#if isIntegrationHub}}
+                <button {{bind-attr class=":button :button--primary :button--ghost isButtonDisabled:disabled isSaving:load-this" disabled="isButtonDisabled"}} {{action "clickConnect"}} data-qa-button="connect">
+                    {{#if isSaving}}
+                        {{labels.loading}}
+                    {{else}}
+                        {{labels.connect}}
+                    {{/if}}
+                </button>
+            {{else}}
+                {{#if oauth}}
+                    {{#if isConnected}}
+                        <button {{bind-attr class=":button :button--error :button--ghost isSaving:load-this" }} data-toggle="modal" data-target="#disconnectModal" data-qa-button="disconnect">
+                            {{#if isSaving}}
+                                {{labels.loading}}
+                            {{else}}
+                                {{labels.disconnect}}
+                            {{/if}}
+                        </button>
+                        <!-- Disconnect Modal -->
+                        <div class="modal fade" id="disconnectModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                            <div class="modal__shell">
+                                <div class="modal__content">
+                                    <div class="modal__top">
+                                        <button type="button" class="close" data-dismiss="modal" data-qa-button="close">
+                                            <span class="close-modal-x"></span>
+                                            <span class="sr-only" data-qa-label="close">{{labels.close}}</span>
+                                        </button>
+                                        <h2 class="modal__heading" id="myModalLabel" data-qa-label="title">{{labels.modal_disconnect_title}}</h2>
+                                    </div>
+                                    <div class="modal__body" data-qa-label="body">
+                                        {{labels.modal_disconnect_body}}
+                                    </div>
+                                    <div class="modal__footer">
+                                        <button type="button" class="button button--secondary"  data-dismiss="modal" data-qa-button="cancel">{{labels.cancel}}</button>
+                                        <button {{action "clickDisconnectOauth" name}} type="button" class="button button--error" data-dismiss="modal" data-qa-button="ok">{{labels.disconnect}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {{else}}
+                        {{#if socialAccounts}}
+                            <div class="form__group" data-qa-container="field">
+                                <label for="">{{labels.facebook_dropdown_label}}</label>
+                                <div class="select__wrap">
+                                    <div class="input__icon juicon juicon-down"></div>
+                                    {{view "select" content=socialAccounts optionLabelPath="content.name" optionValuePath="content.token" componentId=field.componentId data-qa-input="socialAccounts" value=socialAccountToken prompt=labels.select }}
+                                </div>
+                                <small class="input-error-content"></small>
+                            </div>
+                            <button {{bind-attr class=":button :button--primary :button--ghost isButtonDisabled:disabled isSaving:load-this" disabled="isButtonDisabled"}} {{action "clickSaveOauth" name}} data-qa-button="save">
+                                {{#if isSaving}}
+                                    {{labels.loading}}
+                                {{else}}
+                                    {{labels.save}}
+                                {{/if}}
+                            </button>
+                        {{else}}
+                            <button {{bind-attr class=":button :button--primary :button--ghost isButtonDisabled:disabled isSaving:load-this" disabled="isButtonDisabled"}} {{action "clickConnectOauth" name}} data-qa-button="connect">
+                                {{#if isSaving}}
+                                    {{labels.loading}}
+                                {{else}}
+                                    {{#if hasICSettings}}
+                                        Reconnect
+                                    {{else}}
+                                        {{labels.connect}}
+                                    {{/if}}
+                                {{/if}}
+                            </button>
+                        {{/if}}
+                    {{/if}}
+                {{else}}
+                    <button {{bind-attr class=":button :button--primary :button--ghost isButtonDisabled:disabled isSaving:load-this" disabled="isButtonDisabled"}} {{action "clickSave"}} data-qa-button="save">
+                        {{#if isSaving}}
+                            {{labels.loading}}
+                        {{else}}
+                            {{labels.save}}
+                        {{/if}}
+                    </button>
+                {{/if}}
+            {{/if}}
+        {{/unless}}
+    </div>
+</div>

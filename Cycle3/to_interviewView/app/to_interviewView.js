@@ -14,9 +14,9 @@ function detectUrl(text) { // Create link HTML if a URL is recognized
     })
 }
 
-
-function formatDateTime(timeSlots){
+function formatDateTime(timeSlots, locationTimeZone, locationType){
     var timeSlotsArray = [];
+    var interviewIsInPerson = locationType == 'In person' ? true : false;
 
     timeSlots.forEach(function(timeSlot){
         var timeSlotsObj = {};
@@ -25,25 +25,28 @@ function formatDateTime(timeSlots){
         startTime = timeSlot.namespace_Start_Time__c;
         endTime = timeSlot.namespace_End_Time__c;
 
-        var startTimeZone = moment(startTime).zone(userTimeZone).format();
-        var endTimeZone = moment(endTime).zone(userTimeZone).format();
-        var timeZone = String(String(moment(endTime).zone(userTimeZone)._d).match(/\(([^)]+)\)/g)).slice(1,4);
+        var date;
+        var formatedStartTime;
+        var formatedEndTime;
+        var timeZone;
 
-        var fullStartTime = moment(startTimeZone).format('llll');
-        var fullEndTime = moment(endTimeZone).format('llll');
+        if (interviewIsInPerson) {
+            date = moment(startTime).tz(locationTimeZone).format('ddd, MMM DD, YYYY');
+            formatedStartTime = moment(startTime).tz(locationTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
+            formatedEndTime = moment(endTime).tz(locationTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
+            timeZone = moment(endTime).tz(locationTimeZone).format('z');
 
-        var formatedDate = fullStartTime.slice(11)[0] == ',' ? fullStartTime.slice(0, 17) : fullStartTime.slice(0, 16);
-        var sHM = fullStartTime.split(' ')[4][1] == ':' ? fullStartTime.split(' ')[4].slice(0, 4) : fullStartTime.split(' ')[4].slice(0, 5);
-        var fromAmPm = fullStartTime.split(' ')[5][0] == 'A' ? 'a' : 'p';
+        } else {
+            date = moment(startTime).tz(userTimeZone).format('ddd, MMM DD, YYYY');
+            formatedStartTime = moment(startTime).tz(userTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');
+            formatedEndTime = moment(endTime).tz(userTimeZone).format('h:mm A').replace(/(AM|PM)/, '$1');;
+            timeZone = moment(endTime).tz(userTimeZone).format('z');
+        };
 
-        // var eDMDY = fullEndTime.slice(11)[0] == ',' ? fullEndTime.slice(0, 17) : fullEndTime.slice(0, 16);
-        var eHM = fullEndTime.split(' ')[4][1] == ':' ? fullEndTime.split(' ')[4].slice(0, 4) : fullEndTime.split(' ')[4].slice(0, 5);
-        var toAmPm = fullEndTime.split(' ')[5][0] == 'A' ? 'a' : 'p';
 
-        var formatedTime = sHM + '-' + eHM + toAmPm + ' ' + timeZone;
-        timeSlotsObj.formatedDate = formatedDate;
-        timeSlotsObj.formatedTime = formatedTime;
-        
+        timeSlotsObj.formatedDate = date;
+        timeSlotsObj.formatedTime = formatedStartTime + ' - ' + formatedEndTime + ' ' + timeZone;
+
         timeSlotsObj.isAccepted = timeSlot.namespace_Status__c == 'Selected' ? true : false;
         timeSlotsObj.isPossible = timeSlot.namespace_Status__c == 'Possible' ? true : false;        
      
@@ -73,9 +76,6 @@ App.EditModalView = Ember.View.extend({
 
 
 App.MainController = Ember.ObjectController.extend({
-    isSF1: function(){
-        return isSF1;
-    }.property(),
     applicantObj: function(){
         return this.get('applicant');
     }.property('applicant'),
@@ -93,7 +93,6 @@ App.MainController = Ember.ObjectController.extend({
           return this.get('timeSlots').sort();
         };
     }.property('timeSlots'),
-
 
     interviewStatusDraft: function(){
         return this.get('interview.status') == 'Draft' ? true : false;
@@ -129,7 +128,6 @@ App.MainController = Ember.ObjectController.extend({
             return this.get('topicsArray').length != 0 ? true : false;
         };
     }.property('topicsArray'),
-
     interviewersArray: function(){
         if (this.get('interviewers')) {
             return this.get('interviewers').sortBy('name');
@@ -146,9 +144,10 @@ App.MainController = Ember.ObjectController.extend({
     talentProfileObj: function(){
         return this.get('talentProfile');
     }.property('talentProfile'),
-   
+
     interviewGuidelines: '',
     plainInterviewGuidelines: function(){
+        // Refactor this (replace in one line)
         var stringsToReplace = this.get('interviewGuidelines').match(/<a([^>]*)>|<\/a>/g);
         
         var plainInterviewGuidelines = this.get('interviewGuidelines');
@@ -178,16 +177,23 @@ App.MainController = Ember.ObjectController.extend({
             $('#deleteModal').modal({
                 show: true,
             });
+            //window.parent.scrollTo(0,0);
 
             $('#modalDelete').click(function() {
                 var interviewId = self.get('interview').id;
-                cont.deleteInterview(interviewId, function(result, resultObj){});
-
-                $('#modalDelete').unbind('click');
-                window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
+                cont.deleteInterview(interviewId, function(result, resultObj) {
+                    var parsedResult = parseResult(result);
+                    
+                    if (parsedResult.isSuccess) {
+                        window.location.href = window.location.origin + '/' + self.get('interviewObj').application.id;
+                    } else {
+                        // TODO: ERROR MESSAGE FOR FAIL DELETE
+                        $('#modalDelete').unbind('click');
+                    }
+                });
             });
         },
-        clickCancel: function(){
+        clickCancelInterview: function(){
             var self = this;
 
             $('#cancelModal').modal({
@@ -196,10 +202,16 @@ App.MainController = Ember.ObjectController.extend({
 
             $('#modalYes').click(function() {
                 var interviewId = self.get('interview').id;
-                cont.cancelInterview(interviewId, function(result, resultObj){});
-
-                $('#modalYes').unbind('click');
-                window.location.reload();
+                cont.cancelInterview(interviewId, function(result, resultObj) {
+                    var parsedResult = parseResult(result);
+                    
+                    if (parsedResult.isSuccess) {
+                        self.sendEmails();
+                    } else {
+                        // TODO: ERROR MESSAGE FOR FAIL CANCEL
+                        $('#modalYes').unbind('click');
+                    }
+                });
             });
         },
         clickEdit: function(){
@@ -215,8 +227,7 @@ App.MainController = Ember.ObjectController.extend({
             $('#saveEdit').click(function() {
                 $('#saveEdit').unbind('click');
 
-                var interviewGuidelinesString = $('#textareaEdit').val();
-                
+                var interviewGuidelinesString = $('#textareaEdit').val();                
                 var formatedInterviewGuidelines = detectUrl(interviewGuidelinesString);
                 self.set('interviewGuidelines', formatedInterviewGuidelines);           
 
@@ -231,7 +242,6 @@ App.MainController = Ember.ObjectController.extend({
             });
            
         },
-
         viewMap: function(){
             var interviewObj = this.get('interviewObj');
             var streetAddress = interviewObj.location.streetAddress.split(' ').join('+');
@@ -244,13 +254,31 @@ App.MainController = Ember.ObjectController.extend({
             win.focus();
         },
         provideFeedback: function(){
-            window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id');
+            var currentUrl = '/apex/to_interviewView?Id=' + encodeURIComponent(this.get('interview.id'));
+            window.location.href = window.location.origin + '/' + 'apex/to_interviewFeedback?id=' + this.get('application.id') + '&interviewId=' + this.get('interview.id') + '&retUrl=' + currentUrl;
         }
-    } 
+    },
+    sendEmails: function() {
+        var interviewId = this.get('interview').id;
+        
+        cont.sendEmails(interviewId, function(result, resultObj) {
+            var parsedResult = parseResult(result);
+            
+            if (parsedResult.isSuccess) {
+                window.location.reload();
+            } else {
+                // TODO: ERROR MESSAGE FOR FAIL EMAIL
+                $('#modalYes').unbind('click');
+            }
+        });
+    }
 });
 
 App.MainRoute = Ember.Route.extend({
     model: function (){
+        // console.log('////////////////////////////////////////////////////////');
+        // console.log('INTERVIEW VIEW MAP: ', parsedInterviewViewMap);
+        // console.log('////////////////////////////////////////////////////////');
 
         var interview = parsedInterviewViewMap.interview;
         var interviewObj = {
@@ -282,12 +310,13 @@ App.MainRoute = Ember.Route.extend({
             },
             interviewGuidelines: interview.namespace_Interview_Guidelines__c,
             logisticalDetails: interview.namespace_Logistical_Details__c,
-
+            locationTimeZone: interview.namespace_Location_Time_Zone__c,
+            locationType: interview.namespace_Location_Type__c,
         };
 
         var timeSlots;
         if(!Ember.isEmpty(interview.namespace_Interview_Time_Slots__r)){
-            timeSlots = formatDateTime(interview.namespace_Interview_Time_Slots__r.records);
+            timeSlots = formatDateTime(interview.namespace_Interview_Time_Slots__r.records, interview.namespace_Location_Time_Zone__c, interview.namespace_Location_Type__c);
         };
 
         var interviewers = Ember.A();
@@ -382,7 +411,6 @@ App.MainRoute = Ember.Route.extend({
                 feedbackArray.push(feedbackObj);
             });
         };
-
 
         return {
             interview: interviewObj,

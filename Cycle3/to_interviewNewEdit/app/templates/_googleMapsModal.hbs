@@ -1,19 +1,28 @@
 <div aria-hidden="false" aria-labelledby="googleMapsModalLabel" class="modal fade in" id="googleMapsModal" role="dialog" tabindex="-1">
-    <div class="modal__shell big-modal">
+    <div class="modal__shell big-modal" style="max-width: 80%">
         <div class="modal__content">
             <div class="modal__top">
                 <button class="close" data-dismiss="modal" type="button">
                     <span class="close-modal-x"></span><span class="sr-only">Close</span>
                 </button>
                 <h2 class="modal__heading">
-                    Search for a location
+                    Where will the interview be held?
                 </h2>
             </div>
                 <input id="pac-input" class="controls" type="text" placeholder="Enter a location">
-                <div id="map-canvas" style="height:300px;"></div>
+                <div id="map-canvas" style="height:60vh;"></div>
             <div class="modal__footer">
-                <button class="button button--secondary" data-dismiss="modal" type="button">Reset map</button>
-                <button class="button button--primary" data-dismiss="modal" type="button" {{action "clickSelectGoogleLocation"}}>Select location</button>
+                <span class="pad--sm--s alert alert--warning geolocation-alert slide-in" style="margin-right: 5px; padding-top: 10px !important; top: 2px; border-width: 1px; position: relative;">
+                    Sorry, but we couldn't determine your location.
+                    <span class="alert-close-x mar--sm--lxs" {{action "clickGeoLocationClose"}} style="position: relative; top: -1px"></span>
+                </span>
+                
+                <button id="center-button" class="button button--secondary" type="button">
+                    Go to My Location
+                </button>
+                <button {{bind-attr class=":button :button--primary disableLocationSave:disabled"}} data-dismiss="modal" type="button" {{action "clickSelectGoogleLocation"}}>
+                    Use This Place
+                </button>
             </div>
         </div>
     </div>

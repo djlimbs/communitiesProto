@@ -1,0 +1,76 @@
+<div class="scope-container">
+    <div class="content pad--md--tm pad--md--bl pad--sm--only--n">
+        <nav id="integrationNav" class="nav-bar--sf1 mar--sm--bn">
+            <button class="float--right-left button button--secondary mar--sm--only--ls hide-brkpoint--md"><span class="juicon juicon-backward"></span></button>
+            <h2 class="nav-bar--sf1__subtitle page__subheading">{{labels.talentObjects}}</h2>
+            <h1 class="nav-bar--sf1__title has-subtitle has-subheading page__heading">
+                {{#if isSystemPage}}
+                    {{labels.systemConnections}}
+                {{else}}
+                    {{labels.jobPostingConfigurations}}
+                {{/if}}
+            </h1>
+        </nav>
+        <hr class="show-brkpoint--md">
+        <div class="row">
+            {{#if isJPNoConfig}}
+                <div class="alert alert--warning mar--sm--bm" data-qa-alert="errorMessage">
+                    <center><strong>{{labels.configError}}</strong></center>
+                </div>
+            {{else}}
+                <div class="column--md--3">
+                    <div class="content__section" data-qa-container="sidebar">
+                        <nav>
+                            <ul id="setupNav" class="list-group mar--sm--tn">
+                                {{#if isSystemPage}}
+                                    {{#each systemDefaultChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each systemMappingChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each systemWebsiteChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each systemBgChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each systemSearchEngineChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#link-to "calendar" tagName="li" classNames="list-group__item setupNav__item" disabled=disableCalendarLink data-qa-button="custom"}}
+                                        <a href="" class="setupNav__item__link" {{bind-attr disabled="disableCalendarLink"}}>
+                                            Calendar
+                                        </a>
+                                    {{/link-to}}
+                                {{else}}
+                                    {{#each jobPostingJobBoardChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each jobPostingAggregatorChannels itemController=channelNav}}
+                                      {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each jobPostingInternalSocialChannels itemController=channelNav}}
+                                      {{partial "channelLink"}}
+                                    {{/each}}
+                                    {{#each jobPostingSocialChannels itemController="channelNav"}}
+                                        {{partial "channelLink"}}
+                                    {{/each}}
+                                {{/if}}
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="column--md--6" data-qa-container="main">
+                    {{#if connectionMessage}}
+                        <div class="alert alert--error mar--sm--bm" data-qa-alert="errorMessage">
+                            <strong>{{connectionMessage}}</strong>
+                        </div>
+                    {{else}}
+                        {{outlet}}
+                    {{/if}}
+                </div>
+            {{/if}}
+        </div>
+    </div>
+</div>

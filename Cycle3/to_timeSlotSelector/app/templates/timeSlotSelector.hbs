@@ -100,17 +100,23 @@
             <section class="column--md--6" id="location">
                 <div class="panel__body pad--sm--n">
                     <h3>Where</h3>
-                    <small>{{interview.namespace_Location_Name__c}}<br />
-                    {{interview.namespace_Street_Address__c}}<br />
-                    {{interview.namespace_City__c}}, {{interview.namespace_State_Province__c}} {{interview.namespace_Zip_Postal_Code__c}}<br />
-                    <a target="_blank" {{bind-attr href="gmapLink"}}><span class="juicon juicon-location"></span> View Map</a></small>
+                    {{#if interviewIsInPerson}}
+                        <small>{{interview.namespace_Location_Name__c}}<br />
+                        {{interview.namespace_Street_Address__c}}<br />
+                        {{interview.namespace_City__c}}, {{interview.namespace_State_Province__c}} {{interview.namespace_Zip_Postal_Code__c}}<br />
+                        <a target="_blank" {{bind-attr href="gmapLink"}}><span class="juicon juicon-location"></span> View Map</a></small>
+                    {{else}}
+                        {{locationType}}
+                    {{/if}}
                 </div>
             </section>
         </div>
-        <hr />
-        <div id="section-container">
-            <section id="select-section">
-                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--tn">
+        {{#unless isAccepted}}
+            <hr>
+        {{/unless}}
+        <div id="section-container" class="mar--sm--tm">
+            <section id="select-section" {{bind-attr class=":panel__body isAccepted:bg-2"}}>
+                <div class="panel__body pad--sm--ln pad--sm--rn pad--sm--n">
                     <h3>
                         Time and Date
                         {{#if isAccepted}}
@@ -125,7 +131,7 @@
                             {{#if isProposed}}
                                 {{radio-button name="timeSlotSelector" selection=../applicantChoice value=timeSlot.Id data-qa-input="radio" }}
                             {{/if}}
-                            <span {{bind-attr class=":selection-string isDeclined:text-strike"}}>{{timeSlot.date}} | {{timeSlot.startTime}}-{{timeSlot.endTime}} {{timeSlot.timeZone}}</span>
+                            <span {{bind-attr class=":selection-string isDeclined:text-strike"}}>{{timeSlot.date}} | {{timeSlot.startTime}} - {{timeSlot.endTime}} {{timeSlot.timeZone}}</span>
                         </p>
                     {{/each}}
                     
@@ -150,7 +156,7 @@
                         <label for="comments">Your Comments{{#if commentRequired}}<span class="text-error start-hidden" id="comment-asterisk">*</span>{{/if}}</label>
                         {{textarea componentId=componentId data-qa-input='comments' value=comments}}
                         
-                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
+                        <button {{bind-attr class=":button :button--primary isAccepted:button--error :mar--sm--tl disabled:disabled isSubmitting:load-this" disabled=disabled}} id="submit-button" type="button" {{action "submit" on="click"}}>
                             {{#if isAccepted}}
                                 Decline this date and time
                             {{else}}

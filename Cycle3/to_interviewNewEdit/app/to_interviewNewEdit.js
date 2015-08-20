@@ -42,44 +42,79 @@ function convertInterviewTimeSlotToEventObject(interviewTimeSlotObj) {
 function convertGooglePlaceToLocation(place) { 
     var locationObj = {
         namespace_Location_Name__c: place.name,
-        namespace_Geographical_Location__Latitude__s: place.geometry.location.A,
-        namespace_Geographical_Location__Longitude__s: place.geometry.location.F,
+        namespace_Geographical_Location__Latitude__s: place.geometry.location.lat(),
+        namespace_Geographical_Location__Longitude__s: place.geometry.location.lng(),
         namespace_Google_Place_Id__c: place.place_id
     };
 
-    place.address_components.forEach(function(ac) {
-        if (isStringInArray(ac.types, 'street_number')) {
-            if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
-                locationObj.namespace_Street_Address__c = ac.long_name;
-            } else {
-                locationObj.namespace_Street_Address__c += ' ' + ac.long_name;
-            }
-        }
-
-        if (isStringInArray(ac.types, 'route')) {
-            if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
-                locationObj.namespace_Street_Address__c = ac.long_name;
-            } else {
-                locationObj.namespace_Street_Address__c += ' ' + ac.long_name;
-            }
-        }
-
-        if (isStringInArray(ac.types, 'locality')) {
-            locationObj.namespace_City__c = ac.long_name;
-        }
-
-        if (isStringInArray(ac.types, 'administrative_area_level_1')) {
-            locationObj.namespace_State_Province__c = ac.short_name;
-        }
-
-        if (isStringInArray(ac.types, 'country')) {
-            locationObj.namespace_Country_Region__c = ac.short_name;
-        }
-
-        if (isStringInArray(ac.types, 'postal_code')) {
-            locationObj.namespace_Zip_Postal_Code__c = ac.long_name;
-        }
+    // Street Address field
+    var streetNumber = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'street_number');
     });
+
+    if (!Ember.isNone(streetNumber)) {
+        locationObj.namespace_Street_Address__c = streetNumber.long_name;
+    }
+
+    var streetName = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'route');
+    });
+
+    if (!Ember.isNone(streetName)) {
+        if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
+            locationObj.namespace_Street_Address__c = streetName.long_name;
+        } else {
+            locationObj.namespace_Street_Address__c += ' ' + streetName.long_name;
+        }
+    }
+
+    var unitNumber = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'subpremise');
+    });
+
+    if (!Ember.isNone(unitNumber)) {
+        if (Ember.isEmpty(locationObj.namespace_Street_Address__c)) {
+            locationObj.namespace_Street_Address__c = unitNumber.long_name;
+        } else {
+            locationObj.namespace_Street_Address__c += ' #' + unitNumber.long_name;
+        }
+    }
+
+    // City field
+    var city = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'locality');
+    });
+
+    if (!Ember.isNone(city)) {
+        locationObj.namespace_City__c = city.long_name;
+    }
+
+    // State/Province field
+    var stateProvince = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'administrative_area_level_1');
+    });
+
+    if (!Ember.isNone(stateProvince)) {
+        locationObj.namespace_State_Province__c = stateProvince.short_name;
+    }
+
+    // Country field
+    var country = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'country');
+    });
+
+    if (!Ember.isNone(country)) {
+        locationObj.namespace_Country_Region__c = country.short_name;
+    }
+
+    // Zip/Postal Code field
+    var zipPostalCode = place.address_components.find(function(ac) {
+        return isStringInArray(ac.types, 'postal_code');
+    });
+
+    if (!Ember.isNone(zipPostalCode)) {
+        locationObj.namespace_Zip_Postal_Code__c = zipPostalCode.long_name;
+    }
 
     return locationObj;
 }
@@ -93,7 +128,7 @@ function initializeGoogleMaps(self) {
         lng: 151.2195
     };
 
-    var defaultZoom = 13;
+    var defaultZoom = 17;
     var latitudeOffset = .0005;
 
     var infowindow = new google.maps.InfoWindow({
@@ -114,8 +149,8 @@ function initializeGoogleMaps(self) {
         });
         
         defaultLocationCoords = {
-            lat: position.A + latitudeOffset,
-            lng: position.F
+            lat: position.lat() + latitudeOffset,
+            lng: position.lng()
         };
         
         infowindow.setPosition(position);
@@ -149,12 +184,70 @@ function initializeGoogleMaps(self) {
         
         markers.push(marker);
         
+        google.maps.event.addListener(marker, 'click', function() {
+            var thisMarker = this;
+            
+            placesService.getDetails({
+                placeId: this.place_id
+            }, function(selectedPlace, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    var content = [
+                        '<strong>' + selectedPlace.name + '</strong>',
+                        '',
+                        ''
+                    ];
+                    
+                    var location = convertGooglePlaceToLocation(selectedPlace);
+                    
+                    if (location.namespace_Street_Address__c) {
+                        content[1] = location.namespace_Street_Address__c;
+                    }
+                    if (location.namespace_City__c && location.namespace_State_Province__c) {
+                        content[2] = location.namespace_City__c + ' ' + location.namespace_State_Province__c;
+                    }
+                    if (location.namespace_Zip_Postal_Code__c) {
+                        if (content[2] != '') {
+                            content[2] += ', ';
+                        }
+                        content[2] += location.namespace_Zip_Postal_Code__c;
+                    }
+                    if (location.namespace_Country_Region__c) {
+                        if (content[2] != '') {
+                            content[2] += ' ';
+                        }
+                        content[2] += location.namespace_Country_Region__c;
+                    }
+                    
+                    infowindow.setContent('<div>' + content.join('<br>') + '</div>');
+                    infowindow.open(map, thisMarker);
+                    
+                    var markerPosition = thisMarker.getPosition();
+                    map.setCenter(new google.maps.LatLng(markerPosition.lat() + latitudeOffset, markerPosition.lng()));
+                    map.setZoom(defaultZoom);
+                    
+                    self.set('selectedGooglePlace', selectedPlace);
+                    self.set('disableLocationSave', false);
+                }
+            });   
+        });
+        
         defaultZoom = 17;
     }
 
     var map = new google.maps.Map(document.getElementById('map-canvas'), {
         center: defaultLocationCoords,
-        zoom: defaultZoom
+        zoom: defaultZoom,
+        styles: [{
+            featureType: "poi",
+            stylers: [{
+                visibility: "off"
+            }]
+        }, {
+            featureType: "transit.station",
+            stylers: [{
+                visibility: "off"
+            }]
+        }]
     });
     
     var placesService = new google.maps.places.PlacesService(map);
@@ -169,6 +262,29 @@ function initializeGoogleMaps(self) {
         marker.setMap(map);
         infowindow.open(map, marker);
     }
+    
+    $('#center-button').on('click', function() {
+        // Try HTML5 geolocation
+        if(navigator.geolocation) {
+            var $self = $(this);
+            $self.addClass('load-this');
+            $self.addClass('disabled');
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                map.setCenter(pos);
+                map.setZoom(defaultZoom);
+                
+                $self.removeClass('load-this');
+                $self.removeClass('disabled');
+            }, function() {
+                $('.geolocation-alert').addClass('visible');
+                $self.removeClass('load-this');
+                $self.removeClass('disabled');
+            });
+          } else {
+              // do nothing
+          }
+    });
 
     google.maps.event.addListener(searchBox, 'places_changed', function() {
         var places = searchBox.getPlaces();
@@ -184,7 +300,6 @@ function initializeGoogleMaps(self) {
         markers = [];
         var bounds = new google.maps.LatLngBounds();
         for (var i = 0, place; place = places[i]; i++) {
-
             var image = {
                 url: place.icon,
                 size: new google.maps.Size(71, 71),
@@ -237,7 +352,13 @@ function initializeGoogleMaps(self) {
                         
                         infowindow.setContent('<div>' + content.join('<br>') + '</div>');
                         infowindow.open(map, thisMarker);
+                        
+                        var markerPosition = thisMarker.getPosition();
+                        map.setCenter(new google.maps.LatLng(markerPosition.lat() + latitudeOffset, markerPosition.lng()));
+                        map.setZoom(defaultZoom);
+                        
                         self.set('selectedGooglePlace', selectedPlace);
+                        self.set('disableLocationSave', false);
                     }
                 });   
             });
@@ -245,6 +366,11 @@ function initializeGoogleMaps(self) {
             markers.push(marker);
 
             bounds.extend(place.geometry.location);
+        }
+        
+        // select marker if only 1
+        if (markers.length == 1) {
+            google.maps.event.trigger(markers[0], 'click');
         }
 
         map.fitBounds(bounds);
@@ -271,7 +397,7 @@ App.Fixtures = Ember.Object.create({
 });
 
 App.FullCalendarComponent = Ember.Component.extend({
-    attributeBindings: ['isOauthedIntoGoogle', 'isOauthedIntoOutlook', 'timeSlots', 'deletedTimeSlots', 'googleCalendars', 'participants', 'participantsDidChange', 'isEdit', 'calendarEl'],
+    attributeBindings: ['isOauthedIntoGoogle', 'isOauthedIntoOutlook', 'timeSlots', 'deletedTimeSlots', 'googleCalendars', 'participants', 'participantsDidChange', 'isEdit', 'calendarEl', 'numberOfTimeSlots'],
     classNames: ['relative'],
     currentParticipants: [],
     maxNumberOfTimeSlots: 5,
@@ -301,6 +427,8 @@ App.FullCalendarComponent = Ember.Component.extend({
                     event.className = 'fc-available';
                     event.editable = true;
                     $calendar.fullCalendar( 'renderEvent', event, true);
+                    
+                    self.set('numberOfTimeSlots', currentSlots.length + 1);
                 }    
             },
             eventClick: function(calEvent, jsEvent, view) {
@@ -312,6 +440,9 @@ App.FullCalendarComponent = Ember.Component.extend({
                     if (!Ember.isNone(eventObj) && eventObj.id.indexOf('available_slot_') === -1) {
                         self.get('deletedTimeSlots').addObject(eventObj.id);
                     }
+                    
+                    var currentSlots = $calendar.fullCalendar('clientEvents').filterBy('editable', true);
+                    self.set('numberOfTimeSlots', currentSlots.length);
                 }
             },
             eventDrop: function(event, delta, revertFunc) {
@@ -350,6 +481,7 @@ App.FullCalendarComponent = Ember.Component.extend({
         this.set('calendarEl', $calendar);
 
         $calendar.fullCalendar(fullCalendarOptions);
+        this.set('numberOfTimeSlots', $calendar.fullCalendar('clientEvents').filterBy('editable', true).length);
     },
     pullParticipantsCalendarData: function() {
         var $calendar = this.$();
@@ -448,18 +580,20 @@ App.FullCalendarComponent = Ember.Component.extend({
                 // add back participants
 
                 participants.forEach(function(p, i) {
-                    if (!Ember.isNone(googleCalendars.findBy('id', p.Email))) {
+                    //if (!Ember.isNone(googleCalendars.findBy('id', p.Email))) {
                         var liIndex = i+1;
                         var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('box-shadow');
                         var liColor = liCss.match(/rgb\(.+\)/)[0];
-
-                        var eventSourceToAdd = {
+                        var emailComponents = p.Email.split('@');
+                        var email = emailComponents[0].replace('.', '').replace(/\+.+/g, '') + '@' + emailComponents[1];
+                        
+                        var eventSourceToAdd = {    
                             events: function(start, end, timezone, callback) {
                                 var reqBody = {
                                     timeMin: start,
                                     timeMax: end,
                                     items: [{
-                                        id: p.Email
+                                        id: email
                                     }]
                                 };
 
@@ -493,7 +627,7 @@ App.FullCalendarComponent = Ember.Component.extend({
                         currentParticipants.addObject(newParticipant);
 
                         $calendar.fullCalendar('addEventSource', newParticipant.eventSource);
-                    }
+                    //}
                 });
             }
         }, 500);
@@ -518,7 +652,9 @@ App.Select2Component = Ember.TextField.extend({
 
 App.InterviewNewEditView = Ember.View.extend({
     afterRenderEvent: function() {
-        //$('#gettingStartedModal').modal();
+        if (!visited) {
+            $('#gettingStartedModal').modal();
+        }
     }
 });
 
@@ -535,9 +671,16 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
     isOauthedIntoGoogle: function() {
         return App.Fixtures.get('isOauthedIntoGoogle');
     }.property('App.Fixtures.isOauthedIntoGoogle'),
+    isDisabled: function() {
+        var isNew = Ember.isEmpty(this.get('interview.namespace_Status__c'));
+        var isDraft = this.get('interview.namespace_Status__c') === 'Draft';
+        var hasParticipants = !Ember.isEmpty(this.get('participants'));
+        var hasTimeSlots = this.get('numberOfTimeSlots') > 0;
+        
+        return !isNew && !isDraft && (!hasParticipants || !hasTimeSlots);
+    }.property('participantsDidChange', 'numberOfTimeSlots'),
     pullGoogleCalendarData: function() {
         var self = this;
-        var calendarColors = ['blue', 'green', 'orange'];
 
         var isOauthedIntoGoogle = self.get('isOauthedIntoGoogle');
         var toggleParticipants = self.get('toggleParticipants');
@@ -546,7 +689,11 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             gapi.client.load('calendar', 'v3', getAllCalendars);
                     
             function getAllCalendars() {
-                var allCalRequest = gapi.client.calendar.calendarList.list({
+                if (self.get('toggleParticipants') === true) {
+                    self.toggleProperty('participantsDidChange');
+                    self.set('toggleParticipants', false);
+                }
+                /*var allCalRequest = gapi.client.calendar.calendarList.list({
                     calendarId: 'primary',
                     timeMin: moment().format(),
                     showDeleted: false,
@@ -565,84 +712,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                             self.toggleProperty('participantsDidChange');
                             self.set('toggleParticipants', false);
                         }
-
-                        // get interview scheduler calendar
-                        /*
-                        var interviewCalRequest = gapi.client.calendar.events.list({
-                            calendarId: 'appiphony.com_q08ipq97c0fl6spr7b48hpq4ss@group.calendar.google.com',
-                            timeMin: moment().format(),
-                            showDeleted: false,
-                            singleEvents: true,
-                            maxResults: 10,
-                            orderBy: 'startTime'
-                        });
-
-                        interviewCalRequest.execute(function(interviewResponse) {
-                            console.log(interviewResponse);
-                        });
-
-                        
-                        var updatedEvent = {
-                            'summary': 'Google I/O 2015',
-                            'location': '800 Howard St., San Francisco, CA 94103',
-                            'description': 'A chance to hear more about Google\'s developer products.',
-                            'start': {
-                                'dateTime': '2015-07-06T09:00:00-05:00',
-                                'timeZone': 'America/Chicago'
-                            },
-                            'end': {
-                                'dateTime': '2015-07-06T10:00:00-05:00',
-                                'timeZone': 'America/Chicago'
-                            },
-                            'attendees': [
-                                {'email': 'victor@appiphony.com'}
-                            ]
-                        };
-
-                        var moveEventReq = gapi.client.calendar.events.update({
-                            calendarId: 'appiphony.com_q08ipq97c0fl6spr7b48hpq4ss@group.calendar.google.com',
-                            eventId: 'u2576abt5udhc863j4nvpo2ej4',
-                            sendNotifications: true,
-                            resource: updatedEvent
-                        });
-
-                        moveEventReq.execute(function(event) {
-                            console.log(event);
-                            console.log('Event updated: ' + event.htmlLink);
-                        });
-                        */
-                        /*
-                        var event = {
-                          'summary': 'Google I/O 2015',
-                          'location': '800 Howard St., San Francisco, CA 94103',
-                          'description': 'A chance to hear more about Google\'s developer products.',
-                          'start': {
-                            'dateTime': '2015-07-04T09:00:00-05:00',
-                            'timeZone': 'America/Chicago'
-                          },
-                          'end': {
-                            'dateTime': '2015-07-04T10:00:00-05:00',
-                            'timeZone': 'America/Chicago'
-                          },
-                          'attendees': [
-                            {'email': 'victor@appiphony.com'},
-                            {'email': 'burhan@appiphony.com'}
-                          ]
-                        };
-
-                        var addEventToInterviewReq = gapi.client.calendar.events.insert({
-                            calendarId: 'appiphony.com_q08ipq97c0fl6spr7b48hpq4ss@group.calendar.google.com',
-                            sendNotifications: true,
-                            supportsAttachments: true,
-                            resource: event
-                        });
-
-                        addEventToInterviewReq.execute(function(event) {
-                            console.log(event);
-                            console.log('Event created: ' + event.htmlLink);
-                        }); */
                     }
-                });
+                });*/
             }
         } else if (toggleParticipants === true) {
 
@@ -701,19 +772,42 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
         } 
     },
     saveInterview: function(saveObj) {
-        this.presaveInterview(saveObj, function(_saveObj) {
+        var self = this;
+        
+        self.presaveInterview(saveObj, function(_saveObj) {
                 cont.saveInterview(JSON.stringify(_saveObj), function(res, evt) {
                 if (res) {
                     var parsedResult = parseResult(res);
-
+                    
                     if (Ember.isEmpty(parsedResult.errorMessages)) {
-                        window.location.href = retUrl;
+                        self.sendEmails({
+                            interviewId : parsedResult.data.interview.Id,
+                            message : !Ember.isEmpty(self.get('updatedInformationMessage')) ? self.get('updatedInformationMessage') : '',
+                            removedInterviewers : self.get('removedParticipants'),
+                            previousStatus : self.get('previousStatus'),
+                            interviewersChanged : self.get('interviewersChanged'),
+                            scheduleChanged : self.get('scheduleChanged'),
+                            topicsChanged : self.get('topicsChanged')
+                        });
                     } else {
                         console.log(parsedResult)
                         // BROKE DAWG
                     }
                 }
             });
+        });
+    },
+    sendEmails: function(jsonData) {
+        cont.sendEmails(JSON.stringify(jsonData), function(res, evt) {
+            if (res) {
+                var parsedResult = parseResult(res);
+            
+                if (Ember.isEmpty(parsedResult.errorMessages)) {
+                    window.location.href = retUrl;
+                } else {
+                    console.log(parsedResult);
+                }
+            }
         });
     },
     presaveInterview: function(saveObj, callback) {
@@ -758,29 +852,29 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             var participants = this.get('participants');
             var $calendar = this.get('calendarEl');
             var allCalendarEvents = $calendar.fullCalendar('clientEvents');
+            var topics = Ember.isEmpty(interview.topics) ? [] : interview.topics.split(',');
             var timeSlots = allCalendarEvents.filterBy('editable', true);
             var selectedLocation = this.get('selectedLocation');
             var applicant = this.get('applicant');
-
             var isEdit = this.get('isEdit');
-            var originalTopics = this.get('originalTopics');
+            var originalTopics = Ember.isEmpty(this.get('originalTopics')) ? [] : this.get('originalTopics').split(',');
             var originalTimeSlots = this.get('originalTimeSlots');
             var originalParticipants = this.get('originalParticipants');
             var originalLocationName = this.get('originalLocationName');
             var originalLogisticalDetails = this.get('originalLogisticalDetails');
-            var scheduleDidChange = false;
             var areParticipantsSelected = false;
             var areTopicsSelected = false;
             var isLocationSelected = false;
-            var numTimeSlots = 0;
+            var numTimeSlotss = 0;
 
             this.set('isSaving', true);
+            this.set('scheduleChanged', false);
 
             // format topics
             var topicIndex = 1;
 
             if (!Ember.isEmpty(interview.topics)) {
-                interview.topics.split(',').forEach(function(topic, i) {
+                topics.forEach(function(topic, i) {
                     topicIndex = i + 1;
                     interview['Topic' + topicIndex + '__c'] = topic;
                 });
@@ -797,7 +891,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             }
 
             // format participants
-            var userIndex = 1;
+            var userIndex = 0;
             var interviewersString;
             participants.forEach(function(participant, i) {
                 userIndex = i + 1;
@@ -812,7 +906,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 }
             });
 
-            interview.Interviewers__c = interviewersString;
+            interview.Interviewers__c = interviewersString ? interviewersString : '';
 
             for (var i = userIndex + 1; i <= 10; i++) {
                 interview['User' + i + '__c'] = null;
@@ -872,17 +966,13 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             }
 
             // check for topic changes
-            /*
-            if (interview.topics !== originalTopics) {
-                scheduleDidChange = true;
-            }
-            */
-
+            this.set('topicsChanged', $(topics).not(originalTopics).length !== 0 || $(originalTopics).not(topics).length !== 0);
+            
             // check if interview has removed participants
-            var removedParticipants = [];
+            self.set('removedParticipants', []);
             originalParticipants.forEach(function(op){
                 if (Ember.isNone(participants.findBy('Id', op.Id))) {
-                    removedParticipants.addObject(op.Id);
+                    self.get('removedParticipants').addObject(op.Id);
                 }
             });
 
@@ -894,34 +984,29 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 }
             });
 
-            if (!Ember.isEmpty(removedParticipants) || !Ember.isEmpty(addedParticipants)) {
-                scheduleDidChange = true;
-            }
-
+            this.set('interviewersChanged', !Ember.isEmpty(self.get('removedParticipants')) || !Ember.isEmpty(addedParticipants));
+            
             // check for time slot changes
             if (timeSlots.length !== originalTimeSlots.length) {
-                scheduleDidChange = true;
+                this.set('scheduleChanged', true);
             } else {
                 originalTimeSlots.forEach(function(ots) {
                     if (Ember.isEmpty(saveObj.timeSlots.filter(function(ts) {
                         return moment(ots.namespace_Start_Time__c).valueOf() === moment(ts.namespace_Start_Time__c).valueOf()
                                 && moment(ots.namespace_End_Time__c).valueOf() === moment(ts.namespace_End_Time__c).valueOf();
                     }))) { 
-                        scheduleDidChange = true;
+                        self.set('scheduleChanged', true);
                     }
                 });
             }
-
-            // check for location changes
-            if (saveObj.interview.namespace_Location_Name__c !== originalLocationName) {
-                scheduleDidChange = true;
+            
+            // check for location changes and logistical detail changes
+            if (saveObj.interview.namespace_Location_Name__c !== originalLocationName ||
+                saveObj.interview.namespace_Logistical_Details__c !== originalLogisticalDetails) {
+                this.set('scheduleChanged', true);
             }
-
-            // check for logistical detail changes
-            if (saveObj.interview.namespace_Logistical_Details__c !== originalLogisticalDetails) {
-                scheduleDidChange = true;
-            }
-
+            
+            this.set('previousStatus', interview.namespace_Status__c);
 
             if (Ember.isEmpty(interview.namespace_Status__c) || interview.namespace_Status__c === 'Draft') {
                 // Saving a new or draft interview.
@@ -935,11 +1020,6 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     $('.js-justSave').off('click');
 
                     $('.js-confirmSendEmail').one('click', function() {
-                        saveObj.emailProxies = [{
-                            Template__c: 'Time Slot Selector',
-                            Application__c: parsedInterviewNewEditJson.application.Id,
-                            Email__c: parsedInterviewNewEditJson.application.Email__c
-                        }];
                         saveObj.interview.namespace_Status__c = 'Proposed';
                         self.saveInterview(saveObj);
                     });
@@ -950,99 +1030,62 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     });
                 } else if (numTimeSlots === 1 && areParticipantsSelected && isLocationSelected) {
                     // if there's only a single timeslot and necessary info has been filled out
-
                     $('#sendICSModal').modal();
-
                     $('.js-confirmSendInvitations').off('click');
-
                     $('.js-confirmSendInvitations').one('click', function() {
-                        // do the ICS invite stuff.
-                        saveObj.emailProxies = [{
-                            Template__c: 'ICS Accepted Applicant',
-                            Application__c: parsedInterviewNewEditJson.application.Id,
-                            Email__c: parsedInterviewNewEditJson.application.Email__c
-                        }];
-
-                        // add every interviewer's ICS.
-
-                        participants.forEach(function(p) {
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'ICS Accepted Interviewer',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: p.Email
-                            });
-                        });
-                        // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                        // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                        saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                         saveObj.interview.namespace_Status__c = 'Accepted';
                         saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         self.saveInterview(saveObj);
                     });
                 } else {
-                    saveObj.interview.namespace_Status__c = !Ember.isEmpty(interview.namespace_Status__c) ? interview.namespace_Status__c : 'Draft';
+                    saveObj.interview.namespace_Status__c = 'Draft';
                     this.saveInterview(saveObj);
                 }      
             } else if (interview.namespace_Status__c === 'Proposed') {
                 // Updating a proposed interview.
-
-                this.saveInterview(saveObj);
-
+                if (numTimeSlots === 1 && areParticipantsSelected && isLocationSelected) {
+                    // if there's only a single timeslot and necessary info has been filled out
+                    $('#sendICSModal').modal();
+                    $('.js-confirmSendInvitations').off('click');
+                    $('.js-confirmSendInvitations').one('click', function() {
+                        saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                        saveObj.interview.namespace_Status__c = 'Accepted';
+                        saveObj.timeSlots[0].namespace_Status__c = 'Selected';
+                        self.saveInterview(saveObj);
+                    });
+                } else {
+                    this.saveInterview(saveObj);
+                }
             } else if (interview.namespace_Status__c === 'Accepted' || interview.namespace_Status__c === 'Declined' || interview.namespace_Status__c === 'Canceled') {
-                if (scheduleDidChange === true && numTimeSlots > 0 && areParticipantsSelected && isLocationSelected) {
+                if (this.get('scheduleChanged') === true && numTimeSlots > 0 && areParticipantsSelected && isLocationSelected) {
                     $('#updateInvitationModal').modal();
 
+                    $('.js-confirmSave').off('click');
                     $('.js-confirmSave').one('click', function() {
-                        saveObj.emailProxies = [];
-
-                        if (!Ember.isEmpty(removedParticipants)) {
-                            // Send cancellation ICS to removed interviewer.
-                            removedParticipants.forEach(function(rp) {
-                                saveObj.emailProxies.addObject({
-                                    Template__c: 'ICS Remove Interviewer', // MAKE THIS TEMPLATE
-                                    Application__c: parsedInterviewNewEditJson.application.Id,
-                                    Email__c: rp.Email__c
-                                });
-                            });
-                            
-                        }
-
                         if (numTimeSlots === 1) {
-                            // add applicant's ICS.
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'ICS Accepted Applicant',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: parsedInterviewNewEditJson.application.Email__c
-                            });
-
-                            // add every interviewer's ICS.
-                            participants.forEach(function(p) {
-                                saveObj.emailProxies.addObject({
-                                    Template__c: 'ICS Accepted Interviewer',
-                                    Application__c: parsedInterviewNewEditJson.application.Id,
-                                    Email__c: p.Email
-                                });
-                            });
-                            // saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                            // saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
+                            saveObj.interview.namespace_Start_Time__c = moment(saveObj.timeSlots[0].namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                            saveObj.interview.namespace_End_Time__c = moment(saveObj.timeSlots[0].namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
                             saveObj.interview.namespace_Status__c = 'Accepted';
                             saveObj.timeSlots[0].namespace_Status__c = 'Selected';
                         } else if (numTimeSlots > 1) {
-                            saveObj.emailProxies.addObject({
-                                Template__c: 'Time Slot Selector',
-                                Application__c: parsedInterviewNewEditJson.application.Id,
-                                Email__c: parsedInterviewNewEditJson.application.Email__c
-                            });
-
                             var acceptedTimeSlot;
                             if (acceptedTimeSlot = saveObj.timeSlots.findBy('namespace_Status__c', 'Selected')) {
-                                // saveObj.interview.namespace_Start_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                                // saveObj.interview.namespace_End_Time__c = moment(acceptedTimeSlot.namespace_End_Time__c).utc().format('YYYYMMDDTHHmmss') + 'Z';
-                                saveObj.interview.namespace_Status__c = 'Accepted';
-                            } else {
-                                saveObj.interview.namespace_Status__c = 'Proposed';
+                                saveObj.interview.namespace_Start_Time__c = moment(acceptedTimeSlot.namespace_Start_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                                saveObj.interview.namespace_End_Time__c = moment(acceptedTimeSlot.namespace_End_Time__c).utc().format('YYYY-MM-DDTHH:mm:ss.000') + 'Z';
+                                acceptedTimeSlot.namespace_Status__c = 'Possible';
                             }
+                            saveObj.interview.namespace_Status__c = 'Proposed';
                         }
+                        self.saveInterview(saveObj);
+                    });
+                } else if (interview.namespace_Status__c === 'Accepted' && this.get('topicsChanged') === true) {
+                    $('#topicsChangedModal').modal();
 
+                    $('.js-confirmSendTopicsChanged').off('click');
+                    $('.js-confirmSendTopicsChanged').one('click', function() {
                         self.saveInterview(saveObj);
                     });
                 } else {
@@ -1093,6 +1136,31 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             });
             */
         },
+        clickRemoveLocation: function() {
+            this.set('selectedLocation', null);
+            this.set('selectedLocation', this.get('availableLocations')[0]);
+            this.set('interview.namespace_City__c', this.get('selectedLocation.namespace_City__c'));
+            this.set('interview.namespace_Country_Region__c', this.get('selectedLocation.namespace_Country_Region__c'));
+            this.set('interview.namespace_Geographical_Location__c', {
+                latitude: this.get('selectedLocation.namespace_Geographical_Location__Latitude__s'),
+                longitude: this.get('selectedLocation.namespace_Geographical_Location__Longitude__s')
+            });
+            this.set('interview.namespace_Location_Name__c', this.get('selectedLocation.namespace_Location_Name__c'));
+            this.set('interview.namespace_State_Province__c', this.get('selectedLocation.namespace_State_Province__c'));
+            this.set('interview.namespace_Street_Address__c', this.get('selectedLocation.namespace_Street_Address__c'));
+            this.set('interview.namespace_Zip_Posting_Code__c', this.get('selectedLocation.namespace_Zip_Posting_Code__c'));
+            
+            // no 'In person' interview?
+            if (!Ember.isEmpty(this.get('interview.namespace_Location_Type__c')) &&
+                this.get('interview.namespace_Location_Type__c') !== 'In person'
+            ) {
+                this.set('selectedLocation', {
+                    namespace_Location_Name__c: this.get('interview.namespace_Location_Type__c')
+                });
+            }
+            
+            this.set('googlePlaceSelected', false);
+        },
         clickSelectLocation: function(location) {
             this.set('selectedLocation', location);
         },
@@ -1106,6 +1174,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 initializeGoogleMaps(this);
             }
             
+            this.set('disableLocationSave', true);
             $('#googleMapsModal').modal();
 
         },
@@ -1113,7 +1182,11 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             var selectedGooglePlace = this.get('selectedGooglePlace');
             if (!Ember.isNone(selectedGooglePlace)) {
                 this.set('selectedLocation', convertGooglePlaceToLocation(selectedGooglePlace));
+                this.set('googlePlaceSelected', true);
             }
+        },
+        clickGeoLocationClose: function() {
+            $('.geolocation-alert').removeClass('visible');
         }
     }
 });
@@ -1253,8 +1326,8 @@ App.InterviewNewEditRoute = Ember.Route.extend({
                 }
 
                 interviewNewEditObj.deletedTimeSlots = [];
-
                 interviewNewEditObj.calendarEl = null;
+                interviewNewEditObj.googlePlaceSelected = interviewNewEditObj.interview.namespace_Google_Place_Id__c ? true : false;
 
                 if (Ember.isEmpty(retUrl)) {
                     retUrl = '/' + interviewNewEditObj.interview.Application__c;

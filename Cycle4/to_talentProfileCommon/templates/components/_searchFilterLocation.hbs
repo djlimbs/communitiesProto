@@ -1,0 +1,32 @@
+<div>
+    <div class="row">
+        <div class="column column--md--8">
+            <label>Less Than<!-- <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle" data-original-title="Distance from the applicant's address to the primary location"></span>--></label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select"
+                        content=availableRadii
+                        value=radius}}
+            </div>
+        </div>
+        <div class="column column--md--4 pad--sm--tl">
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select"
+                        content=availableUnits
+                        value=units}}
+            </div>
+        </div>
+        <div class="column column--md--12 mar--sm--tm">
+            <label>From</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" 
+                        content=locations
+                        optionLabelPath="content.name"
+                        optionValuePath="content.geolocation"
+                        value=location}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+{
+  "appId": "e5e0d681-2624-4077-b78f-a4605e2c376c",
+  "appRoles": [],
+  "availableToOtherTenants": false,
+  "displayName": "toproto-exchange",
+  "errorUrl": null,
+  "groupMembershipClaims": null,
+  "homepage": "https://c.na24.visual.force.com/apex/protoGCal",
+  "identifierUris": [
+    "https://c.na24.visual.force.com/apex/protoGCal"
+  ],
+  "keyCredentials": [
+    {
+      "customKeyIdentifier": "esP3MgXN7p3orKVYzGWR0I5lF4Y=",
+      "type": "AsymmetricX509Cert",
+      "usage": "Verify",
+      "value": "MIIEjDCCA3SgAwIBAgIJAOH8/2qYwAJ6MA0GCSqGSIb3DQEBBQUAMIGKMQswCQYD
+VQQGEwJVUzERMA8GA1UECBMISWxsaW5vaXMxEDAOBgNVBAcTB0NoaWNhZ28xEjAQ
+BgNVBAoTCUFwcGlwaG9ueTEMMAoGA1UECxMDRGV2MQ8wDQYDVQQDEwZWaWN0b3Ix
+IzAhBgkqhkiG9w0BCQEWFHZpY3RvckBhcHBpcGhvbnkuY29tMB4XDTE1MDcwMjAy
+MzIyOVoXDTE2MDcwMTAyMzIyOVowgYoxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhJ
+bGxpbm9pczEQMA4GA1UEBxMHQ2hpY2FnbzESMBAGA1UEChMJQXBwaXBob255MQww
+CgYDVQQLEwNEZXYxDzANBgNVBAMTBlZpY3RvcjEjMCEGCSqGSIb3DQEJARYUdmlj
+dG9yQGFwcGlwaG9ueS5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB
+AQDSL53z9ji8AkJKY0maEUZx6LRXGbCuHy4fdZVj3M8Vu/ZX12bZpZYfMQGlJHdK
+Cbf6sX+5Hja6FyF1cym/xhZbWCl88CjthnVgpx9t/jbIRlfpm+u2BxY7r3BWer0Z
+8rWLNtMU1b84tod8cwR0LT43+AgaABvdRMgL/JbYE7xIwL41qkExhb7yWBjKvdPu
+HVc8dSnMX0MBe1COuMxavngHFxuy354NVS0iCT0epdrzzJK4rSwGZ7eKvbtDoqDW
+3dR5U5Esv6Zc4ciDOSALx7jhop/rnN832d2SAUHJ3ixRWfVYd1Z+LR6P5g/QJoTm
+75WixCu8rP7BtFnM2HKteVDtAgMBAAGjgfIwge8wHQYDVR0OBBYEFOibTF6JN5lb
+3XSac40MEgyMip9vMIG/BgNVHSMEgbcwgbSAFOibTF6JN5lb3XSac40MEgyMip9v
+oYGQpIGNMIGKMQswCQYDVQQGEwJVUzERMA8GA1UECBMISWxsaW5vaXMxEDAOBgNV
+BAcTB0NoaWNhZ28xEjAQBgNVBAoTCUFwcGlwaG9ueTEMMAoGA1UECxMDRGV2MQ8w
+DQYDVQQDEwZWaWN0b3IxIzAhBgkqhkiG9w0BCQEWFHZpY3RvckBhcHBpcGhvbnku
+Y29tggkA4fz/apjAAnowDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOCAQEA
+eWejkCPEm47Z/7OeJMbZpaVKZERbYHV7h8bgCNIPc5LStRue2yD4M1Yy8qE2V9at
+4crxn199f6BY44iZ8xMvyGPa2QYnjsIvANjV622v8RQSK0J/q4ZajTDFSp12gQFr
+XWWG0WgOvxpvUaJsr9nKjXEIJu3Pk0kSh8PQbaWfCbPrr3uWLM/6sW7pOhaefTQz
+sFzm5waDp3zIgnbNo9MMBdxhtbqyVvqXHqtM5Hcf38tInuVtaNPXalCIRUh22G+u
+gAlmm8AVgVFgnd6PoCNvTxUCbF6OH593pbDkU4Eu1VwUSuFiL8B7kqsJ+ch94KQX
+au54vQUsbQ9e+mrSfVi2ag=="
+    }
+  ],
+  "knownClientApplications": [],
+  "logoutUrl": null,
+  "oauth2AllowImplicitFlow": false,
+  "oauth2AllowUrlPathMatching": false,
+  "oauth2Permissions": [
+    {
+      "adminConsentDescription": "Allow the application to access toproto-exchange on behalf of the signed-in user.",
+      "adminConsentDisplayName": "Access toproto-exchange",
+      "id": "f8100ae7-4719-4704-a1f2-05acdb1b1638",
+      "isEnabled": true,
+      "type": "User",
+      "userConsentDescription": "Allow the application to access toproto-exchange on your behalf.",
+      "userConsentDisplayName": "Access toproto-exchange",
+      "value": "user_impersonation"
+    }
+  ],
+  "oauth2RequirePostResponse": false,
+  "passwordCredentials": [],
+  "publicClient": null,
+  "replyUrls": [
+    "https://c.na24.visual.force.com/apex/protoGCal"
+  ],
+  "requiredResourceAccess": [
+    {
+      "resourceAppId": "00000002-0000-0ff1-ce00-000000000000",
+      "resourceAccess": [
+        {
+          "id": "798ee544-9d2d-430c-a058-570e29e34338",
+          "type": "Role"
+        }
+      ]
+    },
+    {
+      "resourceAppId": "00000002-0000-0000-c000-000000000000",
+      "resourceAccess": [
+        {
+          "id": "5778995a-e1bf-45b8-affa-663a9f3f4d04",
+          "type": "Role"
+        },
+        {
+          "id": "311a71cc-e848-46a1-bdf8-97ff7156d8e6",
+          "type": "Scope"
+        }
+      ]
+    }
+  ],
+  "samlMetadataUrl": null,
+  "extensionProperties": [],
+  "objectType": "Application",
+  "objectId": "44af3695-7591-4b7b-a88d-94da5110fbdf",
+  "deletionTimestamp": null,
+  "createdOnBehalfOf": null,
+  "createdObjects": [],
+  "manager": null,
+  "directReports": [],
+  "members": [],
+  "memberOf": [],
+  "owners": [],
+  "ownedObjects": []
+}
