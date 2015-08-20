@@ -1,0 +1,18 @@
+<div class="scope-container">
+    {{partial "viewApplicantsHeader"}}
+    
+    <div class="content">
+        <div class="row">
+            {{partial "viewApplicantsFilterAndResults"}}
+            {{outlet}}
+        </div>
+    </div>
+    <div class="hide">
+	    {{#tool-tipster buttonClass="js-filled-button"}}
+	    	{{partial "viewApplicantsFilledTooltip"}}
+	    {{/tool-tipster}}
+
+	    {{applicant-totals data=totalApplicants buttonClass="js-stage-status-button"}}
+    </div>
+
+</div>

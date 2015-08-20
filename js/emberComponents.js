@@ -1,7 +1,7 @@
 // Standard JUI date picker component
 // Usage: {{date-picker value=[date value to bind to your controller]}}
 App.DatePickerComponent = Ember.Component.extend({
-    attributeBindings: ['includeToday', 'disabled'],
+    attributeBindings: ['includeToday', 'disabled', 'valueFormat'],
     layoutName: 'components/datepicker',
     didInsertElement: function() {
 
@@ -13,7 +13,8 @@ App.DatePickerComponent = Ember.Component.extend({
             , $element = this.$()
             , $datepicker = $element.find('.datepicker')
             , $input = $element.find('input')
-            , locale = typeof localeString === 'undefined' ? 'YYYY-MM-DD' : localeString;
+            , locale = typeof localeString === 'undefined' ? 'YYYY-MM-DD' : localeString
+            , valueFormat = this.get('valueFormat') || 'YYYY-MM-DD';
 
             $datepicker.datepicker({
                     format: locale.toLowerCase(),
@@ -28,7 +29,7 @@ App.DatePickerComponent = Ember.Component.extend({
                     }
                 })
                 .on('changeDate', function(event) {
-                    self.set('value', moment(event.date).format('YYYY-MM-DD'));
+                    self.set('value', moment(event.date).format(valueFormat));
                     $input.val(moment(event.date).format(locale));
                    
                     $datepicker.datepicker('hide');

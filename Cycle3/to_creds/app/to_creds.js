@@ -27,11 +27,7 @@ App.MainController = Ember.ObjectController.extend({
     }),
     systemSearchEngineChannels: Ember.computed.filter('channelData', function(item, index, array) {
         return item.type == 'Search Engine' && item.configurationPage == 'System';
-    }),
-    systemCustomChannels: Ember.computed.filter('channelData', function(item, index, array) {
-        return item.type == 'Custom' && item.configurationPage == 'System';
-    }),
-    
+    }),    
     jobPostingJobBoardChannels: Ember.computed.filter('channelData', function(item, index, array) {
         return item.type == 'Job Board' && item.configurationPage == 'Job Posting';
     }),

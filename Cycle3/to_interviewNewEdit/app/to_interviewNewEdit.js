@@ -995,7 +995,7 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                         return moment(ots.namespace_Start_Time__c).valueOf() === moment(ts.namespace_Start_Time__c).valueOf()
                                 && moment(ots.namespace_End_Time__c).valueOf() === moment(ts.namespace_End_Time__c).valueOf();
                     }))) { 
-                        this.set('scheduleChanged', true);
+                        self.set('scheduleChanged', true);
                     }
                 });
             }
