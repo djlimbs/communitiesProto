@@ -1,10 +1,17 @@
 <div id="mobileMainView" class="scope-container">
     <div class="content content--readable pad--sm--n">
+        <div data-qa-label='error' {{bind-attr class=":alert :alert--error :mar--sm--bm :mar--sm--tm showAlert::hide"}}>
+            <button type="button" class="close" data-dismiss="alert"><span class="alert-close-x"></span><span class="sr-only">{{labels.close}}</span></button>
+            </button>
+            {{#each errorMsg}}
+                {{.}} <br/>
+            {{/each}}
+        </div>
         <button id="back-to-top" class="button button--primary" style="border-top-left-radius: 0; border-bottom-left-radius: 0; position: fixed; display: none"><span class="juicon juicon-upward"></span></button>
         <div class="panel mar--md--bm js-profile-panel mar--sm--tn mar--md--tm no-radius-on-small">
             <div class="panel__top">
                 <div class="js-edit-buttons">
-                    <button class="button button--secondary float--right mar--sm--ls" data-toggle="modal" data-target="#status-modal" type="button">
+                    <button {{action "openStatusModal"}} class="button button--secondary float--right mar--sm--ls" type="button">
                         Change Status
                     </button>
                 </div>
@@ -12,92 +19,164 @@
                     Application
                 </h2>
                 <h3 class="panel__subheading">
-                    Sr. Sales Engineer
+                    {{application.Requisition_Lookup__r.Job_Posting_Title__c}}
                 </h3>
             </div>
-            <!-- Identity section only appears in sf1 -->
-            <section id="identity" class="part">
+            <section id="identity" class="part pad--md--bxs">
                 <div class="panel__body pad--sm--bs">
                     <div class="part__left--fixed avatar-container--md">
-                        <img src="https://randomuser.me/api/portraits/med/men/15.jpg" alt=""/>
+                        <img {{bind-attr src="photoUrl"}} alt="">
                     </div>
                     <div class="part__body--fixed">
-                        <h4 class="card__heading dots"><a href="#">Freddie George</a></h4>
-                        <h5 class="card__subheading dots" style="display: inline-block">Status: Offer (in progress)</h5>
+                        <h4 class="card__heading dots"><a href="/{{unbound application.Id}}">{{application.First_Name__c}} {{application.Last_Name__c}}</a></h4>
+                        <h5 class="card__subheading dots" style="display: inline-block">{{labels.cardStatus}} {{statusText}}
+                            {{#if hasOutcome}}
+                                <small data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{application.Outcome__c}}</small>
+                            {{/if}}
+                        </h5>
                     </div>
                 </div>
                 <div class="content">
                     <div class="form__group mar--sm--bn">
-                        <small class="block dots"><label>Source:</label> Internal</small>
+                        <small class="block dots"><label>Source:</label> {{application.Source__c}}</small>
                     </div>
                     <div class="form__group mar--sm--bn">
-                        <small class="block dots"><label>Employment:</label> Customer Service Rep, CalTech</small>
+                        <small class="block dots"><label>Employment:</label> {{employmentText}}</small>
                     </div>
                     
                     <div class="row mar--sm--ts mar--sm--bs">
                         <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
-                            <small class="block dots"><label><span class="juicon juicon-document"></span><a href="#"> Resume (35k)</a></label></small>
+                            <small class="block dots">
+                                <label>
+                                    {{#if isInternal}}
+                                        <span class="juicon juicon-user-star"></span>
+                                        <a {{action viewTalentProfile}} data-qa-link="talentProfile" href="#"> {{labels.talentProfile}}</a>
+                                    {{else}}
+                                        <span class="juicon juicon-document"></span>
+                                        {{#if resume}}
+                                            <a data-qa-link="resume" {{action "openResumeUrl"}} href="#"> {{labels.cardResume}} {{formatSize resume.ContentSize}}</a>
+                                        {{else}}
+                                            {{labels.noResume}}
+                                        {{/if}}
+                                    {{/if}}
+                                </label>
+                            </small>
                         </div>
                         <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
-                            <small class="block dots"><label><span class="juicon juicon-linkedin"></span><a href="#"> Profile</a></label></small>
+                            <small class="block dots">
+                                <label data-qa-label="noProfile">
+                                    <span class="juicon juicon-linkedin"></span>
+                                    {{#if hasProfile}}
+                                        <a data-qa-link="linkedIn" {{action "loadLinkedIn"}} href="#" target="linkedIn"> {{labels.cardProfile}}</a>
+                                    {{else}}
+                                        {{labels.noProfile}}
+                                    {{/if}}
+                                </label>
+                            </small>
                         </div>
                         <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
-                            <small class="block dots"><label><span class="juicon juicon-location"></span></label> Chicago, IL</small>
+                            <small class="block dots">
+                                <label data-qa-label="noAddress">
+                                    <span class="juicon juicon-location"></span>
+                                    {{#if hasAddress}}
+                                        {{#if isSF1}}
+                                            <span>{{application.City__c}}, {{application.State_Province__c}}</span>
+                                        {{else}}
+                                            <a data-qa-link="address" {{action loadGoogleMaps}} href="#" target="_blank">{{application.City__c}}, {{application.State_Province__c}}</a>
+                                        {{/if}}
+                                    {{else}}
+                                        {{labels.cardNoAddress}}
+                                    {{/if}}
+                                </label>
+                            </small>
                         </div>
                         <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
-                            <small class="block dots"><label><span class="juicon juicon-calendar"></span></label> Dec 20</small>
+                            <small class="block dots"><label><span class="juicon juicon-calendar"></span></label> {{application.formattedCreatedDate}}</small>
                         </div>
+                        <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                            <small class="block dots"><label><span class="juicon juicon-envelope"></span></label> <a href="mailto:{{unbound application.Email__c}}">{{application.Email__c}}</a></small>
+                        </div>
+                        {{#if application.Mobile_Phone__c}}
+                            <div class="column--md--6 pad--sm--only--ts pad--sm--only--bs form__group mar--sm--bn">
+                                <small class="block dots">
+                                    <label>
+                                        <span class="juicon juicon-phone"></span>
+                                    </label> 
+                                    {{#if application.Mobile_Phone__c}}
+                                        {{application.Mobile_Phone__c}}
+                                    {{else}}
+                                        <span class="text-faded">Not provided</span>
+                                    {{/if}}
+                                </small>
+                            </div>
+                        {{/if}}
                     </div>
                 </div>
             </section>
-            <section id="summary">
-                <div class="list-heading">
-                    <h4 class="list-heading__title">Summary</h4>
-                </div>
-                <div class="panel__body pad--sm--bn">
-                    <p class="mar--sm--tn">
-                        This is typically a paragraph or two that gives an overview of the person’s value as an employee. Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.
-                    </p>
-                    <p class="mar--sm--tn">
-                        Efficiently unleash cross-media information without cross-media value. Quickly maximize timely deliverables for real-time schemas. Dramatically maintain clicks-and-mortar solutions without functional solutions.
-                    </p>
-                </div>
-            </section>
+            {{#with talentProfile}}
+                {{#if Summary__c}}
+                    <section id="summary">
+                        <div class="list-heading">
+                            <h4 data-qa-label="summary" class="list-heading__title">{{../labels.summary}}</h4>
+                        </div>
+                        <div class="panel__body pad--sm--bn">
+                            <p data-qa-label="summaryValue" class="mar--sm--tn">
+                                {{convertNewLinesToBreaks Summary__c}}
+                            </p>
+                        </div>
+                    </section>
+                {{/if}}
+            {{/with}}
             <section id="interview">
                 <div class="list-heading">
-                    <h4 class="list-heading__title">Interview</h4>
+                    <h4 class="list-heading__title">Interviews</h4>
                 </div>
                 <div class="panel__body pad--sm--bn pad--sm--tn">
-                    <article class="mar--sm--bm">
                     {{#each interviews itemController="interview"}}
-                        <div class="card mar--sm--tm">
-                            <div class="card__body">
-                                <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rm"></span>
-                                    <a href="/{{unbound Id}}">{{formattedStartDate}} <span class="text-faded">{{otherText}}</span></a>
-                                </div>
-                                <div class="row pad--sm--lxl">
-                                    <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
-                                        <h4>Interviewers</h4>
-                                        {{Interviewers__c}}
+                        <article class="mar--sm--bm">
+                            <div class="card mar--sm--tm">
+                                <div class="card__body">
+                                    <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rs pad--sm--rxs"></span>
+                                        <a href="/{{unbound Id}}">{{formattedStartDate}} {{#unless ../isSF1}}<span class="text-faded">{{otherText}}</span>{{/unless}}</a>
+                                        <span class="status {{unbound statusColor}}">{{namespace_Status__c}}</span>
                                     </div>
-                                    <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
-                                        <h4>Topics</h4>
-                                        {{#if Topics__c}}
-                                            {{Topics__c}}
-                                        {{else}}
-                                            <span class="text-faded">Not Provided</span>
-                                        {{/if}}
+                                    <div class="row pad--sm--lxl">
+                                        <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
+                                            <h4 class="mar--sm--n">Interviewers</h4>
+                                            {{#if Interviewers__c}}
+                                                {{Interviewers__c}}
+                                            {{else}}
+                                                <span class="text-faded">Not Provided</span>
+                                            {{/if}}
+                                        </div>
+                                        <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
+                                            <h4 class="mar--sm--n">Topics</h4>
+                                            {{#if Topics__c}}
+                                                {{Topics__c}}
+                                            {{else}}
+                                                <span class="text-faded">Not Provided</span>
+                                            {{/if}}
+                                        </div>
                                     </div>
+                                    {{#if isCompleted}}
+                                        <div class="row pad--sm--lxl mar--sm--ts">
+                                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
+                                                <h4 class="mar--sm--n">Feedback</h4>
+                                                {{feedbackStatus}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
                                 </div>
                             </div>
-                        </div>
+                        </article>
                     {{/each}}
-                    </article>
-                    <div class="js-component-controls">
-                        <button {{action "addInterview"}} type="button" class="button button--primary button--ghost width--full js-add-component mar--sm--bm">
-                            <span class="juicon juicon-plus"></span> Add
-                        </button>
-                    </div>
+                    {{#unless isSF1}}
+                        <div class="js-component-controls mar--sm--tm">
+                            <button {{action "addInterview"}} type="button" class="button button--primary button--ghost width--full js-add-component mar--sm--bm">
+                                <span class="juicon juicon-plus"></span> Add interview
+                            </button>
+                        </div>
+                    {{/unless}}
                 </div>
             </section>
             <section id="feedback">
@@ -110,8 +189,8 @@
                             <div class="card mar--sm--tm">
                                 <div {{bind-attr class=":card__body displayPanelBottom::pad--sm--bn"}}>
                                     <div {{bind-attr class=":row displayPanelBottom:panel__top :pad--sm--n displayPanelBottom:pad--sm--txs displayPanelBottom:mar--sm--bm"}} style="height: auto">
-                                        <div class="column--md--8">
-                                            <div class="part__left--fixed" style="display: inline-block; line-height: 0;">
+                                        <div class="column--md--8 dots">
+                                            <div class="part__left--fixed mar--sm--rs pad--sm--rxs" style="display: inline-block; line-height: 0;">
                                                 <div {{bind-attr class=":juicon icon iconColor"}}></div>
                                             </div>
                                             <div class="part__body--fixed pad--md--bm pad--sm--only--bs" style="display: inline-block; max-width:88%;">
@@ -126,7 +205,7 @@
                                             </div>
                                         </div>
                                         <div class="column--md--4 text-right-left mar--sm--only--bm" style="line-height: 16px">
-                                            <small class="text-faded mar--sm--only--lxl pad--sm--only--lxs mar--sm--only--bm">{{CreatedBy.Name}} &bull; {{formattedDate}}</small>
+                                            <small class="text-faded mar--sm--only--lxl mar--sm--only--bm">{{CreatedBy.Name}} &bull; {{formattedDate}}</small>
                                         </div>
                                     </div>
                                     {{#unless hasFinal}}
@@ -134,7 +213,7 @@
                                             <div class="row pad--sm--lxl">
                                                 {{#each criteriaFields}}
                                                     <div class="panel__body column--md--6 pad--sm--tn">
-                                                        <h4>{{label}}</h4>
+                                                        <h4 class="mar--sm--n">{{label}}</h4>
                                                         {{#if value}}
                                                             {{value}}
                                                         {{else}}
@@ -145,14 +224,19 @@
                                             </div>
                                         {{/if}}
                                     {{/unless}}
-                                    <div class="block">
-                                        {{#if Comments__c}}
-                                            "{{Comments__c}}"
-                                        {{/if}}
-                                        {{#if namespace_Disposition__c}}
-                                            "{{namespace_Disposition__c}}"
-                                        {{/if}}
-                                    </div>
+                                    {{#if namespace_Disposition__c}}
+                                        <div class="row pad--sm--lxl">
+                                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
+                                                <h4 class="mar--sm--n">Disposition</h4>
+                                                {{namespace_Disposition__c}}
+                                            </div>
+                                        </div>
+                                    {{/if}}
+                                    {{#if Comments__c}}
+                                        <div class="block">
+                                            "{{convertNewLinesToBreaks Comments__c}}"
+                                        </div>
+                                    {{/if}}
                                 </div>
                             </div>
                         {{/each}}
@@ -167,6 +251,68 @@
             {{#with talentProfile}}
                 {{partial "childrenObjects"}}
             {{/with}}
+            <section id="application-form">
+                <div class="list-heading">
+                    <h4 class="list-heading__title">Application Form</h4>
+                </div>
+                <div class="panel__body pad--sm--bn">
+                    <p class="mar--sm--tn">
+                        {{#if application.hasScore}}
+                            <strong class="{{unbound application.ratingColor}}">Rating: {{application.score}}</strong>
+                            {{#if application.showMax}}<span class="text-faded"> (out of {{application.Maximum_Score__c}}){{/if}}</span>
+                        {{else}}
+                            <strong class="text-faded">Rating: N/A</strong>
+                        {{/if}}
+                    </p>
+                </div>
+                {{#if jobQuestions}}
+                    <div class="panel__component">
+                        <label>Job Specific Questions</label>
+                        {{#each jobQuestions}}
+                            <article class="card mar--sm--tm mar--sm--bxs">
+                                <div class="card__body">
+                                    <div><small>{{Question__c}}</small></div>
+                                    <div class="mar--sm--txs">{{Value__c}}</div>
+                                </div>
+                            </article>
+                        {{/each}}
+                    </div>
+                {{/if}}
+                {{#if generalQuestions}}
+                    <div class="panel__component">
+                        <label>General Questions</label>
+                        {{#each generalQuestions}}
+                            <article class="card mar--sm--tm mar--sm--bxs">
+                                <div class="card__body">
+                                    <div><small>{{Question__c}}</small></div>
+                                    <div class="mar--sm--txs">{{Value__c}}</div>
+                                </div>
+                            </article>
+                        {{/each}}
+                    </div>
+                {{/if}}
+            </section>
+            <section id="contact-information">
+                <div class="list-heading">
+                    <h4 class="list-heading__title">Contact Information</h4>
+                </div>
+                <div class="panel__body pad--sm--bn">
+                    {{#each contactRow in contactRows}}
+                        <div class="row pad--sm--rxxl mar--md--bm">
+                            {{#each contactRow}}
+                                <div class="column--sm--6 column--xs--only--12 pad--sm--only--bm">
+                                    <label class="block">{{label}}</label>
+                                    {{#if value}}
+                                        {{{value}}}
+                                    {{else}}
+                                        <div data-qa-label="notProvided" class="text-faded">{{../../../labels.notProvided}}</div>
+                                    {{/if}}
+                                </div> 
+                            {{/each}}
+                        </div>
+                    {{/each}}
+                </div>
+            </section>
         </div>
     </div>
 
@@ -185,27 +331,21 @@
                         Stage
                         <div class="select__wrap">
                             <div class="input__icon juicon juicon-down"></div>
-                            <select>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                            </select>
+                            {{view "select"  data-qa-select="stages" content=appStages value=selectedStage optionLabelPath="content.label" optionValuePath="content.value"}}
                         </div>
                     </div>
                     <div class="mar--sm--bn">
-                        Status
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                            </select>
+                        <div {{bind-attr class=":form-group noSelect:has-error"}}>
+                            <label>Status</label>
+                            <div class="select__wrap">
+                                <div class="input__icon juicon juicon-down"></div>
+                                {{view "select"  data-qa-select="status" prompt="Select..." content=statusSelect value=selectedStatus optionLabelPath="content" optionValuePath="content"}}
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal__footer">
-                    <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
+                    <button {{action "updateStageStatus"}} class="button button--primary js-save" type="button">OK</button>
                 </div>
             </div>
         </div>

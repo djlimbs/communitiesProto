@@ -6,7 +6,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="projectName">{{Name}}</h3>
+                    <h3 class="mar--sm--n" data-qa-label="projectName">{{Name}}</h3>
                     <small data-qa-label="projectDate" class="text-faded">{{displayDate Start_Date__c End_Date__c "to"}}</small>
                     <p data-qa-label="projectDescription">
                         {{convertNewLinesToBreaks Description__c}}
@@ -25,7 +25,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="recognitionName">
+                    <h3 class="mar--sm--n" data-qa-label="recognitionName">
                         {{#if Link__c}}
                             <a data-qa-link="recognitionNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
@@ -51,7 +51,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="trainingName">
+                    <h3 class="mar--sm--n" data-qa-label="trainingName">
                         {{#if Link__c}}
                             <a data-qa-link="trainingNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
@@ -89,7 +89,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="publicationName">
+                    <h3 class="mar--sm--n" data-qa-label="publicationName">
                         {{#if Link__c}}
                             <a data-qa-link="publicationNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
@@ -114,7 +114,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="patentName">
+                    <h3 class="mar--sm--n" data-qa-label="patentName">
                         {{#if Link__c}}
                             <a data-qa-link="patentNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
@@ -152,7 +152,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <div class="card mar--sm--tm">
+                    <div class="card mar--sm--tn">
                         <div class="card__body">
                             <p data-qa-label="recommendationText" class="mar--sm--n">
                                 {{#if Recommendation_Text__c}}
@@ -181,7 +181,7 @@
         <div class="test panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="certificationName">{{Name}}</h3>
+                    <h3 class="mar--sm--n" data-qa-label="certificationName">{{Name}}</h3>
                     <small data-qa-label="certificationIssuer" class="text-faded block">{{Issuer__c}} 
                         {{#if Issuer__c}}
                             {{#if Number__c}}({{Number__c}}){{/if}}
@@ -204,10 +204,28 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="employmentTitle">{{Job_Title__c}}</h3>
+                    <h3 class="mar--sm--n" data-qa-label="employmentTitle">{{Job_Title__c}}</h3>
                     <small data-qa-label="employmentName" class="text-faded block">{{Name}}</small>
                     <small data-qa-label="employmentDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
-                    <p data-qa-label="employmentDate" >{{convertNewLinesToBreaks Description__c}}</p>
+                    {{#if Description__c}}
+                        <p data-qa-label="employmentDate" class="mar--sm--bn">{{convertNewLinesToBreaks Description__c}}</p>
+                    {{/if}}
+                    {{#if fieldSet}}
+                        <div class="panel__body pad--sm--n">
+                            <div class="row pad--sm--rxxl">
+                                {{#each fieldSet}}
+                                    <div class="column--sm--6 column--xs--only--12 pad--sm--only--tm mar--md--tm">
+                                        <label class="block">{{label}}</label>
+                                        {{#if value}}
+                                            {{{value}}}
+                                        {{else}}
+                                            <div data-qa-label="notProvided" class="text-faded">{{../../../../../labels.notProvided}}</div>
+                                        {{/if}}
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
                     <hr class="hr-alt"/>
                 </article>
             {{/each}}
@@ -222,10 +240,26 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="educationName">{{Name}}</h3>
+                    <h3 class="mar--sm--n" data-qa-label="educationName">{{Name}}</h3>
                     <small data-qa-label="educationLevel" class="text-faded block">{{Education_Level__c}}</small>
                     <small data-qa-label="educationDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
                 </article>
+                {{#if fieldSet}}
+                    <div class="panel__body pad--sm--n">
+                        <div class="row pad--sm--rxxl mar--md--bm">
+                            {{#each fieldSet}}
+                                <div class="column--sm--6 column--xs--only--12 pad--sm--only--bm">
+                                    <label class="block">{{label}}</label>
+                                    {{#if value}}
+                                        {{{value}}}
+                                    {{else}}
+                                        <div data-qa-label="notProvided" class="text-faded">{{../../../../../labels.notProvided}}</div>
+                                    {{/if}}
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
             {{/each}}
         </div>
     </section>
@@ -252,7 +286,7 @@
         <div class="panel__body pad--sm--bn">
             {{#each records}}
                 <article class="mar--sm--bm">
-                    <h3 data-qa-label="volunteeringName">{{Name}}</h3>
+                    <h3 class="mar--sm--n" data-qa-label="volunteeringName">{{Name}}</h3>
                     <small data-qa-label="volunteeringRole" class="text-faded block">{{Role__c}}</small>
                     <small data-qa-label="volunteeringDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
                     <p data-qa-label="volunteeringDescription">
