@@ -8,6 +8,36 @@ var outcomeColorMap = {
     'Rejected' : 'label--error'
 }
 
+App.camelizeObj = function camelizeObj(obj) {
+    var camelizedObj = {};
+
+    Object.keys(obj).forEach(function(key) {
+        camelizedObj[key.replace('__c','').camelize()] = obj[key];
+    });
+
+    return camelizedObj;
+};
+
+App.CamelizeModelMixin = Ember.Mixin.create({
+    camelizedModel: function() {
+        var model = this.get('model');
+        return App.camelizeObj(model);
+    }.property('model')
+});
+
+App.AdditionalInfoMixin = Ember.Mixin.create({
+    camelizedModel: function() {
+        var model = this.get('model');
+        var camelizedModel = {};
+
+        Object.keys(model).forEach(function(key) {
+            camelizedModel[key.replace('__c','').camelize()] = model[key];
+        });
+
+        return camelizedModel;
+    }.property('model')
+});
+
 App.OtherAppsMixin = Ember.Mixin.create({
 	employmentText : function(){
         var employmentHistory = this.get('employmentHistory');
@@ -26,7 +56,6 @@ App.OtherAppsMixin = Ember.Mixin.create({
         return outcomeColorMap[this.get('Outcome__c')];
     }.property(),
     statusText : function(){
-        console.log(this);
         var offerStage = this.get('parentController').get('offerStage');
         var statusText = this.get('Stage__c');
 
@@ -222,6 +251,9 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
     hasProfile : function(){
         return !Ember.isEmpty(this.get('application').LinkedIn_Profile_Id__c);
     }.property(),
+    hasResume : function(){
+        return !Ember.isEmpty(this.get('resume'));
+    }.property(),
     outcomeColor : function(){
         return outcomeColorMap[this.get('application').get('Outcome__c')];
     }.property(),
@@ -408,10 +440,17 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
             }
         },
         openApplicationModal : function(){
-            if(isSF1){
+            if(!isSF1){
                 $('#applicantModal').modal();
             } else {
                 window.location.href = '/_ui/search/ui/UnifiedSearchResults?searchType=2&str=' + this.get('application').get('Name');
+            }
+        },
+        navigateToApplication : function(){
+            if(isSF1){
+                sforce.one.navigateToSObject(this.get('application').Id);
+            } else {
+                window.location.href = '/' + this.get('application').Id;
             }
         }
     }

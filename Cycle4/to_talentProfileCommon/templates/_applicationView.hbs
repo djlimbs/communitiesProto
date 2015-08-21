@@ -2,7 +2,7 @@
     <div class="panel__top">
         <div class="float--left">
             <div class="part__body--fixed pad--sm--txs">
-                <h4 class="card__heading dots"><a {{bind-attr href="application.Id"}}>{{application.First_Name__c}} {{application.Last_Name__c}}</a></h4>
+                <h4 class="card__heading dots"><a {{action navigateToApplication}} href="#">{{application.First_Name__c}} {{application.Last_Name__c}}</a></h4>
                 <h5 class="card__subheading dots" style="display: inline-block">Status: {{statusText}}
                     {{#if hasOutcome}}
                         &nbsp;<small data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{application.Outcome__c}}</small>
@@ -20,7 +20,8 @@
         <div class="panel__body pad--sm--bs">
             <div class="row">
                 <div class="column--md--6">
-                    <small class="block dots mar--sm--bxs"><label>Source:</label> {{application.Source__c}}</small>
+                    <small class="block dots mar--sm--bxs"><label>Source:</label> {{application.Source__c}} 
+                        {{#if isInternal}} <a href="#" class="js-status-button js-tooltip">View Profile</a>{{/if}}</small>
                     <small class="block dots mar--sm--bxs"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>)</small>
                     <small class="block dots mar--sm--bxs"><label>Employment:</label> {{employmentText}}</small>
                 </div>
@@ -67,27 +68,37 @@
             </div>
         </div>
     </section>
-    <section class="button-switch-container pad--sm--m pad--sm--bn">
-        <span class="button-group--collapse button-switch">
-            <div {{action "selectTab" "application"}} {{bind-attr class=":button :button--success showApplicationDetails::disabled"}} data-trigger="application" data-group="view">Application</div>
-            <div {{action "selectTab" "resume"}} {{bind-attr class=":button :button--success showResume::disabled"}} data-trigger="resume" data-group="view">Resume</div>
-            <div {{action "selectTab" "linkedin"}} {{bind-attr class=":button :button--success showLinkedIn::disabled"}} data-trigger="linkedin" data-group="view">LinkedIn</div>
-        </span>
-    </section>
+    {{#unless isSF1}}
+        <section class="button-switch-container pad--sm--m pad--sm--bn">
+            <span class="button-group--collapse button-switch">
+                <div {{action "selectTab" "application"}} {{bind-attr class=":button :button--success showApplicationDetails::disabled"}} data-trigger="application" data-group="view">Application</div>
+                <div {{action "selectTab" "resume"}} {{bind-attr class=":button :button--success showResume::disabled"}} data-trigger="resume" data-group="view">Resume</div>
+                <div {{action "selectTab" "linkedin"}} {{bind-attr class=":button :button--success showLinkedIn::disabled"}} data-trigger="linkedin" data-group="view">LinkedIn</div>
+            </span>
+        </section>
+    {{/unless}}
     {{#if showApplicationDetails}}
         <div class="mar--sm--tm">
             {{partial "applicationDetails"}}
         </div>
     {{/if}}
     {{#if showResume}}
-        <section id="resume1">
+        <section class="resume-section">
             <div class="panel__body pad--sm--bs">
-                <iframe src="https://na24.salesforce.com/sfc/p/1a000000H6T7/a/1a000000KzDp/m5PDZy3HBGd2uEe2Vyyf5FQHQFj7Sy_4STJ5M8O5nV8"></iframe>
+                {{#if hasResume}}
+                    {{#if isDropbox}}
+                        Click <a {{bind-attr href="resume"}} target="_blank">here</a> to view {{application.Name}}'s resume on Dropbox.
+                    {{else}}
+                        <iframe {{bind-attr src="resume"}}></iframe>
+                    {{/if}}
+                {{else}}
+                    <em class="text-faded">No resume provided.</em>
+                {{/if}}
             </div>
         </section>
     {{/if}}
     {{#if showLinkedIn}}
-        <section id="linkedin1">
+        <section>
             <div class="panel__body pad--sm--bs">
                 <img src="../docs/linkedin-csa.png">
             </div>

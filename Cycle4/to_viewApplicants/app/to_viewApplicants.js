@@ -674,18 +674,7 @@ App.FeedbackController = Ember.ObjectController.extend(App.FeedbackMixin, App.Ca
 
 App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.CamelizeModelMixin);
 
-App.AdditionalInfoController = Ember.ObjectController.extend({
-	camelizedModel: function() {
-		var model = this.get('model');
-		var camelizedModel = {};
-
-		Object.keys(model).forEach(function(key) {
-			camelizedModel[key.replace('__c','').camelize()] = model[key];
-		});
-
-		return camelizedModel;
-	}.property('model')
-});
+App.AdditionalInfoController = Ember.ObjectController.extend(App.AdditionalInfoMixin);
 
 App.ViewApplicantsRoute = Ember.Route.extend({
     model: function (){
