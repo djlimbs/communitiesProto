@@ -88,13 +88,15 @@ App.TabController = Ember.ObjectController.extend({
     }.property('parentController.selectedTab'),
 });
 
-App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin);
+App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin);
 
-App.FeedbackController = Ember.ObjectController.extend(App.FeedbackMixin);
+App.FeedbackController = Ember.ObjectController.extend(App.FeedbackMixin, App.CamelizeModelMixin);
 
 App.ApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin);
 
-App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin);
+App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.CamelizeModelMixin);
+
+App.AdditionalInfoController = Ember.ObjectController.extend(App.AdditionalInfoMixin);
 
 
 Ember.Handlebars.helper('convertNewLinesToBreaks', function(text, name) {
@@ -229,6 +231,8 @@ function applicationReaderProcesser(parsedJson){
         })
     }
 
+    parsedJson.talentProfile.camelizedModel = App.camelizeObj(parsedJson.talentProfile);
+
     //if we have questions split them up into jobQuestions and generalQuestions
     if(parsedJson.application.Applicant_Responses__r && parsedJson.application.Applicant_Responses__r.records){
         parsedJson.application.Applicant_Responses__r.records.forEach(function(resp){
@@ -264,6 +268,8 @@ function applicationReaderProcesser(parsedJson){
                 } else {
                     parsedJson.neutralFeedback += 1
                 }
+
+                evaluation.Interview__r.camelizedModel = App.camelizeObj(evaluation.Interview__r);
             }
         })
     }
