@@ -145,7 +145,8 @@ function applicationReaderProcesser(parsedJson){
     parsedJson.selectedStatus = parsedJson.application.Status__c;
     parsedJson.firstTime = true;
     parsedJson.isSF1 = isSF1;
-
+    console.log('AAAAAA');
+    console.log(parsedJson);
     return parsedJson;
 }
 
@@ -291,6 +292,7 @@ App.formatResults = function(obj, res, params) {
 };
 
 App.Fixtures = Ember.Object.create({
+	savedApplications: [],
 	initData: null,
 	emptyParams: {
 		reqId: reqId,
@@ -602,11 +604,35 @@ App.SearchFilterComponent = Ember.Component.extend({
 
 App.ViewApplicantsView = Ember.View.extend({
 	afterRenderEvent: function() {
-		
+		var ctrl = this.get('controller');
+
+		var pressLeftOrRight = function(direction) {
+			if ($('input:focus').length === 0 && $('.modal[aria-hidden="false"]').length === 0) {
+				ctrl.send('clickPrevOrNext', direction);
+			}
+		};
+
+		$('body').keydown(function(e) {
+			switch(e.which) {
+		        case 37:
+		        	Ember.run.debounce(this, pressLeftOrRight, 'prev', 500);
+		        	console.log('a');
+		        break;
+
+		        case 39: // up
+		        	Ember.run.debounce(this, pressLeftOrRight, 'next', 500);
+		        	console.log('b');
+		        break;
+
+		        default: return; // exit this handler for other keys
+		    }
+		});
 	}
 });
 
 App.ViewApplicantsController = Ember.ObjectController.extend({
+	needs: ['viewApplicantsApplicationReader'],
+	currentApplicationIdBinding: 'controllers.viewApplicantsApplicationReader.application.Id',
 	filtersOrSortChanged: function() {
 		this.updateParams();
 	}.observes('filters', 'sortType'),
@@ -654,11 +680,52 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     			// error handling
     		}
     	});
+    },
+    actions: {
+    	clickNext: function() {
+    		var applications = this.get('results.viewableApplications');
+    		var currentApplicationId = this.get('currentApplicationId');
+
+    		var currentIndex = applications.indexOf(applications.findBy('Id', currentApplicationId));
+
+    		if (applications.length - 1 === currentIndex) {
+    			currentIndex = 0;
+    		} else if (currentIndex === 0) {
+    			currentIndex = applications.length - 1;
+    		} else {
+    			currentIndex--;
+    		}
+
+    		this.transitionTo('viewApplicantsApplicationReader', applications[currentIndex].Id);
+    	},
+    	clickPrev: function() {
+    		var applications = this.get('results.viewableApplications');
+    		var currentApplicationId = this.get('currentApplicationId');
+    		console.log(this.get('currentApplicationId'));
+    	},
+    	clickPrevOrNext: function(direction) {
+    		var applications = this.get('results.viewableApplications');
+    		var currentApplicationId = this.get('currentApplicationId');
+    		var currentIndex = applications.indexOf(applications.findBy('Id', currentApplicationId));
+
+    		if (applications.length - 1 === currentIndex) {
+    			// if at end of array
+    			currentIndex = direction === 'prev' ? currentIndex - 1 : 0;
+    		} else if (currentIndex === 0) {
+    			// if at beginning
+    			currentIndex = direction === 'prev' ? applications.length - 1 : currentIndex + 1;
+    		} else {
+    			currentIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+    		}
+
+    		this.transitionTo('viewApplicantsApplicationReader', applications[currentIndex].Id);
+    	}
     }
 });
 
 App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
-	selectedTab: 'application'
+	selectedTab: 'application',
+	retPage: 'to_viewApplicants'
 });
 
 App.ResultController = Ember.ObjectController.extend({
@@ -668,7 +735,9 @@ App.ResultController = Ember.ObjectController.extend({
 	}.property()
 });
 
-App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin);
+App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin, {
+	retPage: 'to_viewApplicants'
+});
 
 App.FeedbackController = Ember.ObjectController.extend(App.FeedbackMixin, App.CamelizeModelMixin);
 

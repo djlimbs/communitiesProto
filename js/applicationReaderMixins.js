@@ -48,13 +48,13 @@ App.OtherAppsMixin = Ember.Mixin.create({
         }
 
         return labels.cardNoEmployment
-    }.property(),
+    }.property('employmentHistory'),
     hasOutcome : function(){
         return !Ember.isEmpty(this.get('Outcome__c'))
-    }.property(),
+    }.property('Outcome__c'),
     outcomeColor : function(){
         return outcomeColorMap[this.get('Outcome__c')];
-    }.property(),
+    }.property('Outcome__c'),
     statusText : function(){
         var offerStage = this.get('parentController').get('offerStage');
         var statusText = this.get('Stage__c');
@@ -68,7 +68,7 @@ App.OtherAppsMixin = Ember.Mixin.create({
         }
 
         return statusText;
-    }.property()
+    }.property('parentController')
 })
 
 App.FeedbackMixin = Ember.Mixin.create({
@@ -85,7 +85,7 @@ App.FeedbackMixin = Ember.Mixin.create({
         }
 
         return headerText;
-    }.property(''),
+    }.property('Interview__r'),
     icon : function(){
         var icon = '';
         var feedback = this.get('Net_Feedback_Score__c');
@@ -103,7 +103,7 @@ App.FeedbackMixin = Ember.Mixin.create({
         }
 
         return icon
-    }.property(''),
+    }.property('Net_Feedback_Score__c'),
     iconColor : function(){
         var iconColor = '';
         var feedback = this.get('Net_Feedback_Score__c');
@@ -118,10 +118,10 @@ App.FeedbackMixin = Ember.Mixin.create({
         }
 
         return iconColor;
-    }.property(''),
+    }.property('Net_Feedback_Score__c'),
     hasFinal : function(){
         return (this.get('Rejected__c') || this.get('Selected__c'))
-    }.property(''),
+    }.property('Rejected__c', 'Selected__c'),
     criteriaFields : function(){
         var self = this;
         var processedFields = Ember.A();
@@ -138,16 +138,16 @@ App.FeedbackMixin = Ember.Mixin.create({
         }
 
         return processedFields;
-    }.property(''),
+    }.property('parentController'),
     formattedDate : function(){
         return moment(this.get('CreatedDate')).format('MMM DD, YYYY')
-    }.property(''),
+    }.property('CreatedDate'),
     displayPanelBottom : function(){
         var hasCriteria = this.get('hasCriteria');
         var hasComments = !Ember.isEmpty(this.get('Comments__c'));
         var hasDisposition = !Ember.isEmpty(this.get('Disposition__c'))
         return (hasCriteria || hasComments || hasDisposition)
-    }.property('')
+    }.property('hasCriteria', 'Comments__c', 'Disposition__c')
 })
 
 App.InterviewMixin = Ember.Mixin.create({
@@ -166,7 +166,7 @@ App.InterviewMixin = Ember.Mixin.create({
         }
         
         return sortedTimeSlots;
-    }.property(''),
+    }.property('parentController'),
     formattedStartDate : function(){
         var sortedTimeSlots = this.get('sortedTimeSlots');
         var formattedStartDate = labels.dateTime + ' TBD';
@@ -189,7 +189,7 @@ App.InterviewMixin = Ember.Mixin.create({
 
         return formattedStartDate;
 
-    }.property(''),
+    }.property('parentController'),
     otherText : function(){
         var sortedTimeSlots = this.get('sortedTimeSlots');
         var otherText = ''
@@ -203,19 +203,19 @@ App.InterviewMixin = Ember.Mixin.create({
         }
 
         return otherText;
-    }.property(''),
+    }.property('sortedTimeSlots'),
     statusColor : function(){
         return this.get('Status__c').toLowerCase();
-    }.property(''),
+    }.property('Status__c'),
     isCompleted : function(){
         return this.get('Status__c').toLowerCase() == 'completed'
-    }.property(''),
+    }.property('Status__c'),
     isSF1 : function(){
         return isSF1
     }.property(''),
     interviewUrl : function(){
         return '/apex/' + extnamespace + 'to_interviewView?id=' + this.get('Id') + '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + 'to_applicationReader?id=' + this.get('parentController').get('application').Id)
-    }.property('')
+    }.property('parentController')
 });
 
 App.ApplicationReaderMixin = Ember.Mixin.create({
@@ -241,22 +241,22 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
     }.property(),
     isInternal : function(){
         return this.get('application').Source__c == 'Internal';
-    }.property(),
+    }.property('application'),
     hasOutcome : function(){
         return !Ember.isEmpty(this.get('application').Outcome__c)
-    }.property(),
+    }.property('application'),
     hasAddress : function(){
         return (!Ember.isEmpty(this.get('application').City__c) && !Ember.isEmpty(this.get('application').State_Province__c))
-    }.property(),
+    }.property('application'),
     hasProfile : function(){
         return !Ember.isEmpty(this.get('application').LinkedIn_Profile_Id__c);
-    }.property(),
+    }.property('application'),
     hasResume : function(){
         return !Ember.isEmpty(this.get('resume'));
-    }.property(),
+    }.property('resume'),
     outcomeColor : function(){
         return outcomeColorMap[this.get('application').get('Outcome__c')];
-    }.property(),
+    }.property('application'),
     employmentText : function(){
         var app = this.get('application');
         var employmentHistory = labels.cardNoEmployment;
@@ -269,7 +269,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
         }
 
         return employmentHistory;
-    }.property(),
+    }.property('application'),
     linkedInLinkText : function(){
         var linkText = labels.cardSearch
 
@@ -278,7 +278,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
         }
 
         return linkText;
-    }.property(),
+    }.property('hasProfile'),
     statusSelect : function(){
         //we need to prevent this from happening on load because we don't want to null out the current status
         if(!this.get('firstTime')){
@@ -291,7 +291,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
     }.property('selectedStage'),
     otherAppsLength : function(){
         return this.get('otherApps').length;
-    }.property(),
+    }.property('otherApps'),
     showApplicationDetails : function(){
     	return this.get('selectedTab') == 'application';
     }.property('selectedTab'),
