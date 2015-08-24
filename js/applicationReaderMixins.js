@@ -214,7 +214,7 @@ App.InterviewMixin = Ember.Mixin.create({
         return isSF1
     }.property(''),
     interviewUrl : function(){
-        return '/apex/' + extnamespace + 'to_interviewView?id=' + this.get('Id') + '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + 'to_applicationReader?id=' + this.get('parentController').get('application').Id)
+        return '/apex/' + extnamespace + 'to_interviewView?id=' + this.get('Id') + '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + this.get('retPage') + '?id=' + this.get('parentController').get('application').Id)
     }.property('')
 });
 
@@ -352,7 +352,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
         },
         provideFeedback : function(){
             var url = '/apex/'+ extnamespace + 'to_interviewFeedback?id=' + this.get('application').Id + 
-                      '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + 'to_applicationReader?id=' + this.get('application').Id)
+                      '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + this.get('retPage') + '?id=' + this.get('application').Id)
 
             if(isSF1){
                 sforce.one.navigateToURL(url);
@@ -362,7 +362,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
         },
         addInterview : function(){
             var url = '/apex/'+ extnamespace + 'to_interviewNewEdit?appId=' + this.get('application').Id + 
-                      '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + 'to_applicationReader?id=' + this.get('application').Id)
+                      '&retUrl=' + encodeURIComponent('/apex/' + extnamespace + this.get('retPage') + '?id=' + this.get('application').Id)
 
             if(isSF1){
                 sforce.one.navigateToURL(url);
