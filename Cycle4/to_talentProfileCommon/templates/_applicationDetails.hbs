@@ -115,6 +115,8 @@
                                 </div>
                             </div>
                         {{/if}}
+                        {{log "feedback"}}
+                        {{log this}}
                         {{#if camelizedModel.comments}}
                             <div data-qa-label="comments" class="block">
                                 "{{convertNewLinesToBreaks Comments__c}}"

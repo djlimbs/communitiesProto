@@ -646,7 +646,7 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     				App.formatResults(updateObj, res, params);
     				//App.formatHeaderNumbers(updateObj, res);
     				self.setProperties(updateObj);
-
+    				self.transitionTo('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
     			} else {
     				// error handling
     			}
@@ -658,7 +658,7 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
 });
 
 App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
-
+	selectedTab: 'application'
 });
 
 App.ResultController = Ember.ObjectController.extend({
