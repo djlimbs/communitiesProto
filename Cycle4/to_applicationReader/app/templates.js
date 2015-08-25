@@ -215,6 +215,14 @@ function program18(depth0,data) {
   data.buffer.push("\n                        ");
   hashTypes = {};
   hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.log.call(depth0, "feedback", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.log.call(depth0, "", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                        ");
+  hashTypes = {};
+  hashContexts = {};
   stack2 = helpers['if'].call(depth0, "camelizedModel.comments", {hash:{},inverse:self.noop,fn:self.program(34, program34, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n                    </div>\n                </div>\n            </article>\n        ");
@@ -986,7 +994,7 @@ function program37(depth0,data) {
 function program39(depth0,data) {
   
   
-  data.buffer.push("\n        <section>\n            <div class=\"panel__body pad--sm--bs\">\n                <img src=\"../docs/linkedin-csa.png\">\n            </div>\n        </section>\n    ");
+  data.buffer.push("\n        <section class=\"linkedin-section\">\n            <div class=\"panel__body pad--sm--bs\">\n                <iframe src=\"https://c.na24.visual.force.com/apex/linkedinframe?firstName=Stanley&lastName=Chui&email=stanley@appiphony.com\"></iframe>\n            </div>\n        </section>\n    ");
   }
 
 function program41(depth0,data) {
