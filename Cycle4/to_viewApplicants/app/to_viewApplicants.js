@@ -281,6 +281,28 @@ App.formatHeaderNumbers = function(obj, res) {
 			total: outcomeCount
 		});
 	});
+
+	// Format filled info
+
+	obj.filledInfo = {
+		totalHeadCount: res.data.requisition.Head_Count__c,
+		numFilled: res.data.hiredApplicants.length,
+		hiredApplicants: res.data.hiredApplicants.map(function(applicant) {
+			return {
+				Id: applicant.Id,
+				Name: applicant.Name,
+				responseDate: !Ember.isNone(applicant.Job_Offer_Lookups__r) ? applicant.Job_Offer_Lookups__r.records[0].Response_Date__c : null
+			};
+		})
+	}
+
+	// Format open since info
+
+	obj.openSince = {
+		approvedOnMonth: moment(res.data.requisition.Approved_On__c).format('MMM'),
+		approvedOnDay: moment(res.data.requisition.Approved_On__c).format('DD'),
+		numDaysOpen: moment().diff(moment(res.data.requisition.Approved_On__c), 'days')
+	}
 };
 
 App.formatResults = function(obj, res, params) {
@@ -354,6 +376,7 @@ App.ToolTipsterComponent = Ember.Component.extend({
 		return $('.' + this.get('buttonClass'));
 	}.property('buttonClass'),
 	initializeToolTipstser: function() {
+		var self = this;
 		var $button = this.get('$button');
 		var content = '<div id="' + this.get('elementId') + '" class="ember-view">' + this.$().html() + '</div>';
 		
@@ -370,6 +393,11 @@ App.ToolTipsterComponent = Ember.Component.extend({
             functionBefore: function(origin, continueTooltip) {
             	$('.js-tooltipster-button').not($button).tooltipster('hide');
             	continueTooltip();
+            },
+            functionReady: function(origin, tooltip) {
+            	var $shell = tooltip.find('.tooltipster-content');
+            	$shell.contents().remove();
+            	$shell.append(self.$());
             },
             content: this.$()
         };
@@ -392,11 +420,67 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 	actions: {
 		setIsStageSelected: function(isStageSelected) {
     		this.set('isStageSelected', isStageSelected);
-    		Ember.run.scheduleOnce('afterRender', this, function() {
-    			this.get('$button').tooltipster('content', this.$());
-    		});
     	}
 	}
+});
+
+App.FilledInfoComponent = App.ToolTipsterComponent.extend({
+	attributeBindings: ['data', 'filters', 'ctrl'],
+	layoutName: 'components/viewApplicantsFilledTooltip',
+	actions: {
+		clickApplicant: function(applicantId) {
+			var ctrl = this.get('ctrl');
+			var filters = this.get('filters');
+			var params = {};
+
+			params.allOutcomes = false;
+			params.showHired = true;
+
+			var newFilter = {
+				name: 'outcome',
+				text: 'Outcome: Hired',
+				params: params
+			}
+
+			filters.clear();
+			filters.pushObject(newFilter);
+
+			ctrl.set('applicantId', applicantId);
+			ctrl.notifyPropertyChange('filters');
+		}
+	}
+});
+
+App.ProvideFeedbackComponent = App.ToolTipsterComponent.extend({
+	attributeBindings: ['data', 'ctrl'],
+	layoutName: 'components/provideFeedback',
+	actions: {
+		clickSave: function() {
+			var ctrl = this.get('ctrl');
+
+			console.log(ctrl);
+		}
+	}
+});
+
+App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
+	attributeBindings: ['data', 'ctrl'],
+	layoutName: 'components/updateStatus',
+	applicationStages: function() {
+		return Object.keys(this.get('ctrl.applicationStageAndStatuses'));
+	}.property(),
+	applicationStatuses: function() {
+		var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
+		if (!Ember.isNone(statuses)) {
+			this.set('status', statuses[0]);
+		}
+		return statuses;
+	}.property('stage'),
+	/*stageChanged: function() {
+		Ember.run.scheduleOnce('afterRender', this, function() {
+			this.get('$button').tooltipster('content', this.$());
+		});
+	}.observes('stage')*/
 });
 
 App.SearchFilterComponent = Ember.Component.extend({
@@ -452,6 +536,12 @@ App.SearchFilterComponent = Ember.Component.extend({
 			this.set('noOutcome', false);
 		}
 	}.observes('showWithdrew'),
+	maxApplicationRatingVal: function() {
+		return this.get('ctrl.maxApplicationRatingVal');
+	}.property(),
+	maxInterviewScore: function() {
+		return this.get('ctrl.maxInterviewScore')[0].score;
+	}.property(),
 	actions: {
 		clickAdd: function() {
 			this.setProperties({
@@ -569,7 +659,11 @@ App.SearchFilterComponent = Ember.Component.extend({
 	},
 	setOutcomeFilter: function() {
 		var textFunction = function(params) {
-			var filterText = params.noOutcome === true ? 'No outcome' : 'Outcome: ';
+			var filterText = 'Outcome: ';
+
+			if (params.noOutcome) {
+				filterText += 'No Outcome';
+			}
 
 			if (params.showHired) {
 				filterText += 'Hired, ';
@@ -608,6 +702,7 @@ App.ViewApplicantsView = Ember.View.extend({
 
 		var pressLeftOrRight = function(direction) {
 			if ($('input:focus').length === 0 && $('.modal[aria-hidden="false"]').length === 0) {
+				
 				ctrl.send('clickPrevOrNext', direction);
 			}
 		};
@@ -615,11 +710,21 @@ App.ViewApplicantsView = Ember.View.extend({
 		$('body').keydown(function(e) {
 			switch(e.which) {
 		        case 37:
+			        var buttonSelector = '.js-prev';
+					$(buttonSelector).css('background-color', '#dadee2');
+					setTimeout(function() {
+						$(buttonSelector).css('background-color', '');
+					}, 250);
 		        	Ember.run.debounce(this, pressLeftOrRight, 'prev', 500);
 		        	console.log('a');
 		        break;
 
 		        case 39: // up
+		        	var buttonSelector = '.js-next';
+					$(buttonSelector).css('background-color', '#dadee2');
+					setTimeout(function() {
+						$(buttonSelector).css('background-color', '');
+					}, 250);
 		        	Ember.run.debounce(this, pressLeftOrRight, 'next', 500);
 		        	console.log('b');
 		        break;
@@ -631,14 +736,22 @@ App.ViewApplicantsView = Ember.View.extend({
 });
 
 App.ViewApplicantsController = Ember.ObjectController.extend({
+	offset: 0,
+	numResultsPerSearch: 2,
 	needs: ['viewApplicantsApplicationReader'],
 	currentApplicationIdBinding: 'controllers.viewApplicantsApplicationReader.application.Id',
+	disableLoadMore: function() {
+		return this.get('results.numberViewable') === this.get('results.total') ? 'disabled' : false;
+	}.property('results.numberViewable', 'results.totalApplicants'),
 	filtersOrSortChanged: function() {
+		this.set('isLoadingResults', true);
 		this.updateParams();
 	}.observes('filters', 'sortType'),
     updateParams: function() {
+    	var self = this;
     	var filterParams = this.get('filters').getEach('params');
         var params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
+        var numResultsPerSearch = this.get('numResultsPerSearch');
 
         if (filterParams.length === 0) {
         	params.allOutcomes = true;
@@ -652,27 +765,37 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     	
     	params.sortType = this.get('sortType');
 
-    	console.log(params);
+    	this.set('params', params);
+    	this.set('offset', 0);
 
-    	Ember.run.debounce(this, this.search, params, 300);
+    	var successFunction = function(res) {
+        	var updateObj = {};
+        	var applicantId = self.get('applicantId');
+
+			App.formatResults(updateObj, res, params);
+			self.setProperties(updateObj);
+			self.set('isLoadingResults', false);
+
+			if (applicantId) {
+				self.set('applicantId', null);
+				self.transitionToRoute('viewApplicantsApplicationReader', applicantId);
+			} else {
+				self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
+			}
+        };
+
+    	Ember.run.debounce(this, this.search, params, successFunction, 300);
     	
     },
-    search: function(params) {
+    search: function(params, successFunction) {
     	var self = this;
     	cont.getFilteredApplicants(params, function(res, evt) {
     		if (res) {
-    			var updateObj = {
-
-    			};
 
     			res = parseResult(res);
 
     			if (res.isSuccess) {
-    				console.log(res);
-    				App.formatResults(updateObj, res, params);
-    				//App.formatHeaderNumbers(updateObj, res);
-    				self.setProperties(updateObj);
-    				self.transitionTo('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
+    				successFunction(res);
     			} else {
     				// error handling
     			}
@@ -681,6 +804,12 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     		}
     	});
     },
+    isScoreSortCustom: function () {
+		return scoreSort !== 'Raw_Score__c';
+	}.property(),
+	maxApplicationRatingVal: function() {
+		return !this.get('isScoreSortCustom') ? this.get('maxApplicationRating')[0].score : null;
+	}.property(),
     actions: {
     	clickNext: function() {
     		var applications = this.get('results.viewableApplications');
@@ -696,7 +825,7 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     			currentIndex--;
     		}
 
-    		this.transitionTo('viewApplicantsApplicationReader', applications[currentIndex].Id);
+    		this.transitionToRoute('viewApplicantsApplicationReader', applications[currentIndex].Id);
     	},
     	clickPrev: function() {
     		var applications = this.get('results.viewableApplications');
@@ -718,21 +847,67 @@ App.ViewApplicantsController = Ember.ObjectController.extend({
     			currentIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
     		}
 
-    		this.transitionTo('viewApplicantsApplicationReader', applications[currentIndex].Id);
+    		this.transitionToRoute('viewApplicantsApplicationReader', applications[currentIndex].Id);
+    	},
+    	clickLoadMore: function() {
+    		var self = this;
+    		var params = this.get('params');
+    		var numResultsPerSearch = this.get('numResultsPerSearch');
+    		var offset = this.get('offset') + numResultsPerSearch;
+
+    		this.set('isLoadingResults', true);
+
+    		params.offset = offset;
+
+    		var successFunction = function(res) {
+    			var updateObj = {};
+
+    			App.formatResults(updateObj, res, params);
+    			self.get('results.viewableApplications').addObjects(updateObj.results.viewableApplications);
+    			self.incrementProperty('results.numberViewable', updateObj.results.numberViewable);
+    			self.setProperties({
+    				offset: offset,
+    				isLoadingResults: false
+    			});
+    		};
+
+    		this.search(params, successFunction);
     	}
     }
 });
 
 App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
 	selectedTab: 'application',
-	retPage: 'to_viewApplicants'
+	retPage: 'to_viewApplicants',
+	actions: {
+		clickProvideFeedbackInline: function() {
+			$('.js-feedback-card').slideDown();
+		},
+		clickCancelFeedbackInline: function() {
+			$('.js-feedback-card').slideUp();
+		}
+	}
 });
 
 App.ResultController = Ember.ObjectController.extend({
 	alertStatusClass: function() {
 		var alertStatus = this.get('Alert_Status__c');
 		return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? 'has-problem-warning' : 'has-problem-error';
-	}.property()
+	}.property(),
+	applicationRatingVal: function() {
+		return this.get(scoreSort);
+	}.property('parentController.results.viewableApplications'),
+	hasApplicationRatingVal: function() {
+		console.log(this.get(scoreSort));
+		return !Ember.isNone(this.get(scoreSort));
+	}.property('parentController.results.viewableApplications'),
+	ratingClass: function() {
+		return this.get('applicationRatingVal') >= 0 ? 'text-success' : 'text-error'; 
+	}.property('applicationRatingVal'),
+	resultPartial: function() {
+		var sortTypeLabel = this.get('parentController.sortOptions').findBy('value', this.get('parentController.sortType')).label;
+		return (sortTypeLabel + ' Results').camelize(); 
+	}.property('parentController.sortType')
 });
 
 App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin, {
@@ -753,7 +928,6 @@ App.ViewApplicantsRoute = Ember.Route.extend({
         	if (!Ember.isNone(initData)) {
         		resolve(initData);
         	} else {
-        		console.log('run');
         		// Empty params
 	        	var params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
 
@@ -771,6 +945,8 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 	        				var resolveObj = {
 	        					applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
 	        					applicationSources: res.data.sourceCounts.getEach('name'),
+	        					maxApplicationRating: res.data.maxApplicationRating,
+	        					maxInterviewScore: res.data.maxInterviewScore,
 	        					sortOptions: App.Fixtures.get('sortOptions'),
 	        					sortType: scoreSort,
 	        					locations: [],
@@ -797,7 +973,7 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 	        				if (params.showHired === false && params.showWithdrew === false && params.showRejected === false) {
 	        					resolveObj.filters.addObject({
 	        						name: 'outcome',
-	        						text: 'No outcome',
+	        						text: 'Outcome: No Outcome',
 	        						params: {
 	        							showHired: false,
 	        							showWithdrew: false,
@@ -830,29 +1006,37 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 	model: function(params) {
 		var self = this;
 		return new Ember.RSVP.Promise(function(resolve, reject) {
-			var resolveObj = {
-				application: self.modelFor('viewApplicants').results.viewableApplications.findBy('Id', params.id)
-			};
+			var savedApplications = App.Fixtures.get('savedApplications');
+			var application = App.Fixtures.get('savedApplications').findBy('application.Id', params.id);
 
-			cont.getApplicantData(params.id, function(res, evt) {
-				if (res) {
-					res = parseResult(res);
+			if (Ember.isNone(application)) {
+				cont.getApplicantData(params.id, function(res, evt) {
+					if (res) {
+						res = parseResult(res);
 
-					if (res.isSuccess) {
-						if (Ember.isNone(monthMap)) {
-							monthMap = res.data.monthMap;
+						if (res.isSuccess) {
+							if (Ember.isNone(monthMap)) {
+								monthMap = res.data.monthMap;
+							}
+							console.log(res.data);
+							
+							application = applicationReaderProcesser(res.data);
+							application.applicationStageAndStatuses = self.modelFor('viewApplicants').applicationStageAndStatuses;
+							savedApplications.addObject(application);
+							
+							resolve(application);
+						} else {
+							reject({});
+							// ERRROR
 						}
-						console.log(res.data);
-						resolve(applicationReaderProcesser(res.data));
 					} else {
 						reject({});
-						// ERRROR
+						// ERROR
 					}
-				} else {
-					reject({});
-					// ERROR
-				}
-			});
+				});
+			} else {
+				resolve(application);
+			}
 		});
 	}
 });

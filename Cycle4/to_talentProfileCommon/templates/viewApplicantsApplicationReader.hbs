@@ -1,3 +1,9 @@
 <div class="content pad--sm--n">
 	{{partial "applicationView"}}
+    
+    <div class="hide">
+		{{provide-feedback ctrl=controller buttonClass="js-feedback-button"}}
+
+		{{update-status ctrl=controller buttonClass="js-status-button"}}
+	</div>
 </div>

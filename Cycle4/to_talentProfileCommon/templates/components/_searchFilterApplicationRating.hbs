@@ -14,7 +14,9 @@
         <div class="column column--md--4 pad--sm--tl">
             <div class="input__wrap">
                 {{input type="number" value=rating}}
-                <small class="text-faded">Max: 10</small>
+                {{#unless ctrl.isScoreSortCustom}}
+                    <small class="text-faded">Max: {{maxApplicationRating}}</small>
+                {{/unless}}
             </div>
         </div>
     </div>

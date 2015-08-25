@@ -11,8 +11,13 @@
     </section>
 {{/if}}
 <section id="interview">
-    <div class="list-heading">
+    <div class="list-heading relative">
         <h4 class="list-heading__title">{{labels.interviews}}</h4>
+        {{#unless isSF1}}
+            <button type="button" class="button button--primary button--ghost width--full mar--sm--bm add-button" {{action "addInterview"}}>
+                <span class="juicon juicon-plus"></span> {{labels.addInterview}}
+            </button>
+        {{/unless}}
     </div>
     <div class="panel__body pad--sm--bn pad--sm--tn">
         {{#each interviews itemController="interview"}}
@@ -53,22 +58,52 @@
                 </div>
             </article>
         {{/each}}
-        {{#unless isSF1}}
-            <div class="js-component-controls mar--sm--tm">
-                <button data-qa-button="addInterview" {{action "addInterview"}} type="button" class="button button--primary button--ghost width--full js-add-component mar--sm--bm">
-                    <span data-qa-label="addInterview" class="juicon juicon-plus"></span> {{labels.addInterview}}
-                </button>
-            </div>
-        {{/unless}}
     </div>
 </section>
 <section id="feedback">
-    <div class="list-heading">
-        <h4 data-qa-label="feedbackTitle" class="list-heading__title">{{labels.feedback}}</h4>
+    <div class="list-heading relative">
+        <h4 class="list-heading__title">{{labels.feedback}}</h4>
+        <button type="button" class="button button--primary button--ghost width--full mar--sm--bm add-button" {{action "clickProvideFeedbackInline"}}>
+            <span class="juicon juicon-chat"></span> {{labels.provideFeedback}}
+        </button>
     </div>
     <div class="panel__body pad--sm--bn pad--sm--tn">
-        {{#each evaluations itemController="feedback"}}
-            <article class="mar--sm--bm">
+        <article class="mar--sm--bm">
+
+            <div class="card mar--sm--tm js-feedback-card">
+                <div class="card__body pad--sm--bn">
+                    <div class="form__group">
+                        <label class="">Regarding</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            <select id="regardingSelect1">
+                                <option value="TF" selected="">Team Fit</option>
+                                <option value="FO&quot;&quot;">Final Outcome</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="TFcontrols2">
+                        <div class="form__group">
+                            <label class="block required-field">Feedback</label>
+                            <div class="button-group feedbackButtons">
+                                <button id="likeButton1" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Thumbs up"><span class="juicon juicon-like"></span></button>
+                                <button id="dislikeButton1" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Thumbs down"><span class="juicon juicon-dislike"></span></button>
+                                <button id="notsureButton1" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Not sure"><span class="juicon juicon-question-circle"></span></button>
+                            </div>
+                        </div>
+                        <div class="form__group mar--sm--bs">
+                            <label>Comment</label>
+                            <textarea placeholder="Type something here"></textarea>
+                        </div>
+                    </div>  
+                </div>
+                <div class="panel__body">
+                    <a href="#" class="float--right button button--primary">Save</a>
+                    <a href="#" class="float--right button button--secondary mar--sm--rs" {{action "clickCancelFeedbackInline"}}>Cancel</a>
+                </div>
+            </div>
+
+            {{#each evaluations itemController="feedback"}}
                 <div data-qa-card="evaluation" class="card mar--sm--tm">
                     <div {{bind-attr class=":card__body displayPanelBottom::pad--sm--bn"}}>
                         <div {{bind-attr class=":row displayPanelBottom:panel__top :pad--sm--n displayPanelBottom:pad--sm--txs displayPanelBottom:mar--sm--bm"}} style="height: auto">
@@ -115,8 +150,6 @@
                                 </div>
                             </div>
                         {{/if}}
-                        {{log "feedback"}}
-                        {{log this}}
                         {{#if camelizedModel.comments}}
                             <div data-qa-label="comments" class="block">
                                 "{{convertNewLinesToBreaks Comments__c}}"
@@ -124,13 +157,9 @@
                         {{/if}}
                     </div>
                 </div>
-            </article>
-        {{/each}}
-        <div class="js-component-controls mar--sm--tm">
-            <button data-qa-button="provideFeedback" {{action "provideFeedback"}} type="button" class="button button--primary button--ghost width--full js-add-component mar--sm--bm">
-                <span data-qa-label="provideFeedback" class="juicon juicon-chat"></span> {{labels.provideFeedback}}
-            </button>
-        </div>
+            {{/each}}
+        </article>
+        
     </div>
 </section>
 {{#with talentProfile as tp}}

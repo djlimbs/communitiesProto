@@ -1,0 +1,32 @@
+<div class="modal__shell">
+    <div class="modal__content">
+        <div class="modal__top pad--sm--bm">
+            <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span><span class="sr-only">Close</span></button>
+            <h2 class="modal__heading" id="myModalLabel">Update Status</h2>
+        </div>
+        <div class="modal__body">
+            <div class="mar--sm--bm">
+                <div class="form-group">
+                    <label>Stage</label>
+                    <div class="select__wrap">
+                        <div class="input__icon juicon juicon-down"></div>
+                        {{view "select" content=applicationStages value=stage}}
+                    </div>
+                </div>
+            </div>
+            <div class="mar--sm--bn">
+                <div class="form-group">
+                    <label>Status</label>
+                    <div class="select__wrap">
+                        <div class="input__icon juicon juicon-down"></div>
+                        {{view "select" content=applicationStatuses value=status}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal__footer">
+            <button class="button button--secondary" data-dismiss="modal" type="button">Cancel</button>
+            <button class="button button--primary js-save" data-dismiss="modal" type="button">Update</button>
+        </div>
+    </div>
+</div>

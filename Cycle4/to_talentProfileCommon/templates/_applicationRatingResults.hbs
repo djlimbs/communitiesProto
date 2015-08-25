@@ -1,0 +1,14 @@
+<a href="#" class="pad--sm--m">
+    <h4 class="card__heading dots">{{application.First_Name__c}} {{application.Last_Name__c}}</h4>
+    <h5 class="card__subheading dots">Rating: 
+        {{#if isScoreSortCustom}}
+            <span {{bind-attr class="application.ratingClass"}}>{{application.applicationRatingVal}}</span>
+        {{else}}
+            {{#if application.hasApplicationRatingVal}}
+                <span {{bind-attr class="application.ratingClass"}}>{{application.applicationRatingVal}}</span> (out of {{maxApplicationRatingVal}})
+            {{else}}
+                <span>N/A</span>
+            {{/if}}
+        {{/if}}
+    </h5>
+</a>
