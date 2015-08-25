@@ -289,6 +289,11 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
 
         return this.get('statusOptions')[this.get('selectedStage')];
     }.property('selectedStage'),
+    csaUrl : function(){
+        var app = this.get('application');
+        var url = '/apex/linkedinframe?linkId=' + app.namespace_LinkedIn_Link_Id__c + '&firstName=' + app.First_Name__c + '&lastName=' + app.Last_Name__c + '&email=' + app.Email__c
+        return url;
+    }.property('application'),
     otherAppsLength : function(){
         return this.get('otherApps').length;
     }.property('otherApps'),

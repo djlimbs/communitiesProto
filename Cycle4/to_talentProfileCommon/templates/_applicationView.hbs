@@ -101,7 +101,7 @@
     {{#if showLinkedIn}}
         <section class="linkedin-section">
             <div class="panel__body pad--sm--bs">
-                <iframe src="https://c.na24.visual.force.com/apex/linkedinframe?firstName=Stanley&lastName=Chui&email=stanley@appiphony.com"></iframe>
+                <iframe {{bind-attr src="csaUrl"}}></iframe>
             </div>
         </section>
     {{/if}}
