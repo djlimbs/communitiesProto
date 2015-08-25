@@ -10,9 +10,7 @@
         </div>
     </div>
     <div class="hide">
-	    {{#tool-tipster buttonClass="js-filled-button"}}
-	    	{{partial "viewApplicantsFilledTooltip"}}
-	    {{/tool-tipster}}
+        {{filled-info data=filledInfo filters=filters ctrl=controller buttonClass="js-filled-button"}}
 
 	    {{applicant-totals data=totalApplicants buttonClass="js-stage-status-button"}}
     </div>

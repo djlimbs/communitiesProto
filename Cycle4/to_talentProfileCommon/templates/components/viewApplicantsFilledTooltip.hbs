@@ -11,14 +11,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>John Smith</td>
-                <td>Jul 22, 2015</td>
-            </tr>
-            <tr>
-                <td>Jane Doe</td>
-                <td>Aug 10, 2015</td>
-            </tr>
+            {{#each applicant in data.hiredApplicants}}
+                <tr {{action "clickApplicant" applicant.Id}}>
+                    <td>{{applicant.Name}}</td>
+                    <td>{{formatDate applicant.responseDate}}</td>
+                </tr>
+            {{/each}}
         </tbody>
     </table>
 </div>

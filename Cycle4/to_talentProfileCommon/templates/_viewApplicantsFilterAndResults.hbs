@@ -21,23 +21,30 @@
         <!-- /Filters and Results -->
         
         <section class="pad--sm--m border-top bg-2">
-            <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
-            <div class="mar--sm--bm">
-                <a href="#" data-toggle="modal" data-target="#reject-modal"><small>Reject</small></a> | <a href="#" data-toggle="modal" data-target="#status-modal"><small>Update Status</small></a> | <a href="#" data-toggle="modal" data-target="#share-modal" id="share-modal-trigger"><small>Share</small></a>
-            </div>
-            <ul id="contentNav" class="list-group list-group--bordered mar--sm--bn bg-1 applicant-list-group">
-                {{#each application in results.viewableApplications itemController="result"}}
-                    {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="list-group__item applicant-entry alertStatusClass"}}
-                        <a href="#candidate1" class="pad--sm--m">
-                            <h4 class="card__heading dots">{{application.First_Name__c}} {{application.Last_Name__c}}</h4>
-                            <h5 class="card__subheading dots">Rating: <span class="text-success">10</span> (out of 10)</h5>
-                        </a>
-                    {{/link-to}}
-                {{/each}}
-            </ul>
-            <div class="text-center mar--sm--tm">
-                <a href="#" class="button button--secondary button--full js-load-more"><small>Load More</small></a>
-            </div>
+            {{#if isLoadingResults}}
+                <div class="content pad--md--ts pad--sm--only--n pad--sm--tm">
+                    <div class="content__section">
+                        <div class="load-block">
+                            <div class="load-block-icon"></div>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
+                <div class="mar--sm--bm">
+                    <a href="#" data-toggle="modal" data-target="#reject-modal"><small>Reject</small></a> | <a href="#" data-toggle="modal" data-target="#status-modal"><small>Update Status</small></a> | <a href="#" data-toggle="modal" data-target="#share-modal" id="share-modal-trigger"><small>Share</small></a>
+                </div>
+                <ul id="contentNav" class="list-group list-group--bordered mar--sm--bn bg-1 applicant-list-group">
+                    {{#each application in results.viewableApplications itemController="result"}}
+                        {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="list-group__item applicant-entry alertStatusClass"}}
+                            {{partial application.resultPartial}}
+                        {{/link-to}}
+                    {{/each}}
+                </ul>
+                <div class="text-center mar--sm--tm">
+                    <button {{bind-attr class=":button :button--secondary :button--full disableLoadMore:disabled" disabled="disableLoadMore"}} {{action "clickLoadMore"}}><small>Load More</small></button>
+                </div>
+            {{/if}}
         </section>
     </div>
 </div>

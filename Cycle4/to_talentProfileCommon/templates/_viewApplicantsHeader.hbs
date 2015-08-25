@@ -2,8 +2,8 @@
     <nav id="formBuildNav" class="nav-bar--sf1 mar--sm--bn review-header">
         <div class="mar--sm--txl">
             <span class="button-group--collapse mar--sm--only--bm float--right-left">
-                <div class="button button--secondary text-center js-prev"><span class="show-brkpoint--md"><span class="juicon juicon-chevron-left">&nbsp;</span></span>Prev</div>
-                <div class="button button--secondary text-center js-next">Next<span class="show-brkpoint--md">&nbsp;<span class="juicon juicon-chevron-right"></span></span></div>
+                <div class="button button--secondary text-center js-prev" {{action "clickPrevOrNext" "prev"}}><span class="show-brkpoint--md"><span class="juicon juicon-chevron-left">&nbsp;</span></span>Prev</div>
+                <div class="button button--secondary text-center js-next" {{action "clickPrevOrNext" "next"}}>Next<span class="show-brkpoint--md">&nbsp;<span class="juicon juicon-chevron-right"></span></span></div>
             </span>
             <div class="review-stats-container">
                 <div class="review-stats text-center">
@@ -14,19 +14,19 @@
                         </li>
                         <li class="js-filled-button js-tooltipster-button cursor-pointer">
                             <label class="block"><small>Filled</small></label>
-                            <span class="large-number">2<span class="text-faded">/5</span></span><span class="juicon juicon-list text-faded"></span>
+                            <span class="large-number">{{filledInfo.numFilled}}<span class="text-faded">/{{filledInfo.totalHeadCount}}</span></span><span class="juicon juicon-list text-faded"></span>
                         </li>
                         <li>
                             <label class="block"><small>Open Since</small></label>
                             <div class="cal-container">
                                 <div class="top">
-                                    <p>Jul</p>
+                                    <p>{{openSince.approvedOnMonth}}</p>
                                 </div>
                                 <div class="bottom">
-                                    <p>22</p>
+                                    <p>{{openSince.approvedOnDay}}</p>
                                 </div>
                             </div>
-                            <label>(18 days)</label>
+                            <label>({{openSince.numDaysOpen}} days)</label>
                         </li>
                     </ul>
                 </div>
