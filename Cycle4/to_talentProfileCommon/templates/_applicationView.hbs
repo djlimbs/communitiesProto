@@ -15,14 +15,15 @@
             <span class="juicon juicon-chat"></span> Provide feedback
         </button>
     </div>
+        
     <!-- Identity section only appears in sf1 -->
     <section>
         <div class="panel__body pad--sm--bs">
             <div class="row">
                 <div class="column--md--6">
                     <small class="block dots mar--sm--bxs"><label>Source:</label> {{application.Source__c}} 
-                        {{#if isInternal}} <a href="#" class="js-status-button js-tooltip">View Profile</a>{{/if}}</small>
-                    <small class="block dots mar--sm--bxs"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>)</small>
+                        {{#if isInternal}} <a {{action "viewTalentProfile"}} href="#">View Profile</a>{{/if}}</small>
+                    <small class="block dots mar--sm--bxs"><label>Applied On:</label> {{formatDate application.Applied_On__c}} {{#if otherAppsLength}}(<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>){{/if}}</small>
                     <small class="block dots mar--sm--bxs"><label>Employment:</label> {{employmentText}}</small>
                 </div>
                 <div class="column--md--2">

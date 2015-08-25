@@ -88,11 +88,15 @@ App.TabController = Ember.ObjectController.extend({
     }.property('parentController.selectedTab'),
 });
 
-App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin);
+App.InterviewController = Ember.ObjectController.extend(App.InterviewMixin, App.CamelizeModelMixin, {
+    retPage : 'to_applicationReader'
+});
 
 App.FeedbackController = Ember.ObjectController.extend(App.FeedbackMixin, App.CamelizeModelMixin);
 
-App.ApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin);
+App.ApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
+    retPage : 'to_applicationReader'
+});
 
 App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.CamelizeModelMixin);
 
