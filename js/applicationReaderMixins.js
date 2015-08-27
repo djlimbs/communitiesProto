@@ -1,6 +1,8 @@
-App = Ember.Application.create({
-    rootElement: '#application'
-});
+if (typeof App === 'undefined') {
+    App = Ember.Application.create({
+        rootElement: '#application'
+    });
+}
 
 var outcomeColorMap = {
     'Hired' : 'label--success',
@@ -219,6 +221,9 @@ App.InterviewMixin = Ember.Mixin.create({
 });
 
 App.ApplicationReaderMixin = Ember.Mixin.create({
+    emailLink: function() {
+        return 'mailto:' + this.get('application.Email__c');
+    }.property('application.Email__c'),
 	statusText : function(){
         var offerStage = this.get('offerStage');
         var application = this.get('application');

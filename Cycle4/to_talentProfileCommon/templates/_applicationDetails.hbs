@@ -10,55 +10,46 @@
         </div>
     </section>
 {{/if}}
-<section id="interview">
-    <div class="list-heading relative">
-        <h4 class="list-heading__title">{{labels.interviews}}</h4>
-        {{#unless isSF1}}
-            <button type="button" class="button button--primary button--ghost width--full mar--sm--bm add-button" {{action "addInterview"}}>
-                <span class="juicon juicon-plus"></span> {{labels.addInterview}}
-            </button>
-        {{/unless}}
+<section id="application-form">
+    <div class="list-heading">
+        <h4 data-qa-label="applicationForm" class="list-heading__title">{{labels.applicationForm}}</h4>
     </div>
-    <div class="panel__body pad--sm--bn pad--sm--tn">
-        {{#each interviews itemController="interview"}}
-            <article class="mar--sm--bm">
-                <div data-qa-card="interview" class="card mar--sm--tm">
+    <div class="panel__body pad--sm--bn">
+        <p class="mar--sm--tn">
+            {{#if application.hasScore}}
+                <strong data-qa-label="score" {{bind-attr class="application.ratingColor"}}>{{labels.rating}} {{application.score}}</strong>
+                {{#if application.showMax}}<span data-qa-label="maxScore" class="text-faded"> ({{labels.outOf}} {{application.Maximum_Score__c}}){{/if}}</span>
+            {{else}}
+                <strong data-qa-label="noRating" class="text-faded">{{labels.rating}} N/A</strong>
+            {{/if}}
+        </p>
+    </div>
+    {{#if jobQuestions}}
+        <div class="panel__component">
+            <label data-qa-label="jobSpecificQuestions">{{labels.jobSpecificQuestions}}</label>
+            {{#each jobQuestions}}
+                <article class="card mar--sm--tm mar--sm--bxs">
                     <div class="card__body">
-                        <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rs pad--sm--rxs"></span>
-                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}} {{#unless isSF1}}<span class="text-faded"> {{otherText}}</span>{{/unless}}</a>
-                            <span data-qa-label="interviewStatus" {{bind-attr class=":status statusColor"}}>{{Status__c}}</span>
-                        </div>
-                        <div class="row pad--sm--lxl">
-                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
-                                <h4 data-qa-label="interviewers" class="mar--sm--n">{{labels.interviewers}}</h4>
-                                {{#if camelizedModel.interviewers}}
-                                    {{Interviewers__c}}
-                                {{else}}
-                                    <span data-qa-label="noInterviews" class="text-faded">{{labels.notProvided}}</span>
-                                {{/if}}
-                            </div>
-                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
-                                <h4 data-qa-label="topics" class="mar--sm--n">{{labels.topics}}</h4>
-                                {{#if camelizedModel.topics}}
-                                    {{Topics__c}}
-                                {{else}}
-                                    <span data-qa-label="noTopics"class="text-faded">{{labels.notProvided}}</span>
-                                {{/if}}
-                            </div>
-                        </div>
-                        {{#if isCompleted}}
-                            <div class="row pad--sm--lxl mar--sm--ts">
-                                <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
-                                    <h4 data-qa-label="feedback" class="mar--sm--n">{{labels.feedback}}</h4>
-                                    {{Feedback_Provided__c}}
-                                </div>
-                            </div>
-                        {{/if}}
+                        <div><small data-qa-label="jobQuestion">{{Question__c}}</small></div>
+                        <div data-qa-label="jobValue" class="mar--sm--txs">{{Value__c}}</div>
                     </div>
-                </div>
-            </article>
-        {{/each}}
-    </div>
+                </article>
+            {{/each}}
+        </div>
+    {{/if}}
+    {{#if generalQuestions}}
+        <div class="panel__component">
+            <label data-qa-label="generalQuestions">{{labels.generalQuestions}}</label>
+            {{#each generalQuestions}}
+                <article class="card mar--sm--tm mar--sm--bxs">
+                    <div class="card__body">
+                        <div><small data-qa-label="generalQuestion">{{Question__c}}</small></div>
+                        <div data-qa-label="generalValue" class="mar--sm--txs">{{Value__c}}</div>
+                    </div>
+                </article>
+            {{/each}}
+        </div>
+    {{/if}}
 </section>
 <section id="feedback">
     <div class="list-heading relative">
@@ -70,38 +61,7 @@
     <div class="panel__body pad--sm--bn pad--sm--tn">
         <article class="mar--sm--bm">
 
-            <div class="card mar--sm--tm js-feedback-card">
-                <div class="card__body pad--sm--bn">
-                    <div class="form__group">
-                        <label class="">Regarding</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select id="regardingSelect1">
-                                <option value="TF" selected="">Team Fit</option>
-                                <option value="FO&quot;&quot;">Final Outcome</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="TFcontrols2">
-                        <div class="form__group">
-                            <label class="block required-field">Feedback</label>
-                            <div class="button-group feedbackButtons">
-                                <button id="likeButton1" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Thumbs up"><span class="juicon juicon-like"></span></button>
-                                <button id="dislikeButton1" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Thumbs down"><span class="juicon juicon-dislike"></span></button>
-                                <button id="notsureButton1" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Not sure"><span class="juicon juicon-question-circle"></span></button>
-                            </div>
-                        </div>
-                        <div class="form__group mar--sm--bs">
-                            <label>Comment</label>
-                            <textarea placeholder="Type something here"></textarea>
-                        </div>
-                    </div>  
-                </div>
-                <div class="panel__body">
-                    <a href="#" class="float--right button button--primary">Save</a>
-                    <a href="#" class="float--right button button--secondary mar--sm--rs" {{action "clickCancelFeedbackInline"}}>Cancel</a>
-                </div>
-            </div>
+            {{provide-feedback-inline ctrl=this}}
 
             {{#each evaluations itemController="feedback"}}
                 <div data-qa-card="evaluation" class="card mar--sm--tm">
@@ -159,53 +119,61 @@
                 </div>
             {{/each}}
         </article>
-        
+    </div>
+</section>
+<section id="interview">
+    <div class="list-heading relative">
+        <h4 class="list-heading__title">{{labels.interviews}}</h4>
+        {{#unless isSF1}}
+            <button type="button" class="button button--primary button--ghost width--full mar--sm--bm add-button" {{action "addInterview"}}>
+                <span class="juicon juicon-plus"></span> {{labels.addInterview}}
+            </button>
+        {{/unless}}
+    </div>
+    <div class="panel__body pad--sm--bn pad--sm--tn">
+        {{#each interviews itemController="interview"}}
+            <article class="mar--sm--bm">
+                <div data-qa-card="interview" class="card mar--sm--tm">
+                    <div class="card__body">
+                        <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rs pad--sm--rxs"></span>
+                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}} {{#unless isSF1}}<span class="text-faded"> {{otherText}}</span>{{/unless}}</a>
+                            <span data-qa-label="interviewStatus" {{bind-attr class=":status statusColor"}}>{{Status__c}}</span>
+                        </div>
+                        <div class="row pad--sm--lxl">
+                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
+                                <h4 data-qa-label="interviewers" class="mar--sm--n">{{labels.interviewers}}</h4>
+                                {{#if camelizedModel.interviewers}}
+                                    {{Interviewers__c}}
+                                {{else}}
+                                    <span data-qa-label="noInterviews" class="text-faded">{{labels.notProvided}}</span>
+                                {{/if}}
+                            </div>
+                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
+                                <h4 data-qa-label="topics" class="mar--sm--n">{{labels.topics}}</h4>
+                                {{#if camelizedModel.topics}}
+                                    {{Topics__c}}
+                                {{else}}
+                                    <span data-qa-label="noTopics"class="text-faded">{{labels.notProvided}}</span>
+                                {{/if}}
+                            </div>
+                        </div>
+                        {{#if isCompleted}}
+                            <div class="row pad--sm--lxl mar--sm--ts">
+                                <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
+                                    <h4 data-qa-label="feedback" class="mar--sm--n">{{labels.feedback}}</h4>
+                                    {{Feedback_Provided__c}}
+                                </div>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </article>
+        {{/each}}
     </div>
 </section>
 {{#with talentProfile as tp}}
     {{partial "childrenObjects"}}
 {{/with}}
-<section id="application-form">
-    <div class="list-heading">
-        <h4 data-qa-label="applicationForm" class="list-heading__title">{{labels.applicationForm}}</h4>
-    </div>
-    <div class="panel__body pad--sm--bn">
-        <p class="mar--sm--tn">
-            {{#if application.hasScore}}
-                <strong data-qa-label="score" {{bind-attr class="application.ratingColor"}}>{{labels.rating}} {{application.score}}</strong>
-                {{#if application.showMax}}<span data-qa-label="maxScore" class="text-faded"> ({{labels.outOf}} {{application.Maximum_Score__c}}){{/if}}</span>
-            {{else}}
-                <strong data-qa-label="noRating" class="text-faded">{{labels.rating}} N/A</strong>
-            {{/if}}
-        </p>
-    </div>
-    {{#if jobQuestions}}
-        <div class="panel__component">
-            <label data-qa-label="jobSpecificQuestions">{{labels.jobSpecificQuestions}}</label>
-            {{#each jobQuestions}}
-                <article class="card mar--sm--tm mar--sm--bxs">
-                    <div class="card__body">
-                        <div><small data-qa-label="jobQuestion">{{Question__c}}</small></div>
-                        <div data-qa-label="jobValue" class="mar--sm--txs">{{Value__c}}</div>
-                    </div>
-                </article>
-            {{/each}}
-        </div>
-    {{/if}}
-    {{#if generalQuestions}}
-        <div class="panel__component">
-            <label data-qa-label="generalQuestions">{{labels.generalQuestions}}</label>
-            {{#each generalQuestions}}
-                <article class="card mar--sm--tm mar--sm--bxs">
-                    <div class="card__body">
-                        <div><small data-qa-label="generalQuestion">{{Question__c}}</small></div>
-                        <div data-qa-label="generalValue" class="mar--sm--txs">{{Value__c}}</div>
-                    </div>
-                </article>
-            {{/each}}
-        </div>
-    {{/if}}
-</section>
 <section id="contact-information">
     <div class="list-heading">
         <h4 data-qa-label="contactInformation" class="list-heading__title">{{labels.contactInformation}}</h4>
