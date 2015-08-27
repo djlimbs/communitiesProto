@@ -219,12 +219,14 @@
                             <div class="row pad--sm--rxxl">
                                 {{#each fieldSet}}
                                     <div class="column--sm--6 column--xs--only--12 pad--sm--only--tm mar--md--tm">
-                                        <label class="block">{{label}}</label>
+                                        <h4 class="mar--sm--n">{{label}}</h4>
+                                        <span class="field-value-small">
                                         {{#if value}}
                                             {{{value}}}
                                         {{else}}
-                                            <div data-qa-label="notProvided" class="text-faded">{{labels.notProvided}}</div>
+                                            <span data-qa-label="notProvided">{{labels.notProvided}}</span>
                                         {{/if}}
+                                        </span>
                                     </div>
                                 {{/each}}
                             </div>
@@ -253,12 +255,14 @@
                         <div class="row pad--sm--rxxl mar--md--bm">
                             {{#each fieldSet}}
                                 <div class="column--sm--6 column--xs--only--12 pad--sm--only--bm">
-                                    <label class="block">{{label}}</label>
+                                    <h4 class="mar--sm--n">{{label}}</h4>
+                                    <span class="field-value-small">
                                     {{#if value}}
                                         {{{value}}}
                                     {{else}}
-                                        <div data-qa-label="notProvided" class="text-faded">{{labels.notProvided}}</div>
+                                        <span data-qa-label="notProvided">{{labels.notProvided}}</span>
                                     {{/if}}
+                                    </span>
                                 </div>
                             {{/each}}
                         </div>
