@@ -728,6 +728,24 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 	shareUrl: function() {
 		return window.location.href.replace(/&filter=.+/,'') + '&filter=' + encodeURIComponent(JSON.stringify(this.get('params')));
 	}.property('params'),
+	successFunction: function(self, res) {
+		var updateObj = {};
+    	var applicantId = self.get('applicantId');
+    	var params = self.get('params');
+
+		App.formatResults(updateObj, res, params);
+		self.setProperties(updateObj);
+		self.set('isLoadingResults', false);
+
+		if (applicantId) {
+			self.set('applicantId', null);
+			self.transitionToRoute('viewApplicantsApplicationReader', applicantId);
+		} else {
+			if (!Ember.isEmpty(updateObj.results.viewableApplications)) {
+				self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
+			}
+		}
+	},
     actions: {
     	clickNext: function() {
     		var applications = this.get('results.viewableApplications');

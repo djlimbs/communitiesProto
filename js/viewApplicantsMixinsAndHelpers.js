@@ -380,40 +380,24 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
     	this.set('params', params);
     	this.set('offset', 0);
 
-    	var successFunction = function(res) {
-        	var updateObj = {};
-        	var applicantId = self.get('applicantId');
-
-			App.formatResults(updateObj, res, params);
-			self.setProperties(updateObj);
-			self.set('isLoadingResults', false);
-
-			if (applicantId) {
-				self.set('applicantId', null);
-				self.transitionToRoute('viewApplicantsApplicationReader', applicantId);
-			} else {
-				if (!Ember.isEmpty(updateObj.results.viewableApplications)) {
-					self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
-				}
-			}
-        };
-
-    	Ember.run.debounce(this, this.search, params, successFunction, 300);
+    	Ember.run.debounce(this, this.search, 300);
     	
     },
-    search: function(params, successFunction) {
+    search: function() {
     	var self = this;
-    	cont.getFilteredApplicants(params, function(res, evt) {
+    	cont.getFilteredApplicants(this.get('params'), function(res, evt) {
     		if (res) {
 
     			res = parseResult(res);
 
     			if (res.isSuccess) {
-    				successFunction(res);
+    				self.get('successFunction')(self, res);
     			} else {
+    				self.set('errorMessage', res.errorMessages[0]);
     				// error handling
     			}
     		} else {
+    			self.set('errorMessage', 'Something broke');
     			// error handling
     		}
     	});
