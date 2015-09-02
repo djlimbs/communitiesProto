@@ -149,7 +149,10 @@ App.FeedbackMixin = Ember.Mixin.create({
         var hasComments = !Ember.isEmpty(this.get('Comments__c'));
         var hasDisposition = !Ember.isEmpty(this.get('Disposition__c'))
         return (hasCriteria || hasComments || hasDisposition)
-    }.property('hasCriteria', 'Comments__c', 'Disposition__c')
+    }.property('hasCriteria', 'Comments__c', 'Disposition__c'),
+    isResumeReview: function() {
+        return Ember.isEmpty(this.get('Interview__c'));
+    }
 })
 
 App.InterviewMixin = Ember.Mixin.create({
@@ -168,6 +171,37 @@ App.InterviewMixin = Ember.Mixin.create({
         }
         
         return sortedTimeSlots;
+    }.property('parentController'),
+    otherTooltipText: function(){
+        var self = this;
+        var sortedTimeSlots = this.get('sortedTimeSlots');
+        var formattedStartDate = labels.dateTime + ' TBD';
+        if(!Ember.isEmpty(sortedTimeSlots)){
+            var dateString = '';
+            var formatString = 'ddd, MMM DD, YYYY @ h:mm A z';
+
+            if(isSF1){
+                formatString = 'ddd MMM DD @ h:mm A';
+            }
+
+            sortedTimeSlots.forEach(function(ts, i) {
+                if (i > 0) {
+                    dateString += moment(sortedTimeSlots[i].Start_Time__c).tz(self.get('parentController').get('timeZone')).format(formatString);
+
+                    if (i < sortedTimeSlots.length - 1) {
+                        dateString += '<br/>';
+                    }
+
+                    if(isSF1){
+                        dateString = dateString.replace('AM', 'A').replace('PM', 'P');  //shorten the AM PM for more space on mobile
+                    }
+                }  
+            });
+
+
+            return dateString
+        }
+
     }.property('parentController'),
     formattedStartDate : function(){
         var sortedTimeSlots = this.get('sortedTimeSlots');

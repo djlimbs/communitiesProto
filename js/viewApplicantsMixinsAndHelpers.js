@@ -11,7 +11,7 @@ App.formatHeaderNumbers = function(obj, initData) {
         					stageSubtotal: 0,
         					total: 0,
         					sourceCounts: initData.sourceCounts,
-        					sourceTotal: initData.sourceCounts.getEach('total').reduce(function(a,b) { return a + b; })
+        					sourceTotal: !Ember.isEmpty(initData.sourceCounts) ? initData.sourceCounts.getEach('total').reduce(function(a,b) { return a + b; }) : 0
         				  };
 
 	// Format applicants totals by Stage
@@ -65,6 +65,7 @@ App.formatHeaderNumbers = function(obj, initData) {
 
 App.formatResults = function(obj, res, params) {
 	obj.results = {
+		allApplicationIds: res.data.applicationIds,
 		total: res.data.applicationIds.length,
 		numberViewable: res.data.applications.length,
 		viewableApplications: res.data.applications 
@@ -200,7 +201,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 	},
 	setStageAndStatusFilter: function() {
 		var textFunction = function(filterParams) {
-			return 'Stage and Status: ' + filterParams.stage + '; ' + (filterParams.status || 'Any');
+			return 'Stage and Status: ' + (filterParams.stage || 'Any') + '; ' + (filterParams.status || 'Any');
 		};
 
 		var customParamsFunction = function(params) {
@@ -311,7 +312,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 	},
 	initializeParams: function() {
 		var params = this.get('params');
-		console.log(params);
+
 		this.setProperties(params);
 		// check for stage and status
 
@@ -350,20 +351,30 @@ App.SearchFilterMixin = Ember.Mixin.create({
 });
 
 App.SearchAndResultsMixin = Ember.Mixin.create({
+	results: {
+		viewableApplications: [],
+		allApplicationIds: [],
+		total: 0
+	},
 	offset: 0,
 	numResultsPerSearch: 2,
 	disableLoadMore: function() {
 		return this.get('results.numberViewable') === this.get('results.total') ? 'disabled' : false;
 	}.property('results.numberViewable', 'results.totalApplicants'),
 	filtersOrSortChanged: function() {
-		this.set('isLoadingResults', true);
-		this.updateParams();
+		Ember.run.scheduleOnce('afterRender', this, function() {
+			this.set('offset', 0);
+			this.set('isLoadingResults', true);
+			this.updateParams();
+		});
 	}.observes('filters', 'sortType'),
     updateParams: function() {
     	var self = this;
     	var filterParams = this.get('filters').getEach('params');
         var params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
-        var numResultsPerSearch = this.get('numResultsPerSearch');
+       	var initLimiter = this.get('initLimiter');
+       	var numResultsPerSearch = this.get('numResultsPerSearch');
+       	var numberViewable = this.get('results.numberViewable');
 
         if (filterParams.length === 0) {
         	params.allOutcomes = true;
@@ -377,21 +388,29 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
     	
     	params.sortType = this.get('sortType');
 
+    	params.limiter = initLimiter || numberViewable;
+
+    	if (Ember.isEmpty(params.limiter) || params.limiter === 0) {
+    		params.limiter = numResultsPerSearch;
+    	}
+
     	this.set('params', params);
-    	this.set('offset', 0);
+    	this.set('offset', 0);//Ember.isNone(initLimiter) ? 0 : (initLimiter - numResultsPerSearch));
 
     	Ember.run.debounce(this, this.search, 300);
-    	
     },
-    search: function() {
-    	var self = this;
-    	cont.getFilteredApplicants(this.get('params'), function(res, evt) {
+    search: function(successFunction) {
+		var self = this;
+
+		var functionToRun = successFunction || self.get('successFunction');
+    	cont.getFilteredApplicants(self.get('params'), function(res, evt) {
     		if (res) {
 
     			res = parseResult(res);
 
     			if (res.isSuccess) {
-    				self.get('successFunction')(self, res);
+    				self.set('initLimiter', null);
+    				functionToRun(self, res);
     			} else {
     				self.set('errorMessage', res.errorMessages[0]);
     				// error handling
@@ -400,10 +419,9 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
     			self.set('errorMessage', 'Something broke');
     			// error handling
     		}
-    	});
+    	});    	
     },
     isScoreSortCustom: function () {
-    	console.log(scoreSort);
 		return scoreSort !== 'Raw_Score__c';
 	}.property(),
 	maxApplicationRatingVal: function() {

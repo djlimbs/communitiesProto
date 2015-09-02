@@ -7,11 +7,11 @@
                     {{#if hasOutcome}}
                         &nbsp;<small data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{application.Outcome__c}}</small>
                     {{else}}
-                        &nbsp;<a href="#" class="js-status-button js-tooltip">Update</a></h5>
+                        &nbsp;<a class="pointer js-status-button js-tooltipster-button">Update</a></h5>
                     {{/if}}
             </div>
         </div>
-        <button type="button" class="button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button float--right-left">
+        <button type="button" class="button button--primary button--ghost mar--sm--only--ts width--full--sm--only js-feedback-button float--right-left js-tooltipster-button">
             <span class="juicon juicon-chat"></span> Provide feedback
         </button>
     </div>
@@ -22,9 +22,10 @@
             <div class="row">
                 <div class="column--md--6">
                     <small class="block dots mar--sm--bxs"><label>Source:</label> {{application.Source__c}} 
-                        {{#if isInternal}} <a {{action "viewTalentProfile"}} href="#">View Profile</a>{{/if}}</small>
+                        {{#if isInternal}} (<a {{action "viewTalentProfile"}} href="#">View Profile</a>){{/if}}</small>
                     <small class="block dots mar--sm--bxs"><label>Applied On:</label> {{formatDate application.Applied_On__c}} {{#if otherAppsLength}}(<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>){{/if}}</small>
                     <small class="block dots mar--sm--bxs"><label>Employment:</label> {{employmentText}}</small>
+                    <small class="block dots mar--sm--bxs"><label>LinkedIn:</label> <a href="#" {{action "loadLinkedIn"}}>{{#if hasProfile}}Profile{{else}}Search{{/if}}</a></small>
                 </div>
                 <div class="column--md--2">
                     <small class="block dots mar--sm--bxs">
