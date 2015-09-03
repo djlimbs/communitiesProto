@@ -332,16 +332,29 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
         var app = this.get('application');
         var url = '';
 
-        //ie9 has no origin
-        var badgeUrl = "https://" + window.location.host + '/' +  app.namespace_Talent_Profile__c;
         url = '/apex/linkedinframe?linkId=' + app.namespace_LinkedIn_Link_Id__c + '&firstName=' 
                + app.First_Name__c + '&lastName=' + app.Last_Name__c + '&email=' + app.Email__c 
                + '&appId=' + app.Id 
 
         if(app.namespace_Talent_Profile__c){
-            url += '&tpId=' + app.namespace_Talent_Profile__c + '&companyName=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Company_Name__c
-               + '&title=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Title__c + '&location=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Location__c
-               + '&url=' + badgeUrl
+            //ie9 has no origin
+            var badgeUrl = "https://" + window.location.host + '/' +  app.namespace_Talent_Profile__c;
+
+            url += '&tpId=' + app.namespace_Talent_Profile__c + '&url=' + encodeURIComponent(badgeUrl);
+
+            if(app.namespace_Talent_Profile__r){
+                if(app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Location__c){
+                    url += '&location=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Location__c
+                }
+
+                if(app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Company_Name__c){
+                    url += '&companyName=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Company_Name__c;
+                }
+
+                if(app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Title__c){
+                    url += '&title=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Title__c;
+                }
+            }
         }
 
         return url;
