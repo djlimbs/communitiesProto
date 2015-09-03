@@ -4,15 +4,17 @@
             <label>Is</label>
             <div class="select__wrap">
                 <div class="input__icon juicon juicon-down"></div>
-                <select>
-                    <option value="option1">Greater Than</option>
-                    <option value="option2">Less Than</option>
-                </select>
+                {{view "select" 
+                    content=comparisons 
+                    optionLabelPath="content.label" 
+                    optionValuePath="content.value"
+                    value=interviewDirection}}
             </div>
         </div>
         <div class="column column--md--4 pad--sm--tl">
             <div class="input__wrap">
-                <input type="number"/>
+                {{input type="number" value=interviewScore}}
+                <small class="text-faded">Max: {{maxInterviewScore}}</small>
             </div>
         </div>
     </div>

@@ -5,6 +5,8 @@
 <ul class="filters mar--sm--tn">
     {{#each filter in filters}}
         <li><a href="#" class="juicon juicon-x text-error part__left vam pad--sm--rs" {{action "clickRemoveFilter" filter}}></a><span class="part__body">{{filter.text}}</span></li>
+    {{else}}
+        <li><em class="text-faded">No Filters</em></li>
     {{/each}}
 </ul>
 

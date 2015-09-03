@@ -9,27 +9,80 @@
                 <label>Regarding</label>
                 <div class="select__wrap">
                     <div class="input__icon juicon juicon-down"></div>
-                    <select id="regardingSelect4">
-                        <option value="TF" selected="">Team Fit</option>
-                        <option value="FO">Final Outcome</option>
-                    </select>
+                    {{view "select"  data-qa-select="interviews" content=regardingSelectValues value=selectedType optionLabelPath="content.label" optionValuePath="content.value"}}
+
                 </div>
             </div>
             <div id="TFcontrols4">
                 <div class="form__group mar--sm--tm">
                     <label class="block required-field">Overall Feedback</label>
-                    <div class="button-group feedbackButtons">
-                        <button id="likeButton4" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Thumbs up"><span class="juicon juicon-like"></span></button>
-                        <button id="dislikeButton4" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Thumbs down"><span class="juicon juicon-dislike"></span></button>
-                        <button id="notsureButton4" class="button button--secondary feedbackButton" data-toggle="tooltip" title="" data-original-title="Not sure"><span class="juicon juicon-question-circle"></span></button>
+                    {{#unless selectedFinalOutcome}}
+                        <div class="button-group feedbackButtons">
+                            <button {{action "clickSelectFeedback" "Positive_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseLike:bg-2" title=ctrl.positiveTooltip}} data-qa-button="positive" data-toggle="tooltip">
+                                <span {{bind-attr class=":juicon :juicon-like chooseLike:text-success"}}></span>
+                            </button>
+                            <button {{action "clickSelectFeedback" "Negative_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDislike:bg-2" title=ctrl.negativeTooltip}} data-qa-button="negative" data-toggle="tooltip">
+                                <span {{bind-attr class=":juicon :juicon-dislike chooseDislike:text-warning"}}></span>
+                            </button>
+                            {{#if allowNeutral}}
+                                <button {{action "clickSelectFeedback" "Neutral__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseUnknown:bg-2" title=ctrl.neutralTooltip}} data-qa-button="neutral" data-toggle="tooltip">
+                                    <span {{bind-attr class=":juicon :juicon-question-circle chooseUnknown:text-info"}}></span>
+                                </button>
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        <div class="button-group feedbackButtons">
+                            <button {{action "clickSelectFeedback" "Selected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseSelected:bg-2" title=labels.selectTooltip}} data-qa-button="select" data-toggle="tooltip">
+                                <span {{bind-attr class=":juicon :juicon-check chooseSelected:text-success"}}></span>
+                            </button>
+                            {{#if allowRejection}}
+                                <button {{action "clickSelectFeedback" "Rejected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDisqualified:bg-2" title=labels.rejectTooltip}} data-qa-button-"reject" data-toggle="tooltip">
+                                    <span {{bind-attr class=":juicon :juicon-ban chooseDisqualified:text-error"}}></span>
+                                </button>
+                            {{/if}}
+                        </div>
+                    {{/unless}}
+                </div>
+
+                {{#unless selectedFinalOutcome}}
+                    {{#unless isResumeReview}}
+                        {{#if additionalCriteriaFields}}
+                            <label data-qa-locator="fieldSetBlock" class="block mar--sm--bs">Questions</label>
+                            {{#each additionalCriteriaFields}}
+                                <div {{bind-attr class=":form__group isEmpty:has-error"}}>
+                                    <label class="block required-field">
+                                        <small>
+                                            {{#if helpText}}{{helpText}}{{else}}{{label}}{{/if}}
+                                        </small> 
+                                    </label>
+                                    <div class="select__wrap mar--sm--bm">
+                                        <div class="input__icon juicon juicon-down"></div>
+                                        {{view "select" prompt="Select..." data-qa-select="fieldSetQuestions" content=values value=selectedValue optionLabelPath="content.label" optionValuePath="content.value"}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{/if}}
+                    {{/unless}}
+                {{/unless}}
+
+                {{#if showDisposition}}
+                    <div id="disposition" class="form__group">
+                        <label data-qa-label="disposition" class="required-field">{{labels.disposition}}</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" data-qa-select="disposition" content=disposition value=selectedDisposition}}
+                        </div>
                     </div>
-                </div>
-                <div class="form__group mar--sm--bs">
-                    <label>Comment</label>
-                    <textarea placeholder="Type something here"></textarea>
-                </div>
+                {{/if}}
+
+                {{#unless selectedFinalOutcome}}
+                    <div class="form__group">
+                        <label data-qa-label="comment" class="">{{labels.comment}}</label>
+                        {{textarea maxlength="1000" data-qa-textarea="comment" disabled=isDisabled value=comments}}
+                    </div>
+                {{/unless}}
             </div>
         </div>
-        <div class="modal__footer"><a href="#" class="float--right button button--primary" data-dismiss="modal" {{action "clickSave"}}>Save</a><a href="#" class="float--right button button--secondary mar--sm--rs" data-dismiss="modal">Cancel</a></div>
+        <div class="modal__footer"><a href="#" class="float--right button button--primary" data-dismiss="modal" {{action "clickSave"}}>Save</a><a href="#" class="float--right button button--secondary mar--sm--rs" data-dismiss="modal" {{action "clickCancel"}}>Cancel</a></div>
     </div>
 </div>

@@ -5,14 +5,28 @@
         <div class="row">
             {{partial "viewApplicantsFilterAndResults"}}
             <div class="column--md--9 pad--sm--bm">
+                {{#if noResultsFound}}
+                    <div id="no-resuts" class="">
+                        <div class="content pad--sm--n">
+                            <div class="panel">
+                                <div class="panel__body">
+                                    <em class="text-faded">No applicants found.</em>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {{/if}}
                 {{outlet}}
+                
             </div>
         </div>
     </div>
     <div class="hide">
         {{filled-info data=filledInfo filters=filters ctrl=controller buttonClass="js-filled-button"}}
 
-	    {{applicant-totals data=totalApplicants buttonClass="js-stage-status-button"}}
+	    {{applicant-totals data=totalApplicants filters=filters ctrl=controller buttonClass="js-stage-status-button"}}
     </div>
-
+    {{partial "viewApplicantsShareModal"}}
+    {{partial "viewApplicantsRejectModal"}}
+    {{partial "viewApplicantsUpdateStatusModal"}}
 </div>
