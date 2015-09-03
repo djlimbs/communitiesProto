@@ -3464,7 +3464,7 @@ function program3(depth0,data) {
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
     'content': ("filterOptions"),
     'value': ("selectedFilter"),
-    'prompt': ("--")
+    'prompt': ("Select...")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                    </div>\n                </div>\n                ");
   hashTypes = {};

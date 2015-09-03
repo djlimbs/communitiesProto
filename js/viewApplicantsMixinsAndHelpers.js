@@ -283,7 +283,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 			var filterText = 'Outcome: ';
 
 			if (params.noOutcome) {
-				filterText += 'No Outcome';
+				filterText += 'No Outcome Yet';
 			}
 
 			if (params.showHired) {

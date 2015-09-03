@@ -919,8 +919,8 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 				if (res.isSuccess) {
 					if (lastIndexToProcess >= appIds.length) {
 						// UPDATE STORED APPS' STAGE AND STATUS
-						//App.Fixtures.get('savedApplications').setEach('Stage', self.get('selectedBulkStage'));
-						//App.Fixtures.get('savedApplications').setEach('Status', self.get('selectedBulkStatus'));
+						App.Fixtures.get('savedApplications').getEach('application').setEach('Stage__c', self.get('selectedBulkStage'));
+						App.Fixtures.get('savedApplications').getEach('application').setEach('Status__c', self.get('selectedBulkStatus'));
 
 						self.notifyPropertyChange('filters');
 					} else {
@@ -1010,19 +1010,8 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
     			appIds: this.get('results.allApplicationIds')
     		};
     		
-    		cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
-    			if (res) {
-    				res = parseResult(res);
-
-    				if (res.isSuccess) {
-    					self.notifyPropertyChange('filters');
-    				} else {
-    					// ERROR
-    				}
-    			} else {
-    				// ERROR
-    			}
-    		});
+    		this.set('isLoadingResults', true);
+    		this.bulkUpdate(0);
     	}
     }
 });
@@ -1031,6 +1020,17 @@ App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(Ap
 	selectedTab: 'application',
 	retPage: 'to_viewApplicants',
 	isInlineFeedbackVisible: false,
+	updateApplicationLinkedInLinkId: function() {
+		var linkObj = App.Fixtures.get('newLinkedInLink');
+
+		if (!Ember.isNone(linkObj) && linkObj.appId === this.get('application.Id')) {
+			var appToUpdate = App.Fixtures.get('savedApplications').findBy('application.Id', linkObj.appId);
+			appToUpdate.set('application.namespace_LinkedIn_Link_Id__c', linkObj.linkId);
+			this.set('application.namespace_LinkedIn_Link_Id__c', linkObj.linkId);
+			this.notifyPropertyChange('application');
+			App.Fixtures.set('newLinkedInLink', null);
+		}
+	}.observes('App.Fixtures.newLinkedInLink'),
 	actions: {
 		clickProvideFeedbackInline: function() {
 			if (!this.get('isInlineFeedbackVisible')) {
@@ -1240,7 +1240,7 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 				                label : labels.finalSelection   
 					        });
 
-							savedApplications.addObject(application);
+							savedApplications.addObject(Ember.Object.create(application));
 							
 							console.log('RESOLVE');
 							resolve(application);
