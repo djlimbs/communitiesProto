@@ -31,7 +31,7 @@
                 <article class="card mar--sm--tm mar--sm--bxs">
                     <div class="card__body">
                         <div><small data-qa-label="jobQuestion">{{Question__c}}</small></div>
-                        <div data-qa-label="jobValue" class="mar--sm--txs">{{Value__c}}</div>
+                        <div data-qa-label="jobValue" class="mar--sm--txs">{{{Value__c}}}</div>
                     </div>
                 </article>
             {{/each}}
@@ -44,7 +44,7 @@
                 <article class="card mar--sm--tm mar--sm--bxs">
                     <div class="card__body">
                         <div><small data-qa-label="generalQuestion">{{Question__c}}</small></div>
-                        <div data-qa-label="generalValue" class="mar--sm--txs">{{Value__c}}</div>
+                        <div data-qa-label="generalValue" class="mar--sm--txs">{{{Value__c}}}</div>
                     </div>
                 </article>
             {{/each}}
@@ -59,11 +59,9 @@
         </button>
     </div>
     <div class="panel__body pad--sm--bn pad--sm--tn">
-        <article class="mar--sm--bm">
-
-            {{provide-feedback-inline ctrl=this}}
-
-            {{#each evaluations itemController="feedback"}}
+        {{provide-feedback-inline ctrl=this}}
+        {{#each evaluations itemController="feedback"}}
+            <article class="mar--sm--bm">
                 <div data-qa-card="evaluation" class="card mar--sm--tm">
                     <div {{bind-attr class=":card__body displayPanelBottom::pad--sm--bn"}}>
                         <div {{bind-attr class=":row displayPanelBottom:panel__top :pad--sm--n displayPanelBottom:pad--sm--txs displayPanelBottom:mar--sm--bm"}} style="height: auto">
@@ -87,22 +85,24 @@
                             </div>
                         </div>
                         {{#unless hasFinal}}
-                            {{#if criteriaFields}}
-                                <div data-qa-label="criterieaFields" class="row pad--sm--lxl">
-                                    {{#each criteriaFields}}
-                                        <div class="panel__body column--md--6 pad--sm--tn">
-                                            <h4 class="mar--sm--n">{{label}}</h4>
-                                            <span class="field-value-small">
-                                            {{#if value}}
-                                                {{value}}
-                                            {{else}}
-                                                <span data-qa-label="notProvided">{{labels.notProvided}}</span>
-                                            {{/if}}
-                                            </span>
-                                        </div>
-                                    {{/each}}
-                                </div>
-                            {{/if}}
+                            {{#unless isResumeReview}}
+                                {{#if criteriaFields}}
+                                    <div data-qa-label="criterieaFields" class="row pad--sm--lxl">
+                                        {{#each criteriaFields}}
+                                            <div class="panel__body column--md--6 pad--sm--tn">
+                                                <h4 class="mar--sm--n">{{label}}</h4>
+                                                <span class="field-value-small">
+                                                {{#if value}}
+                                                    {{value}}
+                                                {{else}}
+                                                    <span data-qa-label="notProvided">{{labels.notProvided}}</span>
+                                                {{/if}}
+                                                </span>
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            {{/unless}}
                         {{/unless}}
                         {{#if camelizedModel.disposition}}
                             <div class="row pad--sm--lxl">
@@ -119,8 +119,10 @@
                         {{/if}}
                     </div>
                 </div>
-            {{/each}}
-        </article>
+            </article>
+        {{else}}
+            <em class="text-faded block mar--sm--tm mar--sm--bm">{{labels.noneProvided}}</em>
+        {{/each}}
     </div>
 </section>
 <section id="interview">
@@ -138,7 +140,7 @@
                 <div data-qa-card="interview" class="card mar--sm--tm">
                     <div class="card__body">    
                         <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rs pad--sm--rxs"></span>
-                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}} {{#unless isSF1}}<span class="text-faded"> {{otherText}}</span>{{/unless}}</a>
+                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}}</a> {{#unless isSF1}}<span class="text-faded" data-toggle="tooltip" data-html="true" {{bind-attr title="otherTooltipText"}}> {{otherText}}</span>{{/unless}}
                             <span data-qa-label="interviewStatus" {{bind-attr class=":status statusColor"}}>{{Status__c}}</span>
                         </div>
                         <div class="row pad--sm--lxl">
@@ -174,6 +176,8 @@
                     </div>
                 </div>
             </article>
+        {{else}}
+            <em class="text-faded block mar--sm--tm mar--sm--bm">{{labels.noneProvided}}</em>
         {{/each}}
     </div>
 </section>

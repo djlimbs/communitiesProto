@@ -23,7 +23,7 @@
                             </thead>
                             <tbody>
                                 {{#each stageCount in data.stageCounts}}
-                                    <tr>
+                                    <tr {{action "clickSetStageFilter" stageCount.name}}>
                                         <td>{{stageCount.name}}</td>
                                         <td>{{stageCount.total}}</td>
                                     </tr>
@@ -37,7 +37,7 @@
                             </thead>
                             <tbody>
                                 {{#each outcomeCount in data.outcomeCounts}}
-                                    <tr>
+                                    <tr {{action "clickSetOutcomeFilter" outcomeCount.name}}>
                                         <td>{{outcomeCount.name}}</td>
                                         <td>{{outcomeCount.total}}</td>
                                     </tr>
@@ -62,7 +62,7 @@
                             </thead>
                             <tbody>
                                 {{#each source in data.sourceCounts}}
-                                    <tr>
+                                    <tr {{action "clickSetSourceFilter" source.name}}>
                                         <td>{{source.name}}</td>
                                         <td>{{source.total}}</td>
                                     </tr>

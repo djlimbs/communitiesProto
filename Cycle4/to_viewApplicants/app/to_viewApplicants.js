@@ -1,38 +1,4 @@
 /*
-$(document).ready(function() {
-    var backToTop = $('#back-to-top'),
-        contentContainer = $('body .scope-container > .content');
-    
-    function setPos() {
-        var topPos = $(window).height() - ($(window).height() / 6),
-            leftPos = contentContainer.offset().left + (contentContainer.width());
-            
-            backToTop.css('top', topPos + 'px')
-                .css('left', leftPos + 'px');
-    }
-    
-    setPos();
-    
-    $(window).resize(setPos);
-    
-    $(window).scroll(function() {
-        if ($(window).scrollTop() > $(window).height()) {
-            backToTop.fadeIn(250);
-        } else {
-            backToTop.fadeOut(250);
-        }
-    });
-    
-    backToTop.click(function() {
-        $('body, html').animate({
-            scrollTop: 0
-        }, 500);
-        
-        return false;
-    });
-});
-
-
 var params = {
 reqId : reqId,
 stage : this.get('selectedStage'),
@@ -110,16 +76,27 @@ function applicationReaderProcesser(parsedJson){
     parsedJson.talentProfile.camelizedModel = camelizeObj(parsedJson.talentProfile);
 
     //if we have questions split them up into jobQuestions and generalQuestions
+    var markupByScore = {
+        '1': '<span class="juicon juicon-like text-success mar--sm--lxs"></span>',
+        '0': '<span class="juicon juicon-question-circle text-info mar--sm--lxs"></span>',
+        '-1': '<span class="juicon juicon-dislike text-error mar--sm--lxs"></span>',
+        'disqualify': '<span class="juicon juicon-ban text-error mar--sm--lxs"></span>'
+    };
+
     if(parsedJson.application.Applicant_Responses__r && parsedJson.application.Applicant_Responses__r.records){
         parsedJson.application.Applicant_Responses__r.records.forEach(function(resp){
+            var scoreMarkup = resp.Disqualified__c === true ? markupByScore.disqualify : markupByScore[resp.Score__c];
+
             //if we have any previous found checkbox repsonses we need to group them up.
             if(!Ember.isEmpty(jobQuestions.findBy('Form_Element__c', resp.Form_Element__c))){   //this if is checking for jobQuestion checkboxes
                var foundResp =  jobQuestions.findBy('Form_Element__c', resp.Form_Element__c);
-               foundResp.Value__c += ', ' + resp.Value__c
+
+               foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
             } else if(!Ember.isEmpty(generalQuestions.findBy('Form_Element__c', resp.Form_Element__c))){  //this if is checking for generalQuestions checkboxes
                var foundResp =  generalQuestions.findBy('Form_Element__c', resp.Form_Element__c);
-               foundResp.Value__c += ', ' + resp.Value__c
+               foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
             } else {
+                resp.Value__c += scoreMarkup;
                 if(resp.Form_Element__r.Section__c == 'Job Specific'){
                     jobQuestions.addObject(Ember.Object.create(resp));
                 } else if(resp.Form_Element__r.Section__c == 'General'){
@@ -182,8 +159,24 @@ function applicationReaderProcesser(parsedJson){
     console.log(parsedJson);
     return parsedJson;
 }
+//Ember.LOG_BINDINGS = true
 
-
+Ember.subscribe('render', {
+  before: function(name, start, payload){
+    return start
+  },
+  after: function(name, end, payload, start){
+    var duration = Math.round(end - start)
+    var template = payload.template
+    console.log(name)
+    console.log(payload)
+    console.log(duration);
+    //console.log(payload);
+    if (template){ // this is to filter out anonymous templates
+      console.log('rendered', template, 'took', duration, 'ms')
+    }
+  }
+})
 
 
 var monthMap = null;
@@ -356,10 +349,12 @@ App.ToolTipsterComponent = Ember.Component.extend({
             contentAsHTML: true,
             trigger: 'click',
             autoClose: false,
+            //autoClose: true,
+            //interactive: true,
+            //hideOnClick: true,
             offsetY: -100,
             offsetX: -10,
             delay: 0,
-            onlyOne: true,
             position: 'bottom',
             updateAnimation: false,
             functionBefore: function(origin, continueTooltip) {
@@ -375,23 +370,87 @@ App.ToolTipsterComponent = Ember.Component.extend({
         };
 
 		$button.tooltipster(tooltipOptions);
-
-        $('body').on('click', '[data-dismiss="modal"]', function() { // Bind dismiss-modal to close tooltips
-            $button.tooltipster('hide');
-        });
 	},
 	afterRenderEvent: function() {
 		this.initializeToolTipstser();
+	},
+	click: function(e) {
+		var $button = this.get('$button');
+		e.stopPropagation();
+
+		if ($(e.target).closest('[data-dismiss="modal"]').length > 0) {
+			$button.tooltipster('hide');
+		}
 	}
 });
 
 App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
-	attributeBindings: ['data'],
+	attributeBindings: ['data', 'filters', 'ctrl'],
 	isStageSelected: true,
 	layoutName: 'components/viewApplicantsStageStatusTooltip',
+	setFilter: function(newFilter) {
+		var ctrl = this.get('ctrl');
+		var filters = this.get('filters');
+		var params = {};
+		var $button = this.get('$button');
+
+		params.allOutcomes = true;
+		params.stage = name;
+
+		filters.clear();
+		filters.pushObject(newFilter);
+
+		//ctrl.set('applicantId', applicantId);
+		ctrl.notifyPropertyChange('filters');
+
+		$button.tooltipster('hide');
+	},
 	actions: {
 		setIsStageSelected: function(isStageSelected) {
     		this.set('isStageSelected', isStageSelected);
+    	},
+    	clickSetStageFilter: function(name) {
+			var params = {};
+
+			params.allOutcomes = true;
+			params.stage = name;
+
+			var newFilter = {
+				name: 'stage',
+				text: 'Stage and Status: ' + name + '; Any',
+				params: params
+			}
+
+			this.setFilter(newFilter);
+    	},
+    	clickSetOutcomeFilter: function(name) {
+			var params = {};
+
+			params.allOutcomes = false;
+			params.showHired = name === 'Hired';
+			params.showRejected = name === 'Rejected';
+			params.showWithdrew = name === 'Withdrew';
+
+			var newFilter = {
+				name: 'outcome',
+				text: 'Outcome: ' + name,
+				params: params
+			}
+
+			this.setFilter(newFilter);
+    	},
+    	clickSetSourceFilter: function(name) {    		
+			var params = {};
+
+			params.source = name;
+
+			var newFilter = {
+				name: 'source',
+				text: 'Source: ' + name,
+				params: params
+			}
+
+			this.setFilter(newFilter);
     	}
 	}
 });
@@ -545,6 +604,7 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
             			self.resetFeedbackValues();
             			if (self.get('isInline') === true) {
 							$('.js-feedback-card').slideUp();
+							self.get('ctrl').set('isInlineFeedbackVisible', false);
 						}
             		} else {
             			console.log(res);
@@ -560,7 +620,7 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
 		clickCancel: function() {
 			if (this.get('isInline') === true) {
 				$('.js-feedback-card').slideUp();
-				this.get('ctrl').toggleProperty('isInlineFeedbackVisible');
+				this.get('ctrl').set('isInlineFeedbackVisible', false);
 			}
 
 			this.resetFeedbackValues();
@@ -718,6 +778,19 @@ App.ViewApplicantsView = Ember.View.extend({
 		$('body').tooltip({
             selector: '[data-toggle=tooltip]'
         });
+
+        $('#share-modal').on('shown.jui.modal', function() {
+        		$('#share-modal').find('input').select();
+        });
+	},
+	click: function(e) {
+		Ember.run.scheduleOnce('afterRender', this, function() {
+			if ($(e.target).closest('.js-tooltipster-button').length === 0) {
+				$('.js-tooltipster-button').tooltipster('hide');
+			}
+		});
+		
+		//console.log('clicked');*/
 	}
 });
 
@@ -726,8 +799,30 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 	currentApplicationIdBinding: 'controllers.viewApplicantsApplicationReader.application.Id',
 	isInlineFeedbackVisibleBinding: 'controllers.viewApplicantsApplicationReader.isInlineFeedbackVisible',
 	shareUrl: function() {
-		return window.location.href.replace(/&filter=.+/,'') + '&filter=' + encodeURIComponent(JSON.stringify(this.get('params')));
-	}.property('params'),
+		if (!Ember.isEmpty(this.get('params'))) {
+			var params = JSON.parse(JSON.stringify(this.get('params')));
+
+			params.limiter = this.get('results.numberViewable') || this.get('numResultsPerSearch');
+			var shareUrl = window.location.href.replace(/&filter=.+/,'') + '&filter=' + encodeURIComponent(JSON.stringify(params)); 
+			if (!Ember.isEmpty(this.get('currentApplicationId'))) {
+				shareUrl += '&appId=' + this.get('currentApplicationId');
+			}
+
+			return shareUrl;
+		} else {
+			return null;
+		}
+	}.property('params', 'currentApplicationId', 'results.numberViewable'),
+	applicationStages: function() {
+		return Object.keys(this.get('applicationStageAndStatuses')).reject(function(stage) { return stage === 'Any'; });
+	}.property('applicationStageAndStatuses'),
+	applicationStatuses: function() {
+		var statuses = this.get('applicationStageAndStatuses')[this.get('selectedBulkStage')];
+		if (!Ember.isEmpty(statuses)) {
+			this.set('selectedBulkStatus', statuses[0]);
+		}
+		return statuses;
+	}.property('selectedBulkStage'),
 	successFunction: function(self, res) {
 		var updateObj = {};
     	var applicantId = self.get('applicantId');
@@ -735,16 +830,76 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 
 		App.formatResults(updateObj, res, params);
 		self.setProperties(updateObj);
+
 		self.set('isLoadingResults', false);
 
-		if (applicantId) {
+		if (applicantId && !Ember.isNone(self.get('results.viewableApplications').findBy('Id', applicantId))) {
 			self.set('applicantId', null);
 			self.transitionToRoute('viewApplicantsApplicationReader', applicantId);
 		} else {
 			if (!Ember.isEmpty(updateObj.results.viewableApplications)) {
+				self.set('applicantId', null);
 				self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
 			}
 		}
+	},
+	noResultsFound: function() {
+		return Ember.isEmpty(this.get('results.viewableApplications'));
+	}.property('results.viewableApplications'),
+	bulkReject: function(startIndex) {
+		var self = this;
+		var lastIndexToProcess = startIndex + BULK_AMOUNT;
+		var appIds = this.get('results.allApplicationIds');
+		var bulkRejectObj = {
+			disposition: this.get('selectedDisposition'),
+			appIds: appIds.slice(startIndex, lastIndexToProcess)
+		};
+
+		cont.bulkReject(JSON.stringify(bulkRejectObj), function(res, evt) {
+			if (res) {
+				res = parseResult(res);
+
+				if (res.isSuccess) {
+					if (lastIndexToProcess >= appIds.length) {
+						self.notifyPropertyChange('filters');
+					} else {
+						self.bulkReject(lastIndexToProcess);
+					}
+				} else {
+					// ERROR
+				}
+			} else {
+				// ERROR
+			}
+		});
+	},
+	bulkUpdate: function(startIndex) {
+		var self = this;
+		var lastIndexToProcess = startIndex + BULK_AMOUNT;
+		var appIds = this.get('results.allApplicationIds');
+		var bulkUpdateObj = {
+			stage: this.get('selectedBulkStage'),
+			status: this.get('selectedBulkStatus'),
+			appIds: this.get('results.allApplicationIds').slice(startIndex, lastIndexToProcess)
+		};
+		
+		cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
+			if (res) {
+				res = parseResult(res);
+
+				if (res.isSuccess) {
+					if (lastIndexToProcess >= appIds.length) {
+						self.notifyPropertyChange('filters');
+					} else {
+						self.bulkUpdate(lastIndexToProcess);
+					}
+				} else {
+					// ERROR
+				}
+			} else {
+				// ERROR
+			}
+		});
 	},
     actions: {
     	clickNext: function() {
@@ -766,7 +921,6 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
     	clickPrev: function() {
     		var applications = this.get('results.viewableApplications');
     		var currentApplicationId = this.get('currentApplicationId');
-    		console.log(this.get('currentApplicationId'));
     	},
     	clickPrevOrNext: function(direction) {
     		var applications = this.get('results.viewableApplications');
@@ -789,13 +943,15 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
     		var self = this;
     		var params = this.get('params');
     		var numResultsPerSearch = this.get('numResultsPerSearch');
-    		var offset = this.get('offset') + numResultsPerSearch;
+    		var offset = this.get('results.numberViewable'); //+ numResultsPerSearch;
 
     		this.set('isLoadingResults', true);
 
     		params.offset = offset;
+    		params.limiter = numResultsPerSearch;
+    		this.set('params', params);
 
-    		var successFunction = function(res) {
+    		var successFunction = function(self, res) {
     			var updateObj = {};
 
     			App.formatResults(updateObj, res, params);
@@ -807,7 +963,33 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
     			});
     		};
 
-    		this.search(params, successFunction);
+    		this.search(successFunction);
+    	},
+    	clickConfirmBulkReject: function() {
+    		this.set('isLoadingResults', true);
+    		this.bulkReject(0);
+    	},
+    	clickConfirmBulkUpdate: function() {
+    		var self = this;
+    		var bulkUpdateObj = {
+    			stage: this.get('selectedBulkStage'),
+    			status: this.get('selectedBulkStatus'),
+    			appIds: this.get('results.allApplicationIds')
+    		};
+    		
+    		cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
+    			if (res) {
+    				res = parseResult(res);
+
+    				if (res.isSuccess) {
+    					self.notifyPropertyChange('filters');
+    				} else {
+    					// ERROR
+    				}
+    			} else {
+    				// ERROR
+    			}
+    		});
     	}
     }
 });
@@ -833,7 +1015,7 @@ App.ResultController = Ember.ObjectController.extend({
 	alertStatusClass: function() {
 		var alertStatus = this.get('Alert_Status__c');
 		return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? 'has-problem-warning' : 'has-problem-error';
-	}.property(),
+	}.property('parentController.results.viewableApplications'),
 	applicationRatingVal: function() {
 		return this.get(scoreSort);
 	}.property('parentController.results.viewableApplications'),
@@ -911,31 +1093,39 @@ App.ViewApplicantsRoute = Ember.Route.extend({
         	if (!Ember.isNone(storedMainData)) {
         		resolve(storedMainData);
         	} else {
-        		var params; 
+        		var params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams'))); 
 
 	        	if (Ember.isEmpty(filterParams)) {
 	    			// Empty params
-
-	        		params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
-
 		        	params.noOutcome = true;
 		        	params.allOutcomes = false;
 		        	params.sortType = scoreSort;
 	        	} else {
-	        		params = JSON.parse(decodeURIComponent(filterParams));
+	        		Ember.merge(params,JSON.parse(decodeURIComponent(filterParams)));
+
+	        		if (params.showHired || params.showRejected || params.showWithdrew || params.noOutcome) {
+	        			params.allOutcomes = false;
+	        		}
+
+	        		if (!params.sortType) {
+	        			params.sortType = scoreSort;
+	        		}
 	        	}
 
 	        	var resolveObj = {
 		        					applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
 		        					applicationSources: initData.sourceCounts.getEach('name'),
+		        					disposition: getDependentOptions(apiKey, 'Application__c', 'Outcome__c', 'Disposition__c', namespace)['Rejected'],
 		        					maxApplicationRating: initData.maxApplicationRating,
 		        					maxInterviewScore: initData.maxInterviewScore,
 		        					sortOptions: App.Fixtures.get('sortOptions'),
-		        					sortType: scoreSort,
+		        					sortType: params.sortType,//scoreSort,
 		        					locations: [],
 		        					filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
 		        					filters: [],
-		        					initParams: params
+		        					initParams: params,
+		        					applicantId: !Ember.isEmpty(appIdParam) ? appIdParam : null,
+		        					initLimiter: params.limiter
 		        				};
 
 		        var anyStatuses = [];
@@ -945,7 +1135,7 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 		        resolveObj.applicationStageAndStatuses['Any'] = anyStatuses;
 
 				App.formatHeaderNumbers(resolveObj, initData);
-				//App.formatResults(resolveObj, res, params);
+
 				// Format locations
 				if (!Ember.isNone(initData.requisition.Job_Locations__r)) {
 					initData.requisition.Job_Locations__r.records.forEach(function(location) {
@@ -959,99 +1149,10 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 					});
 				}
 
-				// Format filters
-				//resolveObj.filters.addObjects(App.convertParamsToFilters(params));
-				
-
 				console.log(resolveObj);
 				App.Fixtures.set('storedMainData', resolveObj);
 				resolve(resolveObj);
         	}
-
-        	
-
-        	/*
-
-        	var initData = App.Fixtures.get('initData');
-
-        	if (!Ember.isNone(initData)) {
-        		resolve(initData);
-        	} else {
-	        	var params; 
-
-	        	if (Ember.isEmpty(filterParams)) {
-        			// Empty params
-
-	        		params = JSON.parse(JSON.stringify(App.Fixtures.get('emptyParams')));
-
-		        	params.noOutcome = true;
-		        	params.allOutcomes = false;
-		        	params.sortType = scoreSort;
-	        	} else {
-	        		params = JSON.parse(decodeURIComponent(filterParams));
-	        	}
-
-	        	cont.getFilteredApplicants(params, function(res, evt) {
-	        		if (res) {
-	        			res = parseResult(res);
-
-	        			if (res.isSuccess) {
-	        				console.log(res);
-	        				var resolveObj = {
-	        					applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
-	        					applicationSources: res.data.sourceCounts.getEach('name'),
-	        					maxApplicationRating: res.data.maxApplicationRating,
-	        					maxInterviewScore: res.data.maxInterviewScore,
-	        					sortOptions: App.Fixtures.get('sortOptions'),
-	        					sortType: scoreSort,
-	        					locations: [],
-	        					filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
-	        					filters: []
-	        				};
-
-	        				App.formatHeaderNumbers(resolveObj, res);
-	        				//App.formatResults(resolveObj, res, params);
-	        				// Format locations
-	        				if (!Ember.isNone(res.data.requisition.Job_Locations__r)) {
-	        					res.data.requisition.Job_Locations__r.records.forEach(function(location) {
-	        						resolveObj.locations.addObject({
-	        							geolocation: !Ember.isNone(location.Location__r.Geographical_Location__c) ? 
-	        											location.Location__r.Geographical_Location__c.latitude + ', ' + location.Location__r.Geographical_Location__c.longitude :
-	        											null,
-	        							name: location.Location__r.Name,
-	        							label: location.Location__r.Name
-	        						});
-	        					});
-	        				}
-
-	        				// Format filters
-	        				if (params.noOutcome === true && params.allOutcomes === false && params.showHired === false && params.showWithdrew === false && params.showRejected === false) {
-	        					resolveObj.filters.addObject({
-	        						name: 'outcome',
-	        						text: 'Outcome: No Outcome',
-	        						params: {
-	        							showHired: false,
-	        							showWithdrew: false,
-	        							showRejected: false,
-	        							noOutcome: true,
-	        							allOutcomes: false
-	        						}
-	        					});
-	        				}
-
-	        				console.log(resolveObj);
-	        				App.Fixtures.set('initData', resolveObj);
-	        				resolve(resolveObj);
-	        			} else {
-	        				reject(res);
-	        			}
-
-	        		} else {
-	        			reject({});
-	        		}
-	        	});
-        	}
-        	*/
         });
     },
     afterModel: function(model, transition) {
@@ -1075,11 +1176,10 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 							if (Ember.isNone(monthMap)) {
 								monthMap = res.data.monthMap;
 							}
-							console.log(res.data);
 							
 							application = applicationReaderProcesser(res.data);
 							application.applicationStageAndStatuses = self.modelFor('viewApplicants').applicationStageAndStatuses;
-							application.disposition = getDependentOptions(apiKey, 'Application__c', 'Outcome__c', 'Disposition__c', namespace)['Rejected'];
+							application.disposition = self.modelFor('viewApplicants').disposition;
 							application.regardingSelectValues = [];
 							application.interviewers = {};
 
@@ -1107,6 +1207,7 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 
 							savedApplications.addObject(application);
 							
+							console.log('RESOLVE');
 							resolve(application);
 						} else {
 							reject({});
@@ -1118,6 +1219,7 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 					}
 				});
 			} else {
+				console.log('from db resolve');
 				resolve(application);
 			}
 		});
