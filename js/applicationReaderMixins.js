@@ -330,7 +330,20 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
     }.property('selectedStage'),
     csaUrl : function(){
         var app = this.get('application');
-        var url = '/apex/linkedinframe?linkId=' + app.namespace_LinkedIn_Link_Id__c + '&firstName=' + app.First_Name__c + '&lastName=' + app.Last_Name__c + '&email=' + app.Email__c
+        var url = '';
+
+        //ie9 has no origin
+        var badgeUrl = "https://" + window.location.host + '/' +  app.namespace_Talent_Profile__c;
+        url = '/apex/linkedinframe?linkId=' + app.namespace_LinkedIn_Link_Id__c + '&firstName=' 
+               + app.First_Name__c + '&lastName=' + app.Last_Name__c + '&email=' + app.Email__c 
+               + '&appId=' + app.Id 
+
+        if(app.namespace_Talent_Profile__c){
+            url += '&tpId=' + app.namespace_Talent_Profile__c + '&companyName=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Company_Name__c
+               + '&title=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Title__c + '&location=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Location__c
+               + '&url=' + badgeUrl
+        }
+
         return url;
     }.property('application'),
     otherAppsLength : function(){
@@ -484,7 +497,7 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
             }
         },
         openApplicationModal : function(){
-            if(!isSF1){
+            if(isSF1){
                 $('#applicantModal').modal();
             } else {
                 window.location.href = '/_ui/search/ui/UnifiedSearchResults?searchType=2&str=' + this.get('application').get('Name');

@@ -1,0 +1,23 @@
+<div>
+    <div class="row">
+        <div class="column column--md--8">
+            <label>Is</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" 
+                    content=comparisons 
+                    optionLabelPath="content.label" 
+                    optionValuePath="content.value"
+                    value=ratingDirection}}
+            </div>
+        </div>
+        <div class="column column--md--4 pad--sm--tl">
+            <div class="input__wrap">
+                {{input type="number" value=rating}}
+                {{#unless ctrl.isScoreSortCustom}}
+                    <small class="text-faded">Max: {{maxApplicationRatingVal}}</small>
+                {{/unless}}
+            </div>
+        </div>
+    </div>
+</div>
