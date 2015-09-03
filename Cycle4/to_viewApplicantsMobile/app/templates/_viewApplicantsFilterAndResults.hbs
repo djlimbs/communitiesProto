@@ -1,0 +1,49 @@
+<div class="column--md--3">
+    <div class="card">
+        
+        <!-- Filters and Results -->
+        <section class="pad--sm--m pad--sm--bl">
+            {{search-filter ctrl=controller filters=filters filterOptions=filterOptions applicationStageAndStatuses=applicationStageAndStatuses applicationSources=applicationSources locations=locations params=initParams}}
+            <h3 class="mar--sm--n">Sort</h3>
+            <div class="form-group">
+                <div class="select__wrap">
+                    <div class="input__icon juicon juicon-down"></div>
+                    {{view "select" 
+                            class="pad--sm--rxl small"
+                            content=sortOptions 
+                            optionLabelPath="content.label"
+                            optionValuePath="content.value"
+                            value=sortType}}
+                </div>
+            </div>
+        </section>
+        <!-- /Filters and Results -->
+        
+        <section class="pad--sm--m border-top bg-2">
+            {{#if isLoadingResults}}
+                <div class="content pad--md--ts pad--sm--only--n pad--sm--tm">
+                    <div class="content__section">
+                        <div class="load-block">
+                            <div class="load-block-icon"></div>
+                        </div>
+                    </div>
+                </div>
+            {{else}}
+                <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
+                <div class="mar--sm--bm">
+                    <a href="#" data-toggle="modal" data-target="#reject-modal"><small>Reject</small></a> | <a href="#" data-toggle="modal" data-target="#status-modal"><small>Update Status</small></a> | <a href="#" data-toggle="modal" data-target="#share-modal" id="share-modal-trigger"><small>Share</small></a>
+                </div>
+                <ul id="contentNav" class="list-group list-group--bordered mar--sm--bn bg-1 applicant-list-group">
+                    {{#each application in results.viewableApplications itemController="result"}}
+                        {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="list-group__item applicant-entry alertStatusClass"}}
+                            {{partial application.resultPartial}}
+                        {{/link-to}}
+                    {{/each}}
+                </ul>
+                <div class="text-center mar--sm--tm">
+                    <button {{bind-attr class=":button :button--secondary :button--full disableLoadMore:disabled" disabled="disableLoadMore"}} {{action "clickLoadMore"}}><small>Load More</small></button>
+                </div>
+            {{/if}}
+        </section>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<div>
+    <div class="row">
+        <div class="column column--md--8">
+            <label>Is</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" 
+                    content=comparisons 
+                    optionLabelPath="content.label" 
+                    optionValuePath="content.value"
+                    value=interviewDirection}}
+            </div>
+        </div>
+        <div class="column column--md--4 pad--sm--tl">
+            <div class="input__wrap">
+                {{input type="number" value=interviewScore}}
+                <small class="text-faded">Max: {{maxInterviewScore}}</small>
+            </div>
+        </div>
+    </div>
+</div>

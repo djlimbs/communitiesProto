@@ -64,6 +64,11 @@ App.formatHeaderNumbers = function(obj, initData) {
 };
 
 App.formatResults = function(obj, res, params) {
+	console.log('FORMAT RES: ');
+	console.log('RES: ', res);
+	console.log('RES DATA: ', res.data);
+	console.log('VIEWABLE APPS:' , res.data.applications);
+
 	obj.results = {
 		total: res.data.applicationIds.length,
 		numberViewable: res.data.applications.length,

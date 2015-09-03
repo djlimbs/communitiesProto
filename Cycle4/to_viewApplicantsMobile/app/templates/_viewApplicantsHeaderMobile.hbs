@@ -1,0 +1,26 @@
+<div class="review-stats-container mobile mar--md--tn"> <!-- Has .mobile .mar--md--tn classes -->
+    <div class="review-stats text-center">
+        <ul class="review-row">
+            <li class="js-filter-button cursor-pointer" data-toggle="modal" data-target="#statsFilterModal">
+                <label class="block"><small>Total</small></label>
+                <span class="large-number">{{totalApplicants.total}}</span><span class="juicon juicon-chart-bar text-faded"></span>
+            </li>
+            <li class="js-filled-button cursor-pointer" data-toggle="modal" data-target="#statsFilledModal">
+                <label class="block"><small>Filled</small></label>
+                <span class="large-number">{{filledInfo.numFilled}}<span class="text-faded">/{{filledInfo.totalHeadCount}}</span></span><span class="juicon juicon-list text-faded"></span>
+            </li>
+            <li>
+                <label class="block"><small>Open Since</small></label>
+                <div class="cal-container">
+                    <div class="top">
+                        <p>{{openSince.approvedOnMonth}}</p>
+                    </div>
+                    <div class="bottom">
+                        <p>{{openSince.approvedOnDay}}</p>
+                    </div>
+                </div>
+                <label>({{openSince.numDaysOpen}} days)</label>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="clearfix">
+    <h3 class="mar--sm--n float--left">Filters</h3>
+</div>
+
+<ul class="filters mar--sm--tn">
+    {{#each filter in filters}}
+        <li><a {{action "clickRemoveFilter" filter}} href="#" class="juicon juicon-x js-remove-filter text-error part__left vam pad--sm--rs"></a><span class="part__body">{{filter.text}}</span></li>
+    {{/each}}
+</ul>
+
+<a {{action "clickAdd"}} data-toggle="modal" data-target="#filter-modal" href="#" class="button button--primary button--ghost button--full mar--sm--bm"><small><span class="juicon juicon-plus"></span>Add</small></a>
+
+<div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span><span class="sr-only">Close</span>
+                </button>
+                <h2 class="modal__heading" id="myModalLabel">Add Condition</h2>
+            </div>
+            <div class="modal__body">
+                <div class="form__group">
+                    <label for="filterStage">Field</label>
+                    <div class="select__wrap">
+                        <div class="input__icon juicon juicon-down"></div>
+                        {{view "select" content=filterOptions value=selectedFilter prompt="--"}}
+                    </div>
+                </div>
+                {{partial filterPartial}}
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="button button--secondary" data-dismiss="modal" {{action "clickCancel"}}>Cancel</button>
+                <button type="button" class="button button--primary filterOK" data-dismiss="modal" {{action "clickOK"}}>OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
