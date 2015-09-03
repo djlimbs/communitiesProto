@@ -89,14 +89,20 @@ function applicationReaderProcesser(parsedJson){
 
             //if we have any previous found checkbox repsonses we need to group them up.
             if(!Ember.isEmpty(jobQuestions.findBy('Form_Element__c', resp.Form_Element__c))){   //this if is checking for jobQuestion checkboxes
-               var foundResp =  jobQuestions.findBy('Form_Element__c', resp.Form_Element__c);
+               	var foundResp =  jobQuestions.findBy('Form_Element__c', resp.Form_Element__c);
 
-               foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	if (!Ember.isEmpty(scoreMarkup)) {
+               		foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	}
             } else if(!Ember.isEmpty(generalQuestions.findBy('Form_Element__c', resp.Form_Element__c))){  //this if is checking for generalQuestions checkboxes
-               var foundResp =  generalQuestions.findBy('Form_Element__c', resp.Form_Element__c);
-               foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	var foundResp =  generalQuestions.findBy('Form_Element__c', resp.Form_Element__c);
+               	if (!Ember.isEmpty(scoreMarkup)) {
+               		foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	}
             } else {
-                resp.Value__c += scoreMarkup;
+                if (!Ember.isEmpty(scoreMarkup)) {
+                	resp.Value__c += scoreMarkup;
+                }
                 if(resp.Form_Element__r.Section__c == 'Job Specific'){
                     jobQuestions.addObject(Ember.Object.create(resp));
                 } else if(resp.Form_Element__r.Section__c == 'General'){
@@ -155,8 +161,6 @@ function applicationReaderProcesser(parsedJson){
     parsedJson.selectedStatus = parsedJson.application.Status__c;
     parsedJson.firstTime = true;
     parsedJson.isSF1 = isSF1;
-    console.log('AAAAAA');
-    console.log(parsedJson);
     return parsedJson;
 }
 //Ember.LOG_BINDINGS = true
@@ -344,7 +348,10 @@ App.ToolTipsterComponent = Ember.Component.extend({
 		var self = this;
 		var $button = this.get('$button');
 		var content = '<div id="' + this.get('elementId') + '" class="ember-view">' + this.$().html() + '</div>';
-		
+		var hideTooltipster = function() {
+			$button.tooltipster('hide');
+		};
+
 		var tooltipOptions = {
             contentAsHTML: true,
             trigger: 'click',
@@ -359,12 +366,16 @@ App.ToolTipsterComponent = Ember.Component.extend({
             updateAnimation: false,
             functionBefore: function(origin, continueTooltip) {
             	$('.js-tooltipster-button').not($button).tooltipster('hide');
+            	$button.one('click', hideTooltipster);
             	continueTooltip();
             },
             functionReady: function(origin, tooltip) {
             	var $shell = tooltip.find('.tooltipster-content');
             	$shell.contents().remove();
             	$shell.append(self.$());
+            },
+            functionAfter: function(origin, tooltip) {
+            	$button.off('click', hideTooltipster);
             },
             content: this.$()
         };
@@ -388,7 +399,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 	attributeBindings: ['data', 'filters', 'ctrl'],
 	isStageSelected: true,
 	layoutName: 'components/viewApplicantsStageStatusTooltip',
-	setFilter: function(newFilter) {
+	setFilter: function(newFilters) {
 		var ctrl = this.get('ctrl');
 		var filters = this.get('filters');
 		var params = {};
@@ -398,7 +409,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 		params.stage = name;
 
 		filters.clear();
-		filters.pushObject(newFilter);
+		filters.pushObjects(newFilters);
 
 		//ctrl.set('applicantId', applicantId);
 		ctrl.notifyPropertyChange('filters');
@@ -410,18 +421,31 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
     		this.set('isStageSelected', isStageSelected);
     	},
     	clickSetStageFilter: function(name) {
-			var params = {};
+			var stageParams = {};
 
-			params.allOutcomes = true;
-			params.stage = name;
+			stageParams.stage = name;
 
-			var newFilter = {
+			var stageFilter = {
 				name: 'stage',
 				text: 'Stage and Status: ' + name + '; Any',
-				params: params
-			}
+				params: stageParams
+			};
 
-			this.setFilter(newFilter);
+			var outcomeParams = {};
+
+			outcomeParams.noOutcome = true;
+			outcomeParams.showHired = false;
+			outcomeParams.showRejected = false;
+			outcomeParams.showWithdrew = false;
+			outcomeParams.allOutcomes = false;
+
+			var outcomeFilter = {
+				name: 'outcome',
+				text: 'Outcome: No outcome',
+				params: outcomeParams
+			};
+
+			this.setFilter([stageFilter, outcomeFilter]);
     	},
     	clickSetOutcomeFilter: function(name) {
 			var params = {};
@@ -437,7 +461,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 				params: params
 			}
 
-			this.setFilter(newFilter);
+			this.setFilter([newFilter]);
     	},
     	clickSetSourceFilter: function(name) {    		
 			var params = {};
@@ -450,7 +474,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 				params: params
 			}
 
-			this.setFilter(newFilter);
+			this.setFilter([newFilter]);
     	}
 	}
 });
@@ -463,6 +487,7 @@ App.FilledInfoComponent = App.ToolTipsterComponent.extend({
 			var ctrl = this.get('ctrl');
 			var filters = this.get('filters');
 			var params = {};
+			var $button = this.get('$button');
 
 			params.allOutcomes = false;
 			params.showHired = true;
@@ -475,6 +500,8 @@ App.FilledInfoComponent = App.ToolTipsterComponent.extend({
 
 			filters.clear();
 			filters.pushObject(newFilter);
+
+			$button.tooltipster('hide');
 
 			ctrl.set('applicantId', applicantId);
 			ctrl.notifyPropertyChange('filters');
@@ -514,11 +541,11 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
 		return this.get('ctrl.regardingSelectValues');
 	}.property('ctrl'),
 	allowNeutral: function() {
-		return this.get('ctrl.allowNeutral');
-	}.property('ctrl'),
+		return initData.allowRejection;
+	}.property(),
 	allowRejection: function() {
-		return this.get('ctrl.allowRejection');
-	}.property('ctrl'),
+		return initData.allowNeutral;
+	}.property(),
 	isResumeReview : function(){
         if(!Ember.isEmpty(this.get('selectedType'))){
             return this.get('selectedType').split('|')[1] == labels.miscellaneous;
@@ -840,6 +867,8 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 			if (!Ember.isEmpty(updateObj.results.viewableApplications)) {
 				self.set('applicantId', null);
 				self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
+			} else {
+				self.transitionToRoute('viewApplicants');
 			}
 		}
 	},
@@ -889,6 +918,10 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 
 				if (res.isSuccess) {
 					if (lastIndexToProcess >= appIds.length) {
+						// UPDATE STORED APPS' STAGE AND STATUS
+						//App.Fixtures.get('savedApplications').setEach('Stage', self.get('selectedBulkStage'));
+						//App.Fixtures.get('savedApplications').setEach('Status', self.get('selectedBulkStatus'));
+
 						self.notifyPropertyChange('filters');
 					} else {
 						self.bulkUpdate(lastIndexToProcess);
@@ -1120,6 +1153,8 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 		        					maxInterviewScore: initData.maxInterviewScore,
 		        					sortOptions: App.Fixtures.get('sortOptions'),
 		        					sortType: params.sortType,//scoreSort,
+		        					allowRejection: initData.allowRejection,
+		        					allowNeutral: initData.allowNeutral,
 		        					locations: [],
 		        					filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
 		        					filters: [],

@@ -357,17 +357,25 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
 		total: 0
 	},
 	offset: 0,
-	numResultsPerSearch: 2,
+	numResultsPerSearch: NUM_RESULTS_PER_SEARCH,
 	disableLoadMore: function() {
 		return this.get('results.numberViewable') === this.get('results.total') ? 'disabled' : false;
 	}.property('results.numberViewable', 'results.totalApplicants'),
-	filtersOrSortChanged: function() {
+	sortChanged: function() {
 		Ember.run.scheduleOnce('afterRender', this, function() {
 			this.set('offset', 0);
 			this.set('isLoadingResults', true);
 			this.updateParams();
 		});
-	}.observes('filters', 'sortType'),
+	}.observes('sortType'),
+	filtersChanged: function() {
+		Ember.run.scheduleOnce('afterRender', this, function() {
+			this.set('offset', 0);
+			this.set('isLoadingResults', true);
+			this.set('initLimiter', 10);
+			this.updateParams();
+		});
+	}.observes('filters'),
     updateParams: function() {
     	var self = this;
     	var filterParams = this.get('filters').getEach('params');
