@@ -21,7 +21,7 @@ App.ApplicationReaderView = Ember.View.extend({
             $('body').tooltip({
                 selector: '[data-toggle=tooltip]'
             });
-
+ 
             //javascript snippet to make the go to top button
             $(document).ready(function() {
                 var backToTop = $('#back-to-top'),
