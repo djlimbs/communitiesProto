@@ -73,11 +73,7 @@
                                     <h4 data-qa-label="feedbackCardTitle" class="card__heading dots">
                                         {{headerText}}
                                     </h4>
-                                    {{#unless hasFinal}}
-                                        {{#if camelizedModel.interviewR.camelizedModel.topics}}
-                                            <div data-qa-label="feedbackInterviewers" class="text-faded dots"><small>{{labels.interviewWith}} {{#with Interview__r}}{{Interviewers__c}}{{/with}}</small></div>
-                                        {{/if}}
-                                    {{/unless}}
+                                    
                                 </div>
                             </div>
                             <div class="column--md--5 text-right-left mar--sm--only--bm dots" style="line-height: 16px">
@@ -95,7 +91,7 @@
                                                 {{#if value}}
                                                     {{value}}
                                                 {{else}}
-                                                    <span data-qa-label="notProvided">{{labels.notProvided}}</span>
+                                                    <span data-qa-label="notProvided">{{log labels}} {{log this}} {{labels.notProvided}}</span>
                                                 {{/if}}
                                                 </span>
                                             </div>

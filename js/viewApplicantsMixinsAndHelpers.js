@@ -377,7 +377,9 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
 		Ember.run.scheduleOnce('afterRender', this, function() {
 			this.set('offset', 0);
 			this.set('isLoadingResults', true);
-			this.set('initLimiter', 10);
+			if (Ember.isNone(this.get('initLimiter'))) {
+				this.set('initLimiter', 10);
+			}
 			this.updateParams();
 		});
 	}.observes('filters'),

@@ -165,7 +165,7 @@ function applicationReaderProcesser(parsedJson){
 }
 //Ember.LOG_BINDINGS = true
 
-Ember.subscribe('render', {
+/*Ember.subscribe('render', {
   before: function(name, start, payload){
     return start
   },
@@ -181,7 +181,7 @@ Ember.subscribe('render', {
     }
   }
 })
-
+*/
 
 var monthMap = null;
 
@@ -441,7 +441,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 
 			var outcomeFilter = {
 				name: 'outcome',
-				text: 'Outcome: No outcome',
+				text: 'Outcome: No Outcome Yet',
 				params: outcomeParams
 			};
 
@@ -468,13 +468,27 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 
 			params.source = name;
 
-			var newFilter = {
+			var sourceFilter = {
 				name: 'source',
 				text: 'Source: ' + name,
 				params: params
 			}
 
-			this.setFilter([newFilter]);
+			var outcomeParams = {};
+
+			outcomeParams.noOutcome = true;
+			outcomeParams.showHired = false;
+			outcomeParams.showRejected = false;
+			outcomeParams.showWithdrew = false;
+			outcomeParams.allOutcomes = false;
+
+			var outcomeFilter = {
+				name: 'outcome',
+				text: 'Outcome: No Outcome Yet',
+				params: outcomeParams
+			};
+
+			this.setFilter([sourceFilter, outcomeFilter]);
     	}
 	}
 });
@@ -594,7 +608,7 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
 		clickSave: function() {
 			var self = this;
 			var ctrl = this.get('ctrl');
-
+			
 			var newEvaluation = {
 				Application_Lookup__c: this.get('ctrl.application.Id'),
 				RecordTypeId: this.get('isResumeReview') === true ? ctrl.get('miscRTId') : ctrl.get('interviewRTId'),
@@ -627,7 +641,9 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
             		res = parseResult(res);
 
             		if (res.isSuccess) {
-            			ctrl.get('evaluations').unshiftObject(res.data.evaluation[0]);
+            			var newEval = res.data.evaluation[0];
+            			newEval.Interview__r.camelizedModel = camelizeObj(newEval.Interview__r);
+            			ctrl.get('evaluations').unshiftObject(newEval);
             			self.resetFeedbackValues();
             			if (self.get('isInline') === true) {
 							$('.js-feedback-card').slideUp();
@@ -708,12 +724,17 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 	attributeBindings: ['data', 'ctrl'],
 	layoutName: 'components/updateStatus',
 	applicationStages: function() {
-		return Object.keys(this.get('ctrl.applicationStageAndStatuses'));
+		var currentStage = this.get('ctrl.application.Stage__c');
+		if (!Ember.isNone(currentStage)) {
+			this.set('stage', currentStage);
+		}
+		return Object.keys(this.get('ctrl.applicationStageAndStatuses')).reject(function(status) { return status === 'Any'; });
 	}.property(),
 	applicationStatuses: function() {
+		var currentStatus = this.get('ctrl.application.Status__c');
 		var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
 		if (!Ember.isNone(statuses)) {
-			this.set('status', statuses[0]);
+			this.set('status', !Ember.isNone(currentStatus) ? currentStatus : statuses[0]);
 		}
 		return statuses;
 	}.property('stage'),
@@ -722,6 +743,39 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 			this.get('$button').tooltipster('content', this.$());
 		});
 	}.observes('stage')*/
+	actions: {
+		clickUpdateStatus: function() {
+			var self = this;
+			var ctrl = this.get('ctrl');
+			var appId = this.get('ctrl.application.Id');
+			var bulkUpdateObj = {
+				stage: this.get('stage'),
+				status: this.get('status'),
+				appIds: [appId]
+			};
+			
+			cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
+				if (res) {
+					res = parseResult(res);
+
+					if (res.isSuccess) {
+						// UPDATE STORED APPS' STAGE AND STATUS
+						var savedApp = App.Fixtures.get('savedApplications').findBy('application.Id', appId);
+						savedApp.set('application.Stage__c', bulkUpdateObj.stage);
+						savedApp.set('application.Status__c', bulkUpdateObj.status);
+
+						ctrl.set('application.Stage__c', bulkUpdateObj.stage);
+						ctrl.set('application.Status__c', bulkUpdateObj.status);
+						self.notifyPropertyChange('filters');
+					} else {
+						// ERROR
+					}
+				} else {
+					// ERROR
+				}
+			});
+		}
+	}
 });
 
 App.SearchFilterComponent = Ember.Component.extend(App.SearchFilterMixin, {
@@ -1017,6 +1071,8 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 });
 
 App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
+	needs: ['viewApplicants'],
+	//shareUrlBinding: 'controllers.viewApplicants.shareUrl',
 	selectedTab: 'application',
 	retPage: 'to_viewApplicants',
 	isInlineFeedbackVisible: false,
@@ -1040,7 +1096,17 @@ App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(Ap
 			}
 
 			this.toggleProperty('isInlineFeedbackVisible');
-		}
+		},
+		addInterview : function(){
+            var url = '/apex/'+ extnamespace + 'to_interviewNewEdit?appId=' + this.get('application').Id + 
+                      '&retUrl=' + encodeURIComponent(this.get('controllers.viewApplicants.shareUrl'));
+
+            if(isSF1){
+                sforce.one.navigateToURL(url);
+            } else {
+                window.location.href = url
+            }
+        }
 	}
 });
 
@@ -1160,7 +1226,8 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 		        					filters: [],
 		        					initParams: params,
 		        					applicantId: !Ember.isEmpty(appIdParam) ? appIdParam : null,
-		        					initLimiter: params.limiter
+		        					initLimiter: params.limiter,
+		        					requisition: initData.requisition
 		        				};
 
 		        var anyStatuses = [];
