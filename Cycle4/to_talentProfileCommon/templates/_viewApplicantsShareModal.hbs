@@ -8,7 +8,14 @@
                 <h2 class="modal__heading" id="myModalLabel">Share Applicant List</h2>
             </div>
             <div class="modal__body">
-                {{input type="text" class="pad--sm--xs pad--sm--ls pad--sm--rs" value=shareUrl}}            
+                <label>Link to share:</label>
+                {{input type="text" class="pad--sm--xs pad--sm--ls pad--sm--rs" value=shareUrl}}      
+
+                {{#if hiringManager}}
+                    Hiring Manager
+                    {{hiringManager.Name}}
+                    <a href="mailto:{{unbound hiringManager.Email}}">{{hiringManager.Email}}</a> 
+                {{/if}}    
             </div>
             <div class="modal__footer">
                 <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>

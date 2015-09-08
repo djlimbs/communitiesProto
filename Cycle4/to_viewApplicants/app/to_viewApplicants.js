@@ -636,29 +636,31 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
                 });
             }
 
-            cont.saveEvaluation(JSON.stringify(newEvaluation), function(res, evt) {
-            	if (res) {
-            		res = parseResult(res);
+            if (!somethingIsEmpty) {
+            	cont.saveEvaluation(JSON.stringify(newEvaluation), function(res, evt) {
+	            	if (res) {
+	            		res = parseResult(res);
 
-            		if (res.isSuccess) {
-            			var newEval = res.data.evaluation[0];
-            			newEval.Interview__r.camelizedModel = camelizeObj(newEval.Interview__r);
-            			ctrl.get('evaluations').unshiftObject(newEval);
-            			self.resetFeedbackValues();
-            			if (self.get('isInline') === true) {
-							$('.js-feedback-card').slideUp();
-							self.get('ctrl').set('isInlineFeedbackVisible', false);
-						}
-            		} else {
-            			console.log(res);
-            			// ERROR
-            		}
-            	} else {
-            		//ERROR 
-            	}
-            });
-
-
+	            		if (res.isSuccess) {
+	            			var newEval = res.data.evaluation[0];
+	            			if (!Ember.isNone(newEval.Interview__r)) {
+	            				newEval.Interview__r.camelizedModel = camelizeObj(newEval.Interview__r);
+	            			}
+	            			ctrl.get('evaluations').unshiftObject(newEval);
+	            			self.resetFeedbackValues();
+	            			if (self.get('isInline') === true) {
+								$('.js-feedback-card').slideUp();
+								self.get('ctrl').set('isInlineFeedbackVisible', false);
+							}
+	            		} else {
+	            			console.log(res);
+	            			// ERROR
+	            		}
+	            	} else {
+	            		//ERROR 
+	            	}
+	            });
+            }
 		},
 		clickCancel: function() {
 			if (this.get('isInline') === true) {
@@ -1184,6 +1186,10 @@ App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.
 
 App.AdditionalInfoController = Ember.ObjectController.extend(App.AdditionalInfoMixin);
 
+App.AddLabelsController = Ember.ObjectController.extend({
+	labels: labels
+});
+
 App.ViewApplicantsRoute = Ember.Route.extend({
     model: function (){
         return new Ember.RSVP.Promise(function(resolve, reject) {
@@ -1227,7 +1233,8 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 		        					initParams: params,
 		        					applicantId: !Ember.isEmpty(appIdParam) ? appIdParam : null,
 		        					initLimiter: params.limiter,
-		        					requisition: initData.requisition
+		        					requisition: initData.requisition,
+		        					hiringManager: !Ember.isNone(initData.requisition.Hiring_Manager__r) ? initData.requisition.Hiring_Manager__r : null
 		        				};
 
 		        var anyStatuses = [];
