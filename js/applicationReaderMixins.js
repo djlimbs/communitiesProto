@@ -122,8 +122,6 @@ App.FeedbackMixin = Ember.Mixin.create({
         return iconColor;
     }.property('Net_Feedback_Score__c'),
     hasFinal : function(){
-        console.log('HAS FINAL');
-        console.log(this.get('Rejected__c') || this.get('Selected__c'));
         return (this.get('Rejected__c') || this.get('Selected__c'))
     }.property('Rejected__c', 'Selected__c'),
     criteriaFields : function(){
@@ -528,4 +526,261 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
             }
         }
     }
+});
+
+// FULL COMPONENTS
+App.ToolTipsterComponent = Ember.Component.extend({
+    attributeBindings: ['data'],
+    layoutName: 'components/tooltipster',
+    $button: function() {
+        return $('.' + this.get('buttonClass'));
+    }.property('buttonClass'),
+    initializeToolTipstser: function() {
+        var self = this;
+        var $button = this.get('$button');
+        var content = '<div id="' + this.get('elementId') + '" class="ember-view">' + this.$().html() + '</div>';
+        var hideTooltipster = function() {
+            $button.tooltipster('hide');
+        };
+
+        var tooltipOptions = {
+            contentAsHTML: true,
+            trigger: 'click',
+            autoClose: false,
+            //autoClose: true,
+            //interactive: true,
+            //hideOnClick: true,
+            offsetY: -100,
+            offsetX: -10,
+            delay: 0,
+            position: 'bottom',
+            updateAnimation: false,
+            functionBefore: function(origin, continueTooltip) {
+                $('.js-tooltipster-button').not($button).tooltipster('hide');
+                $button.one('click', hideTooltipster);
+                continueTooltip();
+            },
+            functionReady: function(origin, tooltip) {
+                var $shell = tooltip.find('.tooltipster-content');
+                $shell.contents().remove();
+                $shell.append(self.$());
+            },
+            functionAfter: function(origin, tooltip) {
+                $button.off('click', hideTooltipster);
+            },
+            content: this.$()
+        };
+
+        $button.tooltipster(tooltipOptions);
+    },
+    afterRenderEvent: function() {
+        this.initializeToolTipstser();
+    },
+    click: function(e) {
+        var $button = this.get('$button');
+        e.stopPropagation();
+
+        if ($(e.target).closest('[data-dismiss="modal"]').length > 0) {
+            $button.tooltipster('hide');
+        }
+    }
+});
+
+App.FeedbackComponent = App.ToolTipsterComponent.extend({
+    attributeBindings: ['data', 'ctrl'],
+    disposition: function() {
+        return this.get('ctrl.disposition');
+    }.property(),
+    chooseLike: function(){
+        return this.get('Positive_Feedback__c') == 1
+    }.property('Positive_Feedback__c'),
+    chooseDislike: function(){
+        return this.get('Negative_Feedback__c') == 1
+    }.property('Negative_Feedback__c'),
+    chooseUnknown: function(){
+        return this.get('Neutral__c') == 1
+    }.property('Neutral__c'),
+    chooseDisqualified: function(){
+        return this.get('Rejected__c');
+    }.property('Rejected__c'),
+    chooseSelected: function(){
+        return this.get('Selected__c');
+    }.property('Selected__c'),
+    interviews: function() {
+        return this.get('ctrl.interviews');
+    }.property('ctrl'),
+    additionalCriteriaFields: function() {
+        return this.get('ctrl.additionalCriteriaFields').map(function(field) {
+            return Ember.Object.create(field);
+        });
+    }.property('ctrl'),
+    regardingSelectValues: function() {
+        return this.get('ctrl.regardingSelectValues');
+    }.property('ctrl'),
+    allowNeutral: function() {
+        return initData.allowRejection;
+    }.property(),
+    allowRejection: function() {
+        return initData.allowNeutral;
+    }.property(),
+    isResumeReview : function(){
+        if(!Ember.isEmpty(this.get('selectedType'))){
+            return this.get('selectedType').split('|')[1] == labels.miscellaneous;
+        }
+
+        return false;
+    }.property('selectedType'),
+    selectedFinalOutcome : function(){
+        this.set('Rejected__c', false)
+        
+        if(!Ember.isEmpty(this.get('selectedType'))){
+            return this.get('selectedType').split('|')[1] == labels.finalSelection;
+        }
+
+        return false;
+    }.property('selectedType'),
+    setType : function(){
+        if(!Ember.isEmpty(this.get('selectedType'))){
+            //reset all the errorstates and selected choices
+            this.set('feedbackError', false);
+            var additionalCriteriaFields = this.get('additionalCriteriaFields');
+            additionalCriteriaFields.forEach(function(field){
+                field.set('isEmpty', false);
+                field.set('selectedValue', null);
+            });
+
+            this.setProperties({
+                Positive_Feedback__c : 0,
+                Negative_Feedback__c : 0,
+                Neutral__c : 0,
+                Selected__c : false,
+                Rejected__c : false
+            });
+
+            selectedType = this.get('selectedType').split('|');
+            this.set('interviewText', this.get('ctrl.interviewers')[selectedType[0]]);
+            this.set('Interview__c', selectedType[0] == "null" ? null : selectedType[0]);
+            this.set('feedbackType', selectedType[1]);
+            this.set('RecordTypeId', selectedType[1] == 'Interview' ? this.get('interviewRTId') : this.get('miscRTId')); 
+        }
+    }.observes('selectedType'),
+    showDisposition: function(){
+        return this.get('Rejected__c');
+    }.property('Rejected__c'),
+    actions: {
+        clickSave: function() {
+            var self = this;
+            var ctrl = this.get('ctrl');
+            
+            var newEvaluation = {
+                Application_Lookup__c: this.get('ctrl.application.Id'),
+                RecordTypeId: this.get('isResumeReview') === true ? ctrl.get('miscRTId') : ctrl.get('interviewRTId'),
+                Comments__c: this.get('comments'),
+                Interview__c: this.get('Interview__c'),
+                Negative_Feedback__c: this.get('Negative_Feedback__c'),
+                Positive_Feedback__c: this.get('Positive_Feedback__c'),
+                Neutral__c : this.get('Neutral__c'),
+                Selected__c : this.get('Selected__c'),
+                Rejected__c : this.get('Rejected__c'),
+                Disposition__c: this.get('selectedDisposition')
+            };
+            var somethingIsEmpty = false;
+
+            if(this.get('feedbackType') == 'Interview'){
+                this.get('additionalCriteriaFields').forEach(function(field){
+                    field.set('isEmpty', false);
+                    
+                    if(Ember.isEmpty(field.selectedValue)){
+                        somethingIsEmpty = true;
+                        field.set('isEmpty', true);
+                    }
+
+                    newEvaluation[field.name] = field.get('selectedValue');
+                });
+            }
+
+            if (!somethingIsEmpty) {
+                cont.saveEvaluation(JSON.stringify(newEvaluation), function(res, evt) {
+                    if (res) {
+                        res = parseResult(res);
+
+                        if (res.isSuccess) {
+                            var newEval = res.data.evaluation[0];
+                            if (!Ember.isNone(newEval.Interview__r)) {
+                                newEval.Interview__r.camelizedModel = camelizeObj(newEval.Interview__r);
+                            }
+                            ctrl.get('evaluations').unshiftObject(newEval);
+                            self.resetFeedbackValues();
+                            if (self.get('isInline') === true) {
+                                $('.js-feedback-card').slideUp();
+                                self.get('ctrl').set('isInlineFeedbackVisible', false);
+                            }
+                        } else {
+                            console.log(res);
+                            // ERROR
+                        }
+                    } else {
+                        //ERROR 
+                    }
+                });
+            }
+        },
+        clickCancel: function() {
+            if (this.get('isInline') === true) {
+                $('.js-feedback-card').slideUp();
+                this.get('ctrl').set('isInlineFeedbackVisible', false);
+            }
+
+            this.resetFeedbackValues();
+        },
+        clickSelectFeedback : function(choice){
+            if(this.get(choice) == 1){
+                this.set('hasFeedback', false);
+                this.set(choice, (choice == 'Rejected__c' || choice == 'Selected__c')? false : 0);
+                this.set('Disposition__c', null);
+            } else {
+                this.set('hasFeedback', true);
+                var choices = {
+                    Positive_Feedback__c : 0,
+                    Negative_Feedback__c : 0,
+                    Neutral__c : 0,
+                    Selected__c : false,
+                    Rejected__c : false
+                }
+
+                if(choice == 'Rejected__c' || choice == 'Selected__c'){
+                    choices[choice] = true;
+                } else {
+                    choices[choice] = 1;
+                    this.set('Disposition__c', null);
+                }
+
+                this.setProperties(choices);
+            }
+        }
+    },
+    resetFeedbackValues: function() {
+        var initState = {
+            Positive_Feedback__c : 0,
+            Negative_Feedback__c : 0,
+            Neutral__c : 0,
+            Selected__c : false,
+            Rejected__c : false,
+            selectedType: this.get('regardingSelectValues')[0].value,
+            selectedDisposition: null,
+            comments: null
+        };
+
+        this.get('additionalCriteriaFields').setEach('selectedValue', null);
+        this.setProperties(initState);
+    }
+});
+
+App.ProvideFeedbackComponent = App.FeedbackComponent.extend({
+    layoutName: 'components/provideFeedback',
+});
+
+App.ProvideFeedbackInlineComponent = App.FeedbackComponent.extend({
+    isInline: true,
+    layoutName: 'components/provideFeedbackInline',
 });

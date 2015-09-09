@@ -4005,13 +4005,14 @@ function program1(depth0,data) {
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['filled-info'] || (depth0 && depth0['filled-info'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "filled-info", options))));
   data.buffer.push("\n\n	    ");
-  hashContexts = {'data': depth0,'filters': depth0,'ctrl': depth0,'buttonClass': depth0};
-  hashTypes = {'data': "ID",'filters': "ID",'ctrl': "ID",'buttonClass': "STRING"};
+  hashContexts = {'data': depth0,'filters': depth0,'ctrl': depth0,'buttonClass': depth0,'toggleUpdateHeader': depth0};
+  hashTypes = {'data': "ID",'filters': "ID",'ctrl': "ID",'buttonClass': "STRING",'toggleUpdateHeader': "ID"};
   options = {hash:{
     'data': ("totalApplicants"),
     'filters': ("filters"),
     'ctrl': ("controller"),
-    'buttonClass': ("js-stage-status-button")
+    'buttonClass': ("js-stage-status-button"),
+    'toggleUpdateHeader': ("toggleUpdateHeader")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['applicant-totals'] || (depth0 && depth0['applicant-totals'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "applicant-totals", options))));
   data.buffer.push("\n    </div>\n    ");

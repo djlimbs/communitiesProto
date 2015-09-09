@@ -24,7 +24,7 @@
     <div class="hide">
         {{filled-info data=filledInfo filters=filters ctrl=controller buttonClass="js-filled-button"}}
 
-	    {{applicant-totals data=totalApplicants filters=filters ctrl=controller buttonClass="js-stage-status-button"}}
+	    {{applicant-totals data=totalApplicants filters=filters ctrl=controller buttonClass="js-stage-status-button" toggleUpdateHeader=toggleUpdateHeader}}
     </div>
     {{partial "viewApplicantsShareModal"}}
     {{partial "viewApplicantsRejectModal"}}
