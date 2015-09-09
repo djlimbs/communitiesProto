@@ -122,6 +122,8 @@ App.FeedbackMixin = Ember.Mixin.create({
         return iconColor;
     }.property('Net_Feedback_Score__c'),
     hasFinal : function(){
+        console.log('HAS FINAL');
+        console.log(this.get('Rejected__c') || this.get('Selected__c'));
         return (this.get('Rejected__c') || this.get('Selected__c'))
     }.property('Rejected__c', 'Selected__c'),
     criteriaFields : function(){
@@ -152,7 +154,7 @@ App.FeedbackMixin = Ember.Mixin.create({
     }.property('hasCriteria', 'Comments__c', 'Disposition__c'),
     isResumeReview: function() {
         return Ember.isEmpty(this.get('Interview__c'));
-    }
+    }.property('Interview__c')
 })
 
 App.InterviewMixin = Ember.Mixin.create({
@@ -267,6 +269,8 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
             if(statusText == offerStage){
                 if(!Ember.isEmpty(application.Job_Offer_Lookups__r)){
                     statusText += ' (' + application.Job_Offer_Lookups__r.records[0].Status__c + ')';
+                } else {
+                    statusText += ' (' + application.Status__c + ')';
                 }
             } else {
                 statusText += ' (' + application.Status__c + ')';

@@ -12,14 +12,14 @@
                 <label class="block required-field">Feedback</label>
                 {{#unless selectedFinalOutcome}}
                     <div class="button-group feedbackButtons">
-                        <button {{action "clickSelectFeedback" "Positive_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseLike:bg-2" title=ctrl.positiveTooltip}} data-qa-button="positive" data-toggle="tooltip">
+                        <button {{action "clickSelectFeedback" "Positive_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseLike:bg-2"}} data-qa-button="positive" data-toggle="tooltip" title="{{unbound labels.positiveTooltip}}">
                             <span {{bind-attr class=":juicon :juicon-like chooseLike:text-success"}}></span>
                         </button>
-                        <button {{action "clickSelectFeedback" "Negative_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDislike:bg-2" title=ctrl.negativeTooltip}} data-qa-button="negative" data-toggle="tooltip">
+                        <button {{action "clickSelectFeedback" "Negative_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDislike:bg-2"}} data-qa-button="negative" data-toggle="tooltip" title="{{unbound labels.negativeTooltip}}">
                             <span {{bind-attr class=":juicon :juicon-dislike chooseDislike:text-warning"}}></span>
                         </button>
                         {{#if allowNeutral}}
-                            <button {{action "clickSelectFeedback" "Neutral__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseUnknown:bg-2" title=ctrl.neutralTooltip}} data-qa-button="neutral" data-toggle="tooltip">
+                            <button {{action "clickSelectFeedback" "Neutral__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseUnknown:bg-2"}} data-qa-button="neutral" data-toggle="tooltip" title="{{unbound labels.inconclusiveTooltip}}">
                                 <span {{bind-attr class=":juicon :juicon-question-circle chooseUnknown:text-info"}}></span>
                             </button>
                         {{/if}}

@@ -89,14 +89,20 @@ function applicationReaderProcesser(parsedJson){
 
             //if we have any previous found checkbox repsonses we need to group them up.
             if(!Ember.isEmpty(jobQuestions.findBy('Form_Element__c', resp.Form_Element__c))){   //this if is checking for jobQuestion checkboxes
-               var foundResp =  jobQuestions.findBy('Form_Element__c', resp.Form_Element__c);
+               	var foundResp =  jobQuestions.findBy('Form_Element__c', resp.Form_Element__c);
 
-               foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	if (!Ember.isEmpty(scoreMarkup)) {
+               		foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	}
             } else if(!Ember.isEmpty(generalQuestions.findBy('Form_Element__c', resp.Form_Element__c))){  //this if is checking for generalQuestions checkboxes
-               var foundResp =  generalQuestions.findBy('Form_Element__c', resp.Form_Element__c);
-               foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	var foundResp =  generalQuestions.findBy('Form_Element__c', resp.Form_Element__c);
+               	if (!Ember.isEmpty(scoreMarkup)) {
+               		foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+               	}
             } else {
-                resp.Value__c += scoreMarkup;
+                if (!Ember.isEmpty(scoreMarkup)) {
+                	resp.Value__c += scoreMarkup;
+                }
                 if(resp.Form_Element__r.Section__c == 'Job Specific'){
                     jobQuestions.addObject(Ember.Object.create(resp));
                 } else if(resp.Form_Element__r.Section__c == 'General'){
@@ -155,13 +161,11 @@ function applicationReaderProcesser(parsedJson){
     parsedJson.selectedStatus = parsedJson.application.Status__c;
     parsedJson.firstTime = true;
     parsedJson.isSF1 = isSF1;
-    console.log('AAAAAA');
-    console.log(parsedJson);
     return parsedJson;
 }
 //Ember.LOG_BINDINGS = true
 
-Ember.subscribe('render', {
+/*Ember.subscribe('render', {
   before: function(name, start, payload){
     return start
   },
@@ -177,7 +181,7 @@ Ember.subscribe('render', {
     }
   }
 })
-
+*/
 
 var monthMap = null;
 
@@ -344,7 +348,10 @@ App.ToolTipsterComponent = Ember.Component.extend({
 		var self = this;
 		var $button = this.get('$button');
 		var content = '<div id="' + this.get('elementId') + '" class="ember-view">' + this.$().html() + '</div>';
-		
+		var hideTooltipster = function() {
+			$button.tooltipster('hide');
+		};
+
 		var tooltipOptions = {
             contentAsHTML: true,
             trigger: 'click',
@@ -359,12 +366,16 @@ App.ToolTipsterComponent = Ember.Component.extend({
             updateAnimation: false,
             functionBefore: function(origin, continueTooltip) {
             	$('.js-tooltipster-button').not($button).tooltipster('hide');
+            	$button.one('click', hideTooltipster);
             	continueTooltip();
             },
             functionReady: function(origin, tooltip) {
             	var $shell = tooltip.find('.tooltipster-content');
             	$shell.contents().remove();
             	$shell.append(self.$());
+            },
+            functionAfter: function(origin, tooltip) {
+            	$button.off('click', hideTooltipster);
             },
             content: this.$()
         };
@@ -388,7 +399,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 	attributeBindings: ['data', 'filters', 'ctrl'],
 	isStageSelected: true,
 	layoutName: 'components/viewApplicantsStageStatusTooltip',
-	setFilter: function(newFilter) {
+	setFilter: function(newFilters) {
 		var ctrl = this.get('ctrl');
 		var filters = this.get('filters');
 		var params = {};
@@ -398,7 +409,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 		params.stage = name;
 
 		filters.clear();
-		filters.pushObject(newFilter);
+		filters.pushObjects(newFilters);
 
 		//ctrl.set('applicantId', applicantId);
 		ctrl.notifyPropertyChange('filters');
@@ -410,18 +421,31 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
     		this.set('isStageSelected', isStageSelected);
     	},
     	clickSetStageFilter: function(name) {
-			var params = {};
+			var stageParams = {};
 
-			params.allOutcomes = true;
-			params.stage = name;
+			stageParams.stage = name;
 
-			var newFilter = {
+			var stageFilter = {
 				name: 'stage',
 				text: 'Stage and Status: ' + name + '; Any',
-				params: params
-			}
+				params: stageParams
+			};
 
-			this.setFilter(newFilter);
+			var outcomeParams = {};
+
+			outcomeParams.noOutcome = true;
+			outcomeParams.showHired = false;
+			outcomeParams.showRejected = false;
+			outcomeParams.showWithdrew = false;
+			outcomeParams.allOutcomes = false;
+
+			var outcomeFilter = {
+				name: 'outcome',
+				text: 'Outcome: No Outcome Yet',
+				params: outcomeParams
+			};
+
+			this.setFilter([stageFilter, outcomeFilter]);
     	},
     	clickSetOutcomeFilter: function(name) {
 			var params = {};
@@ -437,20 +461,34 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 				params: params
 			}
 
-			this.setFilter(newFilter);
+			this.setFilter([newFilter]);
     	},
     	clickSetSourceFilter: function(name) {    		
 			var params = {};
 
 			params.source = name;
 
-			var newFilter = {
+			var sourceFilter = {
 				name: 'source',
 				text: 'Source: ' + name,
 				params: params
 			}
 
-			this.setFilter(newFilter);
+			var outcomeParams = {};
+
+			outcomeParams.noOutcome = true;
+			outcomeParams.showHired = false;
+			outcomeParams.showRejected = false;
+			outcomeParams.showWithdrew = false;
+			outcomeParams.allOutcomes = false;
+
+			var outcomeFilter = {
+				name: 'outcome',
+				text: 'Outcome: No Outcome Yet',
+				params: outcomeParams
+			};
+
+			this.setFilter([sourceFilter, outcomeFilter]);
     	}
 	}
 });
@@ -463,6 +501,7 @@ App.FilledInfoComponent = App.ToolTipsterComponent.extend({
 			var ctrl = this.get('ctrl');
 			var filters = this.get('filters');
 			var params = {};
+			var $button = this.get('$button');
 
 			params.allOutcomes = false;
 			params.showHired = true;
@@ -475,6 +514,8 @@ App.FilledInfoComponent = App.ToolTipsterComponent.extend({
 
 			filters.clear();
 			filters.pushObject(newFilter);
+
+			$button.tooltipster('hide');
 
 			ctrl.set('applicantId', applicantId);
 			ctrl.notifyPropertyChange('filters');
@@ -514,11 +555,11 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
 		return this.get('ctrl.regardingSelectValues');
 	}.property('ctrl'),
 	allowNeutral: function() {
-		return this.get('ctrl.allowNeutral');
-	}.property('ctrl'),
+		return initData.allowRejection;
+	}.property(),
 	allowRejection: function() {
-		return this.get('ctrl.allowRejection');
-	}.property('ctrl'),
+		return initData.allowNeutral;
+	}.property(),
 	isResumeReview : function(){
         if(!Ember.isEmpty(this.get('selectedType'))){
             return this.get('selectedType').split('|')[1] == labels.miscellaneous;
@@ -567,7 +608,7 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
 		clickSave: function() {
 			var self = this;
 			var ctrl = this.get('ctrl');
-
+			
 			var newEvaluation = {
 				Application_Lookup__c: this.get('ctrl.application.Id'),
 				RecordTypeId: this.get('isResumeReview') === true ? ctrl.get('miscRTId') : ctrl.get('interviewRTId'),
@@ -595,27 +636,31 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
                 });
             }
 
-            cont.saveEvaluation(JSON.stringify(newEvaluation), function(res, evt) {
-            	if (res) {
-            		res = parseResult(res);
+            if (!somethingIsEmpty) {
+            	cont.saveEvaluation(JSON.stringify(newEvaluation), function(res, evt) {
+	            	if (res) {
+	            		res = parseResult(res);
 
-            		if (res.isSuccess) {
-            			ctrl.get('evaluations').unshiftObject(res.data.evaluation[0]);
-            			self.resetFeedbackValues();
-            			if (self.get('isInline') === true) {
-							$('.js-feedback-card').slideUp();
-							self.get('ctrl').set('isInlineFeedbackVisible', false);
-						}
-            		} else {
-            			console.log(res);
-            			// ERROR
-            		}
-            	} else {
-            		//ERROR 
-            	}
-            });
-
-
+	            		if (res.isSuccess) {
+	            			var newEval = res.data.evaluation[0];
+	            			if (!Ember.isNone(newEval.Interview__r)) {
+	            				newEval.Interview__r.camelizedModel = camelizeObj(newEval.Interview__r);
+	            			}
+	            			ctrl.get('evaluations').unshiftObject(newEval);
+	            			self.resetFeedbackValues();
+	            			if (self.get('isInline') === true) {
+								$('.js-feedback-card').slideUp();
+								self.get('ctrl').set('isInlineFeedbackVisible', false);
+							}
+	            		} else {
+	            			console.log(res);
+	            			// ERROR
+	            		}
+	            	} else {
+	            		//ERROR 
+	            	}
+	            });
+            }
 		},
 		clickCancel: function() {
 			if (this.get('isInline') === true) {
@@ -681,12 +726,17 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 	attributeBindings: ['data', 'ctrl'],
 	layoutName: 'components/updateStatus',
 	applicationStages: function() {
-		return Object.keys(this.get('ctrl.applicationStageAndStatuses'));
+		var currentStage = this.get('ctrl.application.Stage__c');
+		if (!Ember.isNone(currentStage)) {
+			this.set('stage', currentStage);
+		}
+		return Object.keys(this.get('ctrl.applicationStageAndStatuses')).reject(function(status) { return status === 'Any'; });
 	}.property(),
 	applicationStatuses: function() {
+		var currentStatus = this.get('ctrl.application.Status__c');
 		var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
 		if (!Ember.isNone(statuses)) {
-			this.set('status', statuses[0]);
+			this.set('status', !Ember.isNone(currentStatus) ? currentStatus : statuses[0]);
 		}
 		return statuses;
 	}.property('stage'),
@@ -695,6 +745,39 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 			this.get('$button').tooltipster('content', this.$());
 		});
 	}.observes('stage')*/
+	actions: {
+		clickUpdateStatus: function() {
+			var self = this;
+			var ctrl = this.get('ctrl');
+			var appId = this.get('ctrl.application.Id');
+			var bulkUpdateObj = {
+				stage: this.get('stage'),
+				status: this.get('status'),
+				appIds: [appId]
+			};
+			
+			cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
+				if (res) {
+					res = parseResult(res);
+
+					if (res.isSuccess) {
+						// UPDATE STORED APPS' STAGE AND STATUS
+						var savedApp = App.Fixtures.get('savedApplications').findBy('application.Id', appId);
+						savedApp.set('application.Stage__c', bulkUpdateObj.stage);
+						savedApp.set('application.Status__c', bulkUpdateObj.status);
+
+						ctrl.set('application.Stage__c', bulkUpdateObj.stage);
+						ctrl.set('application.Status__c', bulkUpdateObj.status);
+						self.notifyPropertyChange('filters');
+					} else {
+						// ERROR
+					}
+				} else {
+					// ERROR
+				}
+			});
+		}
+	}
 });
 
 App.SearchFilterComponent = Ember.Component.extend(App.SearchFilterMixin, {
@@ -840,6 +923,8 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 			if (!Ember.isEmpty(updateObj.results.viewableApplications)) {
 				self.set('applicantId', null);
 				self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
+			} else {
+				self.transitionToRoute('viewApplicants');
 			}
 		}
 	},
@@ -889,6 +974,10 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 
 				if (res.isSuccess) {
 					if (lastIndexToProcess >= appIds.length) {
+						// UPDATE STORED APPS' STAGE AND STATUS
+						App.Fixtures.get('savedApplications').getEach('application').setEach('Stage__c', self.get('selectedBulkStage'));
+						App.Fixtures.get('savedApplications').getEach('application').setEach('Status__c', self.get('selectedBulkStatus'));
+
 						self.notifyPropertyChange('filters');
 					} else {
 						self.bulkUpdate(lastIndexToProcess);
@@ -977,27 +1066,29 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
     			appIds: this.get('results.allApplicationIds')
     		};
     		
-    		cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
-    			if (res) {
-    				res = parseResult(res);
-
-    				if (res.isSuccess) {
-    					self.notifyPropertyChange('filters');
-    				} else {
-    					// ERROR
-    				}
-    			} else {
-    				// ERROR
-    			}
-    		});
+    		this.set('isLoadingResults', true);
+    		this.bulkUpdate(0);
     	}
     }
 });
 
 App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
+	needs: ['viewApplicants'],
+	//shareUrlBinding: 'controllers.viewApplicants.shareUrl',
 	selectedTab: 'application',
 	retPage: 'to_viewApplicants',
 	isInlineFeedbackVisible: false,
+	updateApplicationLinkedInLinkId: function() {
+		var linkObj = App.Fixtures.get('newLinkedInLink');
+
+		if (!Ember.isNone(linkObj) && linkObj.appId === this.get('application.Id')) {
+			var appToUpdate = App.Fixtures.get('savedApplications').findBy('application.Id', linkObj.appId);
+			appToUpdate.set('application.namespace_LinkedIn_Link_Id__c', linkObj.linkId);
+			this.set('application.namespace_LinkedIn_Link_Id__c', linkObj.linkId);
+			this.notifyPropertyChange('application');
+			App.Fixtures.set('newLinkedInLink', null);
+		}
+	}.observes('App.Fixtures.newLinkedInLink'),
 	actions: {
 		clickProvideFeedbackInline: function() {
 			if (!this.get('isInlineFeedbackVisible')) {
@@ -1007,7 +1098,17 @@ App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(Ap
 			}
 
 			this.toggleProperty('isInlineFeedbackVisible');
-		}
+		},
+		addInterview : function(){
+            var url = '/apex/'+ extnamespace + 'to_interviewNewEdit?appId=' + this.get('application').Id + 
+                      '&retUrl=' + encodeURIComponent(this.get('controllers.viewApplicants.shareUrl'));
+
+            if(isSF1){
+                sforce.one.navigateToURL(url);
+            } else {
+                window.location.href = url
+            }
+        }
 	}
 });
 
@@ -1085,6 +1186,10 @@ App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.
 
 App.AdditionalInfoController = Ember.ObjectController.extend(App.AdditionalInfoMixin);
 
+App.AddLabelsController = Ember.ObjectController.extend({
+	labels: labels
+});
+
 App.ViewApplicantsRoute = Ember.Route.extend({
     model: function (){
         return new Ember.RSVP.Promise(function(resolve, reject) {
@@ -1120,12 +1225,16 @@ App.ViewApplicantsRoute = Ember.Route.extend({
 		        					maxInterviewScore: initData.maxInterviewScore,
 		        					sortOptions: App.Fixtures.get('sortOptions'),
 		        					sortType: params.sortType,//scoreSort,
+		        					allowRejection: initData.allowRejection,
+		        					allowNeutral: initData.allowNeutral,
 		        					locations: [],
 		        					filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
 		        					filters: [],
 		        					initParams: params,
 		        					applicantId: !Ember.isEmpty(appIdParam) ? appIdParam : null,
-		        					initLimiter: params.limiter
+		        					initLimiter: params.limiter,
+		        					requisition: initData.requisition,
+		        					hiringManager: !Ember.isNone(initData.requisition.Hiring_Manager__r) ? initData.requisition.Hiring_Manager__r : null
 		        				};
 
 		        var anyStatuses = [];
@@ -1205,7 +1314,7 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 				                label : labels.finalSelection   
 					        });
 
-							savedApplications.addObject(application);
+							savedApplications.addObject(Ember.Object.create(application));
 							
 							console.log('RESOLVE');
 							resolve(application);

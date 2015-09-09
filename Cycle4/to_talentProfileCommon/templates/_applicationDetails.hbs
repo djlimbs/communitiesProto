@@ -88,7 +88,7 @@
                             {{#unless isResumeReview}}
                                 {{#if criteriaFields}}
                                     <div data-qa-label="criterieaFields" class="row pad--sm--lxl">
-                                        {{#each criteriaFields}}
+                                        {{#each criteriaFields itemController="addLabels"}}
                                             <div class="panel__body column--md--6 pad--sm--tn">
                                                 <h4 class="mar--sm--n">{{label}}</h4>
                                                 <span class="field-value-small">

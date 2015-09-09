@@ -2,20 +2,9 @@
     <div class="card">
         
         <!-- Filters and Results -->
-        <section class="pad--sm--m pad--sm--bl">
+        <section class="pad--sm--m pad--sm--bs">
             {{search-filter ctrl=controller filters=filters filterOptions=filterOptions applicationStageAndStatuses=applicationStageAndStatuses applicationSources=applicationSources locations=locations params=initParams}}
-            <h3 class="mar--sm--n">Sort</h3>
-            <div class="form-group">
-                <div class="select__wrap">
-                    <div class="input__icon juicon juicon-down"></div>
-                    {{view "select" 
-                            class="pad--sm--rxl small"
-                            content=sortOptions 
-                            optionLabelPath="content.label"
-                            optionValuePath="content.value"
-                            value=sortType}}
-                </div>
-            </div>
+            
         </section>
         <!-- /Filters and Results -->
         
@@ -30,8 +19,20 @@
                 </div>
             {{else}}
                 <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
-                <div class="mar--sm--bm">
+                <div class="mar--sm--bs">
                     <a href="#" data-toggle="modal" data-target="#reject-modal"><small>Reject</small></a> | <a href="#" data-toggle="modal" data-target="#status-modal"><small>Update Status</small></a> | <a href="#" data-toggle="modal" data-target="#share-modal" id="share-modal-trigger"><small>Share</small></a>
+                </div>
+                <h4 class="mar--sm--n">Sort by</h4>
+                <div class="form-group">
+                    <div class="select__wrap">
+                        <div class="input__icon juicon juicon-down"></div>
+                        {{view "select" 
+                                class="pad--sm--rxl small"
+                                content=sortOptions 
+                                optionLabelPath="content.label"
+                                optionValuePath="content.value"
+                                value=sortType}}
+                    </div>
                 </div>
                 {{#if results.viewableApplications}}
                     <ul id="contentNav" class="list-group list-group--bordered mar--sm--bn bg-1 applicant-list-group">
@@ -42,7 +43,7 @@
                         {{/each}}
                     </ul>
                 {{else}}
-                    <small class="block"><em>No Results</em></small>
+                    <small class="block mar--sm--tm"><em>No Results</em></small>
                 {{/if}}
                 {{#unless disableLoadMore}}
                     <div class="text-center mar--sm--tm">

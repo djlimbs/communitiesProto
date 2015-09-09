@@ -17,14 +17,14 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span class="close-modal-x"></span><span class="sr-only">Close</span>
                 </button>
-                <h2 class="modal__heading" id="myModalLabel">Add Condition</h2>
+                <h2 class="modal__heading" id="myModalLabel">Add Filter</h2>
             </div>
             <div class="modal__body">
                 <div class="form__group">
                     <label for="filterStage">Field</label>
                     <div class="select__wrap">
                         <div class="input__icon juicon juicon-down"></div>
-                        {{view "select" content=filterOptions value=selectedFilter prompt="--"}}
+                        {{view "select" content=filterOptions value=selectedFilter prompt="Select..."}}
                     </div>
                 </div>
                 {{partial filterPartial}}
