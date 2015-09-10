@@ -557,14 +557,14 @@ function program53(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.provideFeedback", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n        </button>\n    </div>\n    <div class=\"panel__body pad--sm--bn pad--sm--tn\">\n        <article class=\"mar--sm--bm\">\n\n            ");
+  data.buffer.push("\n        </button>\n    </div>\n    <div class=\"panel__body pad--sm--bn pad--sm--tn\">\n        <article class=\"mar--sm--bm\">\n\n            <!--");
   hashContexts = {'ctrl': depth0};
   hashTypes = {'ctrl': "ID"};
   options = {hash:{
     'ctrl': ("")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['provide-feedback-inline'] || (depth0 && depth0['provide-feedback-inline'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "provide-feedback-inline", options))));
-  data.buffer.push("\n\n            ");
+  data.buffer.push("-->\n\n            ");
   hashContexts = {'itemController': depth0};
   hashTypes = {'itemController': "STRING"};
   stack2 = helpers.each.call(depth0, "evaluations", {hash:{
@@ -2201,6 +2201,41 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["_viewApplicantsFilled"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                <tr ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickApplicant", "applicant.Id", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-dismiss=\"modal\">\n                                    <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "applicant.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                    <td>");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.formatDate || (depth0 && depth0.formatDate)),stack1 ? stack1.call(depth0, "applicant.responseDate", options) : helperMissing.call(depth0, "formatDate", "applicant.responseDate", options))));
+  data.buffer.push("</td>\n                                </tr>\n                            ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"modal fade\" id=\"statsFilledModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bm\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\"><span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span></button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Positions Filled</h2>\n            </div>\n            <div class=\"modal__body\">\n                <div class=\"ar-filled\">\n                    <table>\n                        <thead>\n                            <tr>\n                                <th><label>Applicant</label></th>\n                                <th><label>Offer Accepted</label></th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "applicant", "in", "filledInfo.hiredApplicants", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                        </tbody>\n                    </table>\n                </div>\n            </div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["_viewApplicantsFilterAndResults"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -2404,6 +2439,139 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["_viewApplicantsStageStatus"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    <div class=\"ar-stage\">\n                        <table class=\"mar--sm--ts\">\n                            <thead>\n                                <tr>\n                                    <th><label>Stage</label></th>\n                                    <th><label>Applicants</label></th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "stageCount", "in", "totalApplicants.stageCounts", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                            </tbody>\n                            <thead>\n                                <tr class=\"bg-2\">\n                                    <th><label>Subtotal</label></th>\n                                    <th><label>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "totalApplicants.stageSubtotal", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label></th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "outcomeCount", "in", "totalApplicants.outcomeCounts", {hash:{},inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                            </tbody>\n                            <tfoot>\n                                <tr class=\"bg-2\">\n                                    <th><label>Total</label></th>\n                                    <th><label>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "totalApplicants.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label></th>\n                                </tr>\n                            </tfoot>\n                        </table>\n                    </div>\n                ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                    <tr ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSetStageFilter", "stageCount.name", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-dismiss=\"modal\">\n                                        <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "stageCount.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                        <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "stageCount.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                    </tr>\n                                ");
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                    <tr ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSetOutcomeFilter", "outcomeCount.name", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-dismiss=\"modal\">\n                                        <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outcomeCount.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                        <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outcomeCount.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                    </tr>\n                                ");
+  return buffer;
+  }
+
+function program6(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    <div class=\"ar-source\">\n                        <table class=\"mar--sm--ts\">\n                            <thead>\n                                <tr>\n                                    <th><label>Source</label></th>\n                                    <th><label>Applicants</label></th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "source", "in", "totalApplicants.sourceCounts", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                            </tbody>\n                            <tfoot>\n                                <tr class=\"bg-2\">\n                                    <th><label>Total</label></th>\n                                    <th><label>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "totalApplicants.sourceTotal", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label></th>\n                                </tr>\n                            </tfoot>\n                        </table>\n                    </div>\n                ");
+  return buffer;
+  }
+function program7(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                    <tr ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSetSourceFilter", "source.name", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-dismiss=\"modal\">\n                                        <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "source.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                        <td>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "source.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</td>\n                                    </tr>\n                                ");
+  return buffer;
+  }
+
+  data.buffer.push("<!-- Filter Modal (Stats) -->\n<div class=\"modal fade\" id=\"statsFilterModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bm\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\"><span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span></button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Total Applicants</h2>\n            </div>\n            <div class=\"modal__body\">\n                <div class=\"clearfix\">\n                    <span class=\"button-group--collapse button-switch\">\n                        <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--success isStageSelected::disabled")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-trigger=\"stage\" data-group=\"filter\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setIsStageSelected", true, {hash:{},contexts:[depth0,depth0],types:["STRING","BOOLEAN"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">By Stage</div>\n                        <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--success isStageSelected:disabled")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-trigger=\"source\" data-group=\"filter\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setIsStageSelected", false, {hash:{},contexts:[depth0,depth0],types:["STRING","BOOLEAN"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">By Source</div>\n                    </span>\n                </div>\n\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isStageSelected", {hash:{},inverse:self.program(6, program6, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n\n            </div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["components/_searchFilterApplicationRating"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -2420,7 +2588,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div>\n    <div class=\"row\">\n        <div class=\"column column--md--8\">\n            <label>Is</label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
+  data.buffer.push("<div class=\"pad--sm--rm pad--sm--lm\">\n    <div class=\"row\">\n        <div class=\"column column--md--8\">\n            <label>Is</label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
   hashContexts = {'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0};
   hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
@@ -2453,7 +2621,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div>\n    <div class=\"row\">\n        <div class=\"column column--md--6\">\n            <label>From</label>\n            ");
+  data.buffer.push("<div class=\"pad--sm--rm pad--sm--lm\">\n    <div class=\"row\">\n        <div class=\"column column--md--6\">\n            <label>From</label>\n            ");
   hashContexts = {'value': depth0,'name': depth0,'valueFormat': depth0};
   hashTypes = {'value': "ID",'name': "STRING",'valueFormat': "STRING"};
   options = {hash:{
@@ -2482,7 +2650,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
 
 
-  data.buffer.push("<div>\n    <div class=\"row\">\n        <div class=\"column column--md--8\">\n            <label>Is</label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
+  data.buffer.push("<div class=\"pad--sm--rm pad--sm--lm\">\n    <div class=\"row\">\n        <div class=\"column column--md--8\">\n            <label>Is</label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
   hashContexts = {'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0};
   hashTypes = {'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
@@ -2514,7 +2682,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div>\n    <div class=\"row\">\n        <div class=\"column column--md--8\">\n            <label>Less Than<!-- <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" class=\"has-tooltip juicon juicon-info-circle\" data-original-title=\"Distance from the applicant's address to the primary location\"></span>--></label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
+  data.buffer.push("<div class=\"pad--sm--rm pad--sm--lm\">\n    <div class=\"row\">\n        <div class=\"column column--md--8\">\n            <label>Less Than<!-- <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" class=\"has-tooltip juicon juicon-info-circle\" data-original-title=\"Distance from the applicant's address to the primary location\"></span>--></label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
   hashContexts = {'content': depth0,'value': depth0};
   hashTypes = {'content': "ID",'value': "ID"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
@@ -2548,7 +2716,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   var buffer = '', stack1, hashContexts, hashTypes, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
 
 
-  data.buffer.push("<div>\n    <div class=\"row input__group\">\n        <div class=\"column column--md--6 mar--sm--tm\">\n            ");
+  data.buffer.push("<div class=\"pad--sm--rm pad--sm--lm\">\n    <div class=\"row input__group\">\n        <div class=\"column column--md--6 mar--sm--tm\">\n            ");
   hashContexts = {'type': depth0,'checked': depth0};
   hashTypes = {'type': "STRING",'checked': "ID"};
   options = {hash:{
@@ -2646,6 +2814,653 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["components/backToTop"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  
+
+
+  data.buffer.push("<button id=\"back-to-top\" class=\"button button--primary\"><span class=\"juicon juicon-upward\"></span></button>");
+  
+});
+
+Ember.TEMPLATES["components/datepicker"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashTypes, hashContexts, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing;
+
+
+  data.buffer.push("<div class=\"row input__group\" data-qa-container=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n    <div class=\"column--md--8\">\n        ");
+  hashContexts = {'type': depth0,'value': depth0,'readonly': depth0,'data-qa-input': depth0};
+  hashTypes = {'type': "STRING",'value': "ID",'readonly': "BOOLEAN",'data-qa-input': "ID"};
+  options = {hash:{
+    'type': ("text"),
+    'value': ("value"),
+    'readonly': (true),
+    'data-qa-input': ("name")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.input || (depth0 && depth0.input)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "input", options))));
+  data.buffer.push("\n    </div>\n    <div class=\"column--md--4\">\n        <button style=\"border-left: none;\" type=\"button\" class=\"button button--secondary datepicker\" data-date-format=\"\" data-date=\"\" data-qa-button=\"datepicker\">\n            <span class=\"juicon juicon-calendar\"></span>\n        </button>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["components/provideFeedback"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashContexts, hashTypes, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                        <div class=\"button-group feedbackButtons\">\n                            <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Positive_Feedback__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseLike:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"positive\" data-toggle=\"tooltip\" title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.positiveTooltip", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-like chooseLike:text-success")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                            </button>\n                            <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Negative_Feedback__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseDislike:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"negative\" data-toggle=\"tooltip\" title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.negativeTooltip", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-dislike chooseDislike:text-warning")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                            </button>\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "allowNeutral", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                        </div>\n                    ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Neutral__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseUnknown:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"neutral\" data-toggle=\"tooltip\" title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.inconclusiveTooltip", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                    <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-question-circle chooseUnknown:text-info")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                                </button>\n                            ");
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                        <div class=\"button-group feedbackButtons\">\n                            <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Selected__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0,'title': depth0};
+  hashTypes = {'class': "STRING",'title': "ID"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseSelected:bg-2"),
+    'title': ("labels.selectTooltip")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"select\" data-toggle=\"tooltip\">\n                                <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-check chooseSelected:text-success")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                            </button>\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "allowRejection", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                        </div>\n                    ");
+  return buffer;
+  }
+function program5(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                                <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Rejected__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0,'title': depth0};
+  hashTypes = {'class': "STRING",'title': "ID"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseDisqualified:bg-2"),
+    'title': ("labels.rejectTooltip")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button-\"reject\" data-toggle=\"tooltip\">\n                                    <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-ban chooseDisqualified:text-error")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                                </button>\n                            ");
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "isResumeReview", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                ");
+  return buffer;
+  }
+function program8(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "additionalCriteriaFields", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                    ");
+  return buffer;
+  }
+function program9(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                            <label data-qa-locator=\"fieldSetBlock\" class=\"block mar--sm--bs\">Questions</label>\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "additionalCriteriaFields", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                        ");
+  return buffer;
+  }
+function program10(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                                <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":form__group isEmpty:has-error")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                                    <label class=\"block required-field\">\n                                        <small>\n                                            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "helpText", {hash:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                                        </small> \n                                    </label>\n                                    <div class=\"select__wrap mar--sm--bm\">\n                                        <div class=\"input__icon juicon juicon-down\"></div>\n                                        ");
+  hashContexts = {'prompt': depth0,'data-qa-select': depth0,'content': depth0,'value': depth0,'optionLabelPath': depth0,'optionValuePath': depth0};
+  hashTypes = {'prompt': "STRING",'data-qa-select': "STRING",'content': "ID",'value': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'prompt': ("Select..."),
+    'data-qa-select': ("fieldSetQuestions"),
+    'content': ("values"),
+    'value': ("selectedValue"),
+    'optionLabelPath': ("content.label"),
+    'optionValuePath': ("content.value")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                    </div>\n                                </div>\n                            ");
+  return buffer;
+  }
+function program11(depth0,data) {
+  
+  var hashTypes, hashContexts;
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "helpText", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  }
+
+function program13(depth0,data) {
+  
+  var hashTypes, hashContexts;
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  }
+
+function program15(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                    <div id=\"disposition\" class=\"form__group\">\n                        <label data-qa-label=\"disposition\" class=\"required-field\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.disposition", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label>\n                        <div class=\"select__wrap\">\n                            <div class=\"input__icon juicon juicon-down\"></div>\n                            ");
+  hashContexts = {'data-qa-select': depth0,'content': depth0,'value': depth0};
+  hashTypes = {'data-qa-select': "STRING",'content': "ID",'value': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'data-qa-select': ("disposition"),
+    'content': ("disposition"),
+    'value': ("selectedDisposition")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                        </div>\n                    </div>\n                ");
+  return buffer;
+  }
+
+function program17(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                    <div class=\"form__group\">\n                        <label data-qa-label=\"comment\" class=\"\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.comment", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label>\n                        ");
+  hashContexts = {'maxlength': depth0,'data-qa-textarea': depth0,'disabled': depth0,'value': depth0};
+  hashTypes = {'maxlength': "STRING",'data-qa-textarea': "STRING",'disabled': "ID",'value': "ID"};
+  options = {hash:{
+    'maxlength': ("1000"),
+    'data-qa-textarea': ("comment"),
+    'disabled': ("isDisabled"),
+    'value': ("comments")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n                    </div>\n                ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"modal__shell\">\n    <div class=\"modal__content\">\n        <div class=\"modal__top pad--sm--bm\">\n            <button class=\"close\" data-dismiss=\"modal\" type=\"button\"><span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span></button>\n            <h2 class=\"modal__heading\" id=\"myModalLabel\">Provide Feedback</h2>\n        </div>\n        <div class=\"modal__body\">\n            <div class=\"form__group mar--sm--bs\">\n                <label>Regarding</label>\n                <div class=\"select__wrap\">\n                    <div class=\"input__icon juicon juicon-down\"></div>\n                    ");
+  hashContexts = {'data-qa-select': depth0,'content': depth0,'value': depth0,'optionLabelPath': depth0,'optionValuePath': depth0};
+  hashTypes = {'data-qa-select': "STRING",'content': "ID",'value': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'data-qa-select': ("interviews"),
+    'content': ("regardingSelectValues"),
+    'value': ("selectedType"),
+    'optionLabelPath': ("content.label"),
+    'optionValuePath': ("content.value")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n\n                </div>\n            </div>\n            <div id=\"TFcontrols4\">\n                <div class=\"form__group mar--sm--tm\">\n                    <label class=\"block required-field\">Overall Feedback</label>\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "selectedFinalOutcome", {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                </div>\n\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "selectedFinalOutcome", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "showDisposition", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "selectedFinalOutcome", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            </div>\n        </div>\n        <div class=\"modal__footer\"><a href=\"#\" class=\"float--right button button--primary\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSave", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Save</a><a href=\"#\" class=\"float--right button button--secondary mar--sm--rs\" data-dismiss=\"modal\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancel", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Cancel</a></div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["components/provideFeedbackInline"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', stack1, hashContexts, hashTypes, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                    <div class=\"button-group feedbackButtons\">\n                        <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Positive_Feedback__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseLike:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"positive\" data-toggle=\"tooltip\" title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.positiveTooltip", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                            <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-like chooseLike:text-success")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                        </button>\n                        <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Negative_Feedback__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseDislike:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"negative\" data-toggle=\"tooltip\" title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.negativeTooltip", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                            <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-dislike chooseDislike:text-warning")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                        </button>\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "allowNeutral", {hash:{},inverse:self.noop,fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                    </div>\n                ");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                            <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Neutral__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseUnknown:bg-2")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"neutral\" data-toggle=\"tooltip\" title=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.inconclusiveTooltip", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-question-circle chooseUnknown:text-info")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                            </button>\n                        ");
+  return buffer;
+  }
+
+function program4(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n                    <div class=\"button-group feedbackButtons\">\n                        <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Selected__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0,'title': depth0};
+  hashTypes = {'class': "STRING",'title': "ID"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseSelected:bg-2"),
+    'title': ("labels.selectTooltip")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button=\"select\" data-toggle=\"tooltip\">\n                            <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-check chooseSelected:text-success")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                        </button>\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "allowRejection", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                    </div>\n                ");
+  return buffer;
+  }
+function program5(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                            <button ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectFeedback", "Rejected__c", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" ");
+  hashContexts = {'class': depth0,'title': depth0};
+  hashTypes = {'class': "STRING",'title': "ID"};
+  options = {hash:{
+    'class': (":button :button--secondary :feedbackButton chooseDisqualified:bg-2"),
+    'title': ("labels.rejectTooltip")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" data-qa-button-\"reject\" data-toggle=\"tooltip\">\n                                <span ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":juicon :juicon-ban chooseDisqualified:text-error")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push("></span>\n                            </button>\n                        ");
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "isResumeReview", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            ");
+  return buffer;
+  }
+function program8(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "additionalCriteriaFields", {hash:{},inverse:self.noop,fn:self.program(9, program9, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                ");
+  return buffer;
+  }
+function program9(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                        <label data-qa-locator=\"fieldSetBlock\" class=\"block mar--sm--bs\">Questions</label>\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "additionalCriteriaFields", {hash:{},inverse:self.noop,fn:self.program(10, program10, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                    ");
+  return buffer;
+  }
+function program10(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashContexts, hashTypes, options;
+  data.buffer.push("\n                            <div ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":form__group isEmpty:has-error")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(">\n                                <label class=\"block required-field\">\n                                    <small>\n                                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "helpText", {hash:{},inverse:self.program(13, program13, data),fn:self.program(11, program11, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n                                    </small> \n                                </label>\n                                <div class=\"select__wrap mar--sm--bm\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    ");
+  hashContexts = {'prompt': depth0,'data-qa-select': depth0,'content': depth0,'value': depth0,'optionLabelPath': depth0,'optionValuePath': depth0};
+  hashTypes = {'prompt': "STRING",'data-qa-select': "STRING",'content': "ID",'value': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'prompt': ("Select..."),
+    'data-qa-select': ("fieldSetQuestions"),
+    'content': ("values"),
+    'value': ("selectedValue"),
+    'optionLabelPath': ("content.label"),
+    'optionValuePath': ("content.value")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                </div>\n                            </div>\n                        ");
+  return buffer;
+  }
+function program11(depth0,data) {
+  
+  var hashTypes, hashContexts;
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "helpText", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  }
+
+function program13(depth0,data) {
+  
+  var hashTypes, hashContexts;
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "label", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  }
+
+function program15(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                <div class=\"form__group mar--sm--bs\">\n                    <label data-qa-label=\"disposition\" class=\"required-field\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.disposition", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label>\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        ");
+  hashContexts = {'data-qa-select': depth0,'content': depth0,'value': depth0};
+  hashTypes = {'data-qa-select': "STRING",'content': "ID",'value': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'data-qa-select': ("disposition"),
+    'content': ("disposition"),
+    'value': ("selectedDisposition")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    </div>\n                </div>\n            ");
+  return buffer;
+  }
+
+function program17(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                <div class=\"form__group mar--sm--bs\">\n                    <label data-qa-label=\"comment\" class=\"\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.comment", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</label>\n                    ");
+  hashContexts = {'maxlength': depth0,'data-qa-textarea': depth0,'disabled': depth0,'value': depth0};
+  hashTypes = {'maxlength': "STRING",'data-qa-textarea': "STRING",'disabled': "ID",'value': "ID"};
+  options = {hash:{
+    'maxlength': ("1000"),
+    'data-qa-textarea': ("comment"),
+    'disabled': ("isDisabled"),
+    'value': ("comments")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.textarea || (depth0 && depth0.textarea)),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "textarea", options))));
+  data.buffer.push("\n                </div>\n            ");
+  return buffer;
+  }
+
+  data.buffer.push("<div class=\"card mar--sm--tm js-feedback-card\">\n    <div class=\"card__body pad--sm--bn\">\n        <div class=\"form__group\">\n            <label class=\"\">Regarding</label>\n            <div class=\"select__wrap\">\n                <div class=\"input__icon juicon juicon-down\"></div>\n                ");
+  hashContexts = {'data-qa-select': depth0,'content': depth0,'value': depth0,'optionLabelPath': depth0,'optionValuePath': depth0};
+  hashTypes = {'data-qa-select': "STRING",'content': "ID",'value': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'data-qa-select': ("interviews"),
+    'content': ("regardingSelectValues"),
+    'value': ("selectedType"),
+    'optionLabelPath': ("content.label"),
+    'optionValuePath': ("content.value")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n            </div>\n        </div>\n        <div id=\"TFcontrols2\">\n            <div class=\"form__group\">\n                <label class=\"block required-field\">Feedback</label>\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "selectedFinalOutcome", {hash:{},inverse:self.program(4, program4, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n            </div>\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "selectedFinalOutcome", {hash:{},inverse:self.noop,fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "showDisposition", {hash:{},inverse:self.noop,fn:self.program(15, program15, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.unless.call(depth0, "selectedFinalOutcome", {hash:{},inverse:self.noop,fn:self.program(17, program17, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        </div>  \n    </div>\n    <div class=\"panel__body\">\n        <a class=\"float--right button button--primary\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSave", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Save</a>\n        <a class=\"float--right button button--secondary mar--sm--rs\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickCancel", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Cancel</a>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["components/searchFilter"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -2675,7 +3490,7 @@ function program1(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAdd", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-toggle=\"modal\" data-target=\"#filter-modal\" href=\"#\" class=\"button button--primary button--ghost button--full mar--sm--bm\"><small><span class=\"juicon juicon-plus\"></span>Add</small></a>\n\n<div class=\"modal fade\" id=\"filter-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Add Condition</h2>\n            </div>\n            <div class=\"modal__body\">\n                <div class=\"form__group\">\n                    <label for=\"filterStage\">Field</label>\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        ");
+  data.buffer.push(" data-toggle=\"modal\" data-target=\"#filter-modal\" href=\"#\" class=\"button button--primary button--ghost button--full mar--sm--bm\"><small><span class=\"juicon juicon-plus\"></span> Add</small></a>\n\n<div class=\"modal fade\" id=\"filter-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                \n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Add Filter</h2>\n            </div>\n            <div class=\"modal__body\">\n                <div class=\"form__group\">\n                    <label for=\"filterStage\">Field</label>\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        ");
   hashContexts = {'content': depth0,'value': depth0,'prompt': depth0};
   hashTypes = {'content': "ID",'value': "ID",'prompt': "STRING"};
   data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
@@ -2701,6 +3516,50 @@ function program1(depth0,data) {
   
 });
 
+Ember.TEMPLATES["components/tooltipster"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashTypes, hashContexts, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div id=\"filled-tooltip\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "yield", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
+Ember.TEMPLATES["components/updateStatus"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var buffer = '', hashContexts, hashTypes, escapeExpression=this.escapeExpression;
+
+
+  data.buffer.push("<div class=\"modal__shell\">\n    <div class=\"modal__content\">\n        <div class=\"modal__top pad--sm--bm\">\n            <button class=\"close\" data-dismiss=\"modal\" type=\"button\"><span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span></button>\n            <h2 class=\"modal__heading\" id=\"myModalLabel\">Update Status</h2>\n        </div>\n        <div class=\"modal__body\">\n            <div class=\"mar--sm--bm\">\n                <div class=\"form-group\">\n                    <label>Stage</label>\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        ");
+  hashContexts = {'content': depth0,'value': depth0};
+  hashTypes = {'content': "ID",'value': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'content': ("applicationStages"),
+    'value': ("stage")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    </div>\n                </div>\n            </div>\n            <div class=\"mar--sm--bn\">\n                <div class=\"form-group\">\n                    <label>Status</label>\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        ");
+  hashContexts = {'content': depth0,'value': depth0};
+  hashTypes = {'content': "ID",'value': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'content': ("applicationStatuses"),
+    'value': ("status")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    </div>\n                </div>\n            </div>\n        </div>\n        <div class=\"modal__footer\">\n            <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\">Cancel</button>\n            <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickUpdateStatus", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(">Update</button>\n        </div>\n    </div>\n</div>");
+  return buffer;
+  
+});
+
 Ember.TEMPLATES["main"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -2709,13 +3568,13 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 function program1(depth0,data) {
   
   
-  data.buffer.push("\n                        <div class=\"content pad--md--ts pad--sm--only--n pad--sm--tm\">\n                            <div class=\"content__section\">\n                                <div class=\"load-block\">\n                                    <div class=\"load-block-icon\"></div>\n                                </div>\n                            </div>\n                        </div>\n                    ");
+  data.buffer.push("\n                            <div class=\"content pad--md--ts pad--sm--only--n pad--sm--tm\">\n                                <div class=\"content__section\">\n                                    <div class=\"load-block\">\n                                        <div class=\"load-block-icon\"></div>\n                                    </div>\n                                </div>\n                            </div>\n                        ");
   }
 
 function program3(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n                        <section class=\"pad--sm--m border-top bg-2\">\n                            \n                            <h3 class=\"mar--sm--n\">Results: ");
+  data.buffer.push("\n                            <section class=\"pad--sm--m border-top bg-2\">\n                                <h3 class=\"mar--sm--n\">Results: ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "results.numberViewable", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2723,36 +3582,44 @@ function program3(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "results.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span></h3>\n                        </section>\n                        \n                        <ul class=\"list-group list-group--bordered mar--sm--n bg-1 applicant-list-group no-border-on-small\">\n                            \n\n                            ");
+  data.buffer.push("</span></h3>\n                            </section>\n                            \n\n                            ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.log.call(depth0, "results", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n\n                            ");
+  data.buffer.push(escapeExpression(helpers.log.call(depth0, "HERE", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                            ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.log.call(depth0, "results.viewableApplications", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                            <div class=\"list-group list-group--bordered mar--sm--n bg-1 applicant-list-group no-border-on-small\">\n\n                                ");
   hashContexts = {'itemController': depth0};
   hashTypes = {'itemController': "STRING"};
   stack1 = helpers.each.call(depth0, "application", "in", "results.viewableApplications", {hash:{
     'itemController': ("result")
   },inverse:self.noop,fn:self.program(4, program4, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
-  data.buffer.push("\n\n                        </ul>\n                    ");
+  data.buffer.push("\n\n                            </div>\n                        ");
   return buffer;
   }
 function program4(depth0,data) {
   
   var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n\n                                ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.log.call(depth0, "FEEDBACK", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("\n                                ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.log.call(depth0, "HERE", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                                ");
+  data.buffer.push(escapeExpression(helpers.log.call(depth0, "application.resumeFeedbackScore", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n\n                                    \n                                        <div class=\"list-group__item applicant-entry mobile\">\n\n\n                                            <div class=\"pad--sm--m pad--sm--bn\">\n                                                <h4 class=\"card__heading dots\"><a ");
   hashTypes = {};
   hashContexts = {};
-  data.buffer.push(escapeExpression(helpers.log.call(depth0, "application", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                                <li class=\"list-group__item applicant-entry\">\n                                    <div class=\"pad--sm--m pad--sm--bn\">\n                                    <h4 class=\"card__heading dots\">");
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "viewApplicationReader", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" href=\"#\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</h4>\n                                    <h5 class=\"card__subheading dots\" style=\"display: inline-block\">Status: ");
+  data.buffer.push("</a></h4>\n                                                <h5 class=\"card__subheading dots\" style=\"display: inline-block\">Status: ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Final_Stage__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2760,11 +3627,11 @@ function program4(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Final_Status__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(")</h5>\n\n                                    <div class=\"mar--sm--ts\">\n                                        <small class=\"block dots\"><label>Source:</label> ");
+  data.buffer.push(")</h5>\n\n                                                <div class=\"mar--sm--ts\">\n                                                    <small class=\"block dots\"><label>Source:</label> ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Source__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</small>\n                                        \n                                        <small class=\"block dots mar--sm--bxs\"><label>Applied On:</label> ");
+  data.buffer.push("</small>\n                                                    <small class=\"block dots mar--sm--bxs\"><label>Applied On:</label> ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -2774,7 +3641,40 @@ function program4(depth0,data) {
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "otherAppsLength", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("</small>\n                                    </div>\n\n                                    <div class=\"mar--sm--tm clearfix\">\n                                        <div class=\"column column--sm--6\">\n                                            <small class=\"block dots\" data-qa-label=\"noResume\"><label><span class=\"juicon juicon-document\"></span> <a href=\"#\"> Resume (12B)</a></label></small>\n                                        </div>\n                                        <div class=\"column column--sm--6\">\n                                            <small class=\"block dots\" data-qa-label=\"noResume\"><label><span class=\"juicon juicon-linkedin\"></span> <a href=\"#\"> Search</a></label></small>\n                                        </div>\n                                    </div>\n\n                                    <div class=\"mar--sm--tm\">\n                                        <table class=\"table--fixed applicant-stats\">\n                                            <tbody><tr>\n                                                <td>\n                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-list\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Application Rating\"></span></label> <span class=\"text-success\">10</span>/10</small>\n                                                </td>\n                                                <td>\n                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-like\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Positive Interview Feedback\"></span></label> 1</small>\n                                                </td>\n                                                <td>\n                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-dislike\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Negative Interview Feedback\"></span></label> 0</small>\n                                                </td>\n                                                <td>\n                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-question-circle\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Neutral Interview Feedback\"></span></label> 0</small>\n                                                </td>\n                                            </tr>\n                                        </tbody></table>\n                                    </div>\n                                </li>\n                            ");
+  data.buffer.push("</small>\n                                                </div>\n\n                                                <div class=\"mar--sm--tm clearfix\">\n                                                    <div class=\"column column--sm--6\">\n                                                        <small class=\"block dots\">\n                                                            <label><span class=\"juicon juicon-document\"></span> \n                                                                <a ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "viewResume", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" href=\"#\"> Resume (37KB)</a>\n                                                            </label>\n                                                        </small>\n                                                    </div>\n                                                    <div class=\"column column--sm--6\">\n                                                        <small class=\"block dots\">\n                                                            <label><span class=\"juicon juicon-linkedin\"></span> \n                                                                <a ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "loadLinkedIn", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" href=\"#\"> \n                                                                    ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "application.isLinkedIn", {hash:{},inverse:self.program(9, program9, data),fn:self.program(7, program7, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("</a>\n                                                            </label>\n                                                        </small>\n                                                    </div>\n                                                </div>\n\n                                                <div class=\"mar--sm--tm\">\n                                                    <table class=\"table--fixed applicant-stats\">\n                                                        <tbody>\n                                                            <tr>\n                                                                <td>\n                                                                    <small class=\"block dots\"><label>\n                                                                        <span class=\"juicon juicon-list\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Application Rating\"></span></label> \n                                                                        <span class=\"text-success\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Raw_Score__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>/");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.Maximum_Score__c", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                                                    </small>\n                                                                </td>\n                                                                <td>\n                                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-like\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Positive Interview Feedback\"></span></label> ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.resumeFeedbackScore.positiveFeedback", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</small>\n                                                                </td>\n                                                                <td>\n                                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-dislike\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Negative Interview Feedback\"></span></label> ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.resumeFeedbackScore.negativeFeedback", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</small>\n                                                                </td>\n                                                                <td>\n                                                                    <small class=\"block dots\"><label><span class=\"juicon juicon-question-circle\" data-toggle=\"tooltip\" title=\"\" data-original-title=\"Neutral Interview Feedback\"></span></label> ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "application.resumeFeedbackScore.neutralFeedback", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</small>\n                                                                </td>\n                                                            </tr>\n                                                        </tbody>\n                                                    </table>\n                                                </div>\n                                            </div>\n                                        </div>\n                                    \n                                ");
   return buffer;
   }
 function program5(depth0,data) {
@@ -2784,7 +3684,7 @@ function program5(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "openApplicationModal", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" href=\"#\" >");
+  data.buffer.push(" href=\"#\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "otherAppsLength", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2792,12 +3692,32 @@ function program5(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div class=\"scope-container\">\n        <div class=\"content pad--md--tm pad--md--bn pad--sm--only--n pad--sm--tm\">\n            <nav id=\"formBuildNav\" class=\"nav-bar--sf1 mar--sm--bn\">\n                    <h1 class=\"nav-bar--sf1__title has-subheading page__heading show-brkpoint--sm\">Applicants</h1>\n                    <h2 class=\"nav-bar--sf1__subtitle page__subheading\">Inside Sales Rep</h2>\n            </nav>\n            <hr class=\"show-brkpoint--md\">\n        </div>\n        <div class=\"content\">\n        <div class=\"row\">\n            <div class=\"column--md--12 pad--sm--n mar--md--m\">\n                ");
+function program7(depth0,data) {
+  
+  
+  data.buffer.push(" Profile ");
+  }
+
+function program9(depth0,data) {
+  
+  
+  data.buffer.push(" Search");
+  }
+
+  data.buffer.push("\n\n    <div id=\"mobileMainView\" class=\"scope-container\">\n        <div class=\"content pad--md--tm pad--md--bn pad--sm--only--n pad--sm--tm\">\n            <nav id=\"formBuildNav\" class=\"nav-bar--sf1 mar--sm--bn\">\n                <h1 class=\"nav-bar--sf1__title has-subheading page__heading show-brkpoint--sm\">Applicants</h1>\n                <h2 class=\"nav-bar--sf1__subtitle page__subheading\"><a href=\"/");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "requisition.Id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "requisition.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></h2>\n            </nav>\n            <hr class=\"show-brkpoint--md\">\n        </div>\n        <div class=\"content\">\n            <div class=\"row\">\n                <div class=\"column--md--12 pad--sm--n mar--md--m\">\n                    ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "viewApplicantsHeaderMobile", options) : helperMissing.call(depth0, "partial", "viewApplicantsHeaderMobile", options))));
-  data.buffer.push("\n                \n                <div class=\"card no-border-on-small\">\n                    \n                    <section class=\"pad--sm--m pad--sm--bl\">\n                        ");
+  data.buffer.push("\n                    \n                    <div class=\"card no-border-on-small\">\n                        \n                        <section class=\"pad--sm--m pad--sm--bl\">\n                            ");
   hashContexts = {'ctrl': depth0,'filters': depth0,'filterOptions': depth0,'applicationStageAndStatuses': depth0,'applicationSources': depth0,'locations': depth0,'params': depth0};
   hashTypes = {'ctrl': "ID",'filters': "ID",'filterOptions': "ID",'applicationStageAndStatuses': "ID",'applicationSources': "ID",'locations': "ID",'params': "ID"};
   options = {hash:{
@@ -2810,12 +3730,36 @@ function program5(depth0,data) {
     'params': ("initParams")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['search-filter'] || (depth0 && depth0['search-filter'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "search-filter", options))));
-  data.buffer.push("\n\n                    <!-- Sort-->\n                        <h3 class=\"mar--sm--n\">Sort</h3>\n                        <div class=\"form-group\">\n                            <div class=\"select__wrap\">\n                                <div class=\"input__icon juicon juicon-down\"></div>\n                                <select class=\"pad--sm--rxl small\">\n                                    <option value=\"application-rating\">Application Rating</option>\n                                    <option value=\"applied-on-date\">Applied On Date</option>\n                                    <option value=\"interview-feedback\">Interview Feedback</option>\n                                    <option value=\"last-name\">Last Name</option>\n                                    <option value=\"resume-feedback\">Resume Feedback</option>\n                                </select>\n                            </div>\n                        </div>\n                    </section>\n                    <!-- /Filters and Results -->\n\n\n                    ");
+  data.buffer.push("\n\n                        <!-- Sort-->\n                            <h3 class=\"mar--sm--n\">Sort by</h3>\n                            <div class=\"form-group\">\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    \n\n                                    ");
+  hashContexts = {'class': depth0,'content': depth0,'optionLabelPath': depth0,'optionValuePath': depth0,'value': depth0};
+  hashTypes = {'class': "STRING",'content': "ID",'optionLabelPath': "STRING",'optionValuePath': "STRING",'value': "ID"};
+  data.buffer.push(escapeExpression(helpers.view.call(depth0, "select", {hash:{
+    'class': ("pad--sm--rxl small"),
+    'content': ("sortOptions"),
+    'optionLabelPath': ("content.label"),
+    'optionValuePath': ("content.value"),
+    'value': ("sortType")
+  },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                </div>\n                            </div>\n                        </section>\n                        <!-- /Filters and Results -->\n\n\n                        ");
   hashTypes = {};
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "isLoadingResults", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n\n                    \n                    <div class=\"mar--sm--m\">\n                        <div class=\"text-center mar--sm--tm\">\n                            <a href=\"#\" class=\"button button--secondary button--full js-load-more\"><small>Load More</small></a>\n                        </div>\n                    </div>\n                    \n                </div>\n            </div>\n            \n        </div>\n    </div>\n    <button id=\"back-to-top\" class=\"button button--primary\"><span class=\"juicon juicon-upward\"></span></button>\n        \n    <!-- Sort Modal -->\n    <div class=\"modal fade\" id=\"sortModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top\">\n                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                        <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <h2 class=\"modal__heading\" id=\"sortModalLabel\">Sort Applicants</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <div class=\"form__group\">\n                        <label for=\"filterStage\">Sort by</label>\n                        <div class=\"select__wrap\">\n                            <div class=\"input__icon juicon juicon-down\"></div>\n                            <select>\n                                <option>(Any)</option>\n                                <option>Application</option>\n                                <option>Screening</option>\n                                <option>Interview</option>\n                                <option>Offer</option>\n                            </select>\n                        </div>\n                        <small class=\"input-error-content\">You need stuff in this thing</small>\n                    </div>\n                </div>\n                <div class=\"modal__footer\">\n                    <button type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\">Cancel</button>\n                    <button type=\"button\" class=\"button button--primary filterOK\" data-dismiss=\"modal\">OK</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Sort Modal -->\n\n    <!-- Filter Modal -->\n    <div class=\"modal fade\" id=\"filter-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top\">\n                    <button type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                        <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <h2 class=\"modal__heading\" id=\"myModalLabel\">Add Condition</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <div class=\"form__group\">\n                        <label for=\"filterStage\">Field</label>\n                        <div class=\"select__wrap\">\n                            <div class=\"input__icon juicon juicon-down\"></div>\n                            <select id=\"filter-field\">\n                                <option selected=\"\" disabled=\"\">--</option>\n                                <option value=\"stage-status\">Stage and Status</option>\n                                <option value=\"application-rating\">Application Rating</option>\n                                <option value=\"interview-feedback\">Interview Feedback</option>\n                                <option value=\"applied-on\">Applied On</option>\n                                <option value=\"source\">Source</option>\n                                <option value=\"threshold\">Threshold</option>\n                                <option value=\"location\">Location</option>\n                                <option value=\"outcome\">Outcome</option>\n                            </select>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-stage-status\">\n                        <div class=\"mar--sm--bm\">\n                            <div class=\"form-group\">\n                                <label>Stage</label>\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">Option 1</option>\n                                        <option value=\"option2\">Option 2</option>\n                                        <option value=\"option3\">Option 3</option>\n                                    </select>\n                                </div>\n                            </div>\n                        </div>\n                        <div class=\"mar--sm--bn\">\n                            <div class=\"form-group\">\n                                <label>Status</label>\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">Option 1</option>\n                                        <option value=\"option2\">Option 2</option>\n                                        <option value=\"option3\">Option 3</option>\n                                    </select>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-application-rating\">\n                        <div class=\"row\">\n                            <div class=\"column column--md--8\">\n                                <label>Is</label>\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">Greater Than</option>\n                                        <option value=\"option2\">Less Than</option>\n                                    </select>\n                                </div>\n                            </div>\n                            <div class=\"column column--md--4 pad--sm--tl\">\n                                <div class=\"input__wrap\">\n                                    <input type=\"number\">\n                                    <small class=\"text-faded\">Max: 10</small>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-interview-feedback\">\n                        <div class=\"row\">\n                            <div class=\"column column--md--8\">\n                                <label>Is</label>\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">Greater Than</option>\n                                        <option value=\"option2\">Less Than</option>\n                                    </select>\n                                </div>\n                            </div>\n                            <div class=\"column column--md--4 pad--sm--tl\">\n                                <div class=\"input__wrap\">\n                                    <input type=\"number\">\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-applied-on\">\n                        <div class=\"row\">\n                            <div class=\"column column--md--6\">\n                                <label>From</label>\n                                <div class=\"row input__group\">\n                                    <div class=\"column--md--8\">\n                                        <input type=\"text\">\n                                    </div>\n                                    <div class=\"column--md--4\">\n                                        <button type=\"button\" class=\"button button--secondary datepicker\" data-date-format=\"yyyy-mm-dd\" data-date=\"2012-02-20\">\n                                            <span class=\"juicon juicon-calendar\"></span>\n                                        </button>\n                                    </div>\n                                </div>\n                            </div>\n                            <div class=\"column column--md--6\">\n                                <label>To</label>\n                                <div class=\"row input__group\">\n                                    <div class=\"column--md--8\">\n                                        <input type=\"text\">\n                                    </div>\n                                    <div class=\"column--md--4\">\n                                        <button type=\"button\" class=\"button button--secondary datepicker\" data-date-format=\"yyyy-mm-dd\" data-date=\"2012-02-20\">\n                                            <span class=\"juicon juicon-calendar\"></span>\n                                        </button>\n                                    </div>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-source\">\n                        <label>Equals</label>\n                        <div class=\"select__wrap\">\n                            <div class=\"input__icon juicon juicon-down\"></div>\n                            <select>\n                                <option value=\"option1\">External</option>\n                                <option value=\"option2\">Facebook</option>\n                                <option value=\"option3\">Internal</option>\n                                <option value=\"option4\">LinkedIn</option>\n                                <option value=\"option5\">Monster</option>\n                                <option value=\"option6\">Twitter</option>\n                            </select>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-threshold\">\n                        <label>Equals</label>\n                        <div class=\"select__wrap\">\n                            <div class=\"input__icon juicon juicon-down\"></div>\n                            <select>\n                                <option value=\"option1\">Warning</option>\n                                <option value=\"option2\">Problem</option>\n                            </select>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-location\">\n                        <div class=\"row\">\n                            <div class=\"column column--md--8\">\n                                <label>Less Than<!-- <span data-toggle=\"tooltip\" data-placement=\"bottom\" title=\"\" class=\"has-tooltip juicon juicon-info-circle\" data-original-title=\"Distance from the applicant's address to the primary location\"></span>--></label>\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">5</option>\n                                        <option value=\"option2\">10</option>\n                                        <option value=\"option3\">25</option>\n                                        <option value=\"option4\">50</option>\n                                    </select>\n                                </div>\n                            </div>\n                            <div class=\"column column--md--4 pad--sm--tl\">\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">mi</option>\n                                        <option value=\"option2\">km</option>\n                                    </select>\n                                </div>\n                            </div>\n                            <div class=\"column column--md--12 mar--sm--tm\">\n                                <label>From</label>\n                                <div class=\"select__wrap\">\n                                    <div class=\"input__icon juicon juicon-down\"></div>\n                                    <select>\n                                        <option value=\"option1\">Chicago, IL (Primary)</option>\n                                        <option value=\"option2\">Option 2</option>\n                                        <option value=\"option3\">Option 3</option>\n                                        <option value=\"option4\">Option 4</option>\n                                    </select>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"js-field-group hide js-outcome\">\n                        <div class=\"row input__group\">\n                            <div class=\"column column--md--6 mar--sm--tm\">\n                                <input type=\"checkbox\"><label>Hired</label>\n                            </div>\n                            <div class=\"column column--md--6 mar--sm--tm\">\n                                <input type=\"checkbox\"><label>Withdrew</label>\n                            </div>\n                            <div class=\"column column--md--6 mar--sm--tm\">\n                                <input type=\"checkbox\"><label>Rejected</label>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"modal__footer\">\n                    <button type=\"button\" class=\"button button--secondary\" data-dismiss=\"modal\">Cancel</button>\n                    <button type=\"button\" class=\"button button--primary filterOK\" data-dismiss=\"modal\">OK</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Filter Modal -->\n        \n    <!-- Status Modal -->\n    <div aria-hidden=\"true\" aria-labelledby=\"none\" class=\"modal fade\" id=\"status-modal\" role=\"dialog\" tabindex=\"-1\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top pad--sm--bm\">\n                    <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                        <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <h2 class=\"modal__heading\" id=\"myModalLabel\">Update Status</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <div class=\"mar--sm--bm\">\n                        <div class=\"form-group\">\n                            <label>Stage</label>\n                            <div class=\"select__wrap\">\n                                <div class=\"input__icon juicon juicon-down\"></div>\n                                <select>\n                                    <option value=\"option1\">Option 1</option>\n                                    <option value=\"option2\">Option 2</option>\n                                    <option value=\"option3\">Option 3</option>\n                                </select>\n                            </div>\n                        </div>\n                    </div>\n                    <div class=\"mar--sm--bn\">\n                        <div class=\"form-group\">\n                            <label>Status</label>\n                            <div class=\"select__wrap\">\n                                <div class=\"input__icon juicon juicon-down\"></div>\n                                <select>\n                                    <option value=\"option1\">Option 1</option>\n                                    <option value=\"option2\">Option 2</option>\n                                    <option value=\"option3\">Option 3</option>\n                                </select>\n                            </div>\n                        </div>\n                        <p class=\"mar--sm--bn mar--sm--txl\">Note: This will affect 10 applicants matching the current filter conditions</p>\n                    </div>\n                </div>\n                <div class=\"modal__footer\">\n                    <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\">Cancel</button>\n                    <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">Update</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Status Modal -->\n        \n    <!-- Reject Modal -->\n    <div aria-hidden=\"true\" aria-labelledby=\"none\" class=\"modal fade\" id=\"reject-modal\" role=\"dialog\" tabindex=\"-1\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top pad--sm--bm\">\n                    <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                        <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <h2 class=\"modal__heading\" id=\"myModalLabel\">Reject Applicants</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <p class=\"\">Are you sure you want to reject 10 applicants matching the current filter conditions?</p>\n                    <div class=\"form-group\">\n                        <label>Disposition</label>\n                        <div class=\"select__wrap\">\n                            <div class=\"input__icon juicon juicon-down\"></div>\n                            <select>\n                                <option value=\"option1\">Option 1</option>\n                                <option value=\"option2\">Option 2</option>\n                                <option value=\"option3\">Option 3</option>\n                            </select>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"modal__footer\">\n                    <button class=\"button button--secondary\" data-dismiss=\"modal\" type=\"button\">No, Cancel</button>\n                    <button class=\"button button--error js-save\" data-dismiss=\"modal\" type=\"button\">Yes, Reject These</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Reject Modal -->\n    \n    <!-- Share Modal -->\n    <div aria-hidden=\"true\" aria-labelledby=\"none\" class=\"modal fade mar--sm--txl\" id=\"share-modal\" role=\"dialog\" tabindex=\"-1\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top pad--sm--bm\">\n                    <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                        <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                    </button>\n                    <h2 class=\"modal__heading\" id=\"myModalLabel\">Share Applicant List</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <input type=\"text\" id=\"url-text\" class=\"pad--sm--xs pad--sm--ls pad--sm--rs\">\n                </div>\n                <div class=\"modal__footer\">\n                    <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">OK</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Share Modal -->\n    \n    <!-- Filter Modal (Stats) -->\n    <div class=\"modal fade\" id=\"statsFilterModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top pad--sm--bm\">\n                    <button class=\"close\" data-dismiss=\"modal\" type=\"button\"><span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span></button>\n                    <h2 class=\"modal__heading\" id=\"myModalLabel\">Total Applicants</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <div class=\"clearfix\">\n                        <span class=\"button-group--collapse button-switch\">\n                            <div class=\"button button--success\" data-trigger=\"stage\" data-group=\"filter\">By Stage</div>\n                            <div class=\"button button--success disabled\" data-trigger=\"source\" data-group=\"filter\">By Source</div>\n                        </span>\n                    </div>\n                    <div class=\"js-stage\">\n                        <table class=\"mar--sm--ts\">\n                            <thead>\n                                <tr>\n                                    <th><label>Stage</label></th>\n                                    <th><label>Applicants</label></th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                <tr>\n                                    <td>Application</td>\n                                    <td>2</td>\n                                </tr>\n                                <tr>\n                                    <td>Screening</td>\n                                    <td>3</td>\n                                </tr>\n                                <tr>\n                                    <td>Interview</td>\n                                    <td>4</td>\n                                </tr>\n                                <tr>\n                                    <td>Offer</td>\n                                    <td>2</td>\n                                </tr>\n                            </tbody>\n                            <thead>\n                                <tr class=\"bg-2\">\n                                    <th><label>Subtotal</label></th>\n                                    <th><label>11</label></th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                <tr>\n                                    <td>Hired</td>\n                                    <td>2</td>\n                                </tr>\n                                <tr>\n                                    <td>Withdrew</td>\n                                    <td>1</td>\n                                </tr>\n                                <tr>\n                                    <td>Rejected</td>\n                                    <td>18</td>\n                                </tr>\n                            </tbody>\n                            <tfoot>\n                                <tr class=\"bg-2\">\n                                    <th><label>Total</label></th>\n                                    <th><label>32</label></th>\n                                </tr>\n                            </tfoot>\n                        </table>\n                    </div>\n                    <div class=\"js-source hide\">\n                        <table class=\"mar--sm--ts\">\n                            <thead>\n                                <tr>\n                                    <th><label>Source</label></th>\n                                    <th><label>Applicants</label></th>\n                                </tr>\n                            </thead>\n                            <tbody>\n                                <tr>\n                                    <td>External</td>\n                                    <td>5</td>\n                                </tr>\n                                <tr>\n                                    <td>Facebook</td>\n                                    <td>6</td>\n                                </tr>\n                                <tr>\n                                    <td>Internal</td>\n                                    <td>4</td>\n                                </tr>\n                                <tr>\n                                    <td>LinkedIn</td>\n                                    <td>7</td>\n                                </tr>\n                                <tr>\n                                    <td>Monster</td>\n                                    <td>8</td>\n                                </tr>\n                                <tr>\n                                    <td>Twitter</td>\n                                    <td>2</td>\n                                </tr>\n                            </tbody>\n                            <tfoot>\n                                <tr class=\"bg-2\">\n                                    <th><label>Total</label></th>\n                                    <th><label>32</label></th>\n                                </tr>\n                            </tfoot>\n                        </table>\n                    </div>\n                </div>\n                <div class=\"modal__footer\">\n                    <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">OK</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Filter Modal -->\n    \n    <!-- Filled Modal (Stats) -->\n     <div class=\"modal fade\" id=\"statsFilledModal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n        <div class=\"modal__shell\">\n            <div class=\"modal__content\">\n                <div class=\"modal__top pad--sm--bm\">\n                    <button class=\"close\" data-dismiss=\"modal\" type=\"button\"><span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span></button>\n                    <h2 class=\"modal__heading\" id=\"myModalLabel\">Positions Filled</h2>\n                </div>\n                <div class=\"modal__body\">\n                    <table>\n                        <thead>\n                            <tr>\n                                <th><label>Applicant</label></th>\n                                <th><label>Offer Accepted</label></th>\n                            </tr>\n                        </thead>\n                        <tbody>\n                            <tr>\n                                <td>John Smith</td>\n                                <td>Jul 22, 2015</td>\n                            </tr>\n                            <tr>\n                                <td>Jane Doe</td>\n                                <td>Aug 10, 2015</td>\n                            </tr>\n                        </tbody>\n                    </table>\n                </div>\n                <div class=\"modal__footer\">\n                    <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">OK</button>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- /Filled Modal -->\n</div>");
+  data.buffer.push("\n\n                        \n                        <div class=\"mar--sm--m\">\n                            <div class=\"text-center mar--sm--tm\">\n                                <a ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickLoadMore", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" href=\"#\" class=\"button button--secondary button--full js-load-more\"><small>Load More</small></a>\n                            </div>\n                        </div>\n                        \n                    </div>\n                </div>\n                \n            </div>\n        </div>\n\n        <!-- Filter Modal (Stats) -->\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "viewApplicantsStageStatus", options) : helperMissing.call(depth0, "partial", "viewApplicantsStageStatus", options))));
+  data.buffer.push("\n        <!-- /Filter Modal (Stats) -->\n\n        \n        <!-- Filled Modal (Stats) -->\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.partial || (depth0 && depth0.partial)),stack1 ? stack1.call(depth0, "viewApplicantsFilled", options) : helperMissing.call(depth0, "partial", "viewApplicantsFilled", options))));
+  data.buffer.push("\n        <!-- /Filled Modal -->\n\n        <button id=\"back-to-top\" class=\"button button--primary\"><span class=\"juicon juicon-upward\"></span></button>\n    </div>\n");
   return buffer;
   
 });

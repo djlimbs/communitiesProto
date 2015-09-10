@@ -13,6 +13,8 @@ Ember.Handlebars.helper('formatDate', function(date) {
 });
 
 
+
+
 App.Fixtures = Ember.Object.create({
     // savedApplications: [],
     // storedMainData: null,
@@ -70,38 +72,90 @@ App.SearchFilterComponent = Ember.Component.extend(App.SearchFilterMixin, {
     layoutName: 'components/searchFilter'
 });
 
+App.MainView = Ember.View.extend({
+    didInsertElement: function() {
+        var self = this;
+        Ember.run.scheduleOnce('afterRender', this, function() {
+            alert('i am here');
+            alert(isSF1);
+            /*$('#filter-modal').on('shown.jui.modal', function() {
+                console.log(this.$());
+            });*/
+            // iPhone CSS mod to handle scrolling with the containing div insted of the iframe
+            // When Mobile Safari fixes how it resizes iframes to content, this can go away.
+            if (isSF1) {  
+                $('#mobileMainView').css({
+                                    'max-height' : window.innerHeight,
+                                    'overflow-y' : 'scroll',
+                                    '-webkit-overflow-scrolling' : 'none',
+                                    'overflow-x' : 'none'
+                                });
 
+                alert($('#mobileMainView').css());
+
+                // $('body').css({
+                //     '-webkit-overflow-scrolling' : 'touch'
+                // });
+            }
+        });
+    }
+});
 
 App.MainController = Ember.ObjectController.extend(App.SearchAndResultsMixin, {
+    isStageSelected: true,
     //currentApplicationIdBinding: 'controllers.viewApplicantsApplicationReader.application.Id',
     //isInlineFeedbackVisibleBinding: 'controllers.viewApplicantsApplicationReader.isInlineFeedbackVisible',
     shareUrl: function() {
         return window.location.href.replace(/&filter=.+/,'') + '&filter=' + encodeURIComponent(JSON.stringify(this.get('params')));
     }.property('params'),
     successFunction: function(self, res) {
-        console.log('SUCCES: ');
-        console.log('THE RES: ', res);
+        // console.log('SUCCES: ');
 
         var updateObj = {};
         var applicantId = self.get('applicantId');
         var params = self.get('params');
 
         App.formatResults(updateObj, res, params);
-        self.setProperties(updateObj);
+        self.setProperties(updateObj); 
         self.set('isLoadingResults', false);
     },
+
+    setFilter: function(newFilters) {
+        console.log('CONTROLLER: ', this);
+
+        var ctrl = this;
+        var filters = this.get('filters');
+        var params = {};
+        var $button = this.get('$button');
+
+        params.allOutcomes = true;
+        params.stage = name;
+
+        filters.clear();
+        filters.pushObjects(newFilters);
+
+        //ctrl.set('applicantId', applicantId);
+        ctrl.notifyPropertyChange('filters');
+
+        // $button.tooltipster('hide');
+    },
     actions: {
-        clickLoadMore: function() {
+        setIsStageSelected: function(isStageSelected) {
+            this.set('isStageSelected', isStageSelected);
+        },
+        clickLoadMore: function() {            
             var self = this;
             var params = this.get('params');
             var numResultsPerSearch = this.get('numResultsPerSearch');
-            var offset = this.get('offset') + numResultsPerSearch;
+            var offset = this.get('results.numberViewable'); //+ numResultsPerSearch;
 
             this.set('isLoadingResults', true);
 
             params.offset = offset;
+            params.limiter = numResultsPerSearch;
+            this.set('params', params);
 
-            var successFunction = function(res) {
+            var successFunction = function(self, res) {
                 var updateObj = {};
 
                 App.formatResults(updateObj, res, params);
@@ -113,12 +167,115 @@ App.MainController = Ember.ObjectController.extend(App.SearchAndResultsMixin, {
                 });
             };
 
-            this.search(params, successFunction);
+            this.search(successFunction);
+        },
+        clickSetStageFilter: function(name) {
+            var stageParams = {};
+
+            stageParams.stage = name;
+
+            var stageFilter = {
+                name: 'stage',
+                text: 'Stage and Status: ' + name + '; Any',
+                params: stageParams
+            };
+
+            var outcomeParams = {};
+
+            outcomeParams.noOutcome = true;
+            outcomeParams.showHired = false;
+            outcomeParams.showRejected = false;
+            outcomeParams.showWithdrew = false;
+            outcomeParams.allOutcomes = false;
+
+            var outcomeFilter = {
+                name: 'outcome',
+                text: 'Outcome: No Outcome Yet',
+                params: outcomeParams
+            };
+
+            this.setFilter([stageFilter, outcomeFilter]);
+        },
+        clickSetOutcomeFilter: function(name) {
+            var params = {};
+
+            params.allOutcomes = false;
+            params.showHired = name === 'Hired';
+            params.showRejected = name === 'Rejected';
+            params.showWithdrew = name === 'Withdrew';
+
+            var newFilter = {
+                name: 'outcome',
+                text: 'Outcome: ' + name,
+                params: params
+            }
+
+            this.setFilter([newFilter]);
+        },
+        clickSetSourceFilter: function(name) {          
+            var params = {};
+
+            params.source = name;
+
+            var sourceFilter = {
+                name: 'source',
+                text: 'Source: ' + name,
+                params: params
+            } 
+
+            var outcomeParams = {};
+
+            outcomeParams.noOutcome = true;
+            outcomeParams.showHired = false;
+            outcomeParams.showRejected = false;
+            outcomeParams.showWithdrew = false;
+            outcomeParams.allOutcomes = false;
+
+            var outcomeFilter = {
+                name: 'outcome',
+                text: 'Outcome: No Outcome Yet',
+                params: outcomeParams
+            };
+
+            this.setFilter([sourceFilter, outcomeFilter]);
+        },
+        clickApplicant: function(applicantId) {
+            var ctrl = this;
+            var filters = this.get('filters');
+            var params = {};
+            var $button = this.get('$button');
+
+            params.allOutcomes = false;
+            params.showHired = true;
+
+            var newFilter = {
+                name: 'outcome',
+                text: 'Outcome: Hired',
+                params: params
+            }
+
+            filters.clear();
+            filters.pushObject(newFilter);
+
+            // $button.tooltipster('hide');
+
+            ctrl.set('applicantId', applicantId);
+            ctrl.notifyPropertyChange('filters');
         }
     }
 });
 
+
 App.ResultController = Ember.ObjectController.extend({
+    needs: ['main'],
+    isLinkedIn: function(){
+        return this.get('Source__c') == 'LinkedIn' ? true : false;
+    }.property(),
+    isInternal: function(){
+        console.log('SOURCE: ', this.get('results'));
+
+        return this.get('Source__c') == 'Internal';
+    }.property(), 
     alertStatusClass: function() {
         var alertStatus = this.get('Alert_Status__c');
         return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? 'has-problem-warning' : 'has-problem-error';
@@ -180,6 +337,106 @@ App.ResultController = Ember.ObjectController.extend({
 
         return interviewFeedbackObj;
     }.property('parentController.sortType'),
+    actions: {
+        loadLinkedIn2: function(){
+            sforce.one.navigateToURL('google.com');
+        },
+        // loadLinkedIn: function(){
+        //     if(Ember.isEmpty(this.get('LinkedIn_Profile_Id__c'))){
+        //         var address = 'https://www.google.com?#q=' + this.get('First_Name__c') + ' ' + this.get('Last_Name__c') + ' site://linkedin.com'
+        //         if (isSF1){
+        //             sforce.one.navigateToURL(address);
+        //         } else {
+        //             window.location.href = address; 
+        //         }
+        //     } else {
+        //         var address = 'https://www.linkedin.com/profile/view?id=' + this.get('LinkedIn_Profile_Id__c');
+
+        //         if (isSF1) {
+        //             if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)){
+        //                 var now = new Date().valueOf();
+        //                 setTimeout(function () {
+        //                     if (new Date().valueOf() - now > 300) return;
+        //                     sforce.one.navigateToURL(address);
+        //                 }, 100);
+
+        //                 sforce.one.navigateToURL('linkedin://#profile/' + this.get('LinkedIn_Profile_Id__c'));
+        //             } else {
+        //                 var response = confirm('Sorry, this isn’t supported yet. Would you like the information sent to you via email?');
+        //                 if(response){
+        //                     cont.sendLinkedInEmail(this.get('Id'), function(){});
+        //                 }
+
+        //                 sforce.one.navigateToURL(address);
+        //             }
+        //         } else {
+        //             window.location.href = address;
+        //         }
+        //     }
+        // },
+
+
+        loadLinkedIn: function(){
+            if(Ember.isEmpty(this.get('LinkedIn_Profile_Id__c'))){
+                var address = 'https://www.linkedin.com/vsearch/p?type=people&keywords=' + this.get('First_Name__c') + '+' + this.get('Last_Name__c')
+
+                    sforce.one.navigateToURL(address);
+            } else {
+                var linkedInId = this.get('LinkedIn_Profile_Id__c');
+
+                var address = 'https://touch.www.linkedin.com/#profile/' + linkedInId;
+
+                if(navigator.userAgent.match(/(iPod|iPhone|iPad)/)){
+                    var now = new Date().valueOf();
+                    setTimeout(function () {
+                    if (new Date().valueOf() - now > 300) return;
+                    sforce.one.navigateToURL(address);
+                }, 100);
+
+                    sforce.one.navigateToURL('linkedin://#profile/' + linkedInId);
+
+                } else {
+                    sforce.one.navigateToURL(address);
+                }
+
+            }
+        },
+
+        viewTalentProfile : function(){
+            var url = '/apex/to_talentProfileView?userId=' + this.get('Candidate_User__c');
+
+            if(isSF1){
+                sforce.one.navigateToURL(url);
+            } else {
+                window.location.href = url;
+            }
+        },
+        viewApplicationReader : function(){
+            var url = '/apex/to_applicationReader?Id=' + this.get('Id');
+            //sforce.one.navigateToURL(url); 
+
+            if(isSF1){
+                sforce.one.navigateToURL(url); 
+            } else {
+                window.location.href = url;
+            }
+        },
+        // viewResume : function(){
+        //     console.log('RESUME:: ');
+
+        //     var url = '/' + this.get('Resume_Post_Id__c');
+
+        //     if(isSF1){
+        //         sforce.one.navigateToURL(url);
+        //     } else {
+        //         window.location.href = url;
+        //     }
+        // },
+
+        viewResume: function(){
+            sforce.one.navigateToFeedItemDetail(this.get('Resume_Post_Id__c'));
+        }
+    }
 });
 
 
@@ -200,18 +457,38 @@ App.MainRoute = Ember.Route.extend({
                 params = JSON.parse(decodeURIComponent(filterParams));
             }
 
+            // var resolveObj = {
+            //     applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
+            //     applicationSources: initData.sourceCounts.getEach('name'),
+            //     maxApplicationRating: initData.maxApplicationRating,
+            //     maxInterviewScore: initData.maxInterviewScore,
+            //     sortOptions: App.Fixtures.get('sortOptions'),
+            //     sortType: scoreSort,
+            //     locations: [],
+            //     filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
+            //     filters: [],
+            //     initParams: params
+            // };
+
             var resolveObj = {
-                applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
-                applicationSources: initData.sourceCounts.getEach('name'),
-                maxApplicationRating: initData.maxApplicationRating,
-                maxInterviewScore: initData.maxInterviewScore,
-                sortOptions: App.Fixtures.get('sortOptions'),
-                sortType: scoreSort,
-                locations: [],
-                filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
-                filters: [],
-                initParams: params
-            };
+                    applicationStageAndStatuses: getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace),
+                    applicationSources: initData.sourceCounts.getEach('name'),
+                    disposition: getDependentOptions(apiKey, 'Application__c', 'Outcome__c', 'Disposition__c', namespace)['Rejected'],
+                    maxApplicationRating: initData.maxApplicationRating,
+                    maxInterviewScore: initData.maxInterviewScore,
+                    sortOptions: App.Fixtures.get('sortOptions'),
+                    sortType: params.sortType,//scoreSort,
+                    allowRejection: initData.allowRejection,
+                    allowNeutral: initData.allowNeutral,
+                    locations: [],
+                    filterOptions: ['Stage and Status', 'Application Rating', 'Interview Feedback', 'Applied On', 'Source', 'Threshold', 'Location', 'Outcome'],
+                    filters: [],
+                    initParams: params,
+                    applicantId: !Ember.isEmpty(appIdParam) ? appIdParam : null,
+                    initLimiter: params.limiter,
+                    requisition: initData.requisition,
+                    hiringManager: !Ember.isNone(initData.requisition.Hiring_Manager__r) ? initData.requisition.Hiring_Manager__r : null
+                };
 
             var anyStatuses = [];
             Object.keys(resolveObj.applicationStageAndStatuses).forEach(function(key) {
@@ -238,7 +515,7 @@ App.MainRoute = Ember.Route.extend({
             //resolveObj.filters.addObjects(App.convertParamsToFilters(params));
             
 
-            console.log('RESOLVE OBJ: ', resolveObj);
+            // console.log('RESOLVE OBJ: ', resolveObj);
             // App.Fixtures.set('storedMainData', resolveObj);
             resolve(resolveObj);
         });

@@ -1,618 +1,155 @@
-<div class="scope-container">
+{{!-- <div id="mobileMainView"> --}}
+
+    <div id="mobileMainView" class="scope-container">
         <div class="content pad--md--tm pad--md--bn pad--sm--only--n pad--sm--tm">
             <nav id="formBuildNav" class="nav-bar--sf1 mar--sm--bn">
-                    <h1 class="nav-bar--sf1__title has-subheading page__heading show-brkpoint--sm">Applicants</h1>
-                    <h2 class="nav-bar--sf1__subtitle page__subheading">Inside Sales Rep</h2>
+                <h1 class="nav-bar--sf1__title has-subheading page__heading show-brkpoint--sm">Applicants</h1>
+                <h2 class="nav-bar--sf1__subtitle page__subheading"><a href="/{{unbound requisition.Id}}">{{requisition.Name}}</a></h2>
             </nav>
             <hr class="show-brkpoint--md">
         </div>
         <div class="content">
-        <div class="row">
-            <div class="column--md--12 pad--sm--n mar--md--m">
-                {{partial "viewApplicantsHeaderMobile"}}
-                
-                <div class="card no-border-on-small">
+            <div class="row">
+                <div class="column--md--12 pad--sm--n mar--md--m">
+                    {{partial "viewApplicantsHeaderMobile"}}
                     
-                    <section class="pad--sm--m pad--sm--bl">
-                        {{search-filter ctrl=controller filters=filters filterOptions=filterOptions applicationStageAndStatuses=applicationStageAndStatuses applicationSources=applicationSources locations=locations params=initParams}}
-
-                    <!-- Sort-->
-                        <h3 class="mar--sm--n">Sort</h3>
-                        <div class="form-group">
-                            <div class="select__wrap">
-                                <div class="input__icon juicon juicon-down"></div>
-                                <select class="pad--sm--rxl small">
-                                    <option value="application-rating">Application Rating</option>
-                                    <option value="applied-on-date">Applied On Date</option>
-                                    <option value="interview-feedback">Interview Feedback</option>
-                                    <option value="last-name">Last Name</option>
-                                    <option value="resume-feedback">Resume Feedback</option>
-                                </select>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- /Filters and Results -->
-
-
-                    {{#if isLoadingResults}}
-                        <div class="content pad--md--ts pad--sm--only--n pad--sm--tm">
-                            <div class="content__section">
-                                <div class="load-block">
-                                    <div class="load-block-icon"></div>
-                                </div>
-                            </div>
-                        </div>
-                    {{else}}
-                        <section class="pad--sm--m border-top bg-2">
-                            {{!-- <h3 class="mar--sm--n">Results: 10<span class="text-faded">/14</span></h3> --}}
-                            <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
-                        </section>
+                    <div class="card no-border-on-small">
                         
-                        <ul class="list-group list-group--bordered mar--sm--n bg-1 applicant-list-group no-border-on-small">
-                            {{!-- ******** {{results}} ********* --}}
+                        <section class="pad--sm--m pad--sm--bl">
+                            {{search-filter ctrl=controller filters=filters filterOptions=filterOptions applicationStageAndStatuses=applicationStageAndStatuses applicationSources=applicationSources locations=locations params=initParams}}
 
-                            {{log results}}
-
-                            {{#each application in results.viewableApplications itemController="result"}}
-                                {{log 'HERE'}}
-                                {{log application}}
-                                <li class="list-group__item applicant-entry">
-                                    <div class="pad--sm--m pad--sm--bn">
-                                    <h4 class="card__heading dots">{{application.Name}}</h4>
-                                    <h5 class="card__subheading dots" style="display: inline-block">Status: {{application.Final_Stage__c}} ({{application.Final_Status__c}})</h5>
-
-                                    <div class="mar--sm--ts">
-                                        <small class="block dots"><label>Source:</label> {{application.Source__c}}</small>
-                                        {{!-- <small class="block dots"><label>Applied On:</label> Dec 10, 2015 @ 11:23 AM (<a href="#">2 more</a>)</small> --}}
-                                        <small class="block dots mar--sm--bxs"><label>Applied On:</label> {{formatDate application.Applied_On__c}} {{#if otherAppsLength}}(<a {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} more</a>){{/if}}</small>
-                                    </div>
-
-                                    <div class="mar--sm--tm clearfix">
-                                        <div class="column column--sm--6">
-                                            <small class="block dots" data-qa-label="noResume"><label><span class="juicon juicon-document"></span> <a href="#"> Resume (12B)</a></label></small>
-                                        </div>
-                                        <div class="column column--sm--6">
-                                            <small class="block dots" data-qa-label="noResume"><label><span class="juicon juicon-linkedin"></span> <a href="#"> Search</a></label></small>
-                                        </div>
-                                    </div>
-
-                                    <div class="mar--sm--tm">
-                                        <table class="table--fixed applicant-stats">
-                                            <tbody><tr>
-                                                <td>
-                                                    <small class="block dots"><label><span class="juicon juicon-list" data-toggle="tooltip" title="" data-original-title="Application Rating"></span></label> <span class="text-success">10</span>/10</small>
-                                                </td>
-                                                <td>
-                                                    <small class="block dots"><label><span class="juicon juicon-like" data-toggle="tooltip" title="" data-original-title="Positive Interview Feedback"></span></label> 1</small>
-                                                </td>
-                                                <td>
-                                                    <small class="block dots"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="" data-original-title="Negative Interview Feedback"></span></label> 0</small>
-                                                </td>
-                                                <td>
-                                                    <small class="block dots"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="" data-original-title="Neutral Interview Feedback"></span></label> 0</small>
-                                                </td>
-                                            </tr>
-                                        </tbody></table>
-                                    </div>
-                                </li>
-                            {{/each}}
-
-                        </ul>
-                    {{/if}}
-
-                    
-                    <div class="mar--sm--m">
-                        <div class="text-center mar--sm--tm">
-                            <a href="#" class="button button--secondary button--full js-load-more"><small>Load More</small></a>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-            
-        </div>
-    </div>
-    <button id="back-to-top" class="button button--primary"><span class="juicon juicon-upward"></span></button>
-        
-    <!-- Sort Modal -->
-    <div class="modal fade" id="sortModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <h2 class="modal__heading" id="sortModalLabel">Sort Applicants</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="form__group">
-                        <label for="filterStage">Sort by</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select>
-                                <option>(Any)</option>
-                                <option>Application</option>
-                                <option>Screening</option>
-                                <option>Interview</option>
-                                <option>Offer</option>
-                            </select>
-                        </div>
-                        <small class="input-error-content">You need stuff in this thing</small>
-                    </div>
-                </div>
-                <div class="modal__footer">
-                    <button type="button" class="button button--secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="button button--primary filterOK" data-dismiss="modal">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Sort Modal -->
-
-    <!-- Filter Modal -->
-    <div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top">
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <h2 class="modal__heading" id="myModalLabel">Add Condition</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="form__group">
-                        <label for="filterStage">Field</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select id="filter-field">
-                                <option selected="" disabled="">--</option>
-                                <option value="stage-status">Stage and Status</option>
-                                <option value="application-rating">Application Rating</option>
-                                <option value="interview-feedback">Interview Feedback</option>
-                                <option value="applied-on">Applied On</option>
-                                <option value="source">Source</option>
-                                <option value="threshold">Threshold</option>
-                                <option value="location">Location</option>
-                                <option value="outcome">Outcome</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-stage-status">
-                        <div class="mar--sm--bm">
+                        <!-- Sort-->
+                            <h3 class="mar--sm--n">Sort by</h3>
                             <div class="form-group">
-                                <label>Stage</label>
                                 <div class="select__wrap">
                                     <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">Option 1</option>
-                                        <option value="option2">Option 2</option>
-                                        <option value="option3">Option 3</option>
-                                    </select>
+                                    {{!-- <select class="pad--sm--rxl small">
+                                        <option value="application-rating">Application Rating</option>
+                                        <option value="applied-on-date">Applied On Date</option>
+                                        <option value="interview-feedback">Interview Feedback</option>
+                                        <option value="last-name">Last Name</option>
+                                        <option value="resume-feedback">Resume Feedback</option>
+                                    </select> --}}
+
+                                    {{view "select" 
+                                        class="pad--sm--rxl small"
+                                        content=sortOptions 
+                                        optionLabelPath="content.label"
+                                        optionValuePath="content.value"
+                                        value=sortType}}
                                 </div>
                             </div>
-                        </div>
-                        <div class="mar--sm--bn">
-                            <div class="form-group">
-                                <label>Status</label>
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">Option 1</option>
-                                        <option value="option2">Option 2</option>
-                                        <option value="option3">Option 3</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-application-rating">
-                        <div class="row">
-                            <div class="column column--md--8">
-                                <label>Is</label>
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">Greater Than</option>
-                                        <option value="option2">Less Than</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="column column--md--4 pad--sm--tl">
-                                <div class="input__wrap">
-                                    <input type="number">
-                                    <small class="text-faded">Max: 10</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-interview-feedback">
-                        <div class="row">
-                            <div class="column column--md--8">
-                                <label>Is</label>
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">Greater Than</option>
-                                        <option value="option2">Less Than</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="column column--md--4 pad--sm--tl">
-                                <div class="input__wrap">
-                                    <input type="number">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-applied-on">
-                        <div class="row">
-                            <div class="column column--md--6">
-                                <label>From</label>
-                                <div class="row input__group">
-                                    <div class="column--md--8">
-                                        <input type="text">
-                                    </div>
-                                    <div class="column--md--4">
-                                        <button type="button" class="button button--secondary datepicker" data-date-format="yyyy-mm-dd" data-date="2012-02-20">
-                                            <span class="juicon juicon-calendar"></span>
-                                        </button>
+                        </section>
+                        <!-- /Filters and Results -->
+
+
+                        {{#if isLoadingResults}}
+                            <div class="content pad--md--ts pad--sm--only--n pad--sm--tm">
+                                <div class="content__section">
+                                    <div class="load-block">
+                                        <div class="load-block-icon"></div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="column column--md--6">
-                                <label>To</label>
-                                <div class="row input__group">
-                                    <div class="column--md--8">
-                                        <input type="text">
-                                    </div>
-                                    <div class="column--md--4">
-                                        <button type="button" class="button button--secondary datepicker" data-date-format="yyyy-mm-dd" data-date="2012-02-20">
-                                            <span class="juicon juicon-calendar"></span>
-                                        </button>
-                                    </div>
-                                </div>
+                        {{else}}
+                            <section class="pad--sm--m border-top bg-2">
+                                <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
+                            </section>
+                            
+
+                            {{log 'HERE'}}
+                            {{log results.viewableApplications}}
+                            <div class="list-group list-group--bordered mar--sm--n bg-1 applicant-list-group no-border-on-small">
+
+                                {{#each application in results.viewableApplications itemController="result"}}
+
+                                {{log 'FEEDBACK'}}
+                                {{log application.resumeFeedbackScore}}
+
+                                    {{!-- <a href="to_applicationReader?id={{unbound application.Id}}"> --}}
+                                        <div class="list-group__item applicant-entry mobile">
+
+
+                                            <div class="pad--sm--m pad--sm--bn">
+                                                <h4 class="card__heading dots"><a {{action "viewApplicationReader"}} href="#">{{application.Name}}</a></h4>
+                                                <h5 class="card__subheading dots" style="display: inline-block">Status: {{application.Final_Stage__c}} ({{application.Final_Status__c}})</h5>
+
+                                                <div class="mar--sm--ts">
+                                                    <small class="block dots"><label>Source:</label> {{application.Source__c}}</small>
+                                                    <small class="block dots mar--sm--bxs"><label>Applied On:</label> {{formatDate application.Applied_On__c}} {{#if otherAppsLength}}(<a {{action "openApplicationModal"}} href="#">{{otherAppsLength}} more</a>){{/if}}</small>
+                                                </div>
+
+                                                <div class="mar--sm--tm clearfix">
+                                                    <div class="column column--sm--6">
+                                                        <small class="block dots">
+                                                            <label><span class="juicon juicon-document"></span> 
+                                                                <a {{action "viewResume"}} href="#"> Resume (37KB)</a>
+                                                            </label>
+                                                        </small>
+                                                    </div>
+                                                    <div class="column column--sm--6">
+                                                        <small class="block dots">
+                                                            <label><span class="juicon juicon-linkedin"></span> 
+                                                                <a {{action "loadLinkedIn"}} href="#"> 
+                                                                    {{#if application.isLinkedIn}} Profile {{else}} Search{{/if}}</a>
+                                                            </label>
+                                                        </small>
+                                                    </div>
+                                                </div>
+
+                                                <div class="mar--sm--tm">
+                                                    <table class="table--fixed applicant-stats">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <small class="block dots"><label>
+                                                                        <span class="juicon juicon-list" data-toggle="tooltip" title="" data-original-title="Application Rating"></span></label> 
+                                                                        <span class="text-success">{{application.Raw_Score__c}}</span>/{{application.Maximum_Score__c}}
+                                                                    </small>
+                                                                </td>
+                                                                <td>
+                                                                    <small class="block dots"><label><span class="juicon juicon-like" data-toggle="tooltip" title="" data-original-title="Positive Interview Feedback"></span></label> {{application.resumeFeedbackScore.positiveFeedback}}</small>
+                                                                </td>
+                                                                <td>
+                                                                    <small class="block dots"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="" data-original-title="Negative Interview Feedback"></span></label> {{application.resumeFeedbackScore.negativeFeedback}}</small>
+                                                                </td>
+                                                                <td>
+                                                                    <small class="block dots"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="" data-original-title="Neutral Interview Feedback"></span></label> {{application.resumeFeedbackScore.neutralFeedback}}</small>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {{!-- </a> --}}
+                                {{/each}}
+
+                            </div>
+                        {{/if}}
+
+                        
+                        <div class="mar--sm--m">
+                            <div class="text-center mar--sm--tm">
+                                <a {{action "clickLoadMore"}} href="#" class="button button--secondary button--full js-load-more"><small>Load More</small></a>
                             </div>
                         </div>
-                    </div>
-                    <div class="js-field-group hide js-source">
-                        <label>Equals</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select>
-                                <option value="option1">External</option>
-                                <option value="option2">Facebook</option>
-                                <option value="option3">Internal</option>
-                                <option value="option4">LinkedIn</option>
-                                <option value="option5">Monster</option>
-                                <option value="option6">Twitter</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-threshold">
-                        <label>Equals</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select>
-                                <option value="option1">Warning</option>
-                                <option value="option2">Problem</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-location">
-                        <div class="row">
-                            <div class="column column--md--8">
-                                <label>Less Than<!-- <span data-toggle="tooltip" data-placement="bottom" title="" class="has-tooltip juicon juicon-info-circle" data-original-title="Distance from the applicant's address to the primary location"></span>--></label>
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">5</option>
-                                        <option value="option2">10</option>
-                                        <option value="option3">25</option>
-                                        <option value="option4">50</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="column column--md--4 pad--sm--tl">
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">mi</option>
-                                        <option value="option2">km</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="column column--md--12 mar--sm--tm">
-                                <label>From</label>
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    <select>
-                                        <option value="option1">Chicago, IL (Primary)</option>
-                                        <option value="option2">Option 2</option>
-                                        <option value="option3">Option 3</option>
-                                        <option value="option4">Option 4</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="js-field-group hide js-outcome">
-                        <div class="row input__group">
-                            <div class="column column--md--6 mar--sm--tm">
-                                <input type="checkbox"><label>Hired</label>
-                            </div>
-                            <div class="column column--md--6 mar--sm--tm">
-                                <input type="checkbox"><label>Withdrew</label>
-                            </div>
-                            <div class="column column--md--6 mar--sm--tm">
-                                <input type="checkbox"><label>Rejected</label>
-                            </div>
-                        </div>
+                        
                     </div>
                 </div>
-                <div class="modal__footer">
-                    <button type="button" class="button button--secondary" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="button button--primary filterOK" data-dismiss="modal">OK</button>
-                </div>
+                
             </div>
         </div>
-    </div>
-    <!-- /Filter Modal -->
+
+        <!-- Filter Modal (Stats) -->
+        {{partial "viewApplicantsStageStatus"}}
+        <!-- /Filter Modal (Stats) -->
+
         
-    <!-- Status Modal -->
-    <div aria-hidden="true" aria-labelledby="none" class="modal fade" id="status-modal" role="dialog" tabindex="-1">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top pad--sm--bm">
-                    <button class="close" data-dismiss="modal" type="button">
-                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <h2 class="modal__heading" id="myModalLabel">Update Status</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="mar--sm--bm">
-                        <div class="form-group">
-                            <label>Stage</label>
-                            <div class="select__wrap">
-                                <div class="input__icon juicon juicon-down"></div>
-                                <select>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                    <option value="option3">Option 3</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mar--sm--bn">
-                        <div class="form-group">
-                            <label>Status</label>
-                            <div class="select__wrap">
-                                <div class="input__icon juicon juicon-down"></div>
-                                <select>
-                                    <option value="option1">Option 1</option>
-                                    <option value="option2">Option 2</option>
-                                    <option value="option3">Option 3</option>
-                                </select>
-                            </div>
-                        </div>
-                        <p class="mar--sm--bn mar--sm--txl">Note: This will affect 10 applicants matching the current filter conditions</p>
-                    </div>
-                </div>
-                <div class="modal__footer">
-                    <button class="button button--secondary" data-dismiss="modal" type="button">Cancel</button>
-                    <button class="button button--primary js-save" data-dismiss="modal" type="button">Update</button>
-                </div>
-            </div>
-        </div>
+        <!-- Filled Modal (Stats) -->
+        {{partial "viewApplicantsFilled"}}
+        <!-- /Filled Modal -->
+
+        <button id="back-to-top" class="button button--primary"><span class="juicon juicon-upward"></span></button>
     </div>
-    <!-- /Status Modal -->
-        
-    <!-- Reject Modal -->
-    <div aria-hidden="true" aria-labelledby="none" class="modal fade" id="reject-modal" role="dialog" tabindex="-1">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top pad--sm--bm">
-                    <button class="close" data-dismiss="modal" type="button">
-                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <h2 class="modal__heading" id="myModalLabel">Reject Applicants</h2>
-                </div>
-                <div class="modal__body">
-                    <p class="">Are you sure you want to reject 10 applicants matching the current filter conditions?</p>
-                    <div class="form-group">
-                        <label>Disposition</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            <select>
-                                <option value="option1">Option 1</option>
-                                <option value="option2">Option 2</option>
-                                <option value="option3">Option 3</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal__footer">
-                    <button class="button button--secondary" data-dismiss="modal" type="button">No, Cancel</button>
-                    <button class="button button--error js-save" data-dismiss="modal" type="button">Yes, Reject These</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Reject Modal -->
-    
-    <!-- Share Modal -->
-    <div aria-hidden="true" aria-labelledby="none" class="modal fade mar--sm--txl" id="share-modal" role="dialog" tabindex="-1">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top pad--sm--bm">
-                    <button class="close" data-dismiss="modal" type="button">
-                        <span class="close-modal-x"></span><span class="sr-only">Close</span>
-                    </button>
-                    <h2 class="modal__heading" id="myModalLabel">Share Applicant List</h2>
-                </div>
-                <div class="modal__body">
-                    <input type="text" id="url-text" class="pad--sm--xs pad--sm--ls pad--sm--rs">
-                </div>
-                <div class="modal__footer">
-                    <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Share Modal -->
-    
-    <!-- Filter Modal (Stats) -->
-    <div class="modal fade" id="statsFilterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top pad--sm--bm">
-                    <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span><span class="sr-only">Close</span></button>
-                    <h2 class="modal__heading" id="myModalLabel">Total Applicants</h2>
-                </div>
-                <div class="modal__body">
-                    <div class="clearfix">
-                        <span class="button-group--collapse button-switch">
-                            <div class="button button--success" data-trigger="stage" data-group="filter">By Stage</div>
-                            <div class="button button--success disabled" data-trigger="source" data-group="filter">By Source</div>
-                        </span>
-                    </div>
-                    <div class="js-stage">
-                        <table class="mar--sm--ts">
-                            <thead>
-                                <tr>
-                                    <th><label>Stage</label></th>
-                                    <th><label>Applicants</label></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Application</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Screening</td>
-                                    <td>3</td>
-                                </tr>
-                                <tr>
-                                    <td>Interview</td>
-                                    <td>4</td>
-                                </tr>
-                                <tr>
-                                    <td>Offer</td>
-                                    <td>2</td>
-                                </tr>
-                            </tbody>
-                            <thead>
-                                <tr class="bg-2">
-                                    <th><label>Subtotal</label></th>
-                                    <th><label>11</label></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Hired</td>
-                                    <td>2</td>
-                                </tr>
-                                <tr>
-                                    <td>Withdrew</td>
-                                    <td>1</td>
-                                </tr>
-                                <tr>
-                                    <td>Rejected</td>
-                                    <td>18</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-2">
-                                    <th><label>Total</label></th>
-                                    <th><label>32</label></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="js-source hide">
-                        <table class="mar--sm--ts">
-                            <thead>
-                                <tr>
-                                    <th><label>Source</label></th>
-                                    <th><label>Applicants</label></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>External</td>
-                                    <td>5</td>
-                                </tr>
-                                <tr>
-                                    <td>Facebook</td>
-                                    <td>6</td>
-                                </tr>
-                                <tr>
-                                    <td>Internal</td>
-                                    <td>4</td>
-                                </tr>
-                                <tr>
-                                    <td>LinkedIn</td>
-                                    <td>7</td>
-                                </tr>
-                                <tr>
-                                    <td>Monster</td>
-                                    <td>8</td>
-                                </tr>
-                                <tr>
-                                    <td>Twitter</td>
-                                    <td>2</td>
-                                </tr>
-                            </tbody>
-                            <tfoot>
-                                <tr class="bg-2">
-                                    <th><label>Total</label></th>
-                                    <th><label>32</label></th>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal__footer">
-                    <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Filter Modal -->
-    
-    <!-- Filled Modal (Stats) -->
-     <div class="modal fade" id="statsFilledModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal__shell">
-            <div class="modal__content">
-                <div class="modal__top pad--sm--bm">
-                    <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span><span class="sr-only">Close</span></button>
-                    <h2 class="modal__heading" id="myModalLabel">Positions Filled</h2>
-                </div>
-                <div class="modal__body">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th><label>Applicant</label></th>
-                                <th><label>Offer Accepted</label></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>John Smith</td>
-                                <td>Jul 22, 2015</td>
-                            </tr>
-                            <tr>
-                                <td>Jane Doe</td>
-                                <td>Aug 10, 2015</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="modal__footer">
-                    <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- /Filled Modal -->
-</div>
+{{!-- </div> --}}
