@@ -1,0 +1,89 @@
+<!-- Filter Modal (Stats) -->
+<div class="modal fade" id="statsFilterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--bm">
+                <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span><span class="sr-only">Close</span></button>
+                <h2 class="modal__heading" id="myModalLabel">Total Applicants</h2>
+            </div>
+            <div class="modal__body">
+                <div class="clearfix">
+                    <span class="button-group--collapse button-switch">
+                        <div {{bind-attr class=":button :button--success isStageSelected::disabled"}} data-trigger="stage" data-group="filter" {{action "setIsStageSelected" true}}>By Stage</div>
+                        <div {{bind-attr class=":button :button--success isStageSelected:disabled"}} data-trigger="source" data-group="filter" {{action "setIsStageSelected" false}}>By Source</div>
+                    </span>
+                </div>
+
+                {{#if isStageSelected}}
+                    <div class="ar-stage">
+                        <table class="mar--sm--ts">
+                            <thead>
+                                <tr>
+                                    <th><label>Stage</label></th>
+                                    <th><label>Applicants</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each stageCount in totalApplicants.stageCounts}}
+                                    <tr {{action "clickSetStageFilter" stageCount.name}} data-dismiss="modal">
+                                        <td>{{stageCount.name}}</td>
+                                        <td>{{stageCount.total}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                            <thead>
+                                <tr class="bg-2">
+                                    <th><label>Subtotal</label></th>
+                                    <th><label>{{totalApplicants.stageSubtotal}}</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each outcomeCount in totalApplicants.outcomeCounts}}
+                                    <tr {{action "clickSetOutcomeFilter" outcomeCount.name}} data-dismiss="modal">
+                                        <td>{{outcomeCount.name}}</td>
+                                        <td>{{outcomeCount.total}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-2">
+                                    <th><label>Total</label></th>
+                                    <th><label>{{totalApplicants.total}}</label></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {{else}}
+                    <div class="ar-source">
+                        <table class="mar--sm--ts">
+                            <thead>
+                                <tr>
+                                    <th><label>Source</label></th>
+                                    <th><label>Applicants</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each source in totalApplicants.sourceCounts}}
+                                    <tr {{action "clickSetSourceFilter" source.name}} data-dismiss="modal">
+                                        <td>{{source.name}}</td>
+                                        <td>{{source.total}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-2">
+                                    <th><label>Total</label></th>
+                                    <th><label>{{totalApplicants.sourceTotal}}</label></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {{/if}}
+
+            </div>
+            <div class="modal__footer">
+                <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
