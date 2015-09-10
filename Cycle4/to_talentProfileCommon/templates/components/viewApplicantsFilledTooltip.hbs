@@ -3,22 +3,24 @@
     <h2 class="modal__heading" id="myModalLabel">Positions Filled</h2>
 </div>
 <div class="modal__body">
-    <table>
-        <thead>
-            <tr>
-                <th><label>Applicant</label></th>
-                <th><label>Offer Accepted</label></th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each applicant in data.hiredApplicants}}
-                <tr {{action "clickApplicant" applicant.Id}}>
-                    <td>{{applicant.Name}}</td>
-                    <td>{{formatDate applicant.responseDate}}</td>
+    <div class="ar-filled">
+        <table>
+            <thead>
+                <tr>
+                    <th><label>Applicant</label></th>
+                    <th><label>Offer Accepted</label></th>
                 </tr>
-            {{/each}}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {{#each applicant in data.hiredApplicants}}
+                    <tr {{action "clickApplicant" applicant.Id}}>
+                        <td>{{applicant.Name}}</td>
+                        <td>{{formatDate applicant.responseDate}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
 </div>
 <div class="modal__footer">
     <button class="button button--primary js-save" data-dismiss="modal" type="button">OK</button>
