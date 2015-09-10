@@ -644,6 +644,12 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 		if (!Ember.isEmpty(this.get('params'))) {
 			var params = JSON.parse(JSON.stringify(this.get('params')));
 
+			Object.keys(params).forEach(function(key) {
+				if (Ember.isNone(params[key])) {
+					delete params[key];
+				}
+			});
+
 			params.limiter = this.get('results.numberViewable') || this.get('numResultsPerSearch');
 			var shareUrl = window.location.href.replace(/&filter=.+/,'') + '&filter=' + encodeURIComponent(JSON.stringify(params)); 
 			if (!Ember.isEmpty(this.get('currentApplicationId'))) {
@@ -655,6 +661,14 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 			return null;
 		}
 	}.property('params', 'currentApplicationId', 'results.numberViewable'),
+	mailLink: function() {
+		var subjectString = 'Applicants for ' + this.get('requisition.Name') + ' Position';
+		var bodyString = 'Hi ' + this.get('hiringManager.FirstName') + ',\n\nPlease take a look at the following applicants for the ' 
+								+ this.get('requisition.Name') + ' position: ' + this.get('shareUrl'); 
+		var mailLink = 'mailto:' + this.get('hiringManager.Email') + '?subject=' + encodeURIComponent(subjectString) + '&body=' + encodeURIComponent(bodyString);
+
+		return mailLink;
+	}.property('shareUrl'),
 	applicationStages: function() {
 		return Object.keys(this.get('applicationStageAndStatuses')).reject(function(stage) { return stage === 'Any'; });
 	}.property('applicationStageAndStatuses'),

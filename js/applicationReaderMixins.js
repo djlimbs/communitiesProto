@@ -618,10 +618,10 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
         return this.get('ctrl.regardingSelectValues');
     }.property('ctrl'),
     allowNeutral: function() {
-        return initData.allowRejection;
+        return !Ember.isNone(initData) ? initData.allowNeutral : !Ember.isNone(parsedJson) ? parsedJson.allowNeutral : null;
     }.property(),
     allowRejection: function() {
-        return initData.allowNeutral;
+        return !Ember.isNone(initData) ? initData.allowRejection : !Ember.isNone(parsedJson) ? parsedJson.allowRejection : null;
     }.property(),
     isResumeReview : function(){
         if(!Ember.isEmpty(this.get('selectedType'))){
