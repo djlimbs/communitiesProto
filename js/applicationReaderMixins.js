@@ -10,6 +10,10 @@ var outcomeColorMap = {
     'Rejected' : 'label--error'
 }
 
+App.AddLabelsController = Ember.ObjectController.extend({
+    labels: labels
+});
+
 App.camelizeObj = function camelizeObj(obj) {
     var camelizedObj = {};
 
@@ -618,10 +622,10 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
         return this.get('ctrl.regardingSelectValues');
     }.property('ctrl'),
     allowNeutral: function() {
-        return !Ember.isNone(initData) ? initData.allowNeutral : !Ember.isNone(parsedJson) ? parsedJson.allowNeutral : null;
+        return initData.allowNeutral;
     }.property(),
     allowRejection: function() {
-        return !Ember.isNone(initData) ? initData.allowRejection : !Ember.isNone(parsedJson) ? parsedJson.allowRejection : null;
+        return initData.allowRejection;
     }.property(),
     isResumeReview : function(){
         if(!Ember.isEmpty(this.get('selectedType'))){

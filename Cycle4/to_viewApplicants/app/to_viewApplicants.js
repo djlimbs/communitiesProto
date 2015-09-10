@@ -996,10 +996,6 @@ App.OtherAppsController = Ember.ObjectController.extend(App.OtherAppsMixin, App.
 
 App.AdditionalInfoController = Ember.ObjectController.extend(App.AdditionalInfoMixin);
 
-App.AddLabelsController = Ember.ObjectController.extend({
-	labels: labels
-});
-
 App.ViewApplicantsRoute = Ember.Route.extend({
     model: function (){
         return new Ember.RSVP.Promise(function(resolve, reject) {
