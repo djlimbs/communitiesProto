@@ -3,8 +3,8 @@
     <small class="float--right pad--sm--txs"><a href="#" data-toggle="modal" data-target="#filter-modal" {{action "clickAdd"}}>Add</a></small>
 </div>
 <ul class="filters mar--sm--tn">
-    {{#each filter in filters}}
-        <li><a href="#" class="juicon juicon-x text-error part__left vam pad--sm--rs" {{action "clickRemoveFilter" filter}}></a><span class="part__body">{{filter.text}}</span></li>
+    {{#each filter in filters itemController="filter"}}
+        <li><a href="#" class="juicon juicon-x text-error part__left vam pad--sm--rs" {{action "clickRemoveFilter" filter}}></a><span class="part__body">{{{filter.formattedFilterText}}}</span></li>
     {{else}}
         <li><em class="text-faded">No Filters</em></li>
     {{/each}}

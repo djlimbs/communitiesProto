@@ -279,6 +279,8 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		this.setFilter('location', 'radius units location'.w(), textFunction);
 	},
 	setOutcomeFilter: function() {
+		var params = this.getProperties('showHired showRejected showWithdrew noOutcome allOutcomes'.w());
+
 		var textFunction = function(params) {
 			var filterText = 'Outcome: ';
 
@@ -306,6 +308,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 
 			params.allOutcomes = false;
 
+			// ADD STUFF FOR FILTER TEXT
 			if (params.noOutcome !== true) {
 				filterText = filterText.substring(0, filterText.lastIndexOf(','));
 			}
@@ -313,7 +316,18 @@ App.SearchFilterMixin = Ember.Mixin.create({
 			return filterText;
 		};
 
-		this.setFilter('outcome', 'showHired showRejected showWithdrew noOutcome allOutcomes'.w(), textFunction);
+		if (!params.noOutcome && !params.showHired && !params.showRejected && !params.showWithdrew) {
+			var filters = this.get('filters');
+			var outcomeFilterObj = filters.findBy('name', 'outcome');
+
+			if (!Ember.isNone(outcomeFilterObj)) {
+				filters.removeObject(outcomeFilterObj);
+
+				this.get('ctrl').notifyPropertyChange('filters');
+			}
+		} else {
+			this.setFilter('outcome', 'showHired showRejected showWithdrew noOutcome allOutcomes'.w(), textFunction);
+		}
 	},
 	initializeParams: function() {
 		var params = this.get('params');
@@ -377,6 +391,8 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
 		Ember.run.scheduleOnce('afterRender', this, function() {
 			this.set('offset', 0);
 			this.set('isLoadingResults', true);
+			//this.set('applicantId', null);
+
 			if (Ember.isNone(this.get('initLimiter'))) {
 				this.set('initLimiter', 10);
 			}
@@ -442,4 +458,14 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
 	maxApplicationRatingVal: function() {
 		return !this.get('isScoreSortCustom') ? this.get('maxApplicationRating')[0].score : null;
 	}.property()
+});
+
+App.FilterController = Ember.ObjectController.extend({
+	formattedFilterText: function() {
+		var text = this.get('text');
+		var filterTextComponents = text.split(':');
+		var filterText = '<strong>' + filterTextComponents[0] + ': </strong><span class="text-faded">' + filterTextComponents[1] +'</span>';
+
+		return filterText;
+	}.property('text')
 });

@@ -73,7 +73,7 @@ function applicationReaderProcesser(parsedJson){
     }
 
     // camelize talent profile fields
-    parsedJson.talentProfile.camelizedModel = camelizeObj(parsedJson.talentProfile);
+    parsedJson.talentProfile.camelizedModel = App.camelizeObj(parsedJson.talentProfile);
 
     //if we have questions split them up into jobQuestions and generalQuestions
     var markupByScore = {
@@ -128,7 +128,7 @@ function applicationReaderProcesser(parsedJson){
                     parsedJson.neutralFeedback += 1
                 }
 
-                evaluation.Interview__r.camelizedModel = camelizeObj(evaluation.Interview__r);
+                evaluation.Interview__r.camelizedModel = App.camelizeObj(evaluation.Interview__r);
             }
         })
     }
@@ -263,20 +263,10 @@ Ember.Component.reopen({
 	labels: labels
 });
 
-function camelizeObj(obj) {
-	var camelizedObj = {};
-
-	Object.keys(obj).forEach(function(key) {
-		camelizedObj[key.replace('__c','').camelize()] = obj[key];
-	});
-
-	return camelizedObj;
-};
-
 App.CamelizeModelMixin = Ember.Mixin.create({
 	camelizedModel: function() {
 		var model = this.get('model');
-		return camelizeObj(model);
+		return App.camelizeObj(model);
 	}.property('model')
 });
 
@@ -431,7 +421,7 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 				params: outcomeParams
 			};
 
-			this.setFilter([sourceFilter, outcomeFilter]);
+			this.setFilter([sourceFilter]);
     	}
 	}
 });
@@ -470,20 +460,30 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 	attributeBindings: ['data', 'ctrl'],
 	layoutName: 'components/updateStatus',
 	applicationStages: function() {
-		var currentStage = this.get('ctrl.application.Stage__c');
-		if (!Ember.isNone(currentStage)) {
-			this.set('stage', currentStage);
-		}
 		return Object.keys(this.get('ctrl.applicationStageAndStatuses')).reject(function(status) { return status === 'Any'; });
 	}.property(),
 	applicationStatuses: function() {
-		var currentStatus = this.get('ctrl.application.Status__c');
 		var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
-		if (!Ember.isNone(statuses)) {
-			this.set('status', !Ember.isNone(currentStatus) ? currentStatus : statuses[0]);
-		}
 		return statuses;
 	}.property('stage'),
+	customInitializer: function() {
+		var self = this;
+		var $button = this.get('$button');
+		var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
+		
+		$button.on('click', function(e) {
+            var currentStage = self.get('ctrl.application.Stage__c');
+            var currentStatus = self.get('ctrl.application.Status__c');
+			if (!Ember.isNone(currentStage)) {
+				self.set('stage', currentStage);
+			}
+
+			if (!Ember.isNone(statuses)) {
+				self.set('status', !Ember.isNone(currentStatus) ? currentStatus : statuses[0]);
+			}	
+		});
+			
+	},
 	actions: {
 		clickUpdateStatus: function() {
 			var self = this;
@@ -505,6 +505,7 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 						var previousStage = savedApp.get('application.Stage__c');
 						var previousStageCount = initData.stageCounts.findBy('name', previousStage);
 						var newStageCount = initData.stageCounts.findBy('name', bulkUpdateObj.stage);
+                        var viewApplicantsController = ctrl.get('controllers.viewApplicants');
 
 						savedApp.set('application.Stage__c', bulkUpdateObj.stage);
 						savedApp.set('application.Status__c', bulkUpdateObj.status);
@@ -526,8 +527,12 @@ App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
 						var newHeaderData = {};
 
 						App.formatHeaderNumbers(newHeaderData, initData);
-						ctrl.get('controllers.viewApplicants').set('totalApplicants', newHeaderData.totalApplicants);
-						self.notifyPropertyChange('filters');
+                        var appInResults = viewApplicantsController.get('results.viewableApplications').findBy('Id', appId);
+                        var appInResultsIndex = viewApplicantsController.get('results.viewableApplications').indexOf(appInResults);
+                        viewApplicantsController.set('indexToGoto', appInResultsIndex);
+						viewApplicantsController.set('totalApplicants', newHeaderData.totalApplicants);
+						viewApplicantsController.notifyPropertyChange('sortType');
+
 					} else {
 						// ERROR
 					}
@@ -640,6 +645,30 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 	needs: ['viewApplicantsApplicationReader'],
 	currentApplicationIdBinding: 'controllers.viewApplicantsApplicationReader.application.Id',
 	isInlineFeedbackVisibleBinding: 'controllers.viewApplicantsApplicationReader.isInlineFeedbackVisible',
+	shareUrlChanged: function() {
+		if (!Ember.isEmpty(this.get('params'))) {
+			var params = JSON.parse(JSON.stringify(this.get('params')));
+
+			Object.keys(params).forEach(function(key) {
+				if (Ember.isNone(params[key])) {
+					delete params[key];
+				}
+			});
+
+			params.limiter = this.get('results.numberViewable') || this.get('numResultsPerSearch');
+			var hashFilter='filter=' + encodeURIComponent(JSON.stringify(params)); 
+			if (!Ember.isEmpty(this.get('currentApplicationId'))) {
+				hashFilter += '&appId=' + this.get('currentApplicationId');
+			}
+
+            if (history.replaceState) {
+                history.replaceState(undefined, undefined, '#' + hashFilter);
+            } else {
+                window.location.hash = hashFilter;
+            }
+
+		}
+	}.observes('shareUrl'),
 	shareUrl: function() {
 		if (!Ember.isEmpty(this.get('params'))) {
 			var params = JSON.parse(JSON.stringify(this.get('params')));
@@ -682,6 +711,7 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 	successFunction: function(self, res) {
 		var updateObj = {};
     	var applicantId = self.get('applicantId');
+        var indexToGoto = self.get('indexToGoto');
     	var params = self.get('params');
 
 		App.formatResults(updateObj, res, params);
@@ -689,12 +719,28 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 
 		self.set('isLoadingResults', false);
 
-		if (applicantId && !Ember.isNone(self.get('results.viewableApplications').findBy('Id', applicantId))) {
-			self.set('applicantId', null);
+        var viewableApplications = self.get('results.viewableApplications');
+
+		if (applicantId && !Ember.isNone(viewableApplications.findBy('Id', applicantId))) {
+			//self.set('applicantId', null);
 			self.transitionToRoute('viewApplicantsApplicationReader', applicantId);
-		} else {
+		} else if (indexToGoto) {
+            self.set('indexToGoto', null);
+            var appToGoto;
+
+            do {
+                appToGoto = viewableApplications.objectAt(indexToGoto);
+                indexToGoto--;
+            } while (Ember.isNone(appToGoto) && indexToGoto >= 0)
+
+            if (appToGoto) {
+                self.transitionToRoute('viewApplicantsApplicationReader', appToGoto.Id);
+            } else {
+                self.transitionToRoute('viewApplicants');
+            }
+        } else {
 			if (!Ember.isEmpty(updateObj.results.viewableApplications)) {
-				self.set('applicantId', null);
+				//self.set('applicantId', null);
 				self.transitionToRoute('viewApplicantsApplicationReader', updateObj.results.viewableApplications[0].Id);
 			} else {
 				self.transitionToRoute('viewApplicants');
@@ -800,43 +846,26 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 			}
 		});
 	},
+	gotoPrevOrNextApp: function(direction) {
+		var applications = this.get('results.viewableApplications');
+		var currentApplicationId = this.get('currentApplicationId');
+		var currentIndex = applications.indexOf(applications.findBy('Id', currentApplicationId));
+
+		if (applications.length - 1 === currentIndex) {
+			// if at end of array
+			currentIndex = direction === 'prev' ? currentIndex - 1 : 0;
+		} else if (currentIndex === 0) {
+			// if at beginning
+			currentIndex = direction === 'prev' ? applications.length - 1 : currentIndex + 1;
+		} else {
+			currentIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
+		}
+
+		this.transitionToRoute('viewApplicantsApplicationReader', applications[currentIndex].Id);
+	},
     actions: {
-    	clickNext: function() {
-    		var applications = this.get('results.viewableApplications');
-    		var currentApplicationId = this.get('currentApplicationId');
-
-    		var currentIndex = applications.indexOf(applications.findBy('Id', currentApplicationId));
-
-    		if (applications.length - 1 === currentIndex) {
-    			currentIndex = 0;
-    		} else if (currentIndex === 0) {
-    			currentIndex = applications.length - 1;
-    		} else {
-    			currentIndex--;
-    		}
-
-    		this.transitionToRoute('viewApplicantsApplicationReader', applications[currentIndex].Id);
-    	},
-    	clickPrev: function() {
-    		var applications = this.get('results.viewableApplications');
-    		var currentApplicationId = this.get('currentApplicationId');
-    	},
     	clickPrevOrNext: function(direction) {
-    		var applications = this.get('results.viewableApplications');
-    		var currentApplicationId = this.get('currentApplicationId');
-    		var currentIndex = applications.indexOf(applications.findBy('Id', currentApplicationId));
-
-    		if (applications.length - 1 === currentIndex) {
-    			// if at end of array
-    			currentIndex = direction === 'prev' ? currentIndex - 1 : 0;
-    		} else if (currentIndex === 0) {
-    			// if at beginning
-    			currentIndex = direction === 'prev' ? applications.length - 1 : currentIndex + 1;
-    		} else {
-    			currentIndex = direction === 'prev' ? currentIndex - 1 : currentIndex + 1;
-    		}
-
-    		this.transitionToRoute('viewApplicantsApplicationReader', applications[currentIndex].Id);
+    		Ember.run.debounce(this, this.gotoPrevOrNextApp, direction, 100);
     	},
     	clickLoadMore: function() {
     		var self = this;
@@ -1162,6 +1191,12 @@ App.ViewApplicantsApplicationReaderRoute = Ember.Route.extend({
 
 							savedApplications.addObject(Ember.Object.create(application));
 							
+							if (!Ember.isNone(appIdParam)) {
+								appIdParam = null;
+								self.controllerFor('viewApplicants').set('applicantId', appIdParam);
+							} else {
+								self.controllerFor('viewApplicants').set('applicantId', params.id);
+							}
 							console.log('RESOLVE');
 							resolve(application);
 						} else {

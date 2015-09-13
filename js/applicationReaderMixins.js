@@ -539,6 +539,9 @@ App.ToolTipsterComponent = Ember.Component.extend({
     $button: function() {
         return $('.' + this.get('buttonClass'));
     }.property('buttonClass'),
+    customInitializer: function() {
+        return '';
+    },
     initializeToolTipstser: function() {
         var self = this;
         var $button = this.get('$button');
@@ -579,6 +582,7 @@ App.ToolTipsterComponent = Ember.Component.extend({
     },
     afterRenderEvent: function() {
         this.initializeToolTipstser();
+        this.customInitializer();
     },
     click: function(e) {
         var $button = this.get('$button');
@@ -711,10 +715,32 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
                         if (res.isSuccess) {
                             var newEval = res.data.evaluation[0];
                             if (!Ember.isNone(newEval.Interview__r)) {
-                                newEval.Interview__r.camelizedModel = camelizeObj(newEval.Interview__r);
+                                newEval.Interview__r.camelizedModel = App.camelizeObj(newEval.Interview__r);
+
+                                // Update view's interview feedback values
+                                if(newEval.Positive_Feedback__c != 0){
+                                    ctrl.incrementProperty('positiveFeedback');
+                                } else if(newEval.Negative_Feedback__c != 0){
+                                    ctrl.incrementProperty('negativeFeedback');
+                                } else {
+                                    ctrl.incrementProperty('neutralFeedback');
+                                }
                             }
                             ctrl.get('evaluations').unshiftObject(newEval);
                             self.resetFeedbackValues();
+
+                            // If in applicant review and sort type is relavent to resume/interview, update the results.
+                            var viewApplicantsController = ctrl.get('controllers.viewApplicants');
+
+                            if (!Ember.isNone(viewApplicantsController)) {
+                                var sortType = viewApplicantsController.get('sortType');
+
+                                if ((sortType === 'Feedback_Score__c' && Ember.isNone(newEval.Interview__r))
+                                        || (sortType === 'namespace_Interview_Score__c' && !Ember.isNone(newEval.Interview__r))) {
+                                    viewApplicantsController.notifyPropertyChange('sortType');
+                                }
+                            }
+
                             if (self.get('isInline') === true) {
                                 $('.js-feedback-card').slideUp();
                                 self.get('ctrl').set('isInlineFeedbackVisible', false);
