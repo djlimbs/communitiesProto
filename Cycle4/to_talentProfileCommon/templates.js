@@ -2560,7 +2560,7 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  data.buffer.push("<div aria-hidden=\"true\" aria-labelledby=\"none\" class=\"modal fade mar--sm--txl\" id=\"share-modal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bm\">\n                <button class=\"close\" data-dismiss=\"modal\" type=\"button\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Share Applicant List</h2>\n            </div>\n            <div class=\"modal__body\">\n                <label>Link to Share</label>\n                ");
+  data.buffer.push("<div aria-hidden=\"true\" aria-labelledby=\"none\" class=\"modal fade mar--sm--txl\" id=\"share-modal\" role=\"dialog\" tabindex=\"-1\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top pad--sm--bm\">\n                \n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Share Applicant List</h2>\n            </div>\n            <div class=\"modal__body\">\n                <label>Copy and paste this link in an email or IM:</label>\n                ");
   hashContexts = {'type': depth0,'class': depth0,'value': depth0};
   hashTypes = {'type': "STRING",'class': "STRING",'value': "ID"};
   options = {hash:{
@@ -2574,7 +2574,7 @@ function program1(depth0,data) {
   hashContexts = {};
   stack2 = helpers['if'].call(depth0, "hiringManager", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("    \n            </div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">OK</button>\n            </div>\n        </div>\n    </div>\n</div>");
+  data.buffer.push("    \n            </div>\n            <div class=\"modal__footer\">\n                <button class=\"button button--primary js-save\" data-dismiss=\"modal\" type=\"button\">Done</button>\n            </div>\n        </div>\n    </div>\n</div>");
   return buffer;
   
 });
@@ -3545,9 +3545,11 @@ function program1(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickRemoveFilter", "filter", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("></a><span class=\"part__body\">");
-  hashTypes = {};
-  hashContexts = {};
-  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "filter.text", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  hashContexts = {'unescaped': depth0};
+  hashTypes = {'unescaped': "STRING"};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "filter.formattedFilterText", {hash:{
+    'unescaped': ("true")
+  },contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</span></li>\n    ");
   return buffer;
   }
@@ -3563,9 +3565,11 @@ function program3(depth0,data) {
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickAdd", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(">Add</a></small>\n</div>\n<ul class=\"filters mar--sm--tn\">\n    ");
-  hashTypes = {};
-  hashContexts = {};
-  stack1 = helpers.each.call(depth0, "filter", "in", "filters", {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  hashContexts = {'itemController': depth0};
+  hashTypes = {'itemController': "STRING"};
+  stack1 = helpers.each.call(depth0, "filter", "in", "filters", {hash:{
+    'itemController': ("filter")
+  },inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n</ul>\n\n<div class=\"modal fade\" id=\"filter-modal\" tabindex=\"-1\" role=\"dialog\" aria-labelledby=\"myModalLabel\" aria-hidden=\"true\">\n    <div class=\"modal__shell\">\n        <div class=\"modal__content\">\n            <div class=\"modal__top\">\n                <button type=\"button\" class=\"close\" data-dismiss=\"modal\">\n                    <span class=\"close-modal-x\"></span><span class=\"sr-only\">Close</span>\n                </button>\n                <h2 class=\"modal__heading\" id=\"myModalLabel\">Add Filter</h2>\n            </div>\n            <div class=\"modal__body\">\n                <div class=\"form__group\">\n                    <label for=\"filterStage\">Field</label>\n                    <div class=\"select__wrap\">\n                        <div class=\"input__icon juicon juicon-down\"></div>\n                        ");
   hashContexts = {'content': depth0,'value': depth0,'prompt': depth0};

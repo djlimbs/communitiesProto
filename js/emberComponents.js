@@ -1,7 +1,7 @@
 // Standard JUI date picker component
 // Usage: {{date-picker value=[date value to bind to your controller]}}
 App.DatePickerComponent = Ember.Component.extend({
-    attributeBindings: ['includeToday', 'disabled', 'valueFormat'],
+    attributeBindings: ['includeToday', 'disabled'],
     layoutName: 'components/datepicker',
     didInsertElement: function() {
 
@@ -13,33 +13,37 @@ App.DatePickerComponent = Ember.Component.extend({
             , $element = this.$()
             , $datepicker = $element.find('.datepicker')
             , $input = $element.find('input')
-            , locale = typeof localeString === 'undefined' ? 'YYYY-MM-DD' : localeString
-            , valueFormat = this.get('valueFormat') || 'YYYY-MM-DD';
+            , locale = typeof localeString === 'undefined' ? 'YYYY-MM-DD' : localeString;
 
-            $datepicker.datepicker({
-                    format: locale.toLowerCase(),
-                    onRender: function(date) {
-                        if (disabled === true) {
-                            return 'disabled';
+        $datepicker.datepicker({
+                format: locale.toLowerCase(),
+                onRender: function(date) {
+                    if (disabled === true) {
+                        return 'disabled';
 
-                        } else {
-                            if (includeToday === true) 
-                                return date.valueOf() < moment(currentDate).subtract('days', 1).valueOf() ? 'disabled' : '';
-                        }
+                    } else {
+                        if (includeToday === true) 
+                            return date.valueOf() < moment(currentDate).subtract('days', 1).valueOf() ? 'disabled' : '';
                     }
-                })
-                .on('changeDate', function(event) {
-                    self.set('value', moment(event.date).format(valueFormat));
-                    $input.val(moment(event.date).format(locale));
-                   
-                    $datepicker.datepicker('hide');
-                })
-                // .datepicker('setValue', moment(dateValue).toDate());
+                }
+            })
+            .on('changeDate', function(event) {
+                var e = event.originalEvent || event; 
+                self.set('value', moment(e.date).format(locale));
+                $input.val(moment(e.date).format(locale));
+               
+                $datepicker.datepicker('hide');
+            });
+            // .datepicker('setValue', moment(dateValue).toDate());
 
-            if (!Ember.isNone(dateValue)) {
-                $input.val(moment(dateValue).format(locale));
-                $datepicker.datepicker('setValue', moment(dateValue).toDate());
-            }
+        if (!Ember.isNone(dateValue)) {
+            $input.val(moment(dateValue).format(locale));
+            $datepicker.datepicker('setValue', moment(dateValue).toDate());
+        }
+
+        $input.on('focus', function(e) {
+            $datepicker.click();
+        });
     }
 });
 
@@ -66,6 +70,7 @@ App.RichTextComponent = Ember.Component.extend({
         richTextForm.find('.cke').remove();
         this.$().append(richTextForm.html());
         this.set('componentId', this.get('elementId'));
+        this.$().find('textarea:first').val(this.get('value'));
 
         // We have to constantly poll for Salesforce to finish rendering the rich text field before updating its value.
         var pollForRTF = setInterval(function(){ 
@@ -110,6 +115,7 @@ App.RichTextComponent = Ember.Component.extend({
 
                                     self.set('value', currentContent);
                                     self.set('previousContent', currentContent);
+                                    self.$().find('textarea').val(currentContent);
                                 });
                             } else if (bindingType === 'text') {
                                 rtfBody.keyup(function(e) {
@@ -123,6 +129,7 @@ App.RichTextComponent = Ember.Component.extend({
 
                                     self.set('value', e.target.textContent);
                                     self.set('previousContent', currentContent);
+                                    self.$().find('textarea').val(currentContent);
                                 });
                             }
                         }
