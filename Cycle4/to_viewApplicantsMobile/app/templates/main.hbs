@@ -55,6 +55,9 @@
                                     </div>
                                 </div>
                             </section>
+
+                            {{log 'APPLICATIONS: '}}
+                            {{log results.viewableApplications}}
                             
                             <div class="list-group list-group--bordered mar--sm--n bg-1 applicant-list-group no-border-on-small">
                                 {{#each application in results.viewableApplications itemController="result"}}
@@ -74,7 +77,7 @@
                                                     <div class="column column--sm--6">
                                                         <small class="block dots">
                                                             <label><span class="juicon juicon-document"></span> 
-                                                                <a {{action "viewResume"}} href="#"> Resume (37KB)</a>
+                                                                <a {{action "viewResume"}} href="#"> Resume (37KB {{formatSize resume.ContentSize}})</a>
                                                             </label>
                                                         </small>
                                                     </div>
@@ -132,13 +135,14 @@
                             </div>
                         {{/if}}
 
-                        
-                        <div {{bind-attr class=":mar--sm--m :bg-2 hideLoadMoreButton:hide"}}>
-                            <div class="text-center mar--sm--tm">
-                                <a {{action "clickLoadMore"}} href="#" class="button button--secondary button--full js-load-more"><small>Load More</small></a>
+                        {{#unless disableLoadMore}}
+                            <div {{bind-attr class=":mar--sm--m :bg-2"}}>
+                                <div class="text-center mar--sm--tm">
+                                    <button {{action "clickLoadMore"}} class="button button--secondary button--full js-load-more"><small>Load More</small></button>
+                                </div>
                             </div>
-                        </div>
-                        
+                        {{/unless}}
+
                     </div>
                 </div>
                 
