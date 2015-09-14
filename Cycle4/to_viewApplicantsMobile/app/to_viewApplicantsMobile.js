@@ -76,8 +76,6 @@ App.MainView = Ember.View.extend({
     didInsertElement: function() {
         var self = this;
         Ember.run.scheduleOnce('afterRender', this, function() {
-            alert('i am here');
-            alert(isSF1);
             /*$('#filter-modal').on('shown.jui.modal', function() {
                 console.log(this.$());
             });*/
@@ -87,12 +85,13 @@ App.MainView = Ember.View.extend({
                 $('#mobileMainView').css({
                                     'max-height' : window.innerHeight,
                                     'overflow-y' : 'scroll',
-                                    '-webkit-overflow-scrolling' : 'none',
+                                    '-webkit-overflow-scrolling' : 'touch',
                                     'overflow-x' : 'none'
                                 });
 
-                alert($('#mobileMainView').css());
-
+                // alert($('#mobileMainView').css('max-height'))
+                // alert($('#mobileMainView').css('overflow-y'))
+                // alert($('#mobileMainView').css('-webkit-overflow-scrolling'))
                 // $('body').css({
                 //     '-webkit-overflow-scrolling' : 'touch'
                 // });
@@ -108,6 +107,22 @@ App.MainController = Ember.ObjectController.extend(App.SearchAndResultsMixin, {
     shareUrl: function() {
         return window.location.href.replace(/&filter=.+/,'') + '&filter=' + encodeURIComponent(JSON.stringify(this.get('params')));
     }.property('params'),
+
+    hideLoadMoreButton: function(){
+        var modulo = this.get('results.total') > 10 ? this.get('results.total') % NUM_RESULTS_PER_SEARCH : 0;
+
+        // console.log('MODULE: ', modulo);
+        // console.log('TOTAL: ', this.get('results.total'));
+        // console.log('VIEW: ', this.get('results.numberViewable'));
+
+
+        return this.get('results.numberViewable') + modulo == this.get('results.total');
+    }.property('results'),
+
+    // hideLoadMoreButton: false,
+    isSortByResumeFeedback: function(){
+        return this.get('sortType') == 'Feedback_Score__c';
+    }.property('sortType'),
     successFunction: function(self, res) {
         // console.log('SUCCES: ');
 
@@ -121,7 +136,7 @@ App.MainController = Ember.ObjectController.extend(App.SearchAndResultsMixin, {
     },
 
     setFilter: function(newFilters) {
-        console.log('CONTROLLER: ', this);
+        // console.log('CONTROLLER: ', this);
 
         var ctrl = this;
         var filters = this.get('filters');
@@ -143,7 +158,16 @@ App.MainController = Ember.ObjectController.extend(App.SearchAndResultsMixin, {
         setIsStageSelected: function(isStageSelected) {
             this.set('isStageSelected', isStageSelected);
         },
-        clickLoadMore: function() {            
+        clickLoadMore: function() {
+
+            // Could be done better
+            var modulo = this.get('results.total') > 10 ? this.get('results.total') % NUM_RESULTS_PER_SEARCH : 0;
+            if (this.get('results.numberViewable') + modulo == this.get('results.total')) {
+                this.set('hideLoadMoreButton', true);
+            } else {
+                this.set('hideLoadMoreButton', false);
+            };
+
             var self = this;
             var params = this.get('params');
             var numResultsPerSearch = this.get('numResultsPerSearch');
@@ -272,7 +296,7 @@ App.ResultController = Ember.ObjectController.extend({
         return this.get('Source__c') == 'LinkedIn' ? true : false;
     }.property(),
     isInternal: function(){
-        console.log('SOURCE: ', this.get('results'));
+        // console.log('SOURCE: ', this.get('results'));
 
         return this.get('Source__c') == 'Internal';
     }.property(), 

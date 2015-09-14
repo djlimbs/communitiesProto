@@ -17,28 +17,6 @@
                         
                         <section class="pad--sm--m pad--sm--bl">
                             {{search-filter ctrl=controller filters=filters filterOptions=filterOptions applicationStageAndStatuses=applicationStageAndStatuses applicationSources=applicationSources locations=locations params=initParams}}
-
-                        <!-- Sort-->
-                            <h3 class="mar--sm--n">Sort by</h3>
-                            <div class="form-group">
-                                <div class="select__wrap">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    {{!-- <select class="pad--sm--rxl small">
-                                        <option value="application-rating">Application Rating</option>
-                                        <option value="applied-on-date">Applied On Date</option>
-                                        <option value="interview-feedback">Interview Feedback</option>
-                                        <option value="last-name">Last Name</option>
-                                        <option value="resume-feedback">Resume Feedback</option>
-                                    </select> --}}
-
-                                    {{view "select" 
-                                        class="pad--sm--rxl small"
-                                        content=sortOptions 
-                                        optionLabelPath="content.label"
-                                        optionValuePath="content.value"
-                                        value=sortType}}
-                                </div>
-                            </div>
                         </section>
                         <!-- /Filters and Results -->
 
@@ -54,22 +32,35 @@
                         {{else}}
                             <section class="pad--sm--m border-top bg-2">
                                 <h3 class="mar--sm--n">Results: {{results.numberViewable}}<span class="text-faded">/{{results.total}}</span></h3>
+
+                                <!-- Sort-->
+                                <h4 class="mar--sm--n mar--sm--ts">Sort by</h4>
+                                <div class="form-group">
+                                    <div class="select__wrap">
+                                        <div class="input__icon juicon juicon-down"></div>
+                                        {{!-- <select class="pad--sm--rxl small">
+                                            <option value="application-rating">Application Rating</option>
+                                            <option value="applied-on-date">Applied On Date</option>
+                                            <option value="interview-feedback">Interview Feedback</option>
+                                            <option value="last-name">Last Name</option>
+                                            <option value="resume-feedback">Resume Feedback</option>
+                                        </select> --}}
+
+                                        {{view "select" 
+                                            class="pad--sm--rxl small"
+                                            content=sortOptions 
+                                            optionLabelPath="content.label"
+                                            optionValuePath="content.value"
+                                            value=sortType}}
+                                    </div>
+                                </div>
                             </section>
                             
-
-                            {{log 'HERE'}}
-                            {{log results.viewableApplications}}
                             <div class="list-group list-group--bordered mar--sm--n bg-1 applicant-list-group no-border-on-small">
-
                                 {{#each application in results.viewableApplications itemController="result"}}
-
-                                {{log 'FEEDBACK'}}
-                                {{log application.resumeFeedbackScore}}
 
                                     {{!-- <a href="to_applicationReader?id={{unbound application.Id}}"> --}}
                                         <div class="list-group__item applicant-entry mobile">
-
-
                                             <div class="pad--sm--m pad--sm--bn">
                                                 <h4 class="card__heading dots"><a {{action "viewApplicationReader"}} href="#">{{application.Name}}</a></h4>
                                                 <h5 class="card__subheading dots" style="display: inline-block">Status: {{application.Final_Stage__c}} ({{application.Final_Status__c}})</h5>
@@ -107,15 +98,28 @@
                                                                         <span class="text-success">{{application.Raw_Score__c}}</span>/{{application.Maximum_Score__c}}
                                                                     </small>
                                                                 </td>
-                                                                <td>
-                                                                    <small class="block dots"><label><span class="juicon juicon-like" data-toggle="tooltip" title="" data-original-title="Positive Interview Feedback"></span></label> {{application.resumeFeedbackScore.positiveFeedback}}</small>
-                                                                </td>
-                                                                <td>
-                                                                    <small class="block dots"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="" data-original-title="Negative Interview Feedback"></span></label> {{application.resumeFeedbackScore.negativeFeedback}}</small>
-                                                                </td>
-                                                                <td>
-                                                                    <small class="block dots"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="" data-original-title="Neutral Interview Feedback"></span></label> {{application.resumeFeedbackScore.neutralFeedback}}</small>
-                                                                </td>
+                                                                {{#if isSortByResumeFeedback}}
+                                                                    <td>
+                                                                        <small class="block dots"><label><span class="juicon juicon-like" data-toggle="tooltip" title="" data-original-title="Positive Interview Feedback"></span></label> {{application.resumeFeedbackScore.positiveFeedback}}</small>
+                                                                    </td>
+                                                                    <td>
+                                                                        <small class="block dots"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="" data-original-title="Negative Interview Feedback"></span></label> {{application.resumeFeedbackScore.negativeFeedback}}</small>
+                                                                    </td>
+                                                                    <td>
+                                                                        <small class="block dots"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="" data-original-title="Neutral Interview Feedback"></span></label> {{application.resumeFeedbackScore.neutralFeedback}}</small>
+                                                                    </td>
+                                                                {{else}}
+
+                                                                    <td>
+                                                                        <small class="block dots"><label><span class="juicon juicon-like" data-toggle="tooltip" title="" data-original-title="Positive Interview Feedback"></span></label> {{application.interviewFeedbackScore.positiveFeedback}}</small>
+                                                                    </td>
+                                                                    <td>
+                                                                        <small class="block dots"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="" data-original-title="Negative Interview Feedback"></span></label> {{application.interviewFeedbackScore.negativeFeedback}}</small>
+                                                                    </td>
+                                                                    <td>
+                                                                        <small class="block dots"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="" data-original-title="Neutral Interview Feedback"></span></label> {{application.interviewFeedbackScore.neutralFeedback}}</small>
+                                                                    </td>
+                                                                {{/if}}
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -129,7 +133,7 @@
                         {{/if}}
 
                         
-                        <div class="mar--sm--m">
+                        <div {{bind-attr class=":mar--sm--m :bg-2 hideLoadMoreButton:hide"}}>
                             <div class="text-center mar--sm--tm">
                                 <a {{action "clickLoadMore"}} href="#" class="button button--secondary button--full js-load-more"><small>Load More</small></a>
                             </div>
