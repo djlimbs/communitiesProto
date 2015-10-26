@@ -1,0 +1,35 @@
+<div data-qa-container="locationFilter">
+    <div class="row">
+        <div class="column column--md--8">
+            <label data-qa-label="lessThan">{{labels.lessThan}}</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select"
+                        content=availableRadii
+                        value=radius
+                        data-qa-select="radius"}}
+            </div>
+        </div>
+        <div class="column column--md--4 pad--sm--tl">
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select"
+                        content=availableUnits
+                        value=units
+                        data-qa-select="units"}}
+            </div>
+        </div>
+        <div class="column column--md--12 mar--sm--tm">
+            <label data-qa-label="from">{{labels.from}}</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" 
+                        content=locations
+                        optionLabelPath="content.label"
+                        optionValuePath="content.geolocation"
+                        value=location
+                        data-qa-select="location"}}
+            </div>
+        </div>
+    </div>
+</div>

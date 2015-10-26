@@ -1,0 +1,88 @@
+<div class="modal__shell" data-qa-container="provideFeedback">
+    <div class="modal__content">
+        <div class="modal__top pad--sm--bm">
+            <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span></button>
+            <h2 class="modal__heading" id="myModalLabel" data-qa-label="provideFeedback">{{labels.provideFeedback}}</h2>
+        </div>
+        <div class="modal__body">
+            <div class="form__group mar--sm--bs">
+                <label data-qa-label="regarding">{{labels.regarding}}</label>
+                <div class="select__wrap">
+                    <div class="input__icon juicon juicon-down"></div>
+                    {{view "select"  data-qa-select="interviews" content=regardingSelectValues value=selectedType optionLabelPath="content.label" optionValuePath="content.value"}}
+
+                </div>
+            </div>
+            <div id="TFcontrols4">
+                <div {{bind-attr class=":form__group :mar--sm--tm feedbackScoreIsEmpty:has-error"}}>
+                    <label class="block required-field" data-qa-label="overallFeedback">{{labels.overallFeedback}}</label>
+                    {{#unless selectedFinalOutcome}}
+                        <div class="button-group feedbackButtons">
+                            <button {{action "clickSelectFeedback" "Positive_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseLike:bg-2"}} data-qa-button="positive" data-toggle="tooltip" title="{{unbound labels.positiveFeedback}}">
+                                <span {{bind-attr class=":juicon :juicon-like chooseLike:text-success"}}></span>
+                            </button>
+                            <button {{action "clickSelectFeedback" "Negative_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDislike:bg-2"}} data-qa-button="negative" data-toggle="tooltip" title="{{unbound labels.negativeFeedback}}">
+                                <span {{bind-attr class=":juicon :juicon-dislike chooseDislike:text-warning"}}></span>
+                            </button>
+                            {{#if allowNeutral}}
+                                <button {{action "clickSelectFeedback" "Neutral__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseUnknown:bg-2"}} data-qa-button="neutral" data-toggle="tooltip" title="{{unbound labels.neutralFeedback}}">
+                                    <span {{bind-attr class=":juicon :juicon-question-circle chooseUnknown:text-info"}}></span>
+                                </button>
+                            {{/if}}
+                        </div>
+                    {{else}}
+                        <div class="button-group feedbackButtons">
+                            <button {{action "clickSelectFeedback" "Selected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseSelected:bg-2" title=labels.selectTooltip}} data-qa-button="select" data-toggle="tooltip">
+                                <span {{bind-attr class=":juicon :juicon-check chooseSelected:text-success"}}></span>
+                            </button>
+                            {{#if allowRejection}}
+                                <button {{action "clickSelectFeedback" "Rejected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDisqualified:bg-2" title=labels.rejectTooltip}} data-qa-button-"reject" data-toggle="tooltip">
+                                    <span {{bind-attr class=":juicon :juicon-ban chooseDisqualified:text-error"}}></span>
+                                </button>
+                            {{/if}}
+                        </div>
+                    {{/unless}}
+                </div>
+
+                {{#unless selectedFinalOutcome}}
+                    {{#unless isResumeReview}}
+                        {{#if additionalCriteriaFields}}
+                            <label data-qa-locator="fieldSetBlock" class="block mar--sm--bs">{{labels.questions}}</label>
+                            {{#each additionalCriteriaFields}}
+                                <div {{bind-attr class=":form__group isEmpty:has-error"}}>
+                                    <label class="block required-field">
+                                        <small>
+                                            {{#if helpText}}{{helpText}}{{else}}{{label}}{{/if}}
+                                        </small> 
+                                    </label>
+                                    <div class="select__wrap mar--sm--bm">
+                                        <div class="input__icon juicon juicon-down"></div>
+                                        {{view "select" prompt=labels.selectPlaceHolder data-qa-select="fieldSetQuestions" content=values value=selectedValue optionLabelPath="content.label" optionValuePath="content.value"}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        {{/if}}
+                    {{/unless}}
+                {{/unless}}
+
+                {{#if showDisposition}}
+                    <div id="disposition" {{bind-attr class=":form__group feedbackScoreIsEmpty:has-error"}}>
+                        <label data-qa-label="disposition" class="required-field">{{labels.disposition}}</label>
+                        <div class="select__wrap">
+                            <div class="input__icon juicon juicon-down"></div>
+                            {{view "select" data-qa-select="disposition" content=disposition value=selectedDisposition}}
+                        </div>
+                    </div>
+                {{/if}}
+
+                {{#unless selectedFinalOutcome}}
+                    <div class="form__group">
+                        <label data-qa-label="comment" class="">{{labels.comment}}</label>
+                        {{textarea maxlength="1000" data-qa-textarea="comment" disabled=isDisabled value=comments}}
+                    </div>
+                {{/unless}}
+            </div>
+        </div>
+        <div class="modal__footer"><a href="#" {{bind-attr class=":float--right :button :button--primary isSavingFeedback:load-this"}} {{action "clickSave"}} data-qa-button="save">{{labels.save}}</a><a href="#" class="float--right button button--secondary mar--sm--rs" data-dismiss="modal" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</a></div>
+    </div>
+</div>

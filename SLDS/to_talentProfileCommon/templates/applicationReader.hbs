@@ -1,0 +1,21 @@
+<div id="mobileMainView" class="scope-container">
+    <nav class="nav-bar--sf1 ar-container pad--sm--rn pad--sm--ln mar--sm--bn content">
+        <div class="content ar-container pad--md--tm pad--sm--rn pad--sm--ln">
+            <h2 class="nav-bar--sf1__title page__heading has-subheading has-subtitle">{{labels.application}}</h2>
+            {{#with application.Requisition_Lookup__r}}
+                <h3 class="nav-bar--sf1__subtitle page__subheading">{{Job_Posting_Title__c}}</h3>
+            {{/with}}
+        </div>
+        <hr class="show-brkpoint--md mar--sm--bn"/>
+    </nav>
+    <div class="content ar-container mar--sm--tm mar--sm--bm pad--sm--n">
+        {{partial "applicationView"}}
+        <div class="hide">
+            {{#unless isSF1}}
+                {{provide-feedback ctrl=this buttonClass="js-feedback-button"}}
+
+                {{update-status ctrl=this buttonClass="js-status-button"}}
+            {{/unless}}
+        </div>
+    </div>
+</div>

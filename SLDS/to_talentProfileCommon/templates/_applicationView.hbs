@@ -1,0 +1,162 @@
+<div class="applicant-info panel js-profile-panel mar--sm--tn">
+    <div class="panel__top">
+        <div class="float--left">
+            <div class="part__body--fixed pad--sm--txs">
+                <h4 class="card__heading dots"><a data-qa-link="application" {{action navigateToApplication}} href="#">{{application.First_Name__c}} {{application.Last_Name__c}}</a></h4>
+                <h5 data-qa-label="status" class="card__subheading dots" style="display: inline-block">{{labels.status}}: {{statusText}}
+                    {{#if hasOutcome}}
+                        &nbsp;<small data-qa-label="outcome" data-qa-label="outcome" {{bind-attr class=":label outcomeColor"}}>{{application.Outcome__c}}</small>
+                    {{else}}
+                        {{#if isSF1}}
+                            &nbsp;<a data-qa-link="updateStatus" data-toggle="modal" data-target="#status-modal-component" class="pointer js-status-button updateStatus">{{labels.update}}</a></h5>
+                        {{else}}
+                            &nbsp;<a data-qa-link="updateStatus" class="pointer js-status-button js-tooltipster-button">{{labels.update}}</a></h5>
+                        {{/if}}
+                    {{/if}}
+            </div>
+        </div>
+        {{#if isSF1}}
+            <button data-qa-button="provideFeedback" data-toggle="modal" data-target="#feedback-modal" type="button" {{bind-attr class=":button :button--primary :button--ghost isSF1:mar--sm--only--ts isSF1:width--full--sm--only :js-feedback-button :float--right"}}>
+                <span class="juicon juicon-chat"></span> {{labels.provideFeedback}}
+            </button>
+        {{else}}
+            <button data-qa-button="provideFeedback" type="button" {{bind-attr class=":button :button--primary :button--ghost isSF1:mar--sm--only--ts isSF1:width--full--sm--only :js-feedback-button :float--right :js-tooltipster-button"}}>
+                <span class="juicon juicon-chat"></span> {{labels.provideFeedback}}
+            </button>
+        {{/if}}
+        {{#unless isSF1}}
+            <button data-qa-button="addInterview" type="button" class="button button--primary button--ghost mar--sm--rm float--right" {{action "addInterview"}}>
+                <span class="juicon juicon-plus"></span> {{labels.addInterview}}
+            </button>
+        {{/unless}}
+    </div>
+        
+    <!-- Identity section only appears in sf1 -->
+    <section>
+        <div {{bind-attr class=":panel__body isSF1:pad--sm--bm:pad--sm--bs"}}>
+            <div class="row">
+                <div class="column--md--6 mar--sm--only--bm">
+                    <small data-qa-label="source" class="block dots mar--sm--bxs"><label>{{labels.source}}:</label> {{application.Source__c}} 
+                        {{#if isInternal}} (<a {{action "viewTalentProfile"}} href="#">{{labels.viewProfile}}</a>){{/if}}</small>
+                    <small data-qa-label="appliedOn" class="block dots mar--sm--bxs"><label>{{labels.appliedOn}}:</label> {{formatDate application.Applied_On__c}} {{#if otherAppsLength}}(<a data-qa-link="otherApps" {{action "openApplicationModal"}} href="#" >{{otherAppsLength}} {{labels.more}}</a>){{/if}}</small>
+                    <small data-qa-label="employment" class="block dots mar--sm--bxs"><label>{{labels.employment}}:</label> {{employmentText}}</small>
+                    {{#unless isSF1}}
+                    <small data-qa-label="linkedIn" class="block dots mar--sm--bxs"><label>{{labels.linkedin}}:</label> <a href="#" {{action "loadLinkedIn"}}>{{#if hasProfile}}{{labels.profile}}{{else}}{{labels.search}}{{/if}}</a></small>
+                    {{/unless}}
+                    {{#if isSF1}}
+                        <div class="mar--sm--only--tm">
+                            <small data-qa-label="resume" class="block dots mar--sm--bxs"><span class="juicon juicon-document"></span> <a data-qa-link="openResume" href="#" {{action "openResumeUrl"}}>{{labels.resume}} {{formatSize resumeFeedItem.ContentSize}}</a></small>
+                            <small data-qa-label="linkedIn" class="block"><span class="juicon juicon-linkedin"></span> <a href="#" {{action "loadLinkedIn"}}>{{#if hasProfile}}{{labels.profile}}{{else}}{{labels.search}}{{/if}}</a></small>
+                        </div>
+                    {{/if}}
+                </div>
+                <div {{bind-attr class=":column--md--2 isSF1:mar--sm--bm:pad--md--rn"}}>
+                    <small data-qa-label="applicationRating" class="block dots mar--sm--bxs">
+                        <label>
+                            <span class="juicon juicon-list" data-toggle="tooltip" title="{{unbound labels.applicationRating}}"></span>
+                        </label> 
+                        {{#if application.hasScore}}
+                            <span {{bind-attr class="application.ratingColor"}}>{{application.score}}</span> {{#if application.showMax}}({{labels.outOf}} {{application.Maximum_Score__c}}){{/if}}
+                        {{else}}
+                            <span data-qa-label="noRating" class="text-faded"> N/A</span>
+                        {{/if}}
+                    </small>
+                    <small data-qa-label="positiveInterviewFeedback" class="block dots mar--sm--bxs"><label><span class="juicon juicon-like" data-toggle="tooltip" title="{{unbound labels.positiveInterviewFeedback}}"></span></label> {{positiveFeedback}} {{labels.positive}}</small>
+                    <small data-qa-label="negativeInterviewFeedback" class="block dots mar--sm--bxs"><label><span class="juicon juicon-dislike" data-toggle="tooltip" title="{{unbound labels.negativeInterviewFeedback}}"></span></label> {{negativeFeedback}} {{labels.negative}}</small>
+                    {{#if allowNeutral}}
+                        <small data-qa-label="neutralInterviewFeedback" class="block dots mar--sm--bxs"><label><span class="juicon juicon-question-circle" data-toggle="tooltip" title="{{unbound labels.neutralInterviewFeedback}}"></span></label> {{neutralFeedback}} {{labels.neutral}}</small>
+                    {{/if}}
+                </div>
+                <div class="column--md--4">
+                    <small data-qa-label="email" class="block dots mar--sm--bxs"><label><span class="juicon juicon-envelope" data-toggle="tooltip" title="{{unbound labels.email}}"></span></label> <a {{bind-attr href="emailLink"}}>{{application.Email__c}}</a></small>
+                    <small data-qa-label="phone" class="block dots mar--sm--bxs"><label><span class="juicon juicon-phone" data-toggle="tooltip" title="{{unbound labels.phone}}"></span></label> 
+                            {{#if application.Mobile_Phone__c}}
+                                {{application.Mobile_Phone__c}}
+                            {{else}}
+                                <span data-qa-label="noPhone" class="text-faded">{{labels.notProvided}}</span>
+                            {{/if}}</small>
+                    <small data-qa-label="location" class="block dots mar--sm--bxs">
+                        <label>
+                            <span class="juicon juicon-location" data-toggle="tooltip" title="{{unbound labels.location}}">
+                        </label>
+                        {{#if hasAddress}}
+                            {{#if isSF1}}
+                                <span> {{application.City__c}}, {{application.State_Province__c}}</span>
+                            {{else}}
+                                <a data-qa-link="address" {{action "loadGoogleMaps"}} href="#">{{application.City__c}}, {{application.State_Province__c}}</a>
+                            {{/if}}
+                        {{else}}
+                            {{labels.cardNoAddress}}
+                        {{/if}}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{#unless isSF1}}
+        <section class="button-switch-container pad--sm--m pad--sm--bn">
+            <span class="button-group--collapse button-switch">
+                <div data-qa-button="applicationTab" {{action "selectTab" "application"}} {{bind-attr class=":button :button--success showApplicationDetails::disabled"}} data-trigger="application" data-group="view">{{labels.application}}</div>
+                <div data-qa-button="resumeTab" {{action "selectTab" "resume"}} {{bind-attr class=":button :button--success showResume::disabled"}} data-trigger="resume" data-group="view">{{labels.resume}}</div>
+                <div data-qa-button="linkedInTab" {{action "selectTab" "linkedin"}} {{bind-attr class=":button :button--success showLinkedIn::disabled"}} data-trigger="linkedin" data-group="view">{{labels.linkedin}}</div>
+            </span>
+        </section>
+    {{/unless}}
+    {{#if showApplicationDetails}}
+        <div {{bind-attr class="isSF1::mar--sm--tm"}}>
+            {{partial "applicationDetails"}}
+        </div>
+    {{/if}}
+    {{#if showResume}}
+        <section class="resume-section">
+            <div class="panel__body pad--sm--bs">
+                {{#if hasResume}}
+                    {{#if isDropbox}}
+                        {{labels.dropboxResumePart1}} <a {{bind-attr href="resume"}} target="_blank">{{labels.dropboxResumePart2}}</a> {{labels.dropboxResumePart3}} {{application.Name}}{{labels.dropboxResumePart4}}
+                    {{else}}
+                        <iframe data-qa-iframe="resumeFrame" {{bind-attr src="resume"}}></iframe>
+                    {{/if}}
+                {{else}}
+                    <div class="no-resume">
+                        <div data-qa-label="noResume" class="empty-state"><div class="vertical-center">{{labels.noResume}}</div></div>
+                    </div>
+                {{/if}}
+            </div>
+        </section>
+    {{/if}}
+    {{#if showLinkedIn}}
+        <section class="linkedin-section">
+            <div class="panel__body pad--sm--bs">
+                <iframe data-qa-iframe="linkedInFrame" {{bind-attr src="csaUrl"}}></iframe>
+            </div>
+        </section>
+    {{/if}}
+</div>
+
+{{back-to-top}}
+
+
+{{update-status-modal ctrl=this}}
+​{{provide-feedback-modal ctrl=this}}
+
+<div class="modal fade" id="applicantModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--m">
+                <button data-qa-button="close" type="button" class="close" data-dismiss="modal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h3 data-qa-label="applications" class="modal__heading" id="myModalLabel">{{labels.otherApplications}}</h3>
+                <h4 data-qa-label="name" class="mar--sm--n"><span class="text-faded ">{{application.Name}}</span></h4>
+            </div>
+            <div class="modal__body pad--sm--n">
+                {{#each otherApps itemController="otherApps"}}
+                    {{partial "applicationReaderModalApplicant"}}
+                {{/each}}
+            </div>
+            <div class="modal__footer pad--sm--m">
+                <button type="button" class="button button--secondary" data-dismiss="modal">{{labels.close}}</button>
+            </div>
+        </div>
+    </div>
+</div>

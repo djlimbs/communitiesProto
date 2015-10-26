@@ -1,0 +1,75 @@
+<div class="scope-container">
+    <div {{bind-attr class=":content :content--readable :pad--sm--n isSF1::pad--sm--tm"}}>
+        <div class="panel mar--sm--bm js-panel">
+            <div class="panel__top">
+                <div class="js-view-buttons">
+                    {{#if isChatterView}}
+                        <button type="button" {{action "clickEdit"}} class="button button--secondary float--right js-edit-page">
+                            <span data-qa-button="editButton" class="juicon juicon-pencil"></span>
+                        </button>
+                    {{/if}}
+                </div>
+                <h2 data-qa-label="talentProfile" class="panel__heading">
+                    {{labels.talentProfile}}
+                </h2>
+            </div>
+            {{#unless isChatterView}}
+                <section id="identity" style="display: block;">
+                    <div class="panel__body">
+                        {{#if tp.User__r}}
+                            {{#with tp.User__r}}
+                                <div class="part__body width--full pad--sm--rm">
+                                        <h5 data-qa-link="userName" class="mar--sm--n relatedPerson"><a {{action goToUser Id}} href="">{{Name}}</a></h5>
+                                        <h5 data-qa-label="userTitle" class="text-faded mar--sm--n">
+                                            {{Title}}
+                                        </h5>
+                                </div>
+                            {{/with}}
+                        {{else}}
+                            {{#with tp.Contact__r}}
+                                <div class="part__body width--full">
+                                    <h5 data-qa-link="userName" class="mar--sm--n relatedPerson"><span>{{Name}}</span></h5>
+                                </div>
+                            {{/with}}
+                        {{/if}}
+                    </div>
+                </section>
+            {{/unless}}
+            {{#if tpFields}}
+                <section id="custom-fields">
+                    <div class="js-section-view">
+                        <div {{bind-attr class=":panel__body isChatterView::pad--sm--tn"}}>
+                            <div class="row pad--sm--rxxl">
+                                {{#each field in tpFields}}
+                                    <div class="column--sm--6 column--xs--only--12">
+                                        <label data-qa-lable="fieldSetLabel" class="block">{{field.label}}</label>
+                                        {{#if field.value}}
+                                            <div data-qa-label="fieldSetValue" data-qa-label="fieldSetValue">{{{field.value}}}</div>
+                                        {{else}}
+                                            <div data-qa-label="notProvided">{{labels.notProvided}}</div>
+                                        {{/if}}
+                                    </div> 
+                                {{/each}}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            {{/if}}
+            {{#if tp}}
+                {{#if tp.Summary__c}}
+                    <section id="summary">
+                        <div class="list-heading">
+                            <h4 data-qa-label="summary" class="list-heading__title">{{labels.summary}}</h4>
+                        </div>
+                        <div class="panel__body pad--sm--bn">
+                            <p data-qa-label="summaryValue" class="mar--sm--tn">
+                                {{convertNewLinesToBreaks tp.Summary__c}}
+                            </p>
+                        </div>
+                    </section>
+                {{/if}}
+                {{partial "childrenObjects"}}
+            {{/if}}
+        </div>
+    </div>
+</div>

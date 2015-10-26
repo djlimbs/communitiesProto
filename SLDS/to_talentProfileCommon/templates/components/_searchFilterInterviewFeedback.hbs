@@ -1,0 +1,22 @@
+<div data-qa-container="interviewFeedbackFilter">
+    <div class="row">
+        <div class="column column--md--8">
+            <label data-qa-label="is">{{labels.is}}</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" 
+                    content=comparisons 
+                    optionLabelPath="content.label" 
+                    optionValuePath="content.value"
+                    value=interviewDirection
+                    data-qa-select="interviewDirection"}}
+            </div>
+        </div>
+        <div class="column column--md--4 pad--sm--tl">
+            <div {{bind-attr class=":input__wrap invalidInterviewScore:has-error"}}>
+                {{input type="number" value=interviewScore data-qa-input="interviewScore"}}
+                <small class="text-faded" data-qa-label="maxInterviewScore">{{#if maxInterviewScore}}{{labels.max}}: {{maxInterviewScore}}{{else}}{{labels.loading}}...{{/if}}</small>
+            </div>
+        </div>
+    </div>
+</div>

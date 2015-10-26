@@ -10,6 +10,186 @@ var outcomeColorMap = {
     'Rejected' : 'label--error'
 }
 
+App.applicationReaderProcesser = function(parsedJson){
+    parsedJson.application.formattedCreatedDate = moment(parsedJson.application.CreatedDate).format('MMM DD, YYYY');
+    var jobQuestions = Ember.A();
+    var generalQuestions = Ember.A();
+
+    contactRows = Ember.A();
+    contactRow = Ember.A();
+
+    //we need to split up the additional contact fields into a 2d array where each row is a max length of 2 items. 
+    //This is done so the css is able to handle uneven height of the fields.
+    parsedJson.contactFields.forEach(function(f){
+        if(contactRow.length == 2){
+            contactRows.push(contactRow);
+            contactRow = Ember.A();
+        }
+
+        f.value = parsedJson.application[f.name];
+        f.isEmail = f.type === 'EMAIL';
+        f.emailLink = f.type === 'EMAIL' ? 'mailto:' + f.value : null;
+        contactRow.push(f);
+    });
+
+    contactRows.push(contactRow);
+    parsedJson.contactRows = contactRows;
+
+    if (parsedJson.talentProfile) {
+        parsedJson.talentProfile.labels = labels;
+
+        //find the values of the fields that are in the field set
+        if(parsedJson.talentProfile.Education_Histories__r && parsedJson.talentProfile.Education_Histories__r.records){
+            parsedJson.talentProfile.Education_Histories__r.records.forEach(function(edu){
+                var fieldSet = [];
+                parsedJson.eduFields.forEach(function(f) {
+                    f.value = edu[f.name];
+                    fieldSet.push(f);
+                });
+
+                edu.fieldSet = fieldSet;
+            })
+        }
+
+        //find the values of the fields that are in the field set
+        if(parsedJson.talentProfile.Employment_Histories__r && parsedJson.talentProfile.Employment_Histories__r.records){
+            parsedJson.talentProfile.Employment_Histories__r.records.forEach(function(employ){
+                var fieldSet = [];
+                parsedJson.employFields.forEach(function(f) {
+                    f.value = employ[f.name];
+                    fieldSet.push(f);
+                });
+
+                employ.fieldSet = fieldSet;
+            })
+        }
+
+        // camelize talent profile fields
+        parsedJson.talentProfile.camelizedModel = App.camelizeObj(parsedJson.talentProfile);
+    }
+
+    //if we have questions split them up into jobQuestions and generalQuestions
+    var markupByScore = {
+        '1': '<span data-toggle="tooltip" title="'+labels.positive+'" class="juicon juicon-like text-success mar--sm--lxs"></span>',
+        '0' : '',
+        '-1': '<span data-toggle="tooltip" title="'+labels.negative+'" class="juicon juicon-dislike text-error mar--sm--lxs"></span>',
+        'disqualify': '<span data-toggle="tooltip" title="'+labels.disqualify+'" class="juicon juicon-ban text-error mar--sm--lxs"></span>'
+    };
+
+    if(parsedJson.application.Applicant_Responses__r && parsedJson.application.Applicant_Responses__r.records){
+        parsedJson.application.Applicant_Responses__r.records.forEach(function(resp){
+            var scoreMarkup = resp.Disqualified__c === true ? markupByScore.disqualify : markupByScore[resp.Score__c];
+
+            //if we have any previous found checkbox repsonses we need to group them up.
+            if(!Ember.isEmpty(jobQuestions.findBy('Form_Element__c', resp.Form_Element__c))){   //this if is checking for jobQuestion checkboxes
+                var foundResp =  jobQuestions.findBy('Form_Element__c', resp.Form_Element__c);
+
+                if (!Ember.isEmpty(scoreMarkup)) {
+                    foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+                }
+            } else if(!Ember.isEmpty(generalQuestions.findBy('Form_Element__c', resp.Form_Element__c))){  //this if is checking for generalQuestions checkboxes
+                var foundResp =  generalQuestions.findBy('Form_Element__c', resp.Form_Element__c);
+                if (!Ember.isEmpty(scoreMarkup)) {
+                    foundResp.Value__c += ', ' + resp.Value__c + scoreMarkup;
+                }
+            } else {
+                if (!Ember.isEmpty(scoreMarkup)) {
+                    resp.Value__c += scoreMarkup;
+                }
+                if(resp.Form_Element__r.Section__c == 'Job Specific'){
+                    jobQuestions.addObject(Ember.Object.create(resp));
+                } else if(resp.Form_Element__r.Section__c == 'General'){
+                    generalQuestions.addObject(Ember.Object.create(resp));
+                }
+            }
+        });
+    }
+
+    parsedJson.positiveFeedback = 0;
+    parsedJson.negativeFeedback = 0;
+    parsedJson.neutralFeedback = 0;
+
+    if(parsedJson.application.Evaluation_Lookups__r && parsedJson.application.Evaluation_Lookups__r.records){
+        parsedJson.evaluations = parsedJson.application.Evaluation_Lookups__r.records
+        parsedJson.evaluations.forEach(function(evaluation){
+            if(evaluation.Interview__c != null){
+                if(evaluation.Positive_Feedback__c != 0){
+                    parsedJson.positiveFeedback += 1;
+                } else if(evaluation.Negative_Feedback__c != 0){
+                    parsedJson.negativeFeedback += 1;
+                } else {
+                    parsedJson.neutralFeedback += 1
+                }
+
+                evaluation.Interview__r.camelizedModel = App.camelizeObj(evaluation.Interview__r);
+            }
+        })
+    } else {
+        parsedJson.evaluations = [];
+    }
+    
+    parsedJson.regardingSelectValues = [];
+    parsedJson.interviewers = {};
+
+    parsedJson.regardingSelectValues.addObject({
+        value : 'null|' + labels.miscellaneous,
+        label : labels.miscellaneous
+    });
+    //only accepted or completed interviews can have feedback.
+    if(!Ember.isEmpty(parsedJson.interviews)){
+        parsedJson.interviews.forEach(function(interview){
+            if(interview.Status__c == 'Accepted' || interview.Status__c == 'Completed'){
+                var obj = {
+                    value : interview.Id + '|Interview',
+                    label : Ember.isEmpty(interview.Topics__c) ? 'Interview: ' + interview.Interviewers__c : interview.Topics__c
+                }
+
+                parsedJson.regardingSelectValues.addObject(obj);
+                parsedJson.interviewers[interview.Id] = Ember.isEmpty(interview.Topics__c) ? null : 'Interview with ' + interview.Interviewers__c;
+            }
+        });
+    }
+
+    parsedJson.regardingSelectValues.addObject({
+        value : 'null|' + labels.finalSelection,
+        label : labels.finalSelection   
+    });
+
+    parsedJson.application.showMax = parsedJson.scoreSort == 'Raw_Score__c' //if the scoring type isn't the default Raw_Score don't show the maximum
+    parsedJson.application.score = parsedJson.application[parsedJson.scoreSort];
+
+    if(parsedJson.application.Source__c == 'Career Site'){
+        parsedJson.application.Source__c = parsedJson.careerSiteName;
+    }
+
+    if(parsedJson.application.showMax){
+        parsedJson.application.hasScore = !Ember.isEmpty(parsedJson.application.score) && !Ember.isEmpty(parsedJson.application.Maximum_Score__c);
+    } else {
+        parsedJson.application.hasScore = !Ember.isEmpty(parsedJson.application.score);
+    }
+    
+
+    if(parsedJson.application.hasScore){
+        if(parsedJson.application.score >= 0) {
+            parsedJson.application.ratingColor = 'text-success';
+        } else if(parsedJson.application.score < 0) {
+            parsedJson.application.ratingColor = 'text-error';
+        }
+    }
+
+    parsedJson.application = Ember.Object.create(parsedJson.application);
+
+    //helper function defined in toHelpers allows us to get a list of dependent picklists to use.
+    parsedJson.statusOptions = getDependentOptions(apiKey, 'Application__c', 'Stage__c', 'Status__c', namespace);
+    parsedJson.jobQuestions = jobQuestions;
+    parsedJson.generalQuestions = generalQuestions;
+    parsedJson.selectedStage = parsedJson.application.Stage__c;
+    parsedJson.selectedStatus = parsedJson.application.Status__c;
+    parsedJson.firstTime = true;
+    parsedJson.isSF1 = isSF1;
+    return parsedJson;
+};
+
 App.AddLabelsController = Ember.ObjectController.extend({
     labels: labels
 });
@@ -92,6 +272,24 @@ App.FeedbackMixin = Ember.Mixin.create({
 
         return headerText;
     }.property('Interview__r'),
+    tooltipText : function(){
+        var tooltipText = '';
+        var feedback = this.get('Net_Feedback_Score__c');
+
+        if(this.get('Rejected__c')){
+            tooltipText = labels.rejected
+        } else if(this.get('Selected__c')){
+            tooltipText = labels.selected
+        } else if(feedback == 1){
+            tooltipText = labels.positiveFeedback
+        } else if(feedback == 0){
+            tooltipText = labels.neutralFeedback
+        } else if (feedback == -1){
+            tooltipText = labels.negativeFeedback
+        }
+
+        return tooltipText;
+    }.property('Net_Feedback_Score__c'),
     icon : function(){
         var icon = '';
         var feedback = this.get('Net_Feedback_Score__c');
@@ -149,9 +347,9 @@ App.FeedbackMixin = Ember.Mixin.create({
         return moment(this.get('CreatedDate')).format('MMM DD, YYYY')
     }.property('CreatedDate'),
     displayPanelBottom : function(){
-        var hasCriteria = this.get('hasCriteria');
+        var hasCriteria = !Ember.isEmpty(this.get('criteriaFields')) && !Ember.isEmpty(this.get('Interview__c'));
         var hasComments = !Ember.isEmpty(this.get('Comments__c'));
-        var hasDisposition = !Ember.isEmpty(this.get('Disposition__c'))
+        var hasDisposition = !Ember.isEmpty(this.get('Disposition__c'));
         return (hasCriteria || hasComments || hasDisposition)
     }.property('hasCriteria', 'Comments__c', 'Disposition__c'),
     isResumeReview: function() {
@@ -338,27 +536,27 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
         var app = this.get('application');
         var url = '';
 
-        url = '/apex/linkedinframe?linkId=' + app.namespace_LinkedIn_Link_Id__c + '&firstName=' 
+        url = '/apex/' + extnamespace + 'to_linkedInCSAFrame?linkId=' + app.LinkedIn_Link_Id__c + '&firstName=' 
                + app.First_Name__c + '&lastName=' + app.Last_Name__c + '&email=' + app.Email__c 
                + '&appId=' + app.Id 
 
-        if(app.namespace_Talent_Profile__c){
+        if(app.Talent_Profile__c){
             //ie9 has no origin
-            var badgeUrl = "https://" + window.location.host + '/' +  app.namespace_Talent_Profile__c;
+            var badgeUrl = "https://" + window.location.host + '/' +  app.Talent_Profile__c;
 
-            url += '&tpId=' + app.namespace_Talent_Profile__c + '&url=' + encodeURIComponent(badgeUrl);
+            url += '&tpId=' + app.Talent_Profile__c + '&url=' + encodeURIComponent(badgeUrl);
 
-            if(app.namespace_Talent_Profile__r){
-                if(app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Location__c){
-                    url += '&location=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Location__c
+            if(app.Talent_Profile__r){
+                if(app.Talent_Profile__r.LinkedIn_Badge_Location__c){
+                    url += '&location=' + app.Talent_Profile__r.LinkedIn_Badge_Location__c
                 }
 
-                if(app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Company_Name__c){
-                    url += '&companyName=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Company_Name__c;
+                if(app.Talent_Profile__r.LinkedIn_Badge_Company_Name__c){
+                    url += '&companyName=' + app.Talent_Profile__r.LinkedIn_Badge_Company_Name__c;
                 }
 
-                if(app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Title__c){
-                    url += '&title=' + app.namespace_Talent_Profile__r.namespace_LinkedIn_Badge_Title__c;
+                if(app.Talent_Profile__r.LinkedIn_Badge_Title__c){
+                    url += '&title=' + app.Talent_Profile__r.LinkedIn_Badge_Title__c;
                 }
             }
         }
@@ -377,6 +575,13 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
     showLinkedIn : function(){
     	return this.get('selectedTab') == 'linkedin';
     }.property('selectedTab'),
+    alertStatusClass: function() {
+        var alertStatus = this.get('application.Alert_Status__c');
+        return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? 'alert--warning' : 'alert--error';
+    }.property('application'),
+    thresholdDays: function() {
+        return moment().diff(moment(this.get('application.Condition_Start_Time__c')), 'days');
+    }.property('application'),
     actions : {
     	selectTab : function(tab){
     		this.set('selectedTab', tab);
@@ -500,20 +705,22 @@ App.ApplicationReaderMixin = Ember.Mixin.create({
                 }
             }
         },
-        openResumeUrl : function(){
-            var downloadUrl = '';
-
-            if(Ember.isEmpty(this.get('resume').RelatedRecordId)){
-                downloadUrl = this.get('resume').LinkUrl;
-            } else {
-                downloadUrl = '/' + this.get('resume').RelatedRecordId;
-            }
-
+        clickProvideFeedbackInline: function() {
             if(isSF1){
-                sforce.one.navigateToFeedItemDetail(this.get('resume').Id);
+                $('#feedback-modal').modal('show');
             } else {
-                window.open(downloadUrl, '_blank');
+                if (!this.get('isInlineFeedbackVisible')) {
+                    $('.js-feedback-card').slideDown();
+                } else {
+                    $('.js-feedback-card').slideUp();
+                }
+                
+                this.toggleProperty('isInlineFeedbackVisible');
+                return false;
             }
+        },
+        openResumeUrl : function(){
+            sforce.one.navigateToFeedItemDetail(this.get('resumeFeedItem').Id);
         },
         openApplicationModal : function(){
             if(isSF1){
@@ -571,6 +778,13 @@ App.ToolTipsterComponent = Ember.Component.extend({
                 var $shell = tooltip.find('.tooltipster-content');
                 $shell.contents().remove();
                 $shell.append(self.$());
+                tooltip.appendTo('body .scope-container');
+                tooltip.css('visibility', 'hidden');
+                Ember.run.scheduleOnce('afterRender', this, function() {
+                    $(window).trigger('scroll');
+                    tooltip.css('visibility', 'visible');
+                });
+                
             },
             functionAfter: function(origin, tooltip) {
                 $button.off('click', hideTooltipster);
@@ -581,7 +795,9 @@ App.ToolTipsterComponent = Ember.Component.extend({
         $button.tooltipster(tooltipOptions);
     },
     afterRenderEvent: function() {
-        this.initializeToolTipstser();
+        if (this.get('buttonClass')) {
+            this.initializeToolTipstser();
+        }
         this.customInitializer();
     },
     click: function(e) {
@@ -669,9 +885,23 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
             this.set('interviewText', this.get('ctrl.interviewers')[selectedType[0]]);
             this.set('Interview__c', selectedType[0] == "null" ? null : selectedType[0]);
             this.set('feedbackType', selectedType[1]);
-            this.set('RecordTypeId', selectedType[1] == 'Interview' ? this.get('interviewRTId') : this.get('miscRTId')); 
+            this.set('feedbackScoreIsEmpty', false);
         }
     }.observes('selectedType'),
+    /*customInitializer: function() {
+        var self = this;
+        var $button = this.get('$button');
+
+        $button.on('click', function(e) {
+            var additionalCriteriaFields = self.get('additionalCriteriaFields');
+            additionalCriteriaFields.forEach(function(field){
+                field.set('isEmpty', false);
+            });
+
+            self.set('feedbackScoreIsEmpty', false); 
+        });
+            
+    },*/
     showDisposition: function(){
         return this.get('Rejected__c');
     }.property('Rejected__c'),
@@ -679,6 +909,11 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
         clickSave: function() {
             var self = this;
             var ctrl = this.get('ctrl');
+            var feedbackType = this.get('feedbackType');
+            this.setProperties({
+                feedbackScoreIsEmpty: false,
+                isSavingFeedback: true
+            });
             
             var newEvaluation = {
                 Application_Lookup__c: this.get('ctrl.application.Id'),
@@ -694,7 +929,7 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
             };
             var somethingIsEmpty = false;
 
-            if(this.get('feedbackType') == 'Interview'){
+            if(feedbackType === 'Interview'){
                 this.get('additionalCriteriaFields').forEach(function(field){
                     field.set('isEmpty', false);
                     
@@ -705,6 +940,29 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
 
                     newEvaluation[field.name] = field.get('selectedValue');
                 });
+
+                if (somethingIsEmpty === false) {
+                    if (this.get('Negative_Feedback__c') + this.get('Positive_Feedback__c') + this.get('Neutral__c') === 0) {
+                        somethingIsEmpty = true;
+                        this.set('feedbackScoreIsEmpty', true);
+                    }
+
+                }
+            } else if (feedbackType === 'Resume Review') {
+                if (somethingIsEmpty === false) {
+                    if (this.get('Negative_Feedback__c') + this.get('Positive_Feedback__c') + this.get('Neutral__c') === 0) {
+                        somethingIsEmpty = true;
+                        this.set('feedbackScoreIsEmpty', true);
+                    }
+                }
+            } else if (feedbackType === 'Final Selection') {
+                if (somethingIsEmpty === false) {
+                    if ((!this.get('Selected__c') && this.get('allowRejection') === true && !this.get('Rejected__c'))
+                                            || (this.get('allowRejection') === false && !this.get('Selected__c'))) {
+                        somethingIsEmpty = true;
+                        this.set('feedbackScoreIsEmpty', true);
+                    }                
+                }
             }
 
             if (!somethingIsEmpty) {
@@ -713,7 +971,8 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
                         res = parseResult(res);
 
                         if (res.isSuccess) {
-                            var newEval = res.data.evaluation[0];
+                            var newEval = res.data.evaluation;
+
                             if (!Ember.isNone(newEval.Interview__r)) {
                                 newEval.Interview__r.camelizedModel = App.camelizeObj(newEval.Interview__r);
 
@@ -726,17 +985,23 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
                                     ctrl.incrementProperty('neutralFeedback');
                                 }
                             }
+
+                            if (Ember.isNone(ctrl.get('evaluations'))) {
+                                ctrl.set('evaluations', []);
+                            }
+
                             ctrl.get('evaluations').unshiftObject(newEval);
                             self.resetFeedbackValues();
 
                             // If in applicant review and sort type is relavent to resume/interview, update the results.
-                            var viewApplicantsController = ctrl.get('controllers.viewApplicants');
+                            var viewApplicantsController = ctrl.get('controllers');
 
-                            if (!Ember.isNone(viewApplicantsController)) {
+                            if (!Ember.isEmpty(viewApplicantsController.needs)) {
+                                viewApplicantsController = ctrl.get('controllers.viewApplicants');
                                 var sortType = viewApplicantsController.get('sortType');
 
                                 if ((sortType === 'Feedback_Score__c' && Ember.isNone(newEval.Interview__r))
-                                        || (sortType === 'namespace_Interview_Score__c' && !Ember.isNone(newEval.Interview__r))) {
+                                        || (sortType === 'Interview_Score__c' && !Ember.isNone(newEval.Interview__r))) {
                                     viewApplicantsController.notifyPropertyChange('sortType');
                                 }
                             }
@@ -744,15 +1009,25 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
                             if (self.get('isInline') === true) {
                                 $('.js-feedback-card').slideUp();
                                 self.get('ctrl').set('isInlineFeedbackVisible', false);
+                            } else if (self.get('isModal') === true){
+                                $('#feedback-modal').modal('hide');
+                            } else {
+                                self.get('$button').tooltipster('hide');
                             }
+
+                            self.set('isSavingFeedback', false);
                         } else {
                             console.log(res);
+                            self.set('isSavingFeedback', false);
                             // ERROR
                         }
                     } else {
+                        self.set('isSavingFeedback', false);
                         //ERROR 
                     }
                 });
+            } else {
+                this.set('isSavingFeedback', false);
             }
         },
         clickCancel: function() {
@@ -798,10 +1073,13 @@ App.FeedbackComponent = App.ToolTipsterComponent.extend({
             Rejected__c : false,
             selectedType: this.get('regardingSelectValues')[0].value,
             selectedDisposition: null,
-            comments: null
+            comments: null,
+            feedbackScoreIsEmpty: false
         };
 
         this.get('additionalCriteriaFields').setEach('selectedValue', null);
+        this.get('additionalCriteriaFields').setEach('isEmpty', null);
+
         this.setProperties(initState);
     }
 });
@@ -810,7 +1088,153 @@ App.ProvideFeedbackComponent = App.FeedbackComponent.extend({
     layoutName: 'components/provideFeedback',
 });
 
+App.ProvideFeedbackModalComponent = App.FeedbackComponent.extend({
+    isModal: true,
+    layoutName: 'components/provideFeedbackModal',
+});
+
 App.ProvideFeedbackInlineComponent = App.FeedbackComponent.extend({
     isInline: true,
     layoutName: 'components/provideFeedbackInline',
+});
+
+App.UpdateStatusComponent = App.ToolTipsterComponent.extend({
+    attributeBindings: ['data', 'ctrl'],
+    layoutName: 'components/updateStatus',
+    applicationStages: function() {
+        return Object.keys(this.get('ctrl.applicationStageAndStatuses')).reject(function(status) { return status === labels.any; });
+    }.property(),
+    applicationStatuses: function() {
+        var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
+        return statuses;
+    }.property('stage'),
+    stageChanged: function() {
+        var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
+        this.set('status', statuses[0]);
+    }.observes('stage'),
+    customInitializer: function() {
+        var self = this;
+        var $button = this.get('$button');
+        var statuses = this.get('ctrl.applicationStageAndStatuses')[this.get('stage')];
+        var resetModal = function(){
+            var currentStage = self.get('ctrl.application.Stage__c');
+            var currentStatus = self.get('ctrl.application.Status__c');
+            if (!Ember.isNone(currentStage)) {
+                self.set('stage', currentStage);
+            }
+
+            if (!Ember.isNone(statuses)) {
+                self.set('status', !Ember.isNone(currentStatus) ? currentStatus : statuses[0]);
+            }
+        }
+        if(self.get('isModal')){
+            $('.updateStatus').on('click', resetModal);
+        } else {
+            $button.on('click', resetModal);
+        }
+    },
+    actions: {
+        clickUpdateStatus: function() {
+            var self = this;
+            var ctrl = this.get('ctrl');
+            var appId = this.get('ctrl.application.Id');
+            var bulkUpdateObj = {
+                stage: this.get('stage'),
+                status: this.get('status'),
+                appIds: [appId]
+            };
+            
+            cont.bulkUpdateStatus(JSON.stringify(bulkUpdateObj), function(res, evt) {
+                if (res) {
+                    res = parseResult(res);
+
+                    if (res.isSuccess) {
+                        // UPDATE STORED APPS' STAGE AND STATUS
+                        var savedApp = App.Fixtures.get('savedApplications').findBy('application.Id', appId);
+                        var previousStage = savedApp.get('application.Stage__c');
+                        var previousStageCount = initData.stageCounts.findBy('name', previousStage);
+                        var newStageCount = initData.stageCounts.findBy('name', bulkUpdateObj.stage);
+
+                        savedApp.set('application.Stage__c', bulkUpdateObj.stage);
+                        savedApp.set('application.Status__c', bulkUpdateObj.status);
+
+                        ctrl.set('application.Stage__c', bulkUpdateObj.stage);
+                        ctrl.set('application.Status__c', bulkUpdateObj.status);
+
+                        previousStageCount.total--;
+
+                        if (Ember.isNone(newStageCount)) {
+                            initData.stageCounts.addObject({
+                                name: bulkUpdateObj.stage,
+                                total: 1
+                            });
+                        } else {
+                            newStageCount.total++;
+                        }
+
+                        var viewApplicantsController = ctrl.get('controllers');
+
+                        if (!Ember.isEmpty(viewApplicantsController.needs)) {
+                            viewApplicantsController = ctrl.get('controllers.viewApplicants');
+
+                            var newHeaderData = {};
+                            App.formatHeaderNumbers(newHeaderData, initData);
+                            var appInResults = viewApplicantsController.get('results.viewableApplications').findBy('Id', appId);
+                            var appInResultsIndex = viewApplicantsController.get('results.viewableApplications').indexOf(appInResults);
+                            viewApplicantsController.set('indexToGoto', appInResultsIndex);
+                            viewApplicantsController.set('applicantId', null);
+                            viewApplicantsController.set('totalApplicants', newHeaderData.totalApplicants);
+                            viewApplicantsController.notifyPropertyChange('sortType');
+                        }
+
+                    } else {
+                        // ERROR
+                    }
+                } else {
+                    // ERROR
+                }
+            });
+        }
+    }
+});
+
+App.UpdateStatusModalComponent = App.UpdateStatusComponent.extend({
+    isModal : true,
+    layoutName: 'components/updateStatusModal'
+});
+
+App.BackToTopComponent = Ember.Component.extend({
+    layoutName: 'components/backToTop',
+    afterRenderEvent: function() {
+        var backToTop = $('#back-to-top'),
+            contentContainer = $('body .scope-container .js-profile-panel');
+        
+        function setPos() {
+            var topPos = $(window).height() - ($(window).height() / 6),
+                leftPos = contentContainer.offset().left + (contentContainer.width());
+                
+                backToTop.css('top', (topPos - 50) + 'px')
+                    .css('left', (leftPos + 1) + 'px');
+        }
+        
+        setPos();
+        
+        $(window).resize(setPos);
+        
+        $(window).scroll(function() {
+            if ($(window).scrollTop() > $(window).height()) {
+                backToTop.fadeIn(250);
+            } else {
+                backToTop.fadeOut(250);
+            }
+        });
+        
+        backToTop.click(function() {
+            $('body, html').animate({
+                scrollTop: 0
+            }, 500);
+            
+            return false;
+        });
+    }
 });

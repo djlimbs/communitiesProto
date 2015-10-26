@@ -1,0 +1,24 @@
+<div data-qa-container="applicationRatingFilter">
+    <div class="row">
+        <div class="column column--md--8">
+            <label data-qa-label="is">{{labels.is}}</label>
+            <div class="select__wrap">
+                <div class="input__icon juicon juicon-down"></div>
+                {{view "select" 
+                    content=comparisons 
+                    optionLabelPath="content.label" 
+                    optionValuePath="content.value"
+                    value=ratingDirection
+                    data-qa-select="ratingDirection"}}
+            </div>
+        </div>
+        <div class="column column--md--4 pad--sm--tl">
+            <div {{bind-attr class=":input__wrap invalidApplicationRating:has-error"}}>
+                {{input type="number" value=rating data-qa-input="rating"}}
+                {{#unless ctrl.isScoreSortCustom}}
+                    <small class="text-faded" data-qa-label="maxApplicationRating">{{labels.max}}: {{maxApplicationRatingVal}}</small>
+                {{/unless}}
+            </div>
+        </div>
+    </div>
+</div>

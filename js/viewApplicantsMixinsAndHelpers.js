@@ -43,6 +43,7 @@ App.formatHeaderNumbers = function(obj, initData) {
 	// Format filled info
 
 	obj.filledInfo = {
+		totalHeadCountExists: !Ember.isEmpty(initData.requisition.Head_Count__c) && initData.requisition.Head_Count__c !== 0, 
 		totalHeadCount: initData.requisition.Head_Count__c,
 		numFilled: initData.hiredApplicants.length,
 		hiredApplicants: initData.hiredApplicants.map(function(applicant) {
@@ -64,11 +65,6 @@ App.formatHeaderNumbers = function(obj, initData) {
 };
 
 App.formatResults = function(obj, res, params) {
-	console.log('FORMAT RES: ');
-	console.log('RES: ', res);
-	console.log('RES DATA: ', res.data);
-	console.log('VIEWABLE APPS:' , res.data.applications);
-
 	obj.results = {
 		allApplicationIds: res.data.applicationIds,
 		total: res.data.applicationIds.length,
@@ -84,19 +80,44 @@ App.SearchFilterMixin = Ember.Mixin.create({
 	},
 	attributeBindings: ['filters', 'ctrl'],
 	comparisons: [{
-		label: 'Greater Than',
+		label: labels.greaterThan,
 		value: '>'
 	},
 	{
-		label: 'Less Than',
+		label: labels.lessThan,
 		value: '<'
 	}],
-	thresholds: ['Warning', 'Problem'],
+	thresholds: [labels.warning, labels.problem],
 	availableRadii: [5, 10, 25, 50],
-	availableUnits: ['mi', 'km'],
+	availableUnits: [labels.mi, labels.km],
+	filterChanges: function(){
+		var self = this;
+		this.setProperties({
+			errorMessage: null,
+			invalidApplicationRating: null
+		});
+
+		if (this.get('selectedFilter') === labels.interviewFeedback) {
+			this.set('maxInterviewScore', null);
+			cont.getMaxInterviewScore(reqId, function(res, evt) {
+				if (res) {
+					res = parseResult(res);
+
+					if (res.isSuccess) {
+						self.set('maxInterviewScore', res.data.maxInterviewScore[0].score);
+					} else {
+						ctrl.set('errorMessage', res.errorMessages[0]);
+						// ERROR
+					}
+				} else {
+					// ERROR
+				}
+			});
+			//this.set('maxInterviewScore', 6);
+		}
+	}.observes('selectedFilter'),
 	filterPartial: function() {
 		var selectedFilter = this.get('selectedFilter');
-
 		return !Ember.isEmpty(selectedFilter) ? 'components/searchFilter' + selectedFilter.camelize().capitalize() : null;
 	}.property('selectedFilter'),
 	applicationStages: function() {
@@ -106,7 +127,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		var statuses = this.get('applicationStageAndStatuses')[this.get('stage')];
 		if (!Ember.isNone(statuses)) {
 			this.set('status', statuses[0]);
-			return statuses.concat(['Any']);
+			return statuses.concat([labels.any]);
 		} else {
 			return [];
 		}
@@ -138,15 +159,17 @@ App.SearchFilterMixin = Ember.Mixin.create({
 	maxApplicationRatingVal: function() {
 		return this.get('ctrl.maxApplicationRatingVal');
 	}.property(),
-	maxInterviewScore: function() {
+	/*maxInterviewScore: function() {
 		return this.get('ctrl.maxInterviewScore')[0].score;
-	}.property(),
+	}.property(),*/
 	actions: {
 		clickAdd: function() {
 			this.setProperties({
 				selectedFilter: null,
 				stage: null,
 				status: null,
+				interviewDirection: null,
+				interviewScore: null,
 				ratingDirection : null,
 				rating : null,
 				appliedFrom : null,
@@ -166,6 +189,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 			var selectedFilter = this.get('selectedFilter');
 			var setFilterName = ('set ' + selectedFilter + ' filter').camelize();
 			this[setFilterName]();
+			this.get('ctrl').set('applicantId', null);
 		},
 		clickCancel: function() {
 			// reset filter modal.
@@ -173,7 +197,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		clickRemoveFilter: function(filter) {
     		this.get('filters').removeObject(filter);
     		this.get('ctrl').notifyPropertyChange('filters');
-
+    		this.get('ctrl').set('applicantId', null);
     	}
 	},
 	setFilter: function(filterName, filterParamNames, textFunction, customParamsFunction) {
@@ -203,49 +227,79 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		}
 
 		this.get('ctrl').notifyPropertyChange('filters');
+		$('#filter-modal').modal('hide');
 	},
 	setStageAndStatusFilter: function() {
 		var textFunction = function(filterParams) {
-			return 'Stage and Status: ' + (filterParams.stage || 'Any') + '; ' + (filterParams.status || 'Any');
+			return labels.stageAndStatus + ': ' + (filterParams.stage || labels.any) + '; ' + (filterParams.status || labels.any);
 		};
 
+		var params = this.getProperties('stage status'.w());
+
 		var customParamsFunction = function(params) {
-			if (params.stage === 'Any') {
+			if (params.stage === labels.any) {
 				params.stage = null;
 			}
 
-			if (params.status === 'Any') {
+			if (params.status === labels.any) {
 				params.status = null;
 			}
 		};
 
-		this.setFilter('stageAndStatus', 'stage status'.w(), textFunction, customParamsFunction);
+		if (params.status === labels.any && params.stage === labels.any) {
+			var filters = this.get('filters');
+			var stageAndStatusFilter = filters.findBy('name', 'stageAndStatus');
+
+			if (!Ember.isNone(stageAndStatusFilter)) {
+				filters.removeObject(stageAndStatusFilter);
+
+				this.get('ctrl').notifyPropertyChange('filters');
+			}
+
+			$('#filter-modal').modal('hide');
+		} else {
+			this.setFilter('stageAndStatus', 'stage status'.w(), textFunction, customParamsFunction);
+		}
 	},
 	setApplicationRatingFilter: function() {
 		var comparisons = this.get('comparisons');
 		var textFunction = function(filterParams) {
-			return 'Application Rating: ' + comparisons.findBy('value', filterParams.ratingDirection).label + ' ' + filterParams.rating;
+			return labels.applicationRating +': ' + comparisons.findBy('value', filterParams.ratingDirection).label + ' ' + filterParams.rating;
 		};
 
-		this.setFilter('applicationRating', 'ratingDirection rating'.w(), textFunction);
+		// Validation
+		this.set('invalidApplicationRating', false);
+		var rating = this.get('rating');
+		//if (Ember.isEmpty(rating) || rating > this.get('maxApplicationRatingVal')) {
+		//	this.set('invalidApplicationRating', true);
+		//} else {
+			this.setFilter('applicationRating', 'ratingDirection rating'.w(), textFunction);
+		//}
 	},
 	setInterviewFeedbackFilter: function() {
 		var comparisons = this.get('comparisons');
 		var textFunction = function(filterParams) {
-			return 'Interview Feedback: ' + comparisons.findBy('value', filterParams.interviewDirection).label + ' ' + filterParams.interviewScore;
+			return labels.interviewFeedback + ': ' + comparisons.findBy('value', filterParams.interviewDirection).label + ' ' + filterParams.interviewScore;
 		};
 
-		this.setFilter('interviewFeedback', 'interviewDirection interviewScore'.w(), textFunction);
+		// Validation
+		this.set('invalidInterviewScore', false);
+		var interviewScore = this.get('interviewScore');
+		//if (Ember.isEmpty(interviewScore) || interviewScore > this.get('maxInterviewScore')) {
+		//	this.set('invalidInterviewScore', true);
+		//} else {
+			this.setFilter('interviewFeedback', 'interviewDirection interviewScore'.w(), textFunction);
+		//}
 	},
 	setAppliedOnFilter: function() {
 		var textFunction = function(filterParams) {
 			var dateFormat = 'MMM DD, YYYY';
-			var filterText = 'Applied On: '; 
+			var filterText = labels.appliedOn + ': '; 
 
 			if (Ember.isEmpty(filterParams.appliedFrom)) {
-				filterText += 'Before ' + moment(filterParams.appliedTo).format(dateFormat);
+				filterText += labels.beforeCapitalized + ' ' + moment(filterParams.appliedTo).format(dateFormat);
 			} else if (Ember.isEmpty(filterParams.appliedTo)) {
-				filterText += 'After ' + moment(filterParams.appliedFrom).format(dateFormat);
+				filterText += labels.after + ' ' + moment(filterParams.appliedFrom).format(dateFormat);
 			} else {
 				filterText += moment(filterParams.appliedFrom).format(dateFormat) + ' to ' + moment(filterParams.appliedTo).format(dateFormat);
 			}
@@ -253,18 +307,36 @@ App.SearchFilterMixin = Ember.Mixin.create({
 			return filterText;
 		};
 
-		this.setFilter('appliedOn', 'appliedFrom appliedTo'.w(), textFunction);
+		var formatDateFunction = function(filterParams) {
+			filterParams.appliedFrom = !Ember.isEmpty(filterParams.appliedFrom) ? moment(filterParams.appliedFrom).format('MM/DD/YYYY') : null;
+			filterParams.appliedTo = !Ember.isEmpty(filterParams.appliedTo) ? moment(filterParams.appliedTo).format('MM/DD/YYYY') : null;
+		};
+
+		// Validation
+		this.set('errorMessage', null);
+		var rating = this.get('rating');
+		if (Ember.isEmpty(this.get('appliedFrom')) && Ember.isEmpty(this.get('appliedTo'))) {
+			this.set('errorMessage', labels.pleaseEnterAtLeastOneDate);
+		} else {
+			this.setFilter('appliedOn', 'appliedFrom appliedTo'.w(), textFunction, formatDateFunction);
+		}
 	},
 	setSourceFilter: function() {
 		var textFunction = function(filterParams) {
-			return 'Source: ' + filterParams.source;
+			return labels.source + ': ' + filterParams.source;
 		};
 
-		this.setFilter('source', 'source'.w(), textFunction);
+		var checkCareerSiteSource = function(filterParams) {
+			if (filterParams.source === labels.careerSiteName) {
+				filterParams.source = 'Career Site';
+			}
+		};
+
+		this.setFilter('source', 'source'.w(), textFunction, checkCareerSiteSource);
 	},
 	setThresholdFilter: function() {
 		var textFunction = function(filterParams) {
-			return 'Threshold: ' + filterParams.threshold;
+			return labels.threshold + ': ' + filterParams.threshold;
 		};
 
 		this.setFilter('threshold', 'threshold'.w(), textFunction);
@@ -273,7 +345,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		var locations = this.get('locations');
 
 		var textFunction = function(filterParams) {
-			return 'Location: ' + filterParams.radius + ' ' + filterParams.units + ' from ' + locations.findBy('geolocation', filterParams.location).name;
+			return labels.location + ': ' + filterParams.radius + ' ' + filterParams.units + ' from ' + locations.findBy('geolocation', filterParams.location).name;
 		}
 
 		this.setFilter('location', 'radius units location'.w(), textFunction);
@@ -282,26 +354,26 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		var params = this.getProperties('showHired showRejected showWithdrew noOutcome allOutcomes'.w());
 
 		var textFunction = function(params) {
-			var filterText = 'Outcome: ';
+			var filterText = labels.outcome + ': ';
 
 			if (params.noOutcome) {
-				filterText += 'No Outcome Yet';
+				filterText += labels.noOutcomeYet;
 			}
 
 			if (params.showHired) {
-				filterText += 'Hired, ';
+				filterText += labels.hired +', ';
 			} else {
 				params.showHired = false;
 			}
 
 			if (params.showRejected) {
-				filterText += 'Rejected, ';
+				filterText += labels.rejected + ', ';
 			} else {
 				params.showRejected = false;
 			}
 
 			if (params.showWithdrew) {
-				filterText += 'Withdrew, ';
+				filterText += labels.withdrew + ', ';
 			} else {
 				params.showWithdrew = false;
 			}
@@ -325,6 +397,8 @@ App.SearchFilterMixin = Ember.Mixin.create({
 
 				this.get('ctrl').notifyPropertyChange('filters');
 			}
+
+			$('#filter-modal').modal('hide');
 		} else {
 			this.setFilter('outcome', 'showHired showRejected showWithdrew noOutcome allOutcomes'.w(), textFunction);
 		}
@@ -343,7 +417,7 @@ App.SearchFilterMixin = Ember.Mixin.create({
 			this.setApplicationRatingFilter();
 		}
 
-		if (!Ember.isEmpty(params.interviewDirection) && !Ember.isEmpty(params.interviewRating)) {
+		if (!Ember.isEmpty(params.interviewDirection) && !Ember.isEmpty(params.interviewScore)) {
 			this.setInterviewFeedbackFilter();
 		}
 
@@ -394,7 +468,7 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
 			//this.set('applicantId', null);
 
 			if (Ember.isNone(this.get('initLimiter'))) {
-				this.set('initLimiter', 10);
+				this.set('initLimiter', this.get('numResultsPerSearch'));
 			}
 			this.updateParams();
 		});
@@ -447,7 +521,7 @@ App.SearchAndResultsMixin = Ember.Mixin.create({
     				// error handling
     			}
     		} else {
-    			self.set('errorMessage', 'Something broke');
+    			self.set('errorMessage', '');
     			// error handling
     		}
     	});    	

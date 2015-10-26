@@ -22,7 +22,7 @@ module.exports = function(grunt) {
       options: {
         includeSourceURL: true
       },
-      '/Volumes/s3.amazonaws.com/toprototype1/Cycle1_Phase3/to_applyFlow.pck.js': 'app/to_applyFlow_compiler.js'
+      '/Volumes/s3.amazonaws.com/toprototype1/Cycle4/to_applyFlow.pck.js': 'app/to_applyFlow_compiler.js'
     },
 
     /*

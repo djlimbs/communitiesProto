@@ -716,19 +716,19 @@ App.OnePageView = Ember.View.extend({
 
 App.ApplyView = Ember.View.extend({
     afterRenderEvent: function() {
-        $(document).one('touchstart', function(e) {
-            $('#fixZoom').focus();
-        });
+        // $(document).one('touchstart', function(e) {
+        //     $('#fixZoom').focus();
+        // });
 
-        if (parent && parent.toggleFooter) {
-            Ember.run.later(this, function() { 
-                parent.toggleFooter();
-            }, 200);
-        }
+        // if (parent && parent.toggleFooter) {
+        //     Ember.run.later(this, function() { 
+        //         parent.toggleFooter();
+        //     }, 200);
+        // }
 
-        $('body').tooltip({
-            selector: '[data-toggle=tooltip]'
-        });
+        // $('body').tooltip({
+        //     selector: '[data-toggle=tooltip]'
+        // });
     }
 });
 
@@ -768,7 +768,7 @@ App.UploadFileView = Ember.TextField.extend({
 
 App.ContactInfoView = Ember.View.extend({
     afterRenderEvent: function() {
-        scrollToTop();
+        /*scrollToTop();
 
         var self = this;
         var contactController = this.get('controller');
@@ -847,7 +847,7 @@ App.ContactInfoView = Ember.View.extend({
                     }
                 });
             }
-        });
+        });*/
     }
 });
 

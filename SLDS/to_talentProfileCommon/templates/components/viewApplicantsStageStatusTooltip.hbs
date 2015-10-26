@@ -1,0 +1,86 @@
+<div id="filled-tooltip">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--bm">
+                <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span></button>
+                <h2 class="modal__heading" id="myModalLabel" data-qa-label="totalApplicants">{{labels.totalApplicants}}</h2>
+            </div>
+            <div class="modal__body">
+                <div class="clearfix">
+                    <span class="button-group--collapse button-switch">
+                        <div {{bind-attr class=":button :button--success isStageSelected::disabled"}} data-trigger="stage" data-group="filter" {{action "setIsStageSelected" true}} data-qa-button="stage">{{labels.byStage}}</div>
+                        <div {{bind-attr class=":button :button--success isStageSelected:disabled"}} data-trigger="source" data-group="filter" {{action "setIsStageSelected" false}} data-qa-button="source">{{labels.bySource}}</div>
+                    </span>
+                </div>
+                {{#if isStageSelected}}
+                    <div class="ar-stage" data-qa-container="stage">
+                        <table class="mar--sm--ts">
+                            <thead>
+                                <tr>
+                                    <th><label data-qa-label="stage">{{labels.stage}}</label></th>
+                                    <th><label data-qa-label="applicants">{{labels.applicants}}</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each stageCount in data.stageCounts}}
+                                    <tr {{action "clickSetStageFilter" stageCount.name}} data-qa-link="{{unbound stageCount.name}}">
+                                        <td data-qa-label="stageName">{{stageCount.name}}</td>
+                                        <td data-qa-label="stageTotal">{{stageCount.total}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                            <thead>
+                                <tr class="bg-2">
+                                    <th><label data-qa-label="subtotal">{{labels.subtotal}}</label></th>
+                                    <th><label data-qa-label="subtotalValue">{{data.stageSubtotal}}</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each outcomeCount in data.outcomeCounts}}
+                                    <tr {{action "clickSetOutcomeFilter" outcomeCount.name}} data-qa-link="{{unbound outcome.Name}}">
+                                        <td data-qa-label="outcomeName">{{outcomeCount.name}}</td>
+                                        <td data-qa-label="outcomeTotal">{{outcomeCount.total}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-2">
+                                    <th><label data-qa-label="stageTotal">{{labels.total}}</label></th>
+                                    <th><label data-qa-label="stageTotalValue">{{data.total}}</label></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {{else}}
+                    <div class="ar-source" data-qa-container="source">
+                        <table class="mar--sm--ts">
+                            <thead>
+                                <tr>
+                                    <th><label data-qa-label="source">{{labels.source}}</label></th>
+                                    <th><label data-qa-label="applicants">{{labels.applicants}}</label></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each source in data.sourceCounts}}
+                                    <tr {{action "clickSetSourceFilter" source.name}} data-qa-link="{{unbound source.name}}">
+                                        <td data-qa-label="source">{{source.name}}</td>
+                                        <td data-qa-label="sourceValue">{{source.total}}</td>
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                            <tfoot>
+                                <tr class="bg-2">
+                                    <th><label data-qa-label="sourceTotal">{{labels.total}}</label></th>
+                                    <th><label data-qa-label="sourceTotalValue">{{data.sourceTotal}}</label></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="modal__footer">
+                <button class="button button--primary js-save" data-dismiss="modal" type="button" data-qa-button="ok">{{labels.ok}}</button>
+            </div>
+        </div>
+    </div>
+</div>

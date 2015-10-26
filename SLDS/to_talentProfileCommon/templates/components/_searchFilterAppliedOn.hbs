@@ -1,0 +1,12 @@
+<div data-qa-container="appliedOnFilter">
+    <div class="row">
+        <div class="column column--md--6">
+            <label data-qa-label="from">{{labels.from}}</label>
+            {{date-picker value=appliedFrom name="appliedFrom" valueFormat="MM/DD/YYYY" data-qa-input="appliedFrom"}}
+        </div>
+        <div class="column column--md--6">
+            <label>{{labels.to}}</label>
+            {{date-picker value=appliedTo name="appliedTo" valueFormat="MM/DD/YYYY" data-qa-input="appliedTo"}}
+        </div>
+    </div>
+</div>

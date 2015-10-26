@@ -3,6 +3,8 @@
     <div class="hide">
 		{{provide-feedback ctrl=this buttonClass="js-feedback-button"}}
 
-		{{update-status ctrl=controller buttonClass="js-status-button"}}
+        {{#unless hasOutcome}}
+		  {{update-status ctrl=controller buttonClass="js-status-button"}}
+        {{/unless}}
 	</div>
 </div>

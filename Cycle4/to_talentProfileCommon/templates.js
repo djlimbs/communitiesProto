@@ -4128,8 +4128,22 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 Ember.TEMPLATES["viewApplicantsApplicationReader"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var buffer = '', stack1, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression;
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options, helperMissing=helpers.helperMissing, escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashContexts, hashTypes, options;
+  data.buffer.push("\n		  ");
+  hashContexts = {'ctrl': depth0,'buttonClass': depth0};
+  hashTypes = {'ctrl': "ID",'buttonClass': "STRING"};
+  options = {hash:{
+    'ctrl': ("controller"),
+    'buttonClass': ("js-status-button")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['update-status'] || (depth0 && depth0['update-status'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "update-status", options))));
+  data.buffer.push("\n        ");
+  return buffer;
+  }
 
   data.buffer.push("<div class=\"content pad--sm--n\">\n	");
   hashTypes = {};
@@ -4144,14 +4158,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'buttonClass': ("js-feedback-button")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['provide-feedback'] || (depth0 && depth0['provide-feedback'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "provide-feedback", options))));
-  data.buffer.push("\n\n		");
-  hashContexts = {'ctrl': depth0,'buttonClass': depth0};
-  hashTypes = {'ctrl': "ID",'buttonClass': "STRING"};
-  options = {hash:{
-    'ctrl': ("controller"),
-    'buttonClass': ("js-status-button")
-  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  data.buffer.push(escapeExpression(((stack1 = helpers['update-status'] || (depth0 && depth0['update-status'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "update-status", options))));
+  data.buffer.push("\n\n        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers.unless.call(depth0, "hasOutcome", {hash:{},inverse:self.noop,fn:self.program(1, program1, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   data.buffer.push("\n	</div>\n</div>");
   return buffer;
   

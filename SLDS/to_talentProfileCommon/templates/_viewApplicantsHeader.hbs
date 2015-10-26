@@ -1,0 +1,40 @@
+<div class="content force-overflow pad--sm--tm pad--sm--bm pad--sm--tm" data-qa-container="header">
+    <nav id="formBuildNav" class="nav-bar mar--sm--bn review-header">
+        <div style="margin-top: 38px">
+            <span class="button-group float--right">
+                <div class="button button--secondary text-center js-prev" {{action "clickPrevOrNext" "prev"}} {{bind-attr disabled="disablePrev"}} data-qa-button="prev"><span><span class="juicon juicon-chevron-left">&nbsp;</span></span>{{labels.prev}}</div>
+                <div class="button button--secondary text-center js-next" {{action "clickPrevOrNext" "next"}} {{bind-attr disabled="disableNext"}} data-qa-button="next">{{labels.next}}<span>&nbsp;<span class="juicon juicon-chevron-right"></span></span></div>
+            </span>
+            <div class="review-stats-container">
+                <div class="review-stats text-center">
+                    <ul class="review-row">
+                        <li class="js-stage-status-button js-tooltipster-button cursor-pointer">
+                            <label class="block" data-qa-label="total"><small>{{labels.total}}</small></label>
+                            <span class="large-number" data-qa-label="totalValue">{{totalApplicants.total}}</span><span class="juicon juicon-chart-bar text-faded"></span>
+                        </li>
+                        {{#if filledInfo.totalHeadCountExists}}
+                            <li class="js-filled-button js-tooltipster-button cursor-pointer">
+                                <label class="block" data-qa-label="filled"><small>{{labels.filled}}</small></label>
+                                <span class="large-number" data-qa-label="numFilled">{{filledInfo.numFilled}}<span class="text-faded" data-qa-label="totalHeadCount">/{{filledInfo.totalHeadCount}}</span></span><span class="juicon juicon-list text-faded"></span>
+                            </li>
+                        {{/if}}
+                        <li>
+                            <label class="block" data-qa-label="openSince"><small>{{labels.openSince}}</small></label>
+                            <div class="cal-container">
+                                <div class="top">
+                                    <p data-qa-label="approvedOnMonth">{{openSince.approvedOnMonth}}</p>
+                                </div>
+                                <div class="bottom">
+                                    <p data-qa-label="approvedOnDay">{{openSince.approvedOnDay}}</p>
+                                </div>
+                            </div>
+                            <label data-qa-label="numDaysOpen">({{openSince.numDaysOpen}} {{labels.days}})</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <h1 class="nav-bar__title has-subheading page__heading show-brkpoint--sm" data-qa-label="applicants">{{labels.applicants}}</h1>
+            <h2 class="nav-bar__subtitle page__subheading" data-qa-label="requisition"><a href="/{{unbound requisition.Id}}">{{requisition.Name}}</a></h2>
+        </div>
+    </nav>
+</div>
