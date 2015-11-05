@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>View Applicants</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="assets/styles/salesforce-lightning-design-system-vf.css">
+    <link rel="stylesheet" href="css/styles-lightning.css">
+</head>
+
+<body>
+    <div class="slds non-responsive">
+        <!-- Page Header -->
+        <div class="slds-page-header to-va-header" role="banner">
+            <nav class="slds-m-bottom--xx-small" role="navigation">
+                <p id="bread-crumb-label" class="slds-assistive-text">You are here:</p>
+                <ol class="slds-breadcrumb slds-list--horizontal to-va-breadcrumbs" aria-labelledby="bread-crumb-label">
+                    <li class="slds-list__item slds-text-heading--label"><a href="#">Requisitions</a></li>
+                    <li class="slds-list__item slds-text-heading--label"><a href="#">Human Resources Manager</a></li>
+                </ol>
+            </nav>
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate">
+                    <h1 class="slds-text-heading--medium slds-truncate" title="Contacts (will truncate)">Applicants</h1>
+                </div>
+                <div class="slds-col slds-no-flex slds-align-bottom">
+                    <!-- Button Group -->
+                    <div class="slds-button-group slide-nav" role="group">
+                        <!-- Button -->
+                        <button class="slds-button slds-button--neutral" disabled="">
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#left"></use>
+                            </svg>Prev</button>
+                        <!-- /Button -->
+                        <!-- Button -->
+                        <button class="slds-button slds-button--neutral">Next
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon--right">
+                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#right"></use>
+                            </svg>
+                        </button>
+                        <!-- /Button -->
+                    </div>
+                    <!-- /Button Group -->
+                </div>
+            </div>
+            <ul class="review-stats slds-text-body--small slds-text-align--center">
+                <li class="clickable" data-aljs="modal" data-aljs-show="total-modal">
+                    <div>Total</div>
+                    <span class="slds-text-heading--medium slds-m-top--xx-small">98</span>
+                    <span>
+                        <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                            <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#standard_objects"></use>
+                        </svg>
+                    </span>
+                </li>
+                <li class="clickable" data-aljs="modal" data-aljs-show="filled-modal">
+                    <div>Filled</div>
+                    <span class="slds-text-heading--medium slds-m-top--xx-small">2/12</span>
+                    <span>
+                        <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                            <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#snippet"></use>
+                        </svg>
+                    </span>
+                </li>
+                <li>
+                    <div>Open Since</div>
+                    <div class="cal-container">
+                        <div class="top">Mar</div>
+                        <div class="bottom">12</div>
+                    </div>
+                    <small>(64 days)</small>
+                </li>
+            </ul>
+        </div>
+        <!-- /Page Header -->
+        <div class="slds-grid">
+            <div class="slds-col slds-size--1-of-4 slds-p-top--large slds-p-bottom--large slds-p-left--large">
+                <div class="slds-box slds-m-bottom--small">
+                    <div class="slds-clearfix slds-size--1-of-1">
+                        <div class="slds-clearfix">
+                            <h3 class="slds-text-heading--small slds-float--left">Filters</h3>
+                            <button class="slds-button slds-button--icon-border slds-float--right">
+                                <svg aria-hidden="true" class="slds-button__icon">
+                                    <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+                                </svg>
+                                <span class="slds-assistive-text">Add</span>
+                            </button>
+                        </div>
+                        <!-- Empty State -->
+                        <!--<em class="slds-opacity--50">No Filters</em>-->
+                        <!-- /Empty State -->
+                        <span class="slds-pill to-va-filter"><a href="#" class="slds-pill__label">Outcome: No Outcome</a>
+                            <button class="slds-button slds-button--icon-bare" data-aljs-dismiss="pill">
+                              <svg aria-hidden="true" class="slds-button__icon">
+                                  <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                              </svg>
+                              <span class="slds-assistive-text">Remove</span>
+                            </button>
+                        </span>
+                        <span class="slds-pill to-va-filter"><a href="#" class="slds-pill__label">Location: Less Than 25 mi</a>
+                            <button class="slds-button slds-button--icon-bare" data-aljs-dismiss="pill">
+                              <svg aria-hidden="true" class="slds-button__icon">
+                                  <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                              </svg>
+                              <span class="slds-assistive-text">Remove</span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+                <!-- Card -->
+                <div class="slds-card">
+                    <div class="slds-card__header slds-grid">
+                        <div class="slds-p-around--xx-small slds-clearfix slds-size--1-of-1">
+                            <h3 class="slds-text-heading--small">Results: <strong>3/<span class="slds-opacity--25">34</span></strong></h3>
+                            <p><a href="#" data-aljs="modal" data-aljs-show="reject-modal">Reject</a> | <a href="#" data-aljs="modal" data-aljs-show="update-status-modal">Update Status</a> | <a href="#" data-aljs="modal" data-aljs-show="share-modal">Share</a></p>
+                            <div class="slds-form-element">
+                                <label class="slds-form-element__label slds-m-top--medium" for="sort-by">Sort By</label>
+                                <div class="slds-form-element__control">
+                                    <select id="sort-by" class="slds-select">
+                                        <option>Application Rating</option>
+                                        <option>Applied On Date</option>
+                                        <option selected>Interview Feedback</option>
+                                        <option>Last Name</option>
+                                        <option>Resume Feedback</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-card__body slds-p-top--none">
+                        <!-- Applicant List -->
+                        <ul class="slds-list--vertical slds-has-cards slds-p-left--medium slds-p-right--medium slds-p-bottom--x-small to-va-applicants">
+                            <li class="slds-list__item slds-theme--alt-inverse">
+                                <div class="slds-tile slds-tile--board">
+                                    Catherine Johnson
+                                    <small class="slds-show to-va-sort-info">Interviews: 
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Positive</span>
+                                            10
+                                        </span>
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+                                            <span class="slds-assistive-text">Neutral</span>
+                                            </svg>
+                                            10
+                                        </span>
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default slds-icon--flip-x">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Negative</span>
+                                            10
+                                        </span>
+                                    </small>
+                                </div>
+                            </li>
+                            <li class="slds-list__item to-va-applicant--not-selected to-va-threshold--error">
+                                <div class="slds-tile slds-tile--board">
+                                    Janet Keller
+                                    <small class="slds-show to-va-sort-info">Interviews: 
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Positive</span>
+                                            10
+                                        </span>
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+                                            <span class="slds-assistive-text">Neutral</span>
+                                            </svg>
+                                            10
+                                        </span>
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default slds-icon--flip-x">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Negative</span>
+                                            10
+                                        </span>
+                                    </small>
+                                </div>
+                            </li>
+                            <li class="slds-list__item to-va-applicant--not-selected to-va-threshold--warning">
+                                <div class="slds-tile slds-tile--board">
+                                    Ross Belmont
+                                    <small class="slds-show to-va-sort-info">Interviews: 
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Positive</span>
+                                            10
+                                        </span>
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+                                            <span class="slds-assistive-text">Neutral</span>
+                                            </svg>
+                                            10
+                                        </span>
+                                        <span class="to-va-feedback-container">
+                                            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default slds-icon--flip-x">
+                                                <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                                            </svg>
+                                            <span class="slds-assistive-text">Negative</span>
+                                            10
+                                        </span>
+                                    </small>
+                                </div>
+                            </li>
+                        </ul>
+                        <!-- /Applicant List -->
+
+                        <!-- Load More Button -->
+                        <div class="slds-p-around--medium">
+                            <button class="slds-button slds-button--neutral to-va-load-more">Load More</button>
+                        </div>
+                        <!-- /Load More Button -->
+                    </div>
+                </div>
+                <!-- /Card -->
+            </div>
+            <div class="slds-col slds-size--3-of-4 slds-p-top--large slds-p-around--large">
+                <!-- Application Reader -->
+                <div class="slds-card to-va-application-reader">
+                    <div class="slds-card__header slds-grid">
+                        <div class="slds-media slds-media--center slds-has-flexi-truncate">
+                            <div class="slds-media__body">
+                                <h2 class="slds-text-heading--medium slds-truncate">Catherine Johnson</h2>
+                                <p><strong>Status:</strong> Application (In progress) <a href="#">Update</a></p>
+                            </div>
+                        </div>
+                        <div class="slds-no-flex">
+                            <button class="slds-button slds-button--neutral slds-button--small">
+                                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                                    <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#comments"></use>
+                                </svg>
+                                Provide Feedback
+                            </button>
+                        </div>
+                    </div>
+                    <div class="slds-card__body slds-p-bottom--none">
+                        <div class="slds-p-around--small slds-theme--default">
+                            Stuff
+                            <hr>
+                            <h3>Test</h3>
+                            <div class="slds-card slds-theme--default slds-p-around--medium">
+                                Test
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /Application Reader -->
+            </div>
+        </div>
+        <!-- Total Applicants Modal -->
+        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open slds-hide" id="total-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">Total Applicants</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/icons/action-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div class="slds-modal__content">
+                    <div>
+                        <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</p>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+        <!-- /Total Applicants Modal -->
+        
+        <!-- Positions Filled Modal -->
+        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open slds-hide" id="filled-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">Positions Filled</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/icons/action-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div class="slds-modal__content">
+                    <div>
+                        <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</p>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+        <!-- /Positions Filled Modal -->
+        
+        <!-- Reject Modal -->
+        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open slds-hide" id="reject-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">Reject All</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/icons/action-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div class="slds-modal__content">
+                    <div>
+                        <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</p>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+        <!-- /Reject Modal -->
+        
+        <!-- Update Status Modal -->
+        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open slds-hide" id="update-status-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">Update Status</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/icons/action-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div class="slds-modal__content">
+                    <div>
+                        <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</p>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+        <!-- /Update Status Modal -->
+        
+        <!-- Share Modal -->
+        <div aria-hidden="false" role="dialog" class="slds-modal slds-fade-in-open slds-hide" id="share-modal">
+            <div class="slds-modal__container">
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading--medium">Share</h2>
+                    <button class="slds-button slds-button--icon-inverse slds-modal__close" data-aljs-dismiss="modal">
+                        <svg aria-hidden="true" class="slds-button__icon slds-button__icon--large">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/icons/action-sprite/svg/symbols.svg#close"></use>
+                        </svg>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+                <div class="slds-modal__content">
+                    <div>
+                        <p>Sit nulla est ex deserunt exercitation anim occaecat. Nostrud ullamco deserunt aute id consequat veniam incididunt duis in sint irure nisi.</p>
+                    </div>
+                </div>
+                <div class="slds-modal__footer">
+                    <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+        <!-- /Share Modal -->
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="js/jquery.aljs-init.min.js"></script>
+    <script src="js/jquery.aljs-pill.min.js"></script>
+    <script src="js/jquery.aljs-modal.min.js"></script>
+    <script>
+        $.aljsInit({
+            assetsLocation: '.',
+            scoped: true
+        });
+        $(document).ready(function() {
+            $('body').pill();
+            $('body').modal({
+                selector: '[data-aljs="modal"]'
+            })
+        });
+    </script>
+</body>
+
+</html>

@@ -2,11 +2,11 @@
     <div class="row">
         <div class="column column--md--6">
             <label data-qa-label="from">{{labels.from}}</label>
-            {{date-picker value=appliedFrom name="appliedFrom" valueFormat="MM/DD/YYYY" data-qa-input="appliedFrom"}}
+            {{aljs-datepicker selectedDate=appliedFrom format="MM/DD/YYYY" data-qa-input="appliedFrom" name="appliedFrom"}}
         </div>
         <div class="column column--md--6">
             <label>{{labels.to}}</label>
-            {{date-picker value=appliedTo name="appliedTo" valueFormat="MM/DD/YYYY" data-qa-input="appliedTo"}}
+            {{aljs-datepicker selectedDate=appliedTo format="MM/DD/YYYY" data-qa-input="appliedTo" name="appliedTo"}}
         </div>
     </div>
 </div>

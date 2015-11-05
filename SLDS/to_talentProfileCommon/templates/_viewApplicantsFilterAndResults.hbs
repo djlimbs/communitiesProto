@@ -1,57 +1,52 @@
-<div class="column--sm--3">
-    <div class="card">
-        
-        <!-- Filters and Results -->
-        <section class="pad--sm--m pad--sm--bs">
+<div class="slds-col slds-size--1-of-4 slds-p-top--large slds-p-bottom--large slds-p-left--large">
+    <div class="slds-box slds-m-bottom--small">
+        <div class="slds-clearfix slds-size--1-of-1">
             {{search-filter ctrl=controller filters=filters filterOptions=filterOptions applicationStageAndStatuses=applicationStageAndStatuses applicationSources=applicationSources locations=locations params=initParams}}
             
-        </section>
-        <!-- /Filters and Results -->
-        
-        <section class="pad--sm--m border-top bg-2">
-            {{#if isLoadingResults}}
-                <div class="content pad--md--ts pad--sm--only--n pad--sm--tm" data-qa-container="filterLoading">
-                    <div class="content__section">
-                        <div class="load-block">
-                            <div class="load-block-icon"></div>
-                        </div>
-                    </div>
-                </div>
-            {{else}}
-                <h3 class="mar--sm--n" data-qa-label="results">{{labels.results}} {{results.numberViewable}}<span class="text-faded" data-qa-label="resultsTotal">/{{results.total}}</span></h3>
-                <div class="mar--sm--bs">
-                    <a href="#" data-toggle="modal" data-target="#reject-modal" data-qa-link="bulkReject"><small>{{labels.rejectCapitalized}}</small></a> | <a href="#" data-toggle="modal" data-target="#status-modal" data-qa-link="bulkUpdate"><small>{{labels.updateStatus}}</small></a> | <a href="#" data-toggle="modal" data-target="#share-modal" id="share-modal-trigger" data-qa-link="share"><small>{{labels.share}}</small></a>
-                </div>
-                <h4 class="mar--sm--n" data-qa-label="sortBy">{{labels.sortBy}}</h4>
-                <div class="form-group">
-                    <div class="select__wrap">
-                        <div class="input__icon juicon juicon-down"></div>
-                        {{view "select" 
-                                class="pad--sm--rxl small"
-                                content=sortOptions 
-                                optionLabelPath="content.label"
-                                optionValuePath="content.value"
-                                value=sortType
-                                data-qa-select="sortType"}}
-                    </div>
-                </div>
-                {{#if results.viewableApplications}}
-                    <ul id="contentNav" class="list-group list-group--bordered mar--sm--bn bg-1 applicant-list-group">
-                        {{#each application in results.viewableApplications itemController="result"}}
-                            {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="list-group__item applicant-entry" classNameBindings="application.alertStatusClass" data-qa-link="applicant" disabledWhen="isLoadingMore"}}
-                                {{partial application.resultPartial}}
-                            {{/link-to}}
-                        {{/each}}
-                    </ul>
-                {{else}}
-                    <small class="block mar--sm--tm" data-qa-label="noResults"><em>{{labels.noResults}}</em></small>
-                {{/if}}
-                {{#unless disableLoadMore}}
-                    <div class="text-center mar--sm--tm">
-                        <button {{bind-attr class=":button :button--secondary :button--full isLoadingMore:load-this"}} {{action "clickLoadMore"}} data-qa-button="loadMore"><small data-qa-label="loadMore">{{labels.loadMore}}</small></button>
-                    </div>
-                {{/unless}}
-            {{/if}}
-        </section>
+        </div>
     </div>
+    <!-- Card -->
+    <div class="slds-card">
+        <div class="slds-card__header slds-grid">
+            <div class="slds-p-around--xx-small slds-clearfix slds-size--1-of-1">
+                <h3 class="slds-text-heading--small">{{labels.results}} <strong>{{results.numberViewable}}/<span class="slds-opacity--25">{{results.total}}</span></strong></h3>
+                <p><a href="#" data-aljs="modal" data-aljs-show="reject-modal">{{labels.rejectCapitalized}}</a> | <a href="#" data-aljs="modal" data-aljs-show="status-modal">{{labels.updateStatus}}</a> | <a href="#" data-aljs="modal" data-aljs-show="share-modal">{{labels.share}}</a></p>
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label slds-m-top--medium" for="sort-by">{{labels.sortBy}}</label>
+                    <div class="slds-form-element__control">
+                        {{view "select" 
+                            class="slds-select"
+                            content=sortOptions 
+                            optionLabelPath="content.label"
+                            optionValuePath="content.value"
+                            value=sortType
+                            data-qa-select="sortType"}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="slds-card__body slds-p-top--none">
+            <!-- Applicant List -->
+
+            {{#if results.viewableApplications}}
+                <ul class="slds-list--vertical slds-has-cards slds-p-left--medium slds-p-right--medium slds-p-bottom--x-small to-va-applicants">
+                    {{#each application in results.viewableApplications itemController="result"}}
+                        {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="slds-list__item" activeClass="slds-theme--alt-inverse" classNameBindings="application.alertStatusClass" data-qa-link="applicant" disabledWhen="isLoadingMore"}}
+                            {{partial application.resultPartial}}
+                        {{/link-to}}
+                    {{/each}}
+                </ul>
+            {{else}}
+                <small class="block mar--sm--tm" data-qa-label="noResults"><em>{{labels.noResults}}</em></small>
+            {{/if}}
+            <!-- /Applicant List -->
+
+            <!-- Load More Button -->
+            <div class="slds-p-around--medium">
+                <button class="slds-button slds-button--neutral to-va-load-more" {{action "clickLoadMore"}} data-qa-button="loadMore">{{labels.loadMore}}</button>
+            </div>
+            <!-- /Load More Button -->
+        </div>
+    </div>
+    <!-- /Card -->
 </div>

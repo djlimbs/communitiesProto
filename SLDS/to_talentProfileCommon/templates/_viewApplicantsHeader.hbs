@@ -1,3 +1,66 @@
+<div class="slds-page-header to-va-header" role="banner">
+    <nav class="slds-m-bottom--xx-small" role="navigation">
+        <p id="bread-crumb-label" class="slds-assistive-text">Requisitions</p>
+        <ol class="slds-breadcrumb slds-list--horizontal to-va-breadcrumbs" aria-labelledby="bread-crumb-label">
+            <li class="slds-list__item slds-text-heading--label"><a href="#">Requisitions</a></li>
+            <li class="slds-list__item slds-text-heading--label"><a href="/{{unbound requisition.Id}}">{{requisition.Name}}</a></li>
+        </ol>
+    </nav>
+    <div class="slds-grid">
+        <div class="slds-col slds-has-flexi-truncate">
+            <h1 class="slds-text-heading--medium slds-truncate" title="Contacts (will truncate)">{{labels.applicants}}</h1>
+        </div>
+        <div class="slds-col slds-no-flex slds-align-bottom">
+            <!-- Button Group -->
+            <div class="slds-button-group slide-nav" role="group">
+                <!-- Button -->
+                <button class="slds-button slds-button--neutral" {{action "clickPrevOrNext" "prev"}} {{bind-attr disabled="disablePrev"}} data-qa-button="prev">
+                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                        <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#left"></use>
+                    </svg>Prev</button>
+                <!-- /Button -->
+                <!-- Button -->
+                <button class="slds-button slds-button--neutral" {{action "clickPrevOrNext" "next"}} {{bind-attr disabled="disableNext"}} data-qa-button="next">Next
+                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--right">
+                        <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#right"></use>
+                    </svg>
+                </button>
+                <!-- /Button -->
+            </div>
+            <!-- /Button Group -->
+        </div>
+    </div>
+    <ul class="review-stats slds-text-body--small slds-text-align--center">
+        <li class="clickable" data-aljs="modal" data-aljs-show="total-modal">
+            <div>{{labels.total}}</div>
+            <span class="slds-text-heading--medium slds-m-top--xx-small">{{totalApplicants.total}}</span>
+            <span>
+                <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                    <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#standard_objects"></use>
+                </svg>
+            </span>
+        </li>
+        <li class="clickable" data-aljs="modal" data-aljs-show="filled-modal">
+            <div>{{labels.filled}}</div>
+            <span class="slds-text-heading--medium slds-m-top--xx-small">{{filledInfo.numFilled}}/{{filledInfo.totalHeadCount}}</span>
+            <span>
+                <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                    <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#snippet"></use>
+                </svg>
+            </span>
+        </li>
+        <li>
+            <div>{{labels.openSince}}</div>
+            <div class="cal-container">
+                <div class="top">{{openSince.approvedOnMonth}}</div>
+                <div class="bottom">{{openSince.approvedOnDay}}</div>
+            </div>
+            <small>({{openSince.numDaysOpen}} {{labels.days}})</small>
+        </li>
+    </ul>
+</div>
+
+{{!-- OLD STUFF
 <div class="content force-overflow pad--sm--tm pad--sm--bm pad--sm--tm" data-qa-container="header">
     <nav id="formBuildNav" class="nav-bar mar--sm--bn review-header">
         <div style="margin-top: 38px">
@@ -8,10 +71,11 @@
             <div class="review-stats-container">
                 <div class="review-stats text-center">
                     <ul class="review-row">
-                        <li class="js-stage-status-button js-tooltipster-button cursor-pointer">
+                        <li class="cursor-pointer" data-aljs-toggle="stageStatus">
                             <label class="block" data-qa-label="total"><small>{{labels.total}}</small></label>
                             <span class="large-number" data-qa-label="totalValue">{{totalApplicants.total}}</span><span class="juicon juicon-chart-bar text-faded"></span>
                         </li>
+                        {{partial "viewApplicantsStageStatusPopover"}}
                         {{#if filledInfo.totalHeadCountExists}}
                             <li class="js-filled-button js-tooltipster-button cursor-pointer">
                                 <label class="block" data-qa-label="filled"><small>{{labels.filled}}</small></label>
@@ -37,4 +101,4 @@
             <h2 class="nav-bar__subtitle page__subheading" data-qa-label="requisition"><a href="/{{unbound requisition.Id}}">{{requisition.Name}}</a></h2>
         </div>
     </nav>
-</div>
+</div>--}}

@@ -3,6 +3,10 @@ Ember.ControllerMixin.reopen({
     labels: labels
 });
 
+Ember.Object.reopen({
+    labels: labels
+});
+
 // Attribute bindings for QA locators so we can easily add them to ember markup.
 Ember.View.reopen({
     attributeBindings: ['data-dev', 'data-qa', 'data-qa-label', 'data-qa-button', 'data-qa-input', 

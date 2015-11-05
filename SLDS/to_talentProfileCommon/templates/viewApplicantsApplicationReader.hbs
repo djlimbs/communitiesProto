@@ -3,11 +3,4 @@
         <div {{bind-attr class=":alert alertStatusClass :mar--sm--bm"}}>{{labels.thisApplicationHasBeenIn}} {{application.Stage__c}} ({{application.Status__c}}) {{labels.for}} {{thresholdDays}} {{labels.days}}.</div>
     {{/if}}
 	{{partial "applicationView"}}
-    <div class="hide">
-		{{provide-feedback ctrl=this buttonClass="js-feedback-button"}}
-
-        {{#unless hasOutcome}}
-            {{update-status ctrl=controller buttonClass="js-status-button"}}
-        {{/unless}}
-	</div>
 </div>

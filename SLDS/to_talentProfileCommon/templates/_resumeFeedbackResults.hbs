@@ -1,4 +1,26 @@
-<a class="pad--sm--m">
-    <h4 class="card__heading dots" data-qa-label="applicationName">{{application.First_Name__c}} {{application.Last_Name__c}}</h4>
-    <h5 class="card__subheading dots" data-qa-label="resume">{{labels.resumes}} <span class="feedback-icon"><span class="juicon juicon-like"></span> {{application.resumeFeedbackScore.positiveFeedback}}</span><span class="feedback-icon"><span class="juicon juicon-dislike"></span> {{application.resumeFeedbackScore.negativeFeedback}}</span><span class="feedback-icon"><span class="juicon juicon-question-circle"></span> {{application.resumeFeedbackScore.neutralFeedback}}</span></h5>
-</a>
+<div class="slds-tile slds-tile--board" data-qa-label="applicationName">
+    {{application.First_Name__c}} {{application.Last_Name__c}}
+    <small class="slds-show to-va-sort-info" data-qa-label="resume">{{labels.resumes}}: 
+        <span class="to-va-feedback-container">
+            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+            </svg>
+            <span class="slds-assistive-text">Positive</span>
+            {{application.resumeFeedbackScore.positiveFeedback}}
+        </span>
+        <span class="to-va-feedback-container">
+            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default slds-icon--flip-x">
+                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+            </svg>
+            <span class="slds-assistive-text">Negative</span>
+            {{application.resumeFeedbackScore.negativeFeedback}}
+        </span>
+        <span class="to-va-feedback-container">
+            <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+            <span class="slds-assistive-text">Neutral</span>
+            </svg>
+            {{application.resumeFeedbackScore.neutralFeedback}}
+        </span>
+    </small>
+</div>

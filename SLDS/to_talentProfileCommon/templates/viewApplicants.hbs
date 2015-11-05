@@ -1,9 +1,15 @@
-<div class="scope-container" style="overflow: visible">
+<div class="slds non-responsive">
     {{partial "viewApplicantsHeader"}}
     
-    <div class="content force-overflow">
-        <div class="row">
-            {{partial "viewApplicantsFilterAndResults"}}
+    <div class="slds-grid">
+        {{partial "viewApplicantsFilterAndResults"}}
+        <div class="slds-col slds-size--3-of-4 slds-p-top--large slds-p-around--large">
+            <!-- Application Reader -->
+            {{outlet}}
+            <!-- /Application Reader -->
+        </div>
+
+        {{!--
             <div class="column--sm--9 pad--sm--bm">
                 {{#if noResultsFound}}
                     <div id="no-resuts" class="">
@@ -19,13 +25,9 @@
                 {{outlet}}
                 
             </div>
-        </div>
+        --}}
     </div>
-    <div class="hide">
-        {{filled-info data=filledInfo filters=filters ctrl=controller buttonClass="js-filled-button"}}
-
-	    {{applicant-totals data=totalApplicants filters=filters ctrl=controller buttonClass="js-stage-status-button" toggleUpdateHeader=toggleUpdateHeader}}
-    </div>
+    
     {{partial "viewApplicantsShareModal"}}
     {{partial "viewApplicantsRejectModal"}}
     {{partial "viewApplicantsUpdateStatusModal"}}

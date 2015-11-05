@@ -1,41 +1,47 @@
-<div class="clearfix">
-    <h3 class="mar--sm--n float--left" data-qa-label="filters">{{labels.filters}}</h3>
-    <small class="float--right pad--sm--txs"><a href="#" data-toggle="modal" data-target="#filter-modal" {{action "clickAdd"}} data-qa-labels="add">{{labels.add}}</a></small>
+<div class="slds-clearfix">
+    <h3 class="slds-text-heading--small slds-float--left">{{labels.filters}}</h3>
+    <button class="slds-button slds-button--icon-border slds-float--right" data-aljs-show="filter-modal">
+        <svg aria-hidden="true" class="slds-button__icon">
+            <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
+        </svg>
+        <span class="slds-assistive-text">{{labels.add}}</span>
+    </button>
 </div>
-<ul class="filters mar--sm--tn">
-    {{#each filter in filters itemController="filter"}}
-        <li><a href="#" class="juicon juicon-x text-error part__left vam pad--sm--rs" {{action "clickRemoveFilter" filter}}data-qa-button="removeFilter"></a><span class="part__body" data-qa-label="filterText">{{{filter.formattedFilterText}}}</span></li>
-    {{else}}
-        <li><em class="text-faded" data-qa-label="noFilters">{{labels.noFilters}}</em></li>
-    {{/each}}
-</ul>
+<!-- Empty State -->
+<!--<em class="slds-opacity--50">No Filters</em>-->
+<!-- /Empty State -->
+{{#each filter in filters itemController="filter"}}
+    <span class="slds-pill to-va-filter"><a href="#" class="slds-pill__label">{{{filter.formattedFilterText}}}</a>
+        <button class="slds-button slds-button--icon-bare" {{action "clickRemoveFilter" filter}} data-qa-button="removeFilter">
+          <svg aria-hidden="true" class="slds-button__icon">
+              <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+          </svg>
+          <span class="slds-assistive-text">Remove</span>
+        </button>
+    </span>
+{{else}}
+    <em class="slds-opacity--50">No Filters</em>
+{{/each}}
 
-<div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal__shell">
-        <div class="modal__content">
-            <div class="modal__top">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span class="close-modal-x"></span>
-                </button>
-                <h2 class="modal__heading" id="myModalLabel" data-qa-label="addFilter">{{labels.addFilter}}</h2>
-            </div>
-            <div class="modal__body">
-                <div class="form__group">
-                    <label for="filterStage" data-qa-label="field">{{labels.field}}</label>
-                    <div class="select__wrap">
-                        <div class="input__icon juicon juicon-down"></div>
-                        {{view "select" content=filterOptions value=selectedFilter prompt=labels.selectPlaceHolder data-qa-select="selectedFilter"}}
-                    </div>
+{{#aljs-modal modalId="filter-modal" class=""}}
+    <modalheader>
+        <h2 class="slds-text-heading--medium">{{labels.addFilter}}</h2>
+    </modalHeader>
+    <modalBody>
+        <fieldset class="slds-form--compound">
+            <div class="form-element__group">
+                <div class="slds-form-element__row slds-clearfix">
+                    <label class="slds-form-element__control slds-col slds-size--1-of-1">
+                        <span class="slds-form-element__helper">{{labels.field}}</span>
+                        {{view "select" class="slds-select" content=filterOptions value=selectedFilter prompt=labels.selectPlaceHolder data-qa-select="selectedFilter"}}
+                    </label>
                 </div>
                 {{partial filterPartial}}
             </div>
-            <div class="modal__footer">
-                {{#if errorMessage}}
-                    <div class="alert alert--error alert--inline" data-qa-alert="error">{{errorMessage}}</div>
-                {{/if}}
-                <button type="button" class="button button--secondary" data-dismiss="modal" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
-                <button type="button" class="button button--primary filterOK" {{action "clickOK"}} data-qa-button="ok">{{labels.ok}}</button>
-            </div>
-        </div>
-    </div>
-</div>
+        </fieldset>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="filter-modal" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="filter-modal" {{action "clickOK"}} data-qa-button="ok">{{labels.ok}}</button>
+    </modalFooter>
+{{/aljs-modal}}

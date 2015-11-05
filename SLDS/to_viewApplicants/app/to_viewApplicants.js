@@ -119,6 +119,13 @@ Ember.Handlebars.helper('formatSize', function(size) {
     return formattedSize;
 });
 
+_AljsApp = App;
+
+
+Ember.Object.reopen({
+	assetsLocation: assetsLocation
+});
+
 App.CamelizeModelMixin = Ember.Mixin.create({
 	camelizedModel: function() {
 		var model = this.get('model');
@@ -383,15 +390,6 @@ App.ViewApplicantsView = Ember.View.extend({
         		});
         	}
         });
-	},
-	click: function(e) {
-		Ember.run.scheduleOnce('afterRender', this, function() {
-			if ($(e.target).closest('.js-tooltipster-button').length === 0) {
-				$('.js-tooltipster-button').tooltipster('hide');
-			}
-		});
-		
-		//console.log('clicked');*/
 	}
 });
 
@@ -781,8 +779,12 @@ App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(Ap
 App.ResultController = Ember.ObjectController.extend({
 	alertStatusClass: function() {
 		var alertStatus = this.get('Alert_Status__c');
-		return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? 'has-problem-warning' : 'has-problem-error';
-	}.property('parentController.results.viewableApplications'),
+		var currentApplicationId = this.get('parentController.currentApplicationId');
+		var appId = this.get('Id');
+		var alertStatusString = currentApplicationId === appId ? '' : 'to-va-applicant--not-selected ';
+
+		return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? alertStatusString + 'to-va-threshold--warning' : alertStatusString + 'to-va-threshold--error';
+	}.property('parentController.results.viewableApplications', 'parentController.currentApplicationId'),
 	applicationRatingVal: function() {
 		return this.get(scoreSort);
 	}.property('parentController.results.viewableApplications'),
@@ -790,7 +792,7 @@ App.ResultController = Ember.ObjectController.extend({
 		return !Ember.isNone(this.get(scoreSort));
 	}.property('parentController.results.viewableApplications'),
 	ratingClass: function() {
-		return this.get('applicationRatingVal') >= 0 ? 'text-success' : 'text-error'; 
+		return this.get('applicationRatingVal') >= 0 ? 'to-va-rating to-va-rating--positive' : 'to-va-rating to-va-rating--negative'; 
 	}.property('applicationRatingVal'),
 	resultPartial: function() {
 		var sortTypeLabel = this.get('parentController.sortOptions').findBy('value', this.get('parentController.sortType')).label;

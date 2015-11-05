@@ -1,8 +1,8 @@
-<a href="#" class="pad--sm--m">
-    <h4 class="card__heading dots" data-qa-label="applicationName">{{application.First_Name__c}} {{application.Last_Name__c}}</h4>
-    <h5 class="card__subheading dots" data-qa-label="rating">{{labels.rating}}
+<div class="slds-tile slds-tile--board">
+    {{application.First_Name__c}} {{application.Last_Name__c}}
+    <small class="slds-show to-va-sort-info slds-p-top--xx-small">{{labels.rating}}
         {{#if isScoreSortCustom}}
-            <span {{bind-attr class="application.ratingClass"}} data-qa-label="ratingValue">{{application.applicationRatingVal}}</span>
+            <span {{bind-attr class="application.ratingClass"}}>{{application.applicationRatingVal}}</span>
         {{else}}
             {{#if application.hasApplicationRatingVal}}
                 <span {{bind-attr class="application.ratingClass"}} data-qa-label="ratingValueFraction">{{application.applicationRatingVal}}</span> ({{labels.outOf}} {{application.Maximum_Score__c}})
@@ -10,5 +10,5 @@
                 <span>{{labels.na}}</span>
             {{/if}}
         {{/if}}
-    </h5>
-</a>
+    </small>
+</div>

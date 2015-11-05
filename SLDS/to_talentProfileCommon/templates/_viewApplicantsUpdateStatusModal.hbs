@@ -1,40 +1,34 @@
-<div aria-hidden="true" aria-labelledby="none" class="modal fade" id="status-modal" role="dialog" tabindex="-1" data-qa-container="statusModal">
-    <div class="modal__shell">
-        <div class="modal__content">
-            <div class="modal__top pad--sm--bm">
-                <button class="close" data-dismiss="modal" type="button">
-                    <span class="close-modal-x"></span>
-                </button>
-                <h2 class="modal__heading" data-qa-label="updateStatus">{{labels.updateStatus}}</h2>
-            </div>
-            <div class="modal__body">
-                <div class="alert alert--info mar--sm--bm">
-                    <div class="part__left pad--sm--rn"><span class="juicon juicon-info-circle"></span></div>
-                    <div class="part__right">{{labels.updateStatusModalBody1}} {{results.total}} {{labels.updateStatusModalBody2}}</div>
-                </div>
-                <div class="mar--sm--bm">
-                    <div class="form-group">
-                        <label data-qa-label="stage">{{labels.stage}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" content=applicationStages value=selectedBulkStage data-qa-select="selectedBulkStage" prompt=labels.selectPlaceHolder}}
-                        </div>
-                    </div>
-                </div>
-                <div class="mar--sm--bn">
-                    <div class="form-group">
-                        <label data-qa-label="status">{{labels.status}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" content=applicationStatuses value=selectedBulkStatus data-qa-select="selectedBulkStatus" prompt=labels.selectPlaceHolder}}
-                        </div>
-                    </div>
+{{#aljs-modal modalId="status-modal" class=""}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium">{{labels.updateStatus}}</h2>
+    </modalHeader>
+    <modalBody>
+        <div class="slds-notify slds-notify--alert slds-theme--alert-texture slds-m-bottom--medium" role="alert">
+            <span class="slds-assistive-text">Warning</span>
+            <h2>
+                <svg aria-hidden="true" class="slds-icon slds-icon--small slds-m-right--x-small">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
+                </svg>
+                {{labels.updateStatusModalBody1}} {{results.total}} {{labels.updateStatusModalBody2}}
+            </h2>
+        </div>
+        <div class="slds-form--stacked">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="stage">{{labels.stage}}</label>
+                <div class="slds-form-element__control">
+                    {{view "select" class="slds-select" content=applicationStages value=selectedBulkStage data-qa-select="selectedBulkStage" prompt=labels.selectPlaceHolder}}
                 </div>
             </div>
-            <div class="modal__footer">
-                <button class="button button--secondary" data-dismiss="modal" type="button" data-qa-button="cancel">{{labels.cancel}}</button>
-                <button class="button button--primary js-save" {{bind-attr disabled="disableConfirmBulkUpdate"}} data-dismiss="modal" type="button" {{action "clickConfirmBulkUpdate"}} data-qa-button="update">{{labels.update}} {{results.total}} {{labels.applicantsCapitalizedParens}}</button>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="status">{{labels.status}}</label>
+                <div class="slds-form-element__control">
+                    {{view "select" class="slds-select" content=applicationStatuses value=selectedBulkStatus data-qa-select="selectedBulkStatus" prompt=labels.selectPlaceHolder}}
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral" data-aljs-dismiss="status-modal" tabindex="-1">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--brand" data-aljs-dismiss="status-modal" tabindex="-1" {{bind-attr disabled="disableConfirmBulkUpdate"}} {{action "clickConfirmBulkUpdate"}} data-qa-button="update">{{labels.update}} {{results.total}} {{labels.applicantsCapitalizedParens}}</button>
+    </modalFooter>
+{{/aljs-modal}}

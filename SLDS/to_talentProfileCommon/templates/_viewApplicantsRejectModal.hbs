@@ -1,29 +1,26 @@
-<div aria-hidden="true" aria-labelledby="none" class="modal fade" id="reject-modal" role="dialog" tabindex="-1" data-qa-container="rejectModal">
-    <div class="modal__shell">
-        <div class="modal__content">
-            <div class="modal__top pad--sm--bm">
-                <button class="close" data-dismiss="modal" type="button">
-                    <span class="close-modal-x"></span>
-                </button>
-                <h2 class="modal__heading" data-qa-label="rejectApplications">{{labels.rejectApplicants}}</h2>
-            </div>
-            <div class="modal__body">
-                <div class="alert alert--info mar--sm--bm">
-                    <div class="part__left pad--sm--rn"><span class="juicon juicon-info-circle"></span></div>
-                    <div class="part__right">{{labels.rejectModalBody1}} {{results.total}} {{labels.rejectModalBody2}}</div>
-                </div>
-                <div class="form-group">
-                    <label data-qa-label="disposition">{{labels.disposition}}</label>
-                    <div class="select__wrap">
-                        <div class="input__icon juicon juicon-down"></div>
-                        {{view "select" content=disposition value=selectedBulkDisposition data-qa-select="selectedBulkDisposition" prompt=labels.selectPlaceHolder}}
-                    </div>
-                </div>
-            </div>
-            <div class="modal__footer">
-                <button class="button button--secondary" data-dismiss="modal" type="button" data-qa-button="cancel">{{labels.cancel}}</button>
-                <button class="button button--error js-save" {{bind-attr disabled="disableConfirmBulkReject"}} data-dismiss="modal" type="button" {{action "clickConfirmBulkReject"}} data-qa-button="confirmReject">{{labels.rejectCapitalized}} {{results.total}} {{labels.applicantsCapitalizedParens}}</button>
+{{#aljs-modal modalId="reject-modal" class=""}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium">{{labels.rejectApplicants}}</h2>
+    </modalHeader>
+    <modalBody>
+        <div class="slds-notify slds-notify--alert slds-theme--alert-texture slds-m-bottom--medium" role="alert">
+            <span class="slds-assistive-text">Warning</span>
+            <h2>
+                <svg aria-hidden="true" class="slds-icon slds-icon--small slds-m-right--x-small">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#info"></use>
+                </svg>
+                {{labels.rejectModalBody1}} {{results.total}} {{labels.rejectModalBody2}}
+            </h2>
+        </div>
+        <div class="slds-form-element">
+            <label class="slds-form-element__label" for="disposition">{{labels.disposition}}</label>
+            <div class="slds-form-element__control">
+                {{view "select" class="slds-select" content=disposition value=selectedBulkDisposition data-qa-select="selectedBulkDisposition" prompt=labels.selectPlaceHolder}}
             </div>
         </div>
-    </div>
-</div>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral" data-aljs-dismiss="reject-modal" tabindex="-1">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--brand" data-aljs-dismiss="reject-modal" tabindex="-1" {{bind-attr disabled="disableConfirmBulkReject"}} {{action "clickConfirmBulkReject"}} data-qa-button="confirmReject">{{labels.rejectCapitalized}} {{results.total}} {{labels.applicantsCapitalizedParens}}</button>
+    </modalFooter>
+{{/aljs-modal}}

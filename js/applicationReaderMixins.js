@@ -1207,7 +1207,7 @@ App.BackToTopComponent = Ember.Component.extend({
     layoutName: 'components/backToTop',
     afterRenderEvent: function() {
         var backToTop = $('#back-to-top'),
-            contentContainer = $('body .scope-container .js-profile-panel');
+            contentContainer = $('body .slds .js-profile-panel');
         
         function setPos() {
             var topPos = $(window).height() - ($(window).height() / 6),

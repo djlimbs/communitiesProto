@@ -1,12 +1,11 @@
-<div aria-hidden="true" aria-labelledby="none" class="modal fade mar--sm--txl" id="share-modal" role="dialog" tabindex="-1" data-qa-container="shareModal">
-    <div class="modal__shell">
-        <div class="modal__content">
-            <div class="modal__top pad--sm--bm">
-                <h2 class="modal__heading" data-qa-label="shareApplicant">{{labels.shareApplicantList}}</h2>
-            </div>
-            <div class="modal__body">
-                <label data-qa-label="copyAndPastLink">{{labels.copyAndPasteLink}}</label>
-                {{input type="text" class="pad--sm--xs pad--sm--ls pad--sm--rs" value=shareUrl}}      
+{{#aljs-modal modalId="share-modal" class=""}}
+    <modalheader>
+        <h2 class="slds-text-heading--medium" data-qa-label="shareApplicant">{{labels.shareApplicantList}}</h2>
+    </modalHeader>
+    <modalBody>
+        <div class="slds-form-element">
+            <div class="slds-form-element__control">
+                {{input type="text" class="slds-input" value=shareUrl}}
 
                 {{#if hiringManager}}
                     <label class="block mar--sm--bn mar--sm--tm" data-qa-label="hiringManager">{{labels.hiringManager}}</label>
@@ -14,9 +13,9 @@
                     <a {{bind-attr href="mailLink"}} data-qa-link="hiringManagerEmail">{{hiringManager.Email}}</a>
                 {{/if}}    
             </div>
-            <div class="modal__footer">
-                <button class="button button--primary js-save" data-dismiss="modal" type="button" data-qa-button="done">{{labels.done}}</button>
-            </div>
         </div>
-    </div>
-</div>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="share-modal">{{labels.done}}</button>
+    </modalFooter>
+{{/aljs-modal}}

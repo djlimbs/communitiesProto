@@ -10,12 +10,5 @@
     </nav>
     <div class="content ar-container mar--sm--tm mar--sm--bm pad--sm--n">
         {{partial "applicationView"}}
-        <div class="hide">
-            {{#unless isSF1}}
-                {{provide-feedback ctrl=this buttonClass="js-feedback-button"}}
-
-                {{update-status ctrl=this buttonClass="js-status-button"}}
-            {{/unless}}
-        </div>
     </div>
 </div>
