@@ -1,0 +1,44 @@
+{{#aljs-modal modalId="filled-info-modal" bodyClass="slds-p-around--x-large"}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium">{{labels.positionsFilled}}</h2>
+    </modalHeader>
+    <modalBody>
+        <div class="slds-scrollable--x">
+            {{#if data.hiredApplicants}}
+                <table class="slds-table slds-table--bordered">
+                    <thead>
+                        <tr class="slds-text-heading--label">
+                            <th scope="col">
+                                <span class="slds-truncate">{{labels.applicant}}</span>
+                            </th>
+                            <th scope="col">
+                                <span class="slds-truncate">{{labels.offerAccepted}}</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each applicant in data.hiredApplicants}}
+                            <tr {{action "clickApplicant" applicant.Id}} data-qa-link="{{unbound applicant.Id}}">
+                                <td data-qa-label="applicantName" role="row">
+                                    <a href="#" class="slds-truncate" tabindex="-1">
+                                        {{applicant.Name}}
+                                    </a>
+                                </td>
+                                <td data-qa-label="applicantResponseDate">
+                                    <span class="slds-truncate">
+                                        {{formatDate applicant.responseDate}}
+                                    </span>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+                <em class="slds-show slds-text-align--center slds-text-heading--small slds-disabled-text" data-qa-label="noPositionsFilled">{{labels.noPositionsFilled}}</em>
+            {{/if}}
+        </div>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="filled-info-modal" tabindex="-1">{{labels.ok}}</button>
+    </modalFooter>
+{{/aljs-modal}}

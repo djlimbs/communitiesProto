@@ -47,6 +47,7 @@ _AljsApp.AljsModalComponent = Ember.Component.extend(Ember.Evented, {
         } else {
             this.$().find('bodyYield').replaceWith(bodyContents);
             this.$().find('modalBody').remove();
+            this.$().find('.slds-modal__content').addClass(this.get('bodyClass'));
         }
 
         if (Ember.isEmpty(footerContents)) {

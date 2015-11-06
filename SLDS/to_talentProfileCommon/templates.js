@@ -2760,7 +2760,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'disabled': ("disablePrev")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" data-qa-button=\"prev\">\n                    <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--left\">\n                        <use xlink:href=\"assets/icons/utility-sprite/svg/symbols.svg#left\"></use>\n                    </svg>Prev</button>\n                <!-- /Button -->\n                <!-- Button -->\n                <button class=\"slds-button slds-button--neutral\" ");
+  data.buffer.push(" data-qa-button=\"prev\">\n                    <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--left\">\n                        <use xlink:href=\"assets/icons/utility-sprite/svg/symbols.svg#left\"></use>\n                    </svg>");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.prev", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n                <!-- /Button -->\n                <!-- Button -->\n                <button class=\"slds-button slds-button--neutral\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickPrevOrNext", "next", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2771,7 +2775,11 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     'disabled': ("disableNext")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
-  data.buffer.push(" data-qa-button=\"next\">Next\n                    <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--right\">\n                        <use xlink:href=\"assets/icons/utility-sprite/svg/symbols.svg#right\"></use>\n                    </svg>\n                </button>\n                <!-- /Button -->\n            </div>\n            <!-- /Button Group -->\n        </div>\n    </div>\n    <ul class=\"review-stats slds-text-body--small slds-text-align--center\">\n        <li class=\"clickable\" data-aljs=\"modal\" data-aljs-show=\"total-modal\">\n            <div>");
+  data.buffer.push(" data-qa-button=\"next\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.next", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                    <svg aria-hidden=\"true\" class=\"slds-button__icon slds-button__icon--right\">\n                        <use xlink:href=\"assets/icons/utility-sprite/svg/symbols.svg#right\"></use>\n                    </svg>\n                </button>\n                <!-- /Button -->\n            </div>\n            <!-- /Button Group -->\n        </div>\n    </div>\n    <ul class=\"review-stats slds-text-body--small slds-text-align--center\">\n        <li class=\"clickable\" data-aljs=\"modal\" data-aljs-show=\"stage-status-modal\">\n            <div>");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2779,7 +2787,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "totalApplicants.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</span>\n            <span>\n                <svg aria-hidden=\"true\" class=\"slds-icon slds-icon--x-small slds-icon-text-default\">\n                    <use xlink:href=\"assets/icons/utility-sprite/svg/symbols.svg#standard_objects\"></use>\n                </svg>\n            </span>\n        </li>\n        <li class=\"clickable\" data-aljs=\"modal\" data-aljs-show=\"filled-modal\">\n            <div>");
+  data.buffer.push("</span>\n            <span>\n                <svg aria-hidden=\"true\" class=\"slds-icon slds-icon--x-small slds-icon-text-default\">\n                    <use xlink:href=\"assets/icons/utility-sprite/svg/symbols.svg#standard_objects\"></use>\n                </svg>\n            </span>\n        </li>\n        <li class=\"clickable\" data-aljs=\"modal\" data-aljs-show=\"filled-info-modal\">\n            <div>");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.filled", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -2812,6 +2820,24 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.days", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push(")</small>\n        </li>\n    </ul>\n</div>\n\n");
+  hashContexts = {'data': depth0,'filters': depth0,'ctrl': depth0};
+  hashTypes = {'data': "ID",'filters': "ID",'ctrl': "ID"};
+  options = {hash:{
+    'data': ("filledInfo"),
+    'filters': ("filters"),
+    'ctrl': ("controller")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['filled-info'] || (depth0 && depth0['filled-info'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "filled-info", options))));
+  data.buffer.push("\n\n");
+  hashContexts = {'data': depth0,'filters': depth0,'ctrl': depth0};
+  hashTypes = {'data': "ID",'filters': "ID",'ctrl': "ID"};
+  options = {hash:{
+    'data': ("totalApplicants"),
+    'filters': ("filters"),
+    'ctrl': ("controller")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['applicant-totals'] || (depth0 && depth0['applicant-totals'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "applicant-totals", options))));
+  data.buffer.push("\n\n");
   return buffer;
   
 });
@@ -2967,30 +2993,6 @@ function program2(depth0,data) {
     'class': ("")
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['aljs-modal'] || (depth0 && depth0['aljs-modal'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-modal", options));
-  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  else { data.buffer.push(''); }
-  
-});
-
-Ember.TEMPLATES["_viewApplicantsStageStatusPopover"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
-this.compilerInfo = [4,'>= 1.0.0'];
-helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
-  var stack1, stack2, hashContexts, hashTypes, options, self=this, helperMissing=helpers.helperMissing;
-
-function program1(depth0,data) {
-  
-  
-  data.buffer.push("\n    <popoverbody>\n        Sit nulla est ex deserunt exercitation anim occaecat. Nostrud <a data-aljs-dismiss=\"stageStatus\" href=\"#\">ullamco</a> deserunt aute id consequat veniam incididunt duis in sint irure nisi.\n    </popoverbody>\n");
-  }
-
-  hashContexts = {'popoverId': depth0,'position': depth0,'wrapperDisplay': depth0};
-  hashTypes = {'popoverId': "STRING",'position': "STRING",'wrapperDisplay': "STRING"};
-  options = {hash:{
-    'popoverId': ("stageStatus"),
-    'position': ("bottom"),
-    'wrapperDisplay': ("block")
-  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
-  stack2 = ((stack1 = helpers['aljs-popover'] || (depth0 && depth0['aljs-popover'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-popover", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
   else { data.buffer.push(''); }
   
@@ -3799,7 +3801,7 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "assetsLocation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("/assets/icons/action-sprite/svg/symbols.svg#close\"></use>\n                </svg>\n                <span class=\"slds-assistive-text\">Close</span>\n            </button>\n        </div>\n        <div class=\"slds-modal__content slds-expanded\">\n            <div data-qa-container=\"modalBody\">\n                <bodyYield></bodyYield>\n            </div>\n        </div>\n        <div ");
+  data.buffer.push("/assets/icons/action-sprite/svg/symbols.svg#close\"></use>\n                </svg>\n                <span class=\"slds-assistive-text\">Close</span>\n            </button>\n        </div>\n        <div class=\"slds-modal__content\">\n            <div data-qa-container=\"modalBody\">\n                <bodyYield></bodyYield>\n            </div>\n        </div>\n        <div ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
@@ -5210,11 +5212,11 @@ function program5(depth0,data) {
   },inverse:self.program(3, program3, data),fn:self.program(1, program1, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
   if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
   data.buffer.push("\n\n");
-  hashContexts = {'modalId': depth0,'class': depth0};
-  hashTypes = {'modalId': "STRING",'class': "STRING"};
+  hashContexts = {'modalId': depth0,'bodyClass': depth0};
+  hashTypes = {'modalId': "STRING",'bodyClass': "STRING"};
   options = {hash:{
     'modalId': ("filter-modal"),
-    'class': ("")
+    'bodyClass': ("slds-expanded")
   },inverse:self.noop,fn:self.program(5, program5, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['aljs-modal'] || (depth0 && depth0['aljs-modal'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-modal", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
@@ -5339,6 +5341,96 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
   
 });
 
+Ember.TEMPLATES["components/viewApplicantsFilledInfoModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n    <modalHeader>\n        <h2 class=\"slds-text-heading--medium\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.positionsFilled", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n    </modalHeader>\n    <modalBody>\n        <div class=\"slds-scrollable--x\">\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "data.hiredApplicants", {hash:{},inverse:self.program(5, program5, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n        </div>\n    </modalBody>\n    <modalFooter>\n        <button class=\"slds-button slds-button--neutral slds-button--brand\" data-aljs-dismiss=\"filled-info-modal\" tabindex=\"-1\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.ok", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n    </modalFooter>\n");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n                <table class=\"slds-table slds-table--bordered\">\n                    <thead>\n                        <tr class=\"slds-text-heading--label\">\n                            <th scope=\"col\">\n                                <span class=\"slds-truncate\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applicant", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n                            </th>\n                            <th scope=\"col\">\n                                <span class=\"slds-truncate\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.offerAccepted", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n                            </th>\n                        </tr>\n                    </thead>\n                    <tbody>\n                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "applicant", "in", "data.hiredApplicants", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                    </tbody>\n                </table>\n            ");
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts, options;
+  data.buffer.push("\n                            <tr ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickApplicant", "applicant.Id", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-link=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "applicant.Id", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                <td data-qa-label=\"applicantName\" role=\"row\">\n                                    <a href=\"#\" class=\"slds-truncate\" tabindex=\"-1\">\n                                        ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "applicant.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n                                    </a>\n                                </td>\n                                <td data-qa-label=\"applicantResponseDate\">\n                                    <span class=\"slds-truncate\">\n                                        ");
+  hashTypes = {};
+  hashContexts = {};
+  options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers.formatDate || (depth0 && depth0.formatDate)),stack1 ? stack1.call(depth0, "applicant.responseDate", options) : helperMissing.call(depth0, "formatDate", "applicant.responseDate", options))));
+  data.buffer.push("\n                                    </span>\n                                </td>\n                            </tr>\n                        ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                <em class=\"slds-show slds-text-align--center slds-text-heading--small slds-disabled-text\" data-qa-label=\"noPositionsFilled\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.noPositionsFilled", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</em>\n            ");
+  return buffer;
+  }
+
+  hashContexts = {'modalId': depth0,'bodyClass': depth0};
+  hashTypes = {'modalId': "STRING",'bodyClass': "STRING"};
+  options = {hash:{
+    'modalId': ("filled-info-modal"),
+    'bodyClass': ("slds-p-around--x-large")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['aljs-modal'] || (depth0 && depth0['aljs-modal'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-modal", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  else { data.buffer.push(''); }
+  
+});
+
 Ember.TEMPLATES["components/viewApplicantsFilledTooltip"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
 this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
@@ -5413,6 +5505,208 @@ function program4(depth0,data) {
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.ok", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</button>\n</div>");
   return buffer;
+  
+});
+
+Ember.TEMPLATES["components/viewApplicantsStageStatusModal"] = Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
+this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
+  var stack1, stack2, hashContexts, hashTypes, options, escapeExpression=this.escapeExpression, self=this, helperMissing=helpers.helperMissing;
+
+function program1(depth0,data) {
+  
+  var buffer = '', stack1, stack2, hashTypes, hashContexts, options;
+  data.buffer.push("\n	<modalHeader>\n		<h2 class=\"slds-text-heading--medium\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.totalApplicants", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</h2>\n	</modalHeader>\n	<modalBody>\n		<div class=\"slds-tabs--default\" data-aljs=\"tabs\">\n            <ul class=\"slds-tabs--default__nav\" role=\"tablist\">\n                <li ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":slds-tabs__item :slds-text-heading--label isStageSelected:slds-active")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" title=\"By Stage\" role=\"presentation\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setIsStageSelected", true, {hash:{},contexts:[depth0,depth0],types:["STRING","BOOLEAN"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"stage\"><a href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-stage\" data-aljs-show=\"tab-stage\" tabindex=\"-1\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.byStage", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></li>\n                <li ");
+  hashContexts = {'class': depth0};
+  hashTypes = {'class': "STRING"};
+  options = {hash:{
+    'class': (":slds-tabs__item :slds-text-heading--label isStageSelected::slds-active")
+  },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
+  data.buffer.push(" title=\"By Source\" role=\"presentation\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "setIsStageSelected", false, {hash:{},contexts:[depth0,depth0],types:["STRING","BOOLEAN"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-button=\"source\"><a href=\"#\" role=\"tab\" aria-selected=\"false\" aria-controls=\"tab-source\" data-aljs-show=\"tab-source\" tabindex=\"-1\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.bySource", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></li>\n            </ul>\n            ");
+  hashTypes = {};
+  hashContexts = {};
+  stack2 = helpers['if'].call(depth0, "isStageSelected", {hash:{},inverse:self.program(7, program7, data),fn:self.program(2, program2, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  data.buffer.push("\n        </div>\n	</modalBody>\n	<modalFooter>\n		<button class=\"slds-button slds-button--neutral slds-button--brand\" data-aljs-dismiss=\"stage-status-modal\" tabindex=\"-1\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.ok", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</button>\n	</modalFooter>\n");
+  return buffer;
+  }
+function program2(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n	            <div id=\"tab-stage\" class=\"slds-tabs__content\" role=\"tabpanel\">\n	                    <table class=\"slds-table slds-table--bordered\">\n	                        <thead>\n	                            <tr class=\"slds-text-heading--label\">\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\" data-qa-label=\"stage\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.stage", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n	                                </th>\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\" data-qa-label=\"applicants\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applicants", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n	                                </th>\n	                            </tr>\n	                        </thead>\n	                        <tbody>\n	                        	");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "stageCount", "in", "data.stageCounts", {hash:{},inverse:self.noop,fn:self.program(3, program3, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n		                        <tr class=\"slds-hint-parent slds-theme--shade\">\n                                    <td data-label=\"opportunity-name\" role=\"row\"><span class=\"slds-truncate slds-opacity--50\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.subtotal", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n                                    <td data-label=\"account\"><span class=\"slds-truncate slds-opacity--50\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "data.stageSubtotal", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n                                </tr>\n		                        ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "outcomeCount", "in", "data.outcomeCounts", {hash:{},inverse:self.noop,fn:self.program(5, program5, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n	                            <tr class=\"slds-hint-parent slds-theme--shade\">\n	                                <td data-label=\"opportunity-name\" role=\"row\"><span class=\"slds-truncate slds-opacity--50\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n	                                <td data-label=\"account\"><span class=\"slds-truncate slds-opacity--50\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "data.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n	                            </tr>\n	                        </tbody>\n	                    </table>\n	                <!-- /By Stage -->\n	            </div>\n	        ");
+  return buffer;
+  }
+function program3(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n		                            <tr class=\"slds-hint-parent\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSetStageFilter", "stageCount.name", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-link=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "stageCount.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n		                                <td data-qa-label=\"stageName\" role=\"row\">\n		                                	<a href=\"#\" class=\"slds-truncate\" tabindex=\"-1\">\n		                                		");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "stageCount.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n		                                	</a>\n		                                </td>\n		                                <td data-qa-label=\"stageTotal\">\n		                                	<span class=\"slds-truncate\">\n		                                		");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "stageCount.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n		                                	</span>\n		                                </td>\n		                            </tr>\n		                        ");
+  return buffer;
+  }
+
+function program5(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n                                    <tr class=\"slds-hint-parent\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSetOutcomeFilter", "outcomeCount.name", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-link=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "outcome.Name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n                                        <td data-qa-label=\"outcomeName\" role=\"row\"><a href=\"#\" class=\"slds-truncate\" tabindex=\"-1\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outcomeCount.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</a></td>\n                                        <td data-qa-label=\"outcomeTotal\"><span class=\"slds-truncate\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "outcomeCount.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n                                    </tr>\n                                ");
+  return buffer;
+  }
+
+function program7(depth0,data) {
+  
+  var buffer = '', stack1, hashTypes, hashContexts;
+  data.buffer.push("\n	            <div id=\"tab-source\" class=\"slds-tabs__content\" role=\"tabpanel\">\n	                <!-- By Source -->\n	                <div class=\"slds-scrollable--x\">\n	                    <table class=\"slds-table slds-table--bordered\">\n	                        <thead>\n	                            <tr class=\"slds-text-heading--label\">\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.source", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n	                                </th>\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.applicants", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span>\n	                                </th>\n	                            </tr>\n	                        </thead>\n	                        <tbody>\n	                        	");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers.each.call(depth0, "source", "in", "data.sourceCounts", {hash:{},inverse:self.noop,fn:self.program(8, program8, data),contexts:[depth0,depth0,depth0],types:["ID","ID","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n	                            <tr class=\"slds-hint-parent slds-theme--shade\">\n	                                <td data-label=\"opportunity-name\" role=\"row\"><span class=\"slds-truncate slds-opacity--50\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n	                                <td data-label=\"account\"><span class=\"slds-truncate slds-opacity--50\">");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "data.sourceTotal", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("</span></td>\n	                            </tr>\n	                        </tbody>\n	                    </table>\n	                </div>\n	                <!-- /By Source -->\n	            </div>\n	        ");
+  return buffer;
+  }
+function program8(depth0,data) {
+  
+  var buffer = '', hashTypes, hashContexts;
+  data.buffer.push("\n		                            <tr class=\"slds-hint-parent\" ");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSetSourceFilter", "source.name", {hash:{},contexts:[depth0,depth0],types:["STRING","ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push(" data-qa-link=\"");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "source.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\">\n		                                <td data-qa-label=\"source\" role=\"row\">\n		                                	<a href=\"#\" class=\"slds-truncate\" tabindex=\"-1\">\n		                                		");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "source.name", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n		                                	</a>\n		                                </td>\n		                                <td data-qa-label=\"sourceValue\">\n		                                	<span class=\"slds-truncate\">\n		                                		");
+  hashTypes = {};
+  hashContexts = {};
+  data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "source.total", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
+  data.buffer.push("\n		                                	</span>\n		                                </td>\n		                            </tr>\n		                        ");
+  return buffer;
+  }
+
+  hashContexts = {'modalId': depth0,'bodyClass': depth0};
+  hashTypes = {'modalId': "STRING",'bodyClass': "STRING"};
+  options = {hash:{
+    'modalId': ("stage-status-modal"),
+    'bodyClass': ("slds-p-horizontal--x-large slds-p-bottom--x-large slds-p-top--large")
+  },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
+  stack2 = ((stack1 = helpers['aljs-modal'] || (depth0 && depth0['aljs-modal'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-modal", options));
+  if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
+  else { data.buffer.push(''); }
   
 });
 

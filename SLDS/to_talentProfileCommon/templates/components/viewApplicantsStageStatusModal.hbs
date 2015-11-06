@@ -1,0 +1,102 @@
+{{#aljs-modal modalId="stage-status-modal" bodyClass="slds-p-horizontal--x-large slds-p-bottom--x-large slds-p-top--large"}}
+	<modalHeader>
+		<h2 class="slds-text-heading--medium">{{labels.totalApplicants}}</h2>
+	</modalHeader>
+	<modalBody>
+		<div class="slds-tabs--default" data-aljs="tabs">
+            <ul class="slds-tabs--default__nav" role="tablist">
+                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label isStageSelected:slds-active"}} title="By Stage" role="presentation" {{action "setIsStageSelected" true}} data-qa-button="stage"><a href="#" role="tab" aria-selected="true" aria-controls="tab-stage" data-aljs-show="tab-stage" tabindex="-1">{{labels.byStage}}</a></li>
+                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label isStageSelected::slds-active"}} title="By Source" role="presentation" {{action "setIsStageSelected" false}} data-qa-button="source"><a href="#" role="tab" aria-selected="false" aria-controls="tab-source" data-aljs-show="tab-source" tabindex="-1">{{labels.bySource}}</a></li>
+            </ul>
+            {{#if isStageSelected}}
+	            <div id="tab-stage" class="slds-tabs__content" role="tabpanel">
+	                    <table class="slds-table slds-table--bordered">
+	                        <thead>
+	                            <tr class="slds-text-heading--label">
+	                                <th scope="col">
+	                                    <span class="slds-truncate" data-qa-label="stage">{{labels.stage}}</span>
+	                                </th>
+	                                <th scope="col">
+	                                    <span class="slds-truncate" data-qa-label="applicants">{{labels.applicants}}</span>
+	                                </th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                        	{{#each stageCount in data.stageCounts}}
+		                            <tr class="slds-hint-parent" {{action "clickSetStageFilter" stageCount.name}} data-qa-link="{{unbound stageCount.name}}">
+		                                <td data-qa-label="stageName" role="row">
+		                                	<a href="#" class="slds-truncate" tabindex="-1">
+		                                		{{stageCount.name}}
+		                                	</a>
+		                                </td>
+		                                <td data-qa-label="stageTotal">
+		                                	<span class="slds-truncate">
+		                                		{{stageCount.total}}
+		                                	</span>
+		                                </td>
+		                            </tr>
+		                        {{/each}}
+		                        <tr class="slds-hint-parent slds-theme--shade">
+                                    <td data-label="opportunity-name" role="row"><span class="slds-truncate slds-opacity--50">{{labels.subtotal}}</span></td>
+                                    <td data-label="account"><span class="slds-truncate slds-opacity--50">{{data.stageSubtotal}}</span></td>
+                                </tr>
+		                        {{#each outcomeCount in data.outcomeCounts}}
+                                    <tr class="slds-hint-parent" {{action "clickSetOutcomeFilter" outcomeCount.name}} data-qa-link="{{unbound outcome.Name}}">
+                                        <td data-qa-label="outcomeName" role="row"><a href="#" class="slds-truncate" tabindex="-1">{{outcomeCount.name}}</a></td>
+                                        <td data-qa-label="outcomeTotal"><span class="slds-truncate">{{outcomeCount.total}}</span></td>
+                                    </tr>
+                                {{/each}}
+	                            <tr class="slds-hint-parent slds-theme--shade">
+	                                <td data-label="opportunity-name" role="row"><span class="slds-truncate slds-opacity--50">{{labels.total}}</span></td>
+	                                <td data-label="account"><span class="slds-truncate slds-opacity--50">{{data.total}}</span></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                <!-- /By Stage -->
+	            </div>
+	        {{else}}
+	            <div id="tab-source" class="slds-tabs__content" role="tabpanel">
+	                <!-- By Source -->
+	                <div class="slds-scrollable--x">
+	                    <table class="slds-table slds-table--bordered">
+	                        <thead>
+	                            <tr class="slds-text-heading--label">
+	                                <th scope="col">
+	                                    <span class="slds-truncate">{{labels.source}}</span>
+	                                </th>
+	                                <th scope="col">
+	                                    <span class="slds-truncate">{{labels.applicants}}</span>
+	                                </th>
+	                            </tr>
+	                        </thead>
+	                        <tbody>
+	                        	{{#each source in data.sourceCounts}}
+		                            <tr class="slds-hint-parent" {{action "clickSetSourceFilter" source.name}} data-qa-link="{{unbound source.name}}">
+		                                <td data-qa-label="source" role="row">
+		                                	<a href="#" class="slds-truncate" tabindex="-1">
+		                                		{{source.name}}
+		                                	</a>
+		                                </td>
+		                                <td data-qa-label="sourceValue">
+		                                	<span class="slds-truncate">
+		                                		{{source.total}}
+		                                	</span>
+		                                </td>
+		                            </tr>
+		                        {{/each}}
+	                            <tr class="slds-hint-parent slds-theme--shade">
+	                                <td data-label="opportunity-name" role="row"><span class="slds-truncate slds-opacity--50">{{labels.total}}</span></td>
+	                                <td data-label="account"><span class="slds-truncate slds-opacity--50">{{data.sourceTotal}}</span></td>
+	                            </tr>
+	                        </tbody>
+	                    </table>
+	                </div>
+	                <!-- /By Source -->
+	            </div>
+	        {{/if}}
+        </div>
+	</modalBody>
+	<modalFooter>
+		<button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="stage-status-modal" tabindex="-1">{{labels.ok}}</button>
+	</modalFooter>
+{{/aljs-modal}}

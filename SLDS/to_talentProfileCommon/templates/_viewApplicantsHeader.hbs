@@ -17,10 +17,10 @@
                 <button class="slds-button slds-button--neutral" {{action "clickPrevOrNext" "prev"}} {{bind-attr disabled="disablePrev"}} data-qa-button="prev">
                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
                         <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#left"></use>
-                    </svg>Prev</button>
+                    </svg>{{labels.prev}}</button>
                 <!-- /Button -->
                 <!-- Button -->
-                <button class="slds-button slds-button--neutral" {{action "clickPrevOrNext" "next"}} {{bind-attr disabled="disableNext"}} data-qa-button="next">Next
+                <button class="slds-button slds-button--neutral" {{action "clickPrevOrNext" "next"}} {{bind-attr disabled="disableNext"}} data-qa-button="next">{{labels.next}}
                     <svg aria-hidden="true" class="slds-button__icon slds-button__icon--right">
                         <use xlink:href="assets/icons/utility-sprite/svg/symbols.svg#right"></use>
                     </svg>
@@ -31,7 +31,7 @@
         </div>
     </div>
     <ul class="review-stats slds-text-body--small slds-text-align--center">
-        <li class="clickable" data-aljs="modal" data-aljs-show="total-modal">
+        <li class="clickable" data-aljs="modal" data-aljs-show="stage-status-modal">
             <div>{{labels.total}}</div>
             <span class="slds-text-heading--medium slds-m-top--xx-small">{{totalApplicants.total}}</span>
             <span>
@@ -40,7 +40,7 @@
                 </svg>
             </span>
         </li>
-        <li class="clickable" data-aljs="modal" data-aljs-show="filled-modal">
+        <li class="clickable" data-aljs="modal" data-aljs-show="filled-info-modal">
             <div>{{labels.filled}}</div>
             <span class="slds-text-heading--medium slds-m-top--xx-small">{{filledInfo.numFilled}}/{{filledInfo.totalHeadCount}}</span>
             <span>
@@ -59,6 +59,10 @@
         </li>
     </ul>
 </div>
+
+{{filled-info data=filledInfo filters=filters ctrl=controller}}
+
+{{applicant-totals data=totalApplicants filters=filters ctrl=controller}}
 
 {{!-- OLD STUFF
 <div class="content force-overflow pad--sm--tm pad--sm--bm pad--sm--tm" data-qa-container="header">

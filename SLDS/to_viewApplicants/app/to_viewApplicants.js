@@ -191,10 +191,10 @@ Ember.Select.reopen({
     }
 });
 
-App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
-	attributeBindings: ['data', 'filters', 'ctrl', 'toggleUpdateHeader'],
+App.ApplicantTotalsComponent = Ember.Component.extend({
+	attributeBindings: ['data', 'filters', 'ctrl'],
 	isStageSelected: true,
-	layoutName: 'components/viewApplicantsStageStatusTooltip',
+	layoutName: 'components/viewApplicantsStageStatusModal',
 	setFilter: function(newFilters) {
 		var ctrl = this.get('ctrl');
 		var filters = this.get('filters');
@@ -210,7 +210,8 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 		ctrl.set('applicantId', null);
 		ctrl.notifyPropertyChange('filters');
 
-		$button.tooltipster('hide');
+		$('#stage-status-modal').modal('dismiss');
+		//$button.tooltipster('hide');
 	},
 	actions: {
 		setIsStageSelected: function(isStageSelected) {
@@ -289,9 +290,9 @@ App.ApplicantTotalsComponent = App.ToolTipsterComponent.extend({
 	}
 });
 
-App.FilledInfoComponent = App.ToolTipsterComponent.extend({
+App.FilledInfoComponent = Ember.Component.extend({
 	attributeBindings: ['data', 'filters', 'ctrl'],
-	layoutName: 'components/viewApplicantsFilledTooltip',
+	layoutName: 'components/viewApplicantsFilledInfoModal',
 	actions: {
 		clickApplicant: function(applicantId) {
 			var ctrl = this.get('ctrl');
@@ -311,7 +312,8 @@ App.FilledInfoComponent = App.ToolTipsterComponent.extend({
 			filters.clear();
 			filters.pushObject(newFilter);
 
-			$button.tooltipster('hide');
+			$('#filled-info-modal').modal('dismiss');
+			//$button.tooltipster('hide');
 
 			ctrl.set('applicantId', applicantId);
 			ctrl.notifyPropertyChange('filters');
