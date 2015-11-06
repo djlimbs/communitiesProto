@@ -6,7 +6,6 @@ _AljsApp.AljsModalComponent = Ember.Component.extend(Ember.Evented, {
 
         if (!($.fn.modal)) {
             $.fn.modal = function(option){
-                $('.slds-fade-in-open').trigger('close');
                 this.each(function(){
                     if ($(this).hasClass('slds-modal')) {
                         $(this).trigger(option);
@@ -63,6 +62,11 @@ _AljsApp.AljsModalComponent = Ember.Component.extend(Ember.Evented, {
             
             $('body').on('click', '[data-aljs-show="' + this.get('modalId') + '"]', function() {
                 self.openModal();
+            });
+
+            this.$().find('.slds-modal').on('dismiss', function(e) {
+                self.closeModal();
+                console.log(e);
             });
         });
     },

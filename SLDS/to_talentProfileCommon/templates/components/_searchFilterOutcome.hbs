@@ -1,19 +1,21 @@
-<div data-qa-container="outcomeFilter">
-    <div class="row input__group">
-        <div class="column column--md--6 mar--sm--tm">
-            {{input type="checkbox" checked=showHired data-qa-checkbox="showHired"}}<label data-qa-label="hired">{{labels.hired}}</label>
-        </div>
-        <div class="column column--md--6 mar--sm--tm">
-            {{input type="checkbox" checked=showWithdrew data-qa-checkbox="showWithdrew"}}<label data-qa-label="withdrew">{{labels.withdrew}}</label>
-        </div>
-        <div class="column column--md--6 mar--sm--tm">
-            {{input type="checkbox" checked=showRejected data-qa-checkbox="showRejected"}}<label data-qa-label="rejected">{{labels.rejected}}</label>
-        </div>
-    </div>
-    <hr class="mar--sm--bn" />
-    <div class="row input__group">
-        <div class="column column--md--6 mar--sm--tm">
-            {{input type="checkbox" checked=noOutcome data-qa-checkbox="noOutcome"}}<label data-qa-label="noOutcomeYet">{{labels.noOutcomeYet}}</label>
-        </div>
+<div class="slds-form-element__row slds-clearfix js-filter-set slds-show" id="outcome-fields">
+    <div class="slds-form-element__row slds-clearfix">
+        {{aljs-checkbox customClasses="slds-show slds-form-element__control slds-float--left slds-size--1-of-3 slds-p-horizontal--small" 
+                        checked=showHired
+                        data-qa-checkbox="showHired"
+                        label=labels.hired}}
+        {{aljs-checkbox customClasses="slds-show slds-form-element__control slds-float--left slds-size--1-of-3 slds-p-horizontal--small" 
+                        checked=showWithdrew
+                        data-qa-checkbox="showWithdrew"
+                        label=labels.withdrew}}
+        {{aljs-checkbox customClasses="slds-show slds-form-element__control slds-float--left slds-size--1-of-3 slds-p-horizontal--small" 
+            checked=showRejected
+            data-qa-checkbox="showRejected"
+            label=labels.rejected}}
+        {{aljs-checkbox customClasses="slds-show slds-form-element__control slds-float--left slds-size--1-of-1 slds-theme--shade slds-p-around--small slds-m-top--medium" 
+            checked=noOutcome
+            data-qa-checkbox="noOutcome"
+            label=labels.noOutcomeYet
+            checkboxClass="slds-m-left--xx-small"}}
     </div>
 </div>

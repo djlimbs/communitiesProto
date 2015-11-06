@@ -1,6 +1,6 @@
 <div class="slds-clearfix">
     <h3 class="slds-text-heading--small slds-float--left">{{labels.filters}}</h3>
-    <button class="slds-button slds-button--icon-border slds-float--right" data-aljs-show="filter-modal">
+    <button class="slds-button slds-button--icon-border slds-float--right" data-aljs-show="filter-modal" {{action "clickAdd"}}>
         <svg aria-hidden="true" class="slds-button__icon">
             <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#add"></use>
         </svg>
@@ -36,12 +36,13 @@
                         {{view "select" class="slds-select" content=filterOptions value=selectedFilter prompt=labels.selectPlaceHolder data-qa-select="selectedFilter"}}
                     </label>
                 </div>
+                <hr class="slds-m-bottom--large">
                 {{partial filterPartial}}
             </div>
         </fieldset>
     </modalBody>
     <modalFooter>
         <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="filter-modal" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
-        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="filter-modal" {{action "clickOK"}} data-qa-button="ok">{{labels.ok}}</button>
+        <button class="slds-button slds-button--neutral slds-button--brand" {{action "clickOK"}} data-qa-button="ok">{{labels.ok}}</button>
     </modalFooter>
 {{/aljs-modal}}

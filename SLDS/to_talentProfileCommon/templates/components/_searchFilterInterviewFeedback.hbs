@@ -1,22 +1,22 @@
-<div data-qa-container="interviewFeedbackFilter">
-    <div class="row">
-        <div class="column column--md--8">
-            <label data-qa-label="is">{{labels.is}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
+<div class="slds-form-element__row slds-clearfix" data-qa-container="interviewFeedbackFilter">
+    <div class="slds-form-element__row slds-clearfix">
+        <label class="slds-form-element__control slds-float--left slds-size--3-of-4">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="date">{{labels.is}}</label>
                 {{view "select" 
+                    class="slds-select"
                     content=comparisons 
                     optionLabelPath="content.label" 
                     optionValuePath="content.value"
                     value=interviewDirection
                     data-qa-select="interviewDirection"}}
             </div>
-        </div>
-        <div class="column column--md--4 pad--sm--tl">
-            <div {{bind-attr class=":input__wrap invalidInterviewScore:has-error"}}>
-                {{input type="number" value=interviewScore data-qa-input="interviewScore"}}
-                <small class="text-faded" data-qa-label="maxInterviewScore">{{#if maxInterviewScore}}{{labels.max}}: {{maxInterviewScore}}{{else}}{{labels.loading}}...{{/if}}</small>
+        </label>
+        <label class="slds-form-element__control slds-col slds-size--1-of-4">
+            <div {{bind-attr class=":slds-form-element invalidInterviewScore:slds-has-error"}}>
+                <label class="slds-form-element__label slds-show" for="date">{{#if maxInterviewScore}}(<em>{{labels.max}}: {{maxInterviewScore}}</em>){{else}}{{labels.loading}}...{{/if}}</label>
+                {{input type="number" class="slds-input" value=interviewScore data-qa-input="interviewScore" tabindex="-1"}}
             </div>
-        </div>
+        </label>
     </div>
 </div>

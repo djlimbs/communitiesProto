@@ -1,20 +1,16 @@
-<div data-qa-container="stageAndStatusFilter">
-    <div class="mar--sm--bm">
-        <div class="form-group">
-            <label data-qa-label="stage">{{labels.stage}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
-                {{view "select" content=applicationStages value=stage data-qa-select="stage"}}
+<div class="slds-form-element__row slds-clearfix" data-qa-container="stageAndStatusFilter">
+    <div class="slds-form-element__row slds-clearfix">
+        <label class="slds-form-element__control slds-float--left slds-size--1-of-2">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="stage" data-qa-label="stage">{{labels.stage}}</label>
+                {{view "select" class="slds-select" content=applicationStages value=stage data-qa-select="stage"}}
             </div>
-        </div>
-    </div>
-    <div class="mar--sm--bn">
-        <div class="form-group">
-            <label data-qa-label="status">{{labels.status}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
-                {{view "select" content=applicationStatuses value=status data-qa-select="status"}}
+        </label>
+        <label class="slds-form-element__control slds-col slds-size--1-of-2">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="status" data-qa-label="status">{{labels.status}}</label>
+                {{view "select" class="slds-select" content=applicationStatuses value=status data-qa-select="status"}}
             </div>
-        </div>
+        </label>
     </div>
 </div>

@@ -1,24 +1,24 @@
-<div data-qa-container="applicationRatingFilter">
-    <div class="row">
-        <div class="column column--md--8">
-            <label data-qa-label="is">{{labels.is}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
-                {{view "select" 
+<div class="slds-form-element__row slds-clearfix" data-qa-container="applicationRatingFilter">
+    <div class="slds-form-element__row slds-clearfix">
+        <label class="slds-form-element__control slds-float--left slds-size--3-of-4">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="date">{{labels.is}}</label>
+                {{view "select"
+                    class="slds-select" 
                     content=comparisons 
                     optionLabelPath="content.label" 
                     optionValuePath="content.value"
                     value=ratingDirection
                     data-qa-select="ratingDirection"}}
             </div>
-        </div>
-        <div class="column column--md--4 pad--sm--tl">
-            <div {{bind-attr class=":input__wrap invalidApplicationRating:has-error"}}>
-                {{input type="number" value=rating data-qa-input="rating"}}
+        </label>
+        <label class="slds-form-element__control slds-col slds-size--1-of-4">
+            <div {{bind-attr class=":slds-form-element invalidApplicationRating:slds-has-error"}}>
                 {{#unless ctrl.isScoreSortCustom}}
-                    <small class="text-faded" data-qa-label="maxApplicationRating">{{labels.max}}: {{maxApplicationRatingVal}}</small>
+                    <label class="slds-form-element__label slds-show" for="date">(<em>{{labels.max}}: {{maxApplicationRatingVal}}</em>)</label>
                 {{/unless}}
+                {{input type="number" class="slds-input" value=rating data-qa-input="rating"}}
             </div>
-        </div>
+        </label>
     </div>
 </div>

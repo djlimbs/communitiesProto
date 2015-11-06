@@ -1,7 +1,10 @@
-<div class="js-field-group" data-qa-container="thresholdFilter">
-    <label data-qa-label="equals">{{labels.equals}}</label>
-    <div class="select__wrap">
-        <div class="input__icon juicon juicon-down"></div>
-        {{view "select" content=thresholds value=threshold data-qa-select="threshold"}}
+<div class="slds-form-element__row slds-clearfix" data-qa-container="thresholdFilter">
+    <div class="slds-form-element__row slds-clearfix">
+        <label class="slds-form-element__control slds-float--left slds-size--1-of-1">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="date">{{labels.equals}}</label>
+                {{view "select" class="slds-select" content=thresholds value=threshold data-qa-select="threshold"}}
+            </div>
+        </label>
     </div>
 </div>

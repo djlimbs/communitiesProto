@@ -1,35 +1,38 @@
-<div data-qa-container="locationFilter">
-    <div class="row">
-        <div class="column column--md--8">
-            <label data-qa-label="lessThan">{{labels.lessThan}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
+<div class="slds-form-element__row slds-clearfix" data-qa-container="locationFilter">
+    <div class="slds-form-element__row slds-clearfix">
+        <label class="slds-form-element__control slds-float--left slds-size--3-of-4">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="date" data-qa-label="lessThan">{{labels.lessThan}}</label>
                 {{view "select"
+                        class="slds-select"
                         content=availableRadii
                         value=radius
                         data-qa-select="radius"}}
             </div>
-        </div>
-        <div class="column column--md--4 pad--sm--tl">
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
+        </label>
+        <label class="slds-form-element__control slds-col slds-size--1-of-4">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="date">Unit</label>
                 {{view "select"
+                        class="slds-select"
                         content=availableUnits
                         value=units
                         data-qa-select="units"}}
             </div>
-        </div>
-        <div class="column column--md--12 mar--sm--tm">
-            <label data-qa-label="from">{{labels.from}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
+        </label>
+    </div>
+    <div class="slds-form-element__row slds-clearfix">
+        <label class="slds-form-element__control slds-float--left slds-size--1-of-1">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label slds-show" for="date" data-qa-label="from">{{labels.from}}</label>
                 {{view "select" 
+                        class="slds-select"
                         content=locations
                         optionLabelPath="content.label"
                         optionValuePath="content.geolocation"
                         value=location
                         data-qa-select="location"}}
             </div>
-        </div>
+        </label>
     </div>
 </div>

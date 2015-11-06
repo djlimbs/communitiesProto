@@ -227,7 +227,10 @@ App.SearchFilterMixin = Ember.Mixin.create({
 		}
 
 		this.get('ctrl').notifyPropertyChange('filters');
-		$('#filter-modal').modal('hide');
+		
+		if ($.fn.modal) {
+			$('#filter-modal').modal('dismiss');
+		}
 	},
 	setStageAndStatusFilter: function() {
 		var textFunction = function(filterParams) {

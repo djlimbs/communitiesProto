@@ -1,12 +1,3 @@
 <div data-qa-container="appliedOnFilter">
-    <div class="row">
-        <div class="column column--md--6">
-            <label data-qa-label="from">{{labels.from}}</label>
-            {{aljs-datepicker selectedDate=appliedFrom format="MM/DD/YYYY" data-qa-input="appliedFrom" name="appliedFrom"}}
-        </div>
-        <div class="column column--md--6">
-            <label>{{labels.to}}</label>
-            {{aljs-datepicker selectedDate=appliedTo format="MM/DD/YYYY" data-qa-input="appliedTo" name="appliedTo"}}
-        </div>
-    </div>
+    {{aljs-multi-datepicker selectedStartDate=appliedFrom selectedEndDate=appliedTo format="MM/DD/YYYY" data-qa-startDate-input="appliedFrom" data-qa-endDate-input="appliedTo"}}
 </div>

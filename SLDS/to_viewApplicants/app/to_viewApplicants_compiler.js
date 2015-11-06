@@ -5,5 +5,7 @@ require('../to_talentProfileCommon/templates');
 require('app/to_viewApplicants');
 require('app/ember.aljs-init');
 require('app/ember.aljs-popover');
+require('app/ember.aljs-checkbox');
+require('app/ember.aljs-datepicker');
 require('app/ember.aljs-modal');
 require('../../js/emberComponents');
