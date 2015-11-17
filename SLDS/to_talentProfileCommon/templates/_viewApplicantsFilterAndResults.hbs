@@ -5,48 +5,59 @@
             
         </div>
     </div>
-    <!-- Card -->
     <div class="slds-card">
-        <div class="slds-card__header slds-grid">
-            <div class="slds-p-around--xx-small slds-clearfix slds-size--1-of-1">
-                <h3 class="slds-text-heading--small">{{labels.results}} <strong>{{results.numberViewable}}/<span class="slds-opacity--25">{{results.total}}</span></strong></h3>
-                <p><a href="#" data-aljs="modal" data-aljs-show="reject-modal">{{labels.rejectCapitalized}}</a> | <a href="#" data-aljs="modal" data-aljs-show="status-modal">{{labels.updateStatus}}</a> | <a href="#" data-aljs="modal" data-aljs-show="share-modal">{{labels.share}}</a></p>
-                <div class="slds-form-element">
-                    <label class="slds-form-element__label slds-m-top--medium" for="sort-by">{{labels.sortBy}}</label>
-                    <div class="slds-form-element__control">
-                        {{view "select" 
-                            class="slds-select"
-                            content=sortOptions 
-                            optionLabelPath="content.label"
-                            optionValuePath="content.value"
-                            value=sortType
-                            data-qa-select="sortType"}}
+        {{#if isLoadingResults}}
+            <div class="slds-grid slds-grid--align-center slds-p-around--xx-large" data-qa-container="filterLoading">
+                <div class="slds-spinner--large">
+                    <img src="{{unbound assetsLocation}}/assets/images/spinners/slds_spinner.gif" alt="Loading..." />
+                </div>
+            </div>
+        {{else}}
+            <div class="slds-card__header slds-grid">
+                <div class="slds-p-around--xx-small slds-clearfix slds-size--1-of-1">
+                    <h3 class="slds-text-heading--small">{{labels.results}} <strong>{{results.numberViewable}}/<span class="slds-opacity--25">{{results.total}}</span></strong></h3>
+                    <p><a href="#" data-aljs="modal" data-aljs-show="reject-modal">{{labels.rejectCapitalized}}</a> | <a href="#" data-aljs="modal" data-aljs-show="bulk-status-modal">{{labels.updateStatus}}</a> | <a href="#" data-aljs="modal" data-aljs-show="share-modal">{{labels.share}}</a></p>
+                    <div class="slds-form-element slds-m-bottom--small">
+                        <label class="slds-form-element__label slds-m-top--medium" for="sort-by">{{labels.sortBy}}</label>
+                        <div class="slds-form-element__control">
+                            {{view "select" 
+                                class="slds-select"
+                                content=sortOptions 
+                                optionLabelPath="content.label"
+                                optionValuePath="content.value"
+                                value=sortType
+                                data-qa-select="sortType"}}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="slds-card__body slds-p-top--none">
-            <!-- Applicant List -->
+            <div class="slds-card__body slds-p-top--none">
+                {{#if results.viewableApplications}}
+                    <ul {{bind-attr class=":slds-list--vertical :slds-has-dividers :to-va-applicants isLoadingMore:slds-opacity--50"}}>
+                        {{#each application in results.viewableApplications itemController="result"}}
+                            {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="slds-list__item" disabledClass="slds-cursor--not-allowed" activeClass="slds-is-selected" classNameBindings="application.alertStatusClass" data-qa-link="applicant" disabledWhen="isLoadingMore"}}
+                                {{partial application.resultPartial}}
+                            {{/link-to}}
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    <em class="slds-show slds-opacity--50 slds-p-left--medium slds-m-top--x-small">{{labels.noResults}}</em>
+                {{/if}}
 
-            {{#if results.viewableApplications}}
-                <ul class="slds-list--vertical slds-has-cards slds-p-left--medium slds-p-right--medium slds-p-bottom--x-small to-va-applicants">
-                    {{#each application in results.viewableApplications itemController="result"}}
-                        {{#link-to "viewApplicantsApplicationReader" application.Id tagName="li" class="slds-list__item" activeClass="slds-theme--alt-inverse" classNameBindings="application.alertStatusClass" data-qa-link="applicant" disabledWhen="isLoadingMore"}}
-                            {{partial application.resultPartial}}
-                        {{/link-to}}
-                    {{/each}}
-                </ul>
-            {{else}}
-                <small class="block mar--sm--tm" data-qa-label="noResults"><em>{{labels.noResults}}</em></small>
-            {{/if}}
-            <!-- /Applicant List -->
-
-            <!-- Load More Button -->
-            <div class="slds-p-around--medium">
-                <button class="slds-button slds-button--neutral to-va-load-more" {{action "clickLoadMore"}} data-qa-button="loadMore">{{labels.loadMore}}</button>
+                {{#unless disableLoadMore}}
+                    <div class="slds-p-around--medium">
+                        <button class="slds-button slds-button--neutral to-va-load-more slds-p-around--x-small" {{action "clickLoadMore"}} data-qa-button="loadMore">
+                            {{#if isLoadingMore}}
+                                <div class="slds-spinner--small slds-show--inline-block">
+                                    <img src="{{unbound assetsLocation}}/assets/images/spinners/slds_spinner.gif" alt="Loading...">
+                                </div>
+                            {{else}}
+                                {{labels.loadMore}}
+                            {{/if}}
+                        </button>
+                    </div>
+                {{/unless}}
             </div>
-            <!-- /Load More Button -->
-        </div>
+        {{/if}}
     </div>
-    <!-- /Card -->
 </div>

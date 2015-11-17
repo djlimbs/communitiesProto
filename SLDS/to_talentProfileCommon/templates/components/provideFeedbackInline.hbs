@@ -1,58 +1,66 @@
-<div class="card mar--sm--tm js-feedback-card">
-    <div class="card__body pad--sm--bn">
-        <div class="form__group">
-            <label class="">{{labels.regarding}}</label>
-            <div class="select__wrap">
-                <div class="input__icon juicon juicon-down"></div>
-                {{view "select"  data-qa-select="interviews" content=regardingSelectValues value=selectedType optionLabelPath="content.label" optionValuePath="content.value"}}
+<div class="slds-tile">
+    <h4 class="slds-text-heading--small slds-truncate">{{labels.provideFeedback}}</h4>
+    <div class="slds-m-top--small">
+        <div class="slds-form--stacked">
+            <div class="slds-form-element slds-is-required">
+                <label class="slds-form-element__helper slds-form-element__label" for="regarding">{{labels.regarding}}</label>
+                {{view "select" class="slds-select slds-truncate" data-qa-select="interviews" content=regardingSelectValues value=selectedType optionLabelPath="content.label" optionValuePath="content.value"}}
             </div>
-        </div>
-        <div id="TFcontrols2">
-            <div {{bind-attr class=":form__group feedbackScoreIsEmpty:has-error"}}>
-                <label class="block required-field">{{labels.feedback}}</label>
-                {{#unless selectedFinalOutcome}}
-                    <div class="button-group feedbackButtons">
-                        <button {{action "clickSelectFeedback" "Positive_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseLike:bg-2"}} data-qa-button="positive" data-toggle="tooltip" title="{{unbound labels.positiveFeedback}}">
-                            <span {{bind-attr class=":juicon :juicon-like chooseLike:text-success"}}></span>
+            {{#unless selectedFinalOutcome}}
+                <div class="slds-form-element slds-is-required">
+                    <label class="slds-form-element__helper slds-form-element__label" for="feedback-type">{{labels.overallFeedback}}</label>
+                    <div id="feedback-type" class="slds-button-group" role="group">
+                        <button {{bind-attr class=":slds-button :slds-button--icon-border chooseLike:slds-is-selected:slds-not-selected"}} tabindex="-1" {{action "clickSelectFeedback" "Positive_Feedback__c"}} data-qa-button="positive">
+                            <svg aria-hidden="true" class="slds-button__icon" data-aljs="tooltip" title="{{unbound labels.positiveFeedback}}">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                            </svg>
+                            <span class="slds-assistive-text">{{labels.positiveFeedback}}</span>
                         </button>
-                        <button {{action "clickSelectFeedback" "Negative_Feedback__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDislike:bg-2"}} data-qa-button="negative" data-toggle="tooltip" title="{{unbound labels.negativeFeedback}}">
-                            <span {{bind-attr class=":juicon :juicon-dislike chooseDislike:text-warning"}}></span>
+                        <button {{bind-attr class=":slds-button :slds-button--icon-border chooseDislike:slds-is-selected:slds-not-selected"}} tabindex="-1" {{action "clickSelectFeedback" "Negative_Feedback__c"}} data-qa-button="negative">
+                            <svg aria-hidden="true" class="slds-button__icon slds-icon--flip-x" data-aljs="tooltip" title="{{unbound labels.negativeFeedback}}">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                            </svg>
+                            <span class="slds-assistive-text">{{labels.negativeFeedback}}</span>
                         </button>
-                        {{#if allowNeutral}}
-                            <button {{action "clickSelectFeedback" "Neutral__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseUnknown:bg-2"}} data-qa-button="neutral" data-toggle="tooltip" title="{{unbound labels.neutralFeedback}}">
-                                <span {{bind-attr class=":juicon :juicon-question-circle chooseUnknown:text-info"}}></span>
-                            </button>
-                        {{/if}}
+                        <button {{bind-attr class=":slds-button :slds-button--icon-border chooseUnknown:slds-is-selected:slds-not-selected"}} tabindex="-1" {{action "clickSelectFeedback" "Neutral__c"}} data-qa-button="neutral">
+                            <svg aria-hidden="true" class="slds-button__icon" data-aljs="tooltip" title="{{unbound labels.neutralFeedback}}">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+                            </svg>
+                            <span class="slds-assistive-text">{{labels.neutralFeedback}}</span>
+                        </button>
                     </div>
-                {{else}}
-                    <div class="button-group feedbackButtons">
-                        <button {{action "clickSelectFeedback" "Selected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseSelected:bg-2" title=labels.selectTooltip}} data-qa-button="select" data-toggle="tooltip">
-                            <span {{bind-attr class=":juicon :juicon-check chooseSelected:text-success"}}></span>
+                </div>
+            {{else}}
+                <div class="slds-form-element slds-is-required">
+                    <label class="slds-form-element__helper slds-form-element__label" for="feedback-type">{{labels.overallFeedback}}</label>
+                    <div id="feedback-type" class="slds-button-group" role="group">
+                        <button {{bind-attr class=":slds-button :slds-button--icon-border chooseSelected:slds-is-selected:slds-not-selected"}} tabindex="-1" {{action "clickSelectFeedback" "Selected__c"}} data-qa-button="positive">
+                            <svg aria-hidden="true" class="slds-button__icon" data-aljs="tooltip" title="{{unbound labels.selectTooltip}}">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                            </svg>
+                            <span class="slds-assistive-text">{{labels.selectTooltip}}</span>
                         </button>
                         {{#if allowRejection}}
-                            <button {{action "clickSelectFeedback" "Rejected__c"}} {{bind-attr class=":button :button--secondary :feedbackButton chooseDisqualified:bg-2" title=labels.rejectTooltip}} data-qa-button-"reject" data-toggle="tooltip">
-                                <span {{bind-attr class=":juicon :juicon-ban chooseDisqualified:text-error"}}></span>
+                            <button {{bind-attr class=":slds-button :slds-button--icon-border chooseDisqualified:slds-is-selected:slds-not-selected"}} tabindex="-1" {{action "clickSelectFeedback" "Rejected__c"}} data-qa-button="negative">
+                                <svg aria-hidden="true" class="slds-button__icon" data-aljs="tooltip" title="{{unbound labels.rejectTooltip}}">
+                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#ban"></use>
+                                </svg>
+                                <span class="slds-assistive-text">{{labels.rejectTooltip}}</span>
                             </button>
                         {{/if}}
                     </div>
-                {{/unless}}
-            </div>
+                </div>
+            {{/unless}}
 
+            {{!-- CHANGE BELOW --}}
             {{#unless selectedFinalOutcome}}
                 {{#unless isResumeReview}}
                     {{#if additionalCriteriaFields}}
-                        <label data-qa-locator="fieldSetBlock" class="block mar--sm--bs">{{labels.questions}}</label>
+                        <label class="slds-text-heading--label" for="regarding">{{labels.questions}}</label>
                         {{#each additionalCriteriaFields}}
-                            <div {{bind-attr class=":form__group isEmpty:has-error"}}>
-                                <label class="block required-field">
-                                    <small>
-                                        {{#if helpText}}{{helpText}}{{else}}{{label}}{{/if}}
-                                    </small> 
-                                </label>
-                                <div class="select__wrap mar--sm--bm">
-                                    <div class="input__icon juicon juicon-down"></div>
-                                    {{view "select" prompt=selectPlaceHolder data-qa-select="fieldSetQuestions" content=values value=selectedValue optionLabelPath="content.label" optionValuePath="content.value"}}
-                                </div>
+                            <div class="slds-form-element slds-is-required">
+                                <label class="slds-text-heading--label slds-m-top--large slds-show slds-m-bottom--x-small">{{#if helpText}}{{helpText}}{{else}}{{label}}{{/if}}</label>
+                                {{view "select" class="slds-select slds-truncate" prompt=labels.selectPlaceHolder data-qa-select="fieldSetQuestions" content=values value=selectedValue optionLabelPath="content.label" optionValuePath="content.value"}}
                             </div>
                         {{/each}}
                     {{/if}}
@@ -60,25 +68,26 @@
             {{/unless}}
 
             {{#if showDisposition}}
-                <div {{bind-attr class=":form__group :mar--sm--bs feedbackScoreIsEmpty:has-error"}}>
-                    <label data-qa-label="disposition" class="required-field">{{labels.disposition}}</label>
-                    <div class="select__wrap">
-                        <div class="input__icon juicon juicon-down"></div>
-                        {{view "select" data-qa-select="disposition" content=disposition value=selectedDisposition}}
-                    </div>
+                <div class="slds-form-element slds-is-required">
+                    <label {{bind-attr class=":slds-form-element__helper :slds-form-element__label feedbackScoreIsEmpty:slds-has-error"}} for="regarding">{{labels.disposition}}</label>
+                    {{view "select" class="slds-select slds-truncate" data-qa-select="disposition" content=disposition value=selectedDisposition}}
                 </div>
             {{/if}}
 
             {{#unless selectedFinalOutcome}}
-                <div class="form__group mar--sm--bs">
-                    <label data-qa-label="comment" class="">{{labels.comment}}</label>
-                    {{textarea maxlength="1000" data-qa-textarea="comment" disabled=isDisabled value=comments}}
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label" for="comment">{{labels.comment}}</label>
+                    <div class="slds-form-element__control">
+                        {{textarea class="slds-textarea" maxlength="1000" data-qa-textarea="comment" disabled=isDisabled value=comments}}
+                    </div>
                 </div>
             {{/unless}}
-        </div>  
+        </div>
     </div>
-    <div class="panel__body">
-        <a {{bind-attr class=":float--right :button :button--primary isSavingFeedback:load-this"}} {{action "clickSave"}} data-qa-button="save">{{labels.save}}</a>
-        <a class="float--right button button--secondary mar--sm--rs" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</a>
+    <div class="slds-clearfix slds-m-top--medium">
+        <div class="slds-float--right">
+            <button class="slds-button slds-button--neutral" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+            <button {{bind-attr class=":slds-button :slds-button--brand isSavingFeedback:load-this"}} {{action "clickSave"}} data-qa-button="save">{{labels.save}}</button>
+        </div>
     </div>
 </div>

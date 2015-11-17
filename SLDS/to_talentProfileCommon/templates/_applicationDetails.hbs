@@ -1,15 +1,150 @@
 {{#if talentProfile.camelizedModel.summary}}
-    <section id="summary">
-        <div class="list-heading">
-            <h4 data-qa-label="summary" class="list-heading__title">{{labels.summary}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate">{{labels.summary}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
-            <p data-qa-label="summaryValue" class="mar--sm--tn">
-                {{convertNewLinesToBreaks talentProfile.Summary__c}}
-            </p>
+        <div class="slds-card__body slds-p-around--small">
+            <div class="slds-card slds-theme--default slds-p-around--medium slds-text-longform">
+                <p>{{convertNewLinesToBreaks talentProfile.Summary__c}}</p>
+            </div>
         </div>
-    </section>
+    </div>
 {{/if}}
+<div class="slds-card slds-overflow--hidden">
+    <div class="slds-card__header">
+        <h3 class="slds-text-heading--label slds-truncate">{{labels.applicationForm}}</h3>
+    </div>
+    <div class="slds-card__body slds-p-around--small">
+        <div class="slds-card slds-theme--default slds-p-around--medium">
+            {{#if application.hasScore}}
+                <h4 class="slds-text-heading--small">{{labels.rating}}: 
+                    <strong class="to-va-rating--positive">
+                        {{application.score}}
+                    </strong>
+                    {{#if application.showMax}}/{{application.Maximum_Score__c}}{{/if}}
+                </h4>
+            {{else}}
+                <strong data-qa-label="noRating" class="text-faded">{{labels.rating}} {{labels.na}}</strong>
+            {{/if}}
+        </div>
+        {{#if jobQuestions}}
+            <div class="slds-card slds-theme--default slds-p-around--medium">
+                <h4 class="slds-text-heading--small">{{labels.jobSpecificQuestions}}</h4>
+                <ul class="slds-list--vertical slds-has-dividers slds-m-top--xx-small">
+                    {{#each jobQuestions}}
+                        <!-- Positive Entry -->
+                        <li class="slds-list__item">
+                            <p class="slds-text-body--small">{{Question__c}}</p>
+                            <p>
+                                {{{Value__c}}}
+                            </p>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+        {{#if generalQuestions}}
+            <div class="slds-card slds-theme--default slds-p-around--medium">
+                <h4 class="slds-text-heading--small">{{labels.generalQuestions}}</h4>
+                <ul class="slds-list--vertical slds-has-dividers slds-m-top--xx-small">
+                    {{#each generalQuestions}}
+                        <li class="slds-list__item">
+                            <p class="slds-text-body--small">{{Question__c}}</p>
+                            <p>
+                                {{{Value__c}}}
+                            </p>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+    </div>
+</div>
+<div class="slds-card">
+    <div class="slds-card__header slds-p-bottom--none slds-clearfix">
+        <h3 class="slds-text-heading--label slds-truncate slds-float--left">{{labels.feedback}}</h3>
+        <div class="slds-float--right">
+            <button class="slds-button slds-button--neutral slds-button--small" {{action "clickProvideFeedbackInline"}}>
+                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#comments"></use>
+                </svg>
+                {{labels.provideFeedback}}
+            </button>
+        </div>
+    </div>
+    <div class="slds-card__body slds-p-around--small">
+        {{#if isInlineFeedbackVisible}}
+            {{provide-feedback-inline ctrl=this}}
+        {{/if}}
+
+        {{#each evaluations itemController="feedback"}}
+            <div class="slds-card slds-theme--default">
+                <div class="slds-tile slds-grid">
+                    <div class="slds-col slds-no-flex slds-m-right--small">
+                        <span class="slds-icon__container" data-aljs="tooltip" {{bind-attr title="tooltipText"}}>
+                            <svg aria-hidden="true" {{bind-attr class=":slds-icon :slds-icon-text-default :slds-icon--x-small iconClass"}}>
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#{{unbound icon}}"></use>
+                            </svg>
+                            <span class="slds-assistive-text">{{tooltipText}}</span>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <h4 class="slds-text-heading--small slds-truncate">{{headerText}}</h4>
+                        <div class="slds-tile__detail slds-text-body--small">
+                            {{#unless hasFinal}}
+                                {{#if camelizedModel.interviewR.camelizedModel.topics}}
+                                    <p data-qa-label="feedbackInterviewers">{{labels.interviewWith}} {{#with Interview__r}}{{Interviewers__c}}{{/with}}</p>
+                                {{/if}}
+                            {{/unless}}
+                            <ul class="slds-list--horizontal slds-has-dividers slds-tile__meta">
+                                <li class="slds-list__item">{{#with CreatedBy}}{{Name}}{{/with}}</li>
+                                <li class="slds-list__item">{{formattedDate}}</li>
+                            </ul>
+                        </div>
+
+                        {{#unless hasFinal}}
+                            {{#unless isResumeReview}}
+                                {{#if criteriaFields}}
+                                    <hr class="slds-m-top--small slds-m-bottom--small">
+                                    <div class="slds-grid">
+                                        {{#each criteriaFields itemController="addLabels"}}
+                                            <div class="slds-col ">
+                                                <p class="slds-text-body--small">{{label}}</p>
+                                                {{#if value}}
+                                                    <p>{{value}}</p>
+                                                {{else}}
+                                                    <p data-qa-label="notProvided">{{labels.notProvided}}</p>
+                                                {{/if}}
+                                            </div>
+                                        {{/each}}
+                                    </div>
+                                {{/if}}
+                            {{/unless}}
+                        {{/unless}}
+                        {{#if camelizedModel.disposition}}
+                            <hr class="slds-m-top--small slds-m-bottom--small">
+                            <div class="slds-grid">
+                                <div class="slds-col ">
+                                    <p class="slds-text-body--small">{{labels.disposition}}</p>
+                                    <p>{{Disposition__c}}</p>
+                                </div>
+                            </div>
+                        {{/if}}
+                        {{#if camelizedModel.comments}}
+                            <hr class="slds-m-top--small slds-m-bottom--small" data-qa-label="comments">
+                                "{{convertNewLinesToBreaks Comments__c}}"
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            {{#unless isInlineFeedbackVisible}}
+                <em class="slds-opacity--50 slds-show js-inline-empty">{{labels.noneProvided}}</em>            
+            {{/unless}}
+        {{/each}}
+    </div>
+</div>
+{{!--
 <section id="application-form">
     <div class="list-heading">
         <h4 data-qa-label="applicationForm" class="list-heading__title">{{labels.applicationForm}}</h4>
@@ -50,163 +185,105 @@
             {{/each}}
         </div>
     {{/if}}
-</section>
-<section id="feedback">
-    <div class="list-heading relative">
-        <h4 class="list-heading__title">{{labels.feedback}}</h4>
-        <button type="button" class="button button--primary button--ghost width--full mar--sm--bm add-button" {{action "clickProvideFeedbackInline"}}>
-            <span class="juicon juicon-chat"></span> {{labels.provideFeedback}}
-        </button>
-    </div>
-    <div class="panel__body pad--sm--bn pad--sm--tn">
-        {{#each evaluations itemController="feedback"}}
-            <article class="mar--sm--bm">
-                <div data-qa-card="evaluation" class="card mar--sm--tm">
-                    <div {{bind-attr class=":card__body displayPanelBottom::pad--sm--bn"}}>
-                        <div {{bind-attr class=":row displayPanelBottom:panel__top :pad--sm--n displayPanelBottom:mar--sm--bm"}} style="height: auto">
-                            <div class="column--md--7">
-                                <div class="part__left--fixed mar--sm--rs pad--sm--rxs" style="display: inline-block; line-height: 0;">
-                                    <div data-toggle="tooltip" {{bind-attr title="tooltipText"}} {{bind-attr class=":juicon icon iconColor"}}></div>
-                                </div>
-                                <div class="part__body--fixed pad--md--bm pad--sm--only--bs" style="display: inline-block; max-width:88%;">
-                                    <h4 data-qa-label="feedbackCardTitle" class="card__heading dots">
-                                        {{headerText}}
-                                    </h4>
-                                    {{#unless hasFinal}}
-                                        {{#if camelizedModel.interviewR.camelizedModel.topics}}
-                                            <div data-qa-label="feedbackInterviewers" class="text-faded dots"><small>{{labels.interviewWith}} {{#with Interview__r}}{{Interviewers__c}}{{/with}}</small></div>
-                                        {{/if}}
-                                    {{/unless}}
-                                </div>
-                            </div>
-                            <div class="column--md--5 text-right-left mar--sm--only--bm dots" style="line-height: 16px">
-                                <small data-qa-label="createdByDate" class="text-faded mar--sm--only--lxl mar--sm--only--bm">{{#with CreatedBy}}{{Name}}{{/with}} &bull; {{formattedDate}}</small>
-                            </div>
-                        </div>
-                        {{#unless hasFinal}}
-                            {{#unless isResumeReview}}
-                                {{#if criteriaFields}}
-                                    <div data-qa-label="criterieaFields" class="row pad--sm--lxl">
-                                        {{#each criteriaFields itemController="addLabels"}}
-                                            <div class="panel__body column--md--6 pad--sm--tn">
-                                                <h4 class="mar--sm--n">{{label}}</h4>
-                                                <span class="field-value-small">
-                                                {{#if value}}
-                                                    {{value}}
-                                                {{else}}
-                                                    <span data-qa-label="notProvided">{{labels.notProvided}}</span>
-                                                {{/if}}
-                                                </span>
-                                            </div>
-                                        {{/each}}
-                                    </div>
-                                {{/if}}
-                            {{/unless}}
-                        {{/unless}}
-                        {{#if camelizedModel.disposition}}
-                            <div class="row pad--sm--lxl">
-                                <div data-qa-label="disposition" class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
-                                    <h4 data-qa-label="dispositionTitle" class="mar--sm--n">{{labels.disposition}}</h4>
-                                    <span class="field-value-small">{{Disposition__c}}</span>
-                                </div>
-                            </div>
-                        {{/if}}
-                        {{#if camelizedModel.comments}}
-                            <div data-qa-label="comments" class="block">
-                                "{{convertNewLinesToBreaks Comments__c}}"
-                            </div>
-                        {{/if}}
-                    </div>
-                </div>
-            </article>
-        {{else}}
-            <em class="text-faded block mar--sm--tm mar--sm--bm">{{labels.noneProvided}}</em>
-        {{/each}}
-    </div>
-</section>
-<section id="interview">
-    <div class="list-heading relative">
-        <h4 class="list-heading__title">{{labels.interviews}}</h4>
-        {{#unless isSF1}}
-            <button type="button" class="button button--primary button--ghost width--full mar--sm--bm add-button" {{action "addInterview"}}>
-                <span class="juicon juicon-plus"></span> {{labels.addInterview}}
+</section>--}}
+<div class="slds-card">
+    <div class="slds-card__header slds-p-bottom--none slds-clearfix">
+        <h3 class="slds-text-heading--label slds-truncate slds-float--left">{{labels.interviews}}</h3>
+        <div class="slds-float--right">
+            <button class="slds-button slds-button--neutral slds-button--small" {{action "addInterview"}}>
+                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#new"></use>
+                </svg>
+                {{labels.addInterview}}
             </button>
-        {{/unless}}
+        </div>
     </div>
-    <div class="panel__body pad--sm--bn pad--sm--tn">
+    <div class="slds-card__body slds-p-around--small">
         {{#each interviews itemController="interview"}}
-            <article class="mar--sm--bm">
-                <div data-qa-card="interview" class="card mar--sm--tm">
-                    <div class="card__body">    
-                        <div class="mar--sm--bs"><span class="juicon juicon-calendar text-faded mar--sm--rs pad--sm--rxs"></span>
-                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}}</a> {{#unless isSF1}}<span class="text-faded" data-toggle="tooltip" data-html="true" {{bind-attr title="otherTooltipText"}}> {{otherText}}</span>{{/unless}}
-                            <span data-qa-label="interviewStatus" {{bind-attr class=":status statusColor"}}>{{Status__c}}</span>
-                        </div>
-                        <div class="row pad--sm--lxl">
-                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
-                                <h4 data-qa-label="interviewers" class="mar--sm--n">{{labels.interviewers}}</h4>
-                                <span class="field-value-small">
-                                {{#if camelizedModel.interviewers}}
-                                    {{Interviewers__c}}
-                                {{else}}
-                                    <span data-qa-label="noInterviews">{{labels.notProvided}}</span>
-                                {{/if}}
-                                </span>
+            <div class="slds-card slds-theme--default">
+                <div class="slds-tile slds-grid">
+                    <div class="slds-col slds-no-flex slds-m-right--small">
+                        <span class="slds-icon__container" data-aljs="tooltip" title="{{unbound labels.interviewNoColon}}">
+                            <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#event"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Event Icon</span>
+                        </span>
+                    </div>
+                    <div class="slds-col">
+                        <h4 class="slds-text-heading--small slds-truncate slds-expanded">
+                            <a data-qa-link="interview" {{bind-attr href="interviewUrl"}}>{{formattedStartDate}}</a>
+                            {{#unless isSF1}}<span data-aljs="tooltip" {{bind-attr title="otherTooltipText"}}> {{otherText}}</span>{{/unless}}
+                            <span {{bind-attr class=":slds-badge statusColor"}} data-qa-label="interviewStatus">{{Status__c}}</span>
+                        </h4>
+                        <hr class="slds-m-top--small slds-m-bottom--small">
+                        <div class="slds-grid">
+                            <div class="slds-col">
+                                <p class="slds-text-body--small">{{labels.interviewers}}</p>
+                                <p>
+                                    {{#if camelizedModel.interviewers}}
+                                        {{Interviewers__c}}
+                                    {{else}}
+                                        <span data-qa-label="noInterviews">{{labels.notProvided}}</span>
+                                    {{/if}}
+                                </p>
                             </div>
-                            <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn">
-                                <h4 data-qa-label="topics" class="mar--sm--n">{{labels.topics}}</h4>
-                                <span class="field-value-small">
-                                {{#if camelizedModel.topics}}
-                                    {{Topics__c}}
-                                {{else}}
-                                    <span data-qa-label="noTopics">{{labels.notProvided}}</span>
-                                {{/if}}
-                                </span>
+                            <div class="slds-col">
+                                <p class="slds-text-body--small">{{labels.topics}}</p>
+                                <p>
+                                    {{#if camelizedModel.topics}}
+                                        {{Topics__c}}
+                                    {{else}}
+                                        <span data-qa-label="noTopics">{{labels.notProvided}}</span>
+                                    {{/if}}
+                                </p>
                             </div>
-                        </div>
-                        {{#if isCompleted}}
-                            <div class="row pad--sm--lxl mar--sm--ts">
-                                <div class="panel__body column--md--6 pad--sm--tn pad--sm--bn pad--sm--only--bs">
-                                    <h4 data-qa-label="feedback" class="mar--sm--n">{{labels.feedback}}</h4>
-                                    <span class="field-value-small">{{Feedback_Provided__c}}</span>
+                            {{#if isCompleted}}
+                                <div class="slds-col">
+                                    <p class="slds-text-body--small">{{labels.feedback}}</p>
+                                    <p>{{Feedback_Provided__c}}</p>
                                 </div>
-                            </div>
-                        {{/if}}
+                            {{/if}}
+                        </div>
                     </div>
                 </div>
-            </article>
+            </div>
         {{else}}
-            <em class="text-faded block mar--sm--tm mar--sm--bm">{{labels.noneProvided}}</em>
+            <em class="slds-opacity--50 slds-show js-inline-empty">{{labels.noneProvided}}</em>
         {{/each}}
     </div>
-</section>
+</div>
 {{#with talentProfile as tp}}
     {{partial "childrenObjects"}}
 {{/with}}
-<section id="contact-information">
-    <div class="list-heading">
-        <h4 data-qa-label="contactInformation" class="list-heading__title">{{labels.contactInformation}}</h4>
+<div class="slds-card slds-overflow--hidden">
+    <div class="slds-card__header">
+        <h3 class="slds-text-heading--label slds-truncate" data-qa-label="contactInformation">{{labels.contactInformation}}</h3>
     </div>
-    <div data-qa-rows="contactRows" class="panel__body pad--sm--bn">
-        {{#each contactRow in contactRows}}
-            <div class="row pad--sm--rxxl mar--md--bm">
-                {{#each contactRow}}
-                    <div data-qa-label="rowValue" class="column--sm--6 column--xs--only--12 pad--sm--only--bm">
-                        <h4 class="mar--sm--n">{{label}}</h4>
-                        <span class="field-value-small">
-                        {{#if value}}
-                            {{#if isEmail}}
-                                <a {{bind-attr href="emailLink"}}>{{{value}}}</a>
-                            {{else}}
-                                {{{value}}}
-                            {{/if}}
-                        {{else}}
-                            <span data-qa-label="notProvided">{{labels.notProvided}}</span>
-                        {{/if}}
-                        </span>
-                    </div> 
+    <div class="slds-card__body slds-p-around--small">
+        <!-- Card -->
+        <div class="slds-card slds-theme--default slds-p-horizontal--medium slds-p-bottom--medium">
+            <!-- Fieldset -->
+            <div class="slds-grid slds-wrap">
+                {{#each contactRow in contactRows}}
+                    {{#each contactRow}}
+                        <div data-qa-label="rowValue" class="slds-col slds-no-flex slds-size--1-of-5 slds-m-top--medium">
+                            <p class="slds-text-body--small">{{label}}</p>
+                            <p class="slds-truncate">
+                                {{#if value}}
+                                    {{#if isEmail}}
+                                        <a {{bind-attr href="emailLink"}}>{{{value}}}</a>
+                                    {{else}}
+                                        {{{value}}}
+                                    {{/if}}
+                                {{else}}
+                                    <span data-qa-label="notProvided">{{labels.notProvided}}</span>
+                                {{/if}}
+                            </p>
+                        </div>
+                    {{/each}}
                 {{/each}}
             </div>
-        {{/each}}
+        </div>
     </div>
-</section>
+</div>

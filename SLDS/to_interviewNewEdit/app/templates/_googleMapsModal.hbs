@@ -1,0 +1,30 @@
+<div aria-hidden="false" aria-labelledby="googleMapsModalLabel" class="modal fade in" id="googleMapsModal" role="dialog" tabindex="-1" data-qa-container="googleMapsModal">
+    <div class="modal__shell big-modal" style="max-width: 80%">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button class="close" data-dismiss="modal" type="button" data-qa-button="closeModal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h2 class="modal__heading" data-qa-label="whereWillInterviewBeHeld">
+                    {{labels.whereWillTheInterviewBeHeld}}
+                </h2>
+            </div>
+                <input id="pac-input" class="controls" type="text" placeholder="{{unbound labels.enterALocation}}" data-qa-input="location">
+                <div id="map-canvas" style="height:60vh;"></div>
+            <div class="modal__footer">
+                <span class="pad--sm--s alert alert--warning geolocation-alert slide-in" style="margin-right: 5px; padding-top: 10px !important; top: 2px; border-width: 1px; position: relative;" data-qa-alert="couldNotDetermineLocation">
+                    {{labels.sorryButWeCouldntDetermineYourLocation}}
+                    <span class="alert-close-x mar--sm--lxs" {{action "clickGeoLocationClose"}} style="position: relative; top: -1px" data-qa-button="closeAlert"></span>
+                </span>
+                
+
+                <button id="gotoMyLocation" class="button button--secondary" type="button" data-qa-button="gotoMyLocation" style="position:relative; z-index:1;">
+                    {{labels.goToMyLocation}}
+                </button>
+                <button {{bind-attr class=":button :button--primary disableLocationSave:disabled" disabled="disableLocationSave"}} data-dismiss="modal" type="button" {{action "clickSelectGoogleLocation"}} data-qa-button="useThisPlace" style="position:relative; z-index:1;">
+                    {{labels.useThisPlace}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,14 +1,16 @@
-<div class="slds-tile slds-tile--board">
-    {{application.First_Name__c}} {{application.Last_Name__c}}
-    <small class="slds-show to-va-sort-info slds-p-top--xx-small">{{labels.rating}}
-        {{#if isScoreSortCustom}}
-            <span {{bind-attr class="application.ratingClass"}}>{{application.applicationRatingVal}}</span>
-        {{else}}
-            {{#if application.hasApplicationRatingVal}}
-                <span {{bind-attr class="application.ratingClass"}} data-qa-label="ratingValueFraction">{{application.applicationRatingVal}}</span> ({{labels.outOf}} {{application.Maximum_Score__c}})
+<div class="slds-media slds-tile">
+    <div class="slds-media__body">
+        <p class="slds-tile__title slds-truncate"><a href="#">{{application.First_Name__c}} {{application.Last_Name__c}}</a></p>
+        <small class="slds-show to-va-sort-info">{{labels.rating}}
+            {{#if isScoreSortCustom}}
+                <span {{bind-attr class="application.ratingClass"}}>{{application.applicationRatingVal}}</span>
             {{else}}
-                <span>{{labels.na}}</span>
+                {{#if application.hasApplicationRatingVal}}
+                    <span {{bind-attr class="application.ratingClass"}} data-qa-label="ratingValueFraction">{{application.applicationRatingVal}}</span> ({{labels.outOf}} {{application.Maximum_Score__c}})
+                {{else}}
+                    <span>{{labels.na}}</span>
+                {{/if}}
             {{/if}}
-        {{/if}}
-    </small>
+        </small>    
+    </div>
 </div>

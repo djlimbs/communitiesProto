@@ -1,307 +1,300 @@
 {{#with tp.Projects__r as projects}}
-    <section id="projects">
-        <div class="list-heading">
-            <h4 data-qa-label="projects" class="list-heading__title">{{labels.projects}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate">{{labels.projects}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
-            {{#each projects.records}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="projectName">{{Name}}</h3>
-                    <small data-qa-label="projectDate" class="text-faded">{{displayDate Start_Date__c End_Date__c "to"}}</small>
-                    <p data-qa-label="projectDescription">
-                        {{convertNewLinesToBreaks Description__c}}
-                    </p>
-                    <hr class="hr-alt"/>
-                </article>
-            {{/each}}
-        </div>
-    </section>
+        {{#each projects.records}}
+            <div class="slds-card__body slds-p-around--small">
+                <div class="slds-card slds-theme--default slds-p-around--medium slds-text-longform">
+                    <h4 class="slds-text-heading--small slds-truncate">{{Name}}</h4>
+                    <ul class="slds-list--horizontal slds-has-dividers slds-tile__meta slds-text-body--small">
+                        <li class="slds-list__item">{{displayDate Start_Date__c End_Date__c "to"}}</li>
+                    </ul>
+                    <p>{{convertNewLinesToBreaks Description__c}}</p>
+                </div>
+            </div>
+        {{/each}}
+    </div>
 {{/with}}
 {{#with tp.Recognition__r as recognition}}
-    <section id="recognition">
-        <div class="list-heading">
-            <h4 data-qa-recognition="recognition" class="list-heading__title">{{labels.recognition}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate">{{labels.recognition}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each recognition.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="recognitionName">
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate" data-qa-label="recognitionName">
                         {{#if camelizedModel.link}}
                             <a data-qa-link="recognitionNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
                             {{Name}}
                         {{/if}}
-                    </h3>
-                    <small data-qa-label="recognitionIssuer" class="text-faded block">{{Issuer__c}}</small>
-                    <small data-qa-label="recognitionDate" class="text-faded">{{displayMonthYear Month__c Year__c}}</small>
-                    <p data-qa-label="recognitionDescription">
-                        {{convertNewLinesToBreaks Description__c}}
-                    </p>
-                    <hr class="hr-alt"/>
-                </article>
+                    </h4>
+                    <p class="slds-text-body--small slds-text--disabled">{{Issuer__c}}</p>
+                    <p class="slds-text-body--small slds-text--disabled">{{formatDate Date__c}}</p>
+                    <div class="slds-m-top--medium slds-text-longform">
+                        <p>{{convertNewLinesToBreaks Description__c}}</p>
+                    </div>
+                </div>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Training_Activities__r as ta}}
-    <section id="traning">
-        <div class="list-heading">
-            <h4 class="list-heading__title">{{labels.trainingAndDevelopment}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate">{{labels.trainingAndDevelopment}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each ta.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="trainingName">
-                        {{#if camelizedModel.link}}
-                            <a data-qa-link="trainingNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
-                        {{else}}
-                            {{Name}}
-                        {{/if}}
-                    </h3>
-                    <small data-qa-label="trainingSource" class="text-faded block">{{Source__c}}</small>
-                    <small data-qa-label="trainingDate" class="text-faded">{{formatDate Date__c}}</small>
-                    <p data-qa-label="trainingDescription">
-                        {{convertNewLinesToBreaks Description__c}}
-                    </p>
-                    <hr class="hr-alt"/>
-                </article>
+            <div class="slds-card slds-theme--default slds-p-around--medium">
+                <h4 class="slds-text-heading--small slds-truncate">
+                    {{#if camelizedModel.link}}
+                        <a data-qa-link="trainingNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
+                    {{else}}
+                        {{Name}}
+                    {{/if}}
+                </h4>
+                <p class="slds-text-body--small slds-text--disabled">{{Source__c}}</p>
+                <p class="slds-text-body--small slds-text--disabled">{{formatDate Date__c}}</p>
+                <div class="slds-m-top--medium slds-text-longform">
+                    <p>{{convertNewLinesToBreaks Description__c}}</p>
+                </div>
+            </div>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Skill_Assertions__r as sa}}
-    <section id="otherSkills">
-        <div class="list-heading">
-            <h4 data-qa-label="skills" class="list-heading__title">{{labels.skills}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate">{{labels.skills}}</h3>
         </div>
-        <div class="panel__body">
+        <div class="slds-card__body slds-p-around--small">
             {{#each sa.records}}
-                <span data-qa-label="skillNames" class="label label--secondary inline-block mar--sm--bxs">
-                    {{#with Skill__r}}
-                        {{Name}}
-                    {{/with}}
+                <span data-qa-label="skillName" class="slds-pill">
+                    <span href="#" class="slds-pill__label">
+                        {{#with Skill__r}}
+                            {{Name}}
+                        {{/with}}
+                    </span>
                 </span>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Publications__r as publications}}
-    <section id="publications">
-        <div class="list-heading">
-            <h4 data-qa-label="publications" class="list-heading__title">{{labels.publications}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="publications">{{labels.publications}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each publications.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="publicationName">
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate">
                         {{#if camelizedModel.link}}
                             <a data-qa-link="publicationNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
                             {{Name}}
                         {{/if}}
-                    </h3>
-                    <small data-qa-label="publicationDate" class="text-faded">{{formateDateWithPartition Date__c Publisher__c "●"}}</small>
-                    <p data-qa-label="publicationDescription">
-                        {{convertNewLinesToBreaks Description__c}}
-                    </p>
-                    <hr class="hr-alt"/>
-                </article>
+                    </h4>
+                    <p class="slds-text-body--small slds-text--disabled">{{formateDateWithPartition Date__c Publisher__c "●"}}</p>
+                    <div class="slds-m-top--medium slds-text-longform">
+                        <p>{{convertNewLinesToBreaks Description__c}}</p>
+                    </div>
+                </div>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Patents__r as patents}}
-    <section id="patents">
-        <div class="list-heading">
-            <h4 data-qa-label="patents" class="list-heading__title">{{labels.patents}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="patents">{{labels.patents}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each patents.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="patentName">
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate">
                         {{#if camelizedModel.link}}
                             <a data-qa-link="patentNameWithLink" {{action "navigation" Link__c}} href="#" target>{{Name}}</a>
                         {{else}}
                             {{Name}}
                         {{/if}}
-                    </h3>
-                    <small data-qa-label="patentNumberAndOffice" class="text-faded block">
-                        {{#if camelizedModel.number}}
-                            {{Number__c}} {{#if camelizedModel.office}}({{Office__c}}){{/if}}
-                        {{else}}
-                            {{Office__c}}
-                        {{/if}}
-                    </small>
-                    <small data-qa-label="patentDateAndStatus" class="text-faded">
+                    </h4>
+                    <p class="slds-text-body--small slds-text--disabled">
                         {{#if camelizedModel.date}}
                             {{formatDate Date__c}} {{#if camelizedModel.status}}({{Status__c}}){{/if}}
                         {{else}}
                             {{Status__c}}
                         {{/if}}
-                    </small>
-                    <p data-qa-label="patentSummary">
-                        {{convertNewLinesToBreaks Summary__c}}
                     </p>
-                    <hr class="hr-alt"/>
-                </article>
+                    <p class="slds-text-body--small slds-text--disabled">
+                        {{#if camelizedModel.number}}
+                            {{Number__c}} {{#if camelizedModel.office}}({{Office__c}}){{/if}}
+                        {{else}}
+                            {{Office__c}}
+                        {{/if}}
+                    </p>
+                    <div class="slds-m-top--medium slds-text-longform">
+                        <p>{{convertNewLinesToBreaks Summary__c}}</p>
+                    </div>
+                </div>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Recommendations__r as recs}}
-    <section id="recommendations">
-        <div class="list-heading">
-            <h4 data-qa-label="recommendations" class="list-heading__title">{{labels.recommendations}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="recommendations">{{labels.recommendations}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each recs.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <div class="card mar--sm--tn">
-                        <div class="card__body">
-                            <p data-qa-label="recommendationText" class="mar--sm--n">
-                                {{#if camelizedModel.recommendationText}}
-                                    "{{convertNewLinesToBreaks Recommendation_Text__c}}"
-                                {{/if}}
-                            </p>
-                            <div data-qa-label="recommendationTitle" class="text-right">
-                                <p data-qa-label="recommendationName" class="mar--sm--bn">
-                                    {{Name}}
-                                </p>
-                                {{Recommender_Title__c}}
-                            </div>
-                        </div>
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <div class="slds-text-longform">
+                        <p>
+                            {{#if camelizedModel.recommendationText}}
+                                "{{convertNewLinesToBreaks Recommendation_Text__c}}"
+                            {{/if}}
+                        </p>
+                        <p class="slds-text-align--right"><a href="#">{{Name}}</a>
+                            <br> {{Recommender_Title__c}}</p>
                     </div>
-                    <hr class="hr-alt"/>
-                </article>
+                </div>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Certifications__r as certs}}
-    <section id="certifications">
-        <div class="list-heading">
-            <h4 data-qa-label="certifications" class="list-heading__title">{{labels.certifications}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="certifications">{{labels.certifications}}</h3>
         </div>
-        <div class="test panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each certs.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="certificationName">{{Name}}</h3>
-                    <small data-qa-label="certificationIssuer" class="text-faded block">{{Issuer__c}} 
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate">{{Name}}</h4>
+                    <p class="slds-text-body--small slds-text--disabled">
                         {{#if camelizedModel.issuer}}
                             {{#if camelizedModel.number}}({{Number__c}}){{/if}}
                         {{else}}
                             {{Number__c}}
                         {{/if}}
-                    </small>
-                    <small data-qa-label="certificationDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
-                    <hr class="hr-alt"/>
-                </article>
+                    </p>
+                    <p class="slds-text-body--small slds-text--disabled">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</p>
+                </div>
             {{/each}}
+            <!-- /Card -->
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Employment_Histories__r as empHists}}
-    <section id="employment">
-        <div class="list-heading">
-            <h4 data-qa-label="employment" class="list-heading__title">{{labels.employment}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="employment">{{labels.employment}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each empHists.records itemController="additionalInfo"}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="employmentTitle">{{Job_Title__c}}</h3>
-                    <small data-qa-label="employmentName" class="text-faded block">{{Name}}</small>
-                    <small data-qa-label="employmentDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
+                <!-- Card -->
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate" data-qa-label="employmentTitle">{{Job_Title__c}}</h4>
+                    <p class="slds-text-body--small slds-text--disabled" data-qa-label="employmentName">{{Name}}</p>
+                    <p class="slds-text-body--small slds-text--disabled" data-qa-label="employmentDate">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</p>
                     {{#if camelizedModel.description}}
-                        <p data-qa-label="employmentDate" class="mar--sm--bn">{{convertNewLinesToBreaks Description__c}}</p>
+                        <div class="slds-m-top--medium slds-text-longform">
+                            <p data-qa-label="employmentDescription">{{convertNewLinesToBreaks Description__c}}</p>
+                        </div>
                     {{/if}}
                     {{#if fieldSet}}
-                        <div class="panel__body pad--sm--n">
-                            <div class="row pad--sm--rxxl">
-                                {{#each fieldSet}}
-                                    <div class="column--sm--6 column--xs--only--12 pad--sm--only--tm mar--md--tm">
-                                        <h4 class="mar--sm--n">{{label}}</h4>
-                                        <span class="field-value-small">
+                        <hr class="slds-m-top--small slds-m-bottom--small">
+                        <div class="slds-grid">
+                            <!-- Field -->
+                            {{#each fieldSet}}
+                                <div class="slds-col ">
+                                    <p class="slds-text-body--small">{{label}}</p>
+                                    <p>
                                         {{#if value}}
                                             {{{value}}}
                                         {{else}}
                                             <span data-qa-label="notProvided">{{labels.notProvided}}</span>
                                         {{/if}}
-                                        </span>
-                                    </div>
-                                {{/each}}
-                            </div>
-                        </div>
-                    {{/if}}
-                    <hr class="hr-alt"/>
-                </article>
-            {{/each}}
-        </div>
-    </section>
-{{/with}}
-{{#with tp.Education_Histories__r as eduHists}}
-    <section id="educations">
-        <div class="list-heading">
-            <h4 data-qa-label="education" class="list-heading__title">{{labels.education}}</h4>
-        </div>
-        <div class="panel__body pad--sm--bn">
-            {{#each eduHists.records}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="educationName">{{Name}}</h3>
-                    <small data-qa-label="educationLevel" class="text-faded block">{{Education_Level__c}}</small>
-                    <small data-qa-label="educationDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
-                </article>
-                {{#if fieldSet}}
-                    <div class="panel__body pad--sm--n">
-                        <div class="row pad--sm--rxxl mar--md--bm">
-                            {{#each fieldSet}}
-                                <div class="column--sm--6 column--xs--only--12 pad--sm--only--bm">
-                                    <h4 class="mar--sm--n">{{label}}</h4>
-                                    <span class="field-value-small">
-                                    {{#if value}}
-                                        {{{value}}}
-                                    {{else}}
-                                        <span data-qa-label="notProvided">{{labels.notProvided}}</span>
-                                    {{/if}}
-                                    </span>
+                                    </p>
                                 </div>
                             {{/each}}
                         </div>
-                    </div>
-                {{/if}}
+                    {{/if}}
+                </div>
             {{/each}}
         </div>
-    </section>
+    </div>
+{{/with}}
+{{#with tp.Education_Histories__r as eduHists}}
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="education">{{labels.education}}</h3>
+        </div>
+        <div class="slds-card__body slds-p-around--small">
+            {{#each eduHists.records}}
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate" data-qa-label="educationName">{{Name}}</h4>
+                    <p class="slds-text-body--small slds-text--disabled" data-qa-label="educationLevel">{{Education_Level__c}}</p>
+                    <p class="slds-text-body--small slds-text--disabled" data-qa-label="educationDate">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</p>
+                    {{#if fieldSet}}
+                        <hr class="slds-m-top--small slds-m-bottom--small">
+                        <div class="slds-grid">
+                            {{#each fieldSet}}
+                                <div class="slds-col ">
+                                    <p class="slds-text-body--small">{{label}}</p>
+                                    <p>
+                                        {{#if value}}
+                                            {{{value}}}
+                                        {{else}}
+                                            <span data-qa-label="notProvided">{{labels.notProvided}}</span>
+                                        {{/if}}
+                                    </p>
+                                </div>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                </div>
+            {{/each}}
+        </div>
+    </div>
 {{/with}}
 {{#with tp.Languages__r as languages}}
-    <section id="languages">
-        <div class="list-heading">
-            <h4 data-qa-label="languages" class="list-heading__title">{{labels.languages}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="languages">{{labels.languages}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
-            <ul class="mar--sm--tn">
-                {{#each languages.records itemController="additionalInfo"}}
-                    <li data-qa-label="languageName">{{Name}} {{#if camelizedModel.proficiencyLevel}}({{Proficiency_Level__c}}){{/if}}</li>
-                {{/each}}
-            </ul>
+        <div class="slds-card__body slds-p-around--small">
+            <div class="slds-card slds-theme--default slds-p-around--medium">
+                <ul class="slds-list--dotted">
+                    {{#each languages.records itemController="additionalInfo"}}
+                        <li data-qa-label="languageName">{{Name}} {{#if camelizedModel.proficiencyLevel}}({{Proficiency_Level__c}}){{/if}}</li>
+                    {{/each}}
+                </ul>
+            </div>
         </div>
-    </section>
+    </div>
 {{/with}}
 {{#with tp.Volunteer_Work__r as vw}}
-    <section id="volunteering">
-        <div class="list-heading">
-            <h4 data-qa-label="volunteering" class="list-heading__title">{{labels.volunteering}}</h4>
+    <div class="slds-card slds-overflow--hidden">
+        <div class="slds-card__header">
+            <h3 class="slds-text-heading--label slds-truncate" data-qa-label="volunteering">{{labels.volunteering}}</h3>
         </div>
-        <div class="panel__body pad--sm--bn">
+        <div class="slds-card__body slds-p-around--small">
             {{#each vw.records}}
-                <article class="mar--sm--bm">
-                    <h3 class="mar--sm--n" data-qa-label="volunteeringName">{{Name}}</h3>
-                    <small data-qa-label="volunteeringRole" class="text-faded block">{{Role__c}}</small>
-                    <small data-qa-label="volunteeringDate" class="text-faded">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</small>
-                    <p data-qa-label="volunteeringDescription">
-                        {{convertNewLinesToBreaks Description__c}}
-                    </p>
-                </article>
+                <div class="slds-card slds-theme--default slds-p-around--medium">
+                    <h4 class="slds-text-heading--small slds-truncate" data-qa-label="volunteeringName">{{Name}}</h4>
+                    <p class="slds-text-body--small slds-text--disabled">{{Role__c}}</p>
+                    <p class="slds-text-body--small slds-text--disabled">{{displayMonthYearRange Start_Month__c Start_Year__c End_Month__c End_Year__c "to"}}</p>
+                    <div class="slds-m-top--medium slds-text-longform">
+                        <p>{{convertNewLinesToBreaks Description__c}}</p>
+                    </div>
+                </div>
             {{/each}}
         </div>
-    </section>
+    </div>
 {{/with}}

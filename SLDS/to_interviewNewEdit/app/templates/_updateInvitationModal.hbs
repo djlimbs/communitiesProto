@@ -1,0 +1,23 @@
+<div class="modal fade" id="updateInvitationModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel" aria-hidden="true" data-qa-container="updateInvitationModal">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal" {{action "clickCancelModal"}} data-qa-button="closeModal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h2 class="modal__heading" id="myModalLabel" data-qa-label="updateInvitation">{{labels.updateInvitation}}</h2>
+            </div>
+            <div class="modal__body">
+                <div class="mar--sm--bm" data-qa-label="updateInvitationModalBody">
+                    {{labels.updateInvitationModalBody1}}
+                </div>
+                <div class="form__group">
+                    {{textarea value=updatedInformationMessage maxlength="1000" class="js-updateTextArea" data-qa-input="updateInformationMessage"}}
+                </div>
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="button button--primary" {{action "clickConfirmSave"}} data-dismiss="modal" data-qa-button="continue">{{labels.continue}}</button>
+            </div>
+        </div>
+    </div>
+</div>

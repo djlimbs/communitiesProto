@@ -1,0 +1,388 @@
+<div class="slds non-responsive">
+    <!-- Page Header -->
+    <div class="slds-page-header" role="banner">
+        <div class="slds-grid">
+            <div class="slds-col slds-has-flexi-truncate">
+                <nav class="slds-m-bottom--xx-small" role="navigation">
+                    <p id="bread-crumb-label" class="slds-assistive-text">{{applicant.Job_Posting__r.Job_Title__c}}</p>
+                    <ol class="slds-breadcrumb slds-list--horizontal" aria-labelledby="bread-crumb-label">
+                        <li class="slds-list__item slds-text-heading--label"><a href="javascript:void(0)">{{applicant.Job_Posting__r.Job_Title__c}}</a></li>
+                        <li class="slds-list__item slds-text-heading--label"><a href="javascript:void(0)">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</a></li>
+                    </ol>
+                </nav>
+                <div class="slds-grid">
+                    <div class="slds-grid slds-no-space">
+                        <!-- Page Title -->
+                        <h1 class="slds-text-heading--medium slds-truncate">{{#if isEdit}}{{labels.edit}}{{else}}{{labels.new}}{{/if}} {{labels.interview}}</h1>
+                        <!-- /Page Title -->
+                    </div>
+                </div>
+            </div>
+            <div class="slds-col slds-no-flex slds-align-bottom">
+                <button class="slds-button slds-button--neutral slds-m-right--medium" data-aljs-show="getting-started-modal">{{labels.help}}
+                    <svg aria-hidden="true" class="slds-button__icon--stateful slds-button__icon--right">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+                    </svg>
+                </button>
+                <button class="slds-button slds-button--neutral" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+                <button class="slds-button slds-button--brand" {{action "clickSave"}} data-qa-button="save">{{labels.save}}</button>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+    <div class="slds-grid slds-p-around--large">
+        <!-- Left Col -->
+        <div class="slds-col slds-no-flex slds-size--1-of-4">
+            <div class="slds-lookup to-im-participants-lookup" data-select="single" data-scope="single">
+                <div class="slds-form-element">
+                    <label class="slds-form-element__label slds-text-heading--medium" for="lookup" data-qa-label="participants">{{labels.participants}}</label>
+                    <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--right">
+                        <svg aria-hidden="true" class="slds-input__icon">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#search"></use>
+                        </svg>
+                        {{input type="text" class="slds-input js-userSearchInput" disabled=isAtMaxParticipants placeholder=labels.addParticipants value=userSearchTerm data-qa-input="userSearchTerm" aria-autocomplete="list" role="combobox" aria-expanded="true" aria-activedescendant=""}}
+                    </div>
+                </div>
+                    <div {{bind-attr class=":slds-lookup__menu :js-searchResults searchResults::slds-hide"}} role="listbox">
+                        <ul class="slds-lookup__list" role="presentation">
+                            {{#each searchResult in searchResults}}
+                                <li class="slds-lookup__item">
+                                    <a href="#" role="option" {{action "clickSearchResult" searchResult}} data-qa-link="searchResult">
+                                        <span data-qa-label="searchResultName">{{searchResult.Name}}</span><br><small data-qa-label="searchResultTitle">{{searchResult.Title}}</small>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </div>
+            </div>
+            <!-- Participants List -->
+            <ul class="slds-list--vertical slds-has-cards slds-m-top--medium">
+                <!-- Participant -->
+                <li class="slds-list__item to-im-participant">
+                    <div class="slds-tile slds-tile--board slds-p-around--xx-small">
+                        <div class="slds-tile__detail">
+                            <p class="slds-truncate" data-qa-label="applicantName">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</p>
+                            <p class="slds-truncate slds-text-body--small">{{labels.applicant}}</p>
+                        </div>
+                    </div>
+                </li>
+                {{#if participants}}
+                    {{#each participant in participants}}
+                        <li class="slds-list__item to-im-participant">
+                            <div class="slds-tile slds-tile--board slds-p-around--xx-small">
+                                <div class="slds-tile__detail slds-clearfix">
+                                    <a href="javascript:void(0)" class="slds-float--right slds-icon__container" data-qa-button="removeParticipant" {{action "clickRemoveParticipant" participant}}>
+                                        <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                                        </svg>
+                                        <span class="slds-assistive-text">Remove Participant</span>
+                                    </a>
+                                    <p class="slds-truncate" data-qa-label="participantName">{{participant.Name}}</p>
+                                    <p class="slds-truncate slds-text-body--small" data-qa-label="participantTitle">{{participant.Title}}</p>
+                                </div>
+                            </div>
+                        </li>
+
+                        {{!-- OLD
+                        <li class="list-group__item list-group__item--multi has-icon--right js-participant-item" style="cursor: default">
+                            <div class="input__icon juicon juicon-x" style="cursor: pointer" {{action "clickRemoveParticipant" participant}} data-qa-button="removeParticipant"></div>
+                            <a>
+                                <span class="block dots" data-qa-label="participantName">{{participant.Name}}</span>
+                                <small class="block text-faded dots" data-qa-label="participantTitle">{{participant.Title}}</small>
+                            </a>
+                        </li>
+                        --}}
+                    {{/each}}
+                {{else}}
+                    <li class="slds-list__item to-im-participant">
+                        <div class="slds-tile slds-tile--board slds-p-around--xx-small">
+                            <div class="slds-tile__detail">
+                                <p class="slds-truncate" data-qa-label="emptyState">{{labels.noParticipantsExist}}</p>
+                            </div>
+                        </div>
+                    </li>
+                {{/if}}
+            </ul>
+            <!-- /Participants List -->
+            <!-- Topics -->
+            <div class="slds-form-element slds-m-top--large">
+                <label class="slds-form-element__label slds-text-heading--medium" for="{{unbound labels.topics}}" data-qa-label="topics">{{labels.topics}}</label>
+                <div class="slds-form-element__control">
+                    {{topics-input type="text" placeholder=labels.addTopic class="slds-input" topics=interview.topics}}
+                </div>
+            </div>
+            <div id="topic-pills" class="slds-m-top--xx-small">
+                {{#each topic in interview.topics}}
+                    <span class="slds-pill slds-m-top--x-small"><a href="#" class="slds-pill__label">{{topic}}</a>
+                        <button class="slds-button slds-button--icon-bare" data-qa-button="removeTopic" {{action "clickRemoveTopic" topic}}>
+                            <svg aria-hidden="true" class="slds-button__icon">
+                                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+                            </svg>
+                            <span class="slds-assistive-text">Remove</span>
+                        </button>
+                    </span>
+                {{/each}}
+            </div>
+            <!-- /Topics -->
+            <!-- Where -->
+            <div class="slds-form-element slds-m-top--large">
+                <label class="slds-form-element__label slds-text-heading--medium" for="lookup" data-qa-label="where">{{labels.where}}</label>
+                <div class="slds-picklist js-locationDropdown" aria-expanded="true" data-aljs="picklist">
+                    <button class="slds-button slds-button--neutral slds-picklist__label to-im-where" aria-haspopup="true" {{action "clickToggleDropdown"}}>
+                        <p class="slds-truncate">{{selectedLocation.Location_Name__c}}</p>
+                        {{#if isSelectedLocationInPersonOrGoogle}}
+                            <p class="slds-truncate slds-text-body--small">{{selectedLocationAddress}}</p>
+                        {{/if}}
+                        <svg aria-hidden="true" class="slds-icon">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#down"></use>
+                        </svg>
+                    </button>
+                    <div {{bind-attr class=":slds-dropdown :slds-dropdown--left :slds-dropdown--menu isLocationDropdownOpen::slds-hide"}}>
+                        <div class="slds-dropdown__header">
+                            <span class="slds-text-heading--label">{{labels.locations}}</span>
+                        </div>
+                        <ul class="slds-dropdown__list" role="menu">
+                            {{#each location in availableLocations itemController="location"}}
+                                {{#unless location.isSelected}}
+                                    <li class="slds-dropdown__item" {{action "clickSelectLocation" location}} data-qa-label="locationName">
+                                        <a href="javascript:void(0)" role="menuitemradio">
+                                            <p class="slds-truncate">
+                                                <svg aria-hidden="true" class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                                </svg>{{location.Location_Name__c}}
+                                            </p>
+                                        </a>
+                                    </li>
+                                {{/unless}}
+                            {{/each}}
+                        </ul>
+                        <ul class="slds-dropdown__list" role="menu">
+                            <li class="slds-dropdown__item slds-has-divider"></li>
+                            {{#each customLocation in customLocations itemController="location"}}
+                                {{#unless customLocation.isSelected}}
+                                    <li href="#" class="slds-dropdown__item" {{action "clickSelectCustomLocation" customLocation.Location_Name__c}} data-qa-button="selectCustomLocation">
+                                        <a href="javascript:void(0)" role="menuitemradio">
+                                            <p class="slds-truncate">
+                                                <svg aria-hidden="true" class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small">
+                                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                                </svg>{{customLocation.Location_Name__c}}
+                                            </p>
+                                        </a>
+                                    </li>    
+                                {{/unless}}
+                            {{/each}}
+                            <li href="#" class="slds-dropdown__item" {{action "clickSelectGoogleMaps"}} data-qa-button="selectGoogleLocation">
+                                <a href="javascript:void(0)" role="menuitemradio">
+                                    <p class="slds-truncate">
+                                        <svg aria-hidden="true" class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small">
+                                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
+                                        </svg>{{labels.placeFromGoogleMaps}}
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    {{#if googlePlaceSelected}}
+                        <small class="block mar--sm--ts">
+                            <a class="block" href="#" {{action "clickSelectGoogleMaps"}} data-qa-link="editGoogleLocation">
+                                <div class="part__body">
+                                    {{labels.editUsingGoogleMaps}}
+                                </div>
+                            </a>
+                        </small>
+                    {{/if}}
+                </div>
+            </div>
+            <!-- /Where -->
+            <!-- Details -->
+            <div class="slds-form-element slds-m-top--large">
+                <label class="slds-form-element__label slds-text-heading--medium" for="lookup" data-qa-label="logisticalDetails">{{labels.logisticalDetails}}</label>
+                <div class="slds-form-element__control">
+                    {{textarea class="slds-textarea" value=interview.Logistical_Details__c maxlength="1000" data-qa-input="logisticalDetails"}}
+                </div>
+            </div>
+            <!-- /Details -->
+            <a href="#" data-aljs-show="contact-info-modal">
+                <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#warning"></use>
+                </svg> {{labels.view}} {{applicant.First_Name__c}} {{applicant.Last_Name__c}}{{labels.personsContactInfo}}
+            </a>
+        </div>
+        <!-- /Left Col -->
+        <!-- Right Col -->
+        <div id="calendar" class="slds-col slds-no-flex slds-size--3-of-4 slds-p-left--large">
+            {{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle
+                    isOauthedIntoOutlook=isOauthedIntoOutlook timeSlots=timeSlots
+                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars
+                    participants=participants notifyCalendarToUpdate=notifyCalendarToUpdate 
+                    calendarEl=calendarEl numberOfTimeSlots=numberOfTimeSlots 
+                    timeSlotsChanged=timeSlotsChanged notifyCalendarToRemoveParticipants=notifyCalendarToRemoveParticipants}}
+        </div>
+        <!-- /Right Col -->
+    </div>
+
+    {{partial "contactModal"}}
+    {{partial "gettingStartedModal"}}
+
+</div>
+
+{{!--
+<div class="scope-container" style="overflow: visible;">
+    <div class="content pad--sm--m">
+        <nav class="nav-bar--sf1 mar--sm--bn">
+            <button type="button" {{bind-attr class=":button :button--primary :js-save-button :float--right :mar--sm--only--rs :mar--md--lxs isSaving:load-this isDisabled:disabled" disabled="isDisabled"}} {{action "clickSave"}} data-qa-button="save">{{labels.save}}</button>
+            <button type="button" class="button button--secondary js-save-button float--right-left mar--sm--only--rs mar--md--lxs" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+            <a href="#" class="block pad--sm--s float--right" data-toggle="modal" data-target="#gettingStartedModal" data-qa-link="help">{{labels.help}} <span class="juicon juicon-question-circle"></span></a>
+            <h2 class="nav-bar--sf1__title page__heading has-subheading has-subtitle" data-qa-label="header">{{#if isEdit}}{{labels.edit}}{{else}}{{labels.new}}{{/if}} {{labels.interview}}</h2>
+            <h3 class="nav-bar--sf1__subtitle page__subheading" style="overflow:visible;" data-qa-label="jobTitle">
+                {{applicant.Job_Posting__r.Job_Title__c}}<span {{bind-attr class=":status statusClass"}}>{{unbound interview.Status__c}}</span>
+            </h3>
+            <hr class="show-brkpoint--md"/>
+        </nav>
+        {{#if errorMessage}}
+            <div class="alert alert--error mar--sm--bm" data-qa-alert="errorMessage">
+                {{{errorMessage}}}
+            </div>
+        {{/if}}
+        <section>
+            <div class="row">
+                <div class="column--md--3">
+                    <h3 data-qa-label="participants">{{labels.participants}}</h3>
+                    <!--item search input-->
+                    <div {{bind-attr class=":form__group mar--sm--bn isSearching:load-this"}}>
+                        <label class="sr-only" data-qa-label="addParticipants">{{labels.addParticipants}}</label>
+                        <div class="input__wrap has-icon--right">
+                            <div class="input__icon juicon juicon-search"></div>
+                            {{input type="text" class="bg-1" disabled=isAtMaxParticipants placeholder=labels.addParticipants value=userSearchTerm data-qa-input="userSearchTerm"}}
+                        </div>
+                        <small class="input-error-content"></small>
+                    </div>
+                    <!--item search results-->
+                    {{#if searchResults}}
+                        <ul id="participant-dropdown" class="list-group list-group--bordered mar--sm--bn mar--sm--tn" style="max-height: 300px; overflow-y: scroll; overflow-x: hidden;" data-qa-container="searchResults">
+                            {{#each searchResult in searchResults}}
+                                <li class="list-group__item item">
+                                    <a {{action "clickSearchResult" searchResult}} data-qa-link="searchResult">
+                                        <span data-qa-label="searchResultName">{{searchResult.Name}}</span>
+                                        <small class="block text-faded dots" data-qa-label="searchResultTitle">{{searchResult.Title}}</small>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    {{/if}}
+                    <ul class="list-group list-group--bordered mar--sm--ts" id="chosenParticipants" data-qa-container="participants">
+                        <li class="list-group__item list-group__item--multi has-icon--right js-participant-item" style="cursor: default">
+                            <div class="input__icon juicon juicon-user-star"></div>
+                            <a>
+                                <span class="block dots" data-qa-label="applicantName">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</span>
+                                <small class="block text-faded" data-qa-label="applicant">{{labels.applicant}}</small>
+                            </a>
+                        </li>
+                        {{#if participants}}
+                            {{#each participant in participants}}
+                                <li class="list-group__item list-group__item--multi has-icon--right js-participant-item" style="cursor: default">
+                                    <div class="input__icon juicon juicon-x" style="cursor: pointer" {{action "clickRemoveParticipant" participant}} data-qa-button="removeParticipant"></div>
+                                    <a>
+                                        <span class="block dots" data-qa-label="participantName">{{participant.Name}}</span>
+                                        <small class="block text-faded dots" data-qa-label="participantTitle">{{participant.Title}}</small>
+                                    </a>
+                                </li>
+                            {{/each}}
+                        {{else}}
+                            <div class="js-empty-state">
+                                <small class="block pad--sm--m text-faded text-center" data-qa-label="emptyState">{{labels.noParticipantsExist}}</small>   
+                            </div>
+                        {{/if}}
+                    </ul>
+                    
+                    <h3 data-qa-label="topics">{{labels.topics}}</h3>
+                    <div class="form__group">
+                        {{select-2 value=interview.topics data-qa-input="topics" placeholder=labels.addTopic}}
+                    </div>
+                    <h3 data-qa-label="where">{{labels.where}}</h3>
+                    <div class="form__group" style="">
+                        <div class="button-group width--full" style="">
+                            <div class="button button--secondary button--dropdown width--full text-left" data-toggle="dropdown" data-qa-label="selectedLocationName">
+                                <div class="dots float--left" style="width: 164px;">
+                                    <span class="block dots">
+                                        {{selectedLocation.Location_Name__c}}
+                                    </span>
+                                    
+                                    {{#if isSelectedLocationInPersonOrGoogle}}
+                                        <small class="block dots text-faded" data-toggle="tooltip" {{bind-attr title="selectedLocationAddress" data-original-title="selectedLocationAddress"}}>{{selectedLocationAddress}}</small>
+                                    {{/if}}
+                                </div>
+                                <span class="caret float--right"></span>
+                            </div>
+                            <ul class="dropdown-menu pad--sm--bs pad--sm--ts" data-qa-container="locationSelector">
+                                {{#unless noLocationsAvailable}}
+                                    <small class="block mar--sm--m mar--sm--bxs mar--sm--ts text-faded">{{labels.locations}}</small>
+                                {{/unless}}
+                                {{#each location in availableLocations itemController="location"}}
+                                    {{#unless location.isSelected}}
+                                        <li class="dropdown-menu__list-item" {{action "clickSelectLocation" location}} data-qa-button="selectLocation"><a href="#" data-qa-label="locationName">{{location.Location_Name__c}}</a></li>
+                                    {{/unless}}
+                                {{/each}}
+                                {{#unless noLocationsAvailable}}
+                                    <hr class="mar--sm--n mar--sm--ts mar--sm--bs">
+                                {{/unless}}
+                                {{#each customLocation in customLocations itemController="location"}}
+                                    {{#unless customLocation.isSelected}}
+                                        <li class="dropdown-menu__list-item" {{action "clickSelectCustomLocation" customLocation.Location_Name__c}} data-qa-button="selectCustomLocation"><a href="#" data-qa-label="customLocationName">{{customLocation.Location_Name__c}}</a></li>
+                                    {{/unless}}
+                                {{/each}}
+                                <li class="dropdown-menu__list-item" {{action "clickSelectGoogleMaps"}} data-qa-button="selectGoogleLocation"><a data-target="#googleModal" data-toggle="modal" href="#" data-qa-label="selectFromGoogleMaps">{{labels.placeFromGoogleMaps}}</a></li>
+                            </ul>
+                        </div>
+                        {{#if googlePlaceSelected}}
+                            <small class="block mar--sm--ts">
+                                <a class="block" href="#" {{action "clickSelectGoogleMaps"}} data-qa-link="editGoogleLocation">
+                                    <div class="part__body">
+                                        {{labels.editUsingGoogleMaps}}
+                                    </div>
+                                </a>
+                            </small>
+                        {{/if}}
+                    </div>
+                    <h3 data-qa-label="logisticalDetails">{{labels.logisticalDetails}}</h3>
+                    <div class="form__group">
+                        {{textarea value=interview.Logistical_Details__c maxlength="1000" data-qa-input="logisticalDetails"}}
+                        <small class="block mar--sm--ts">
+                            <a class="block" data-target="#contactModal" data-toggle="modal" href="#" data-qa-link="viewContactInfo">
+                                <div class="part__left pad--sm--rxs">
+                                    <div class="juicon juicon-user-star"></div>
+                                </div>
+                                <div class="part__body">
+                                    {{labels.view}} {{applicant.First_Name__c}} {{applicant.Last_Name__c}}{{labels.personsContactInfo}}
+                                </div>
+                            </a>
+                        </small>
+                    </div>
+                </div>
+                <div class="column--md--9">
+                    {{full-calendar isOauthedIntoGoogle=isOauthedIntoGoogle
+                    isOauthedIntoOutlook=isOauthedIntoOutlook timeSlots=timeSlots
+                    deletedTimeSlots=deletedTimeSlots googleCalendars=googleCalendars
+                    participants=participants notifyCalendarToUpdate=notifyCalendarToUpdate 
+                    calendarEl=calendarEl numberOfTimeSlots=numberOfTimeSlots 
+                    timeSlotsChanged=timeSlotsChanged notifyCalendarToRemoveParticipants=notifyCalendarToRemoveParticipants}}
+                    {{#if isOauthedIntoGoogle}}
+                        <div class="float--right mar--sm--txs">
+                            <small>{{labels.signedIntoGoogleCalendarAs}} {{googleUserDisplayName}}. <a href="#" {{action "clickSignOutOfGoogle"}}>{{labels.signOut}}</a></small>
+                        </div>
+                    {{/if}}
+                </div>
+            </div>
+        </section>
+    </div>
+    {{partial "oauthIntoGoogleModal"}}
+    {{partial "updateInvitationModal"}}
+    {{partial "gettingStartedModal"}}
+    {{partial "googleMapsModal"}}
+    {{partial "sendICSModal"}}
+    {{partial "sendEmailToApplicant"}}
+    {{partial "contactModal"}}
+    {{partial "topicsChangedModal"}}
+    {{partial "reproposeNotAcceptedModal"}}
+</div>
+--}}

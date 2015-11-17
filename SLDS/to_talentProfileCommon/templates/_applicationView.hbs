@@ -1,3 +1,145 @@
+<div class="slds-card to-va-application-reader js-profile-panel">
+    <div class="slds-card__header slds-grid">
+        <div class="slds-media slds-media--center slds-has-flexi-truncate">
+            <div class="slds-media__body slds-p-bottom--x-small">
+                <h2 class="slds-text-heading--medium slds-truncate">{{application.First_Name__c}} {{application.Last_Name__c}}</h2>
+                <p><strong>{{labels.status}}:</strong> {{statusText}} <a href="#" data-aljs-show="update-status-modal">{{labels.update}}</a></p>
+            </div>
+        </div>
+        <div class="slds-no-flex">
+            {{#unless isSF1}}
+                <button class="slds-button slds-button--neutral slds-button--small" {{action "addInterview"}}>
+                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#new"></use>
+                    </svg>
+                    {{labels.addInterview}}
+                </button>
+            {{/unless}}
+            <button class="slds-button slds-button--neutral slds-button--small" data-aljs-show="feedback-modal">
+                <svg aria-hidden="true" class="slds-button__icon slds-button__icon--left">
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#comments"></use>
+                </svg>
+                {{labels.provideFeedback}}
+            </button>
+        </div>
+    </div>
+    
+    <div class="slds-card__body slds-theme--default slds-p-bottom--none">
+        <div class="slds-grid slds-p-around--medium slds-theme--default">
+            <div class="slds-col slds-size--2-of-4">
+                <p><span class="slds-opacity--50">{{labels.source}}:</span> {{application.Source__c}}</p>
+                <p><span class="slds-opacity--50">{{labels.appliedOn}}:</span> {{formatDate application.Applied_On__c}}</p>
+                <p><span class="slds-opacity--50">{{labels.employment}}:</span> {{employmentText}}</p>
+                <p><span class="slds-opacity--50">{{labels.linkedin}}:</span> <a href="#" {{action "loadLinkedIn"}}>{{#if hasProfile}}{{labels.profile}}{{else}}{{labels.search}}{{/if}}</a></p>
+            </div>
+            <div class="slds-col slds-size--1-of-4">
+                <p>
+                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.applicationRating}}" style="position: relative;">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#list"></use>
+                    </svg>
+                    <span class="slds-assistive-text">{{labels.applicationRating}}</span>
+                    <span class="to-va-rating to-va-rating--positive">{{application.score}}</span> {{#if application.showMax}}({{labels.outOf}} {{application.Maximum_Score__c}}){{/if}}
+                </p>
+                <p>
+                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.positiveInterviewFeedback}}" style="position: relative;" data-qa-label="positiveInterviewFeedback">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                    </svg>
+                    <span class="slds-assistive-text">{{labels.positiveInterviewFeedback}}</span>
+                    {{positiveFeedback}} {{labels.positive}}
+                </p>
+                <p>
+                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-icon--flip-x slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.negativeInterviewFeedback}}" style="position: relative;" data-qa-label="negativeInterviewFeedback">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                    </svg>
+                    <span class="slds-assistive-text">{{labels.negativeInterviewFeedback}}</span>
+                    {{negativeFeedback}} {{labels.negative}}
+                </p>
+                {{#if allowNeutral}}
+                    <p>
+                        <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.neutralInterviewFeedback}}" style="position: relative;">
+                            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+                        </svg>
+                        <span class="slds-assistive-text">{{labels.neutralInterviewFeedback}}</span>
+                        {{neutralFeedback}} {{labels.neutral}}
+                    </p>
+                {{/if}}
+            </div>
+            <div class="slds-col slds-size--1-of-4">
+                <p>
+                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.email}}">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#email"></use>
+                    </svg>
+                    <span class="slds-assistive-text">{{labels.email}}</span>
+                    <a {{bind-attr href="emailLink"}} target="_blank">{{application.Email__c}}</a>
+                </p>
+                <p>
+                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.phone}}">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#call"></use>
+                    </svg>
+                    <span class="slds-assistive-text">{{labels.phone}}</span>
+                    {{#if application.Mobile_Phone__c}}
+                        {{application.Mobile_Phone__c}}
+                    {{else}}
+                        <span data-qa-label="noPhone" class="text-faded">{{labels.notProvided}}</span>
+                    {{/if}}
+                </p>
+                <p>
+                    <svg aria-hidden="true" class="slds-icon slds-icon-text-default slds-icon--x-small slds-m-right--xx-small" data-aljs="tooltip" title="{{unbound labels.location}}">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#checkin"></use>
+                    </svg>
+                    <span class="slds-assistive-text">{{labels.location}}</span>
+                    {{#if hasAddress}}
+                        {{#if isSF1}}
+                            <span> {{application.City__c}}, {{application.State_Province__c}}</span>
+                        {{else}}
+                            <a data-qa-link="address" {{action "loadGoogleMaps"}} href="#">{{application.City__c}}, {{application.State_Province__c}}</a>
+                        {{/if}}
+                    {{else}}
+                        {{labels.cardNoAddress}}
+                    {{/if}}
+                </p>
+            </div>
+        </div>
+        <div class="slds-tabs--default slds-p-left--medium slds-p-right--medium slds-p-bottom--medium">
+            <ul class="slds-tabs--default__nav" role="tablist">
+                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label showApplicationDetails:slds-active" title="tabLink.label" tabindex="0"}} role="presentation" {{action "selectTab" "application"}} data-qa-button="applicationTab"><a href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.application}}</a></li>
+                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label showResume:slds-active" title="tabLink.label" tabindex="1"}} role="presentation" {{action "selectTab" "resume"}} data-qa-button="resumeTab"><a href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.resume}}</a></li>
+                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label showLinkedIn:slds-active" title="tabLink.label" tabindex="2"}} role="presentation" {{action "selectTab" "linkedin"}} data-qa-button="linkedInTab"><a href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.linkedin}}</a></li>
+            </ul>
+            <div class="slds-tabs__content" role="tabpanel">
+                {{#if showApplicationDetails}}
+                    <div id="tab-application" class="slds-tabs__content" role="tabpanel">
+                        {{partial "applicationDetails"}}
+                    </div>
+                {{/if}}
+                {{#if showResume}}
+                    <div id="tab-resume" {{bind-attr class=":slds-tabs__content hasResume::empty"}} role="tabpanel">
+                        {{#if hasResume}}
+                            {{#if isDropbox}}
+                                {{labels.dropboxResumePart1}} <a {{bind-attr href="resume"}} target="_blank">{{labels.dropboxResumePart2}}</a> {{labels.dropboxResumePart3}} {{application.Name}}{{labels.dropboxResumePart4}}
+                            {{else}}
+                                <iframe data-qa-iframe="resumeFrame" {{bind-attr src="resume"}}></iframe>
+                            {{/if}}
+                        {{/if}}
+                    </div>
+                {{/if}}
+                {{#if showLinkedIn}}
+                    <div id="tab-linkedin" class="slds-tabs__content" role="tabpanel">
+                        <iframe data-qa-iframe="linkedInFrame" {{bind-attr src="csaUrl"}}></iframe>
+                    </div>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</div>
+
+{{!--{{back-to-top}}--}}
+
+{{update-status-modal ctrl=this}}
+​{{provide-feedback-modal ctrl=this}}
+{{!--
+
+
 <div class="applicant-info panel js-profile-panel mar--sm--tn">
     <div class="panel__top">
         <div class="float--left">
@@ -160,3 +302,4 @@
         </div>
     </div>
 </div>
+--}}

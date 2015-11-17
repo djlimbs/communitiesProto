@@ -140,10 +140,11 @@ _AljsApp.AljsDatepickerComponent = Ember.Component.extend(Ember.Evented, {
     didInsertElement: function() {
         var self = this;
 
-        $('body').on('keyup', this, this.triggerClickNextOrPrev);
+        $('body').on('keyup.' + this.get('elementId'), this, this.triggerClickNextOrPrev);
+        $('body').on('click.' + this.get('elementId'), this, this.closeDatepicker);
     },
     willClearRender: function() {
-        $('body').unbind('keyup', this, this.triggerClickNextOrPrev);
+        $('body').off('.' + this.get('elementId'));
     },
     years: function() {
         var currentYear = (new Date()).getFullYear();
@@ -397,10 +398,11 @@ _AljsApp.AljsMultiDatepickerComponent = Ember.Component.extend(Ember.Evented, {
     didInsertElement: function() {
         var self = this;
 
-        $('body').on('keyup', this, this.triggerClickNextOrPrev);
+        $('body').on('keyup.' + this.get('elementId'), this, this.triggerClickNextOrPrev);
+        $('body').on('click.' + this.get('elementId'), this, this.closeDatepicker);
     },
     willClearRender: function() {
-        $('body').unbind('keyup', this, this.triggerClickNextOrPrev);
+        $('body').off('.' + this.get('elementId'));
     },
     years: function() {
         var currentYear = (new Date()).getFullYear();
@@ -472,7 +474,7 @@ _AljsApp.AljsMultiDatepickerComponent = Ember.Component.extend(Ember.Evented, {
                 calendarRows.push({
                     data: [],
                     'slds-has-multi-row-selection': (index > 6 && calendarRows[calendarRows.length - 1].data[6].isSelected === true && day.isSelected === true)
-                                                        || (index === 0 && allDays[6].isSelected === true && allDays[7].isSelected === true) 
+                                                        || (!Ember.isNone(allDays[index + 6]) && allDays[index + 6].isSelected === true && !Ember.isNone(allDays[index + 7]) && allDays[index + 7].isSelected === true) 
                 });
             }
 
@@ -530,13 +532,19 @@ _AljsApp.AljsMultiDatepickerComponent = Ember.Component.extend(Ember.Evented, {
         this.set('is' + otherInputType + 'Open', false);
         this.set(('is' + inputType + 'Open'), true);
     },
-    closeDatepicker: function() {
-        var inputType = this.get('inputType');
+    closeDatepicker: function(e) {
+        var self = this;
 
-        this.set('is' + inputType + 'YearOpen', false);
-        this.set('is' + inputType + 'Open', false);
+        if (e) {
+            self = e.data;
+        }
 
-        this.$().find('[data-aljs-multi-datepicker="' + inputType + '"]').blur();
+        var inputType = self.get('inputType');
+
+        self.set('is' + inputType + 'YearOpen', false);
+        self.set('is' + inputType + 'Open', false);
+
+        self.$().find('[data-aljs-multi-datepicker="' + inputType + '"]').blur();
     },
     openYearDropdown: function() {
         this.set('isYearOpen', true);

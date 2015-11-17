@@ -7,20 +7,18 @@
         <span class="slds-assistive-text">{{labels.add}}</span>
     </button>
 </div>
-<!-- Empty State -->
-<!--<em class="slds-opacity--50">No Filters</em>-->
-<!-- /Empty State -->
+
 {{#each filter in filters itemController="filter"}}
-    <span class="slds-pill to-va-filter"><a href="#" class="slds-pill__label">{{{filter.formattedFilterText}}}</a>
+    <span class="slds-pill to-va-filter"><a href="#" class="slds-pill__label" data-aljs="tooltip" {{bind-attr title="filter.formattedFilterText"}}>{{{filter.formattedFilterText}}}</a>
         <button class="slds-button slds-button--icon-bare" {{action "clickRemoveFilter" filter}} data-qa-button="removeFilter">
-          <svg aria-hidden="true" class="slds-button__icon">
-              <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
-          </svg>
-          <span class="slds-assistive-text">Remove</span>
+            <svg aria-hidden="true" class="slds-button__icon">
+                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#close"></use>
+            </svg>
+            <span class="slds-assistive-text">{{labels.remove}}</span>
         </button>
     </span>
 {{else}}
-    <em class="slds-opacity--50">No Filters</em>
+    <em class="slds-opacity--50">{{labels.noFilters}}</em>
 {{/each}}
 
 {{#aljs-modal modalId="filter-modal" bodyClass="slds-expanded"}}
@@ -42,7 +40,7 @@
         </fieldset>
     </modalBody>
     <modalFooter>
-        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="filter-modal" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--neutral" data-aljs-dismiss="filter-modal" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
         <button class="slds-button slds-button--neutral slds-button--brand" {{action "clickOK"}} data-qa-button="ok">{{labels.ok}}</button>
     </modalFooter>
 {{/aljs-modal}}

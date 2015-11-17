@@ -1,34 +1,26 @@
-<div aria-hidden="true" aria-labelledby="none" class="modal fade" id="status-modal-component" role="dialog" tabindex="-1">
-    <div class="modal__shell" data-qa-container="updateStatus">
-        <div class="modal__content">
-            <div class="modal__top pad--sm--bm">
-                <button class="close" data-dismiss="modal" type="button"><span class="close-modal-x"></span></button>
-                <h2 class="modal__heading" id="myModalLabel" data-qa-label="updateStatus">{{labels.updateStatus}}</h2>
-            </div>
-            <div class="modal__body">
-                <div class="mar--sm--bm">
-                    <div class="form-group">
-                        <label data-qa-label="stage">{{labels.stage}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" content=applicationStages value=stage data-qa-select="stage"}}
-                        </div>
-                    </div>
-                </div>
-                <div class="mar--sm--bn">
-                    <div class="form-group">
-                        <label data-qa-label="status">{{labels.status}}</label>
-                        <div class="select__wrap">
-                            <div class="input__icon juicon juicon-down"></div>
-                            {{view "select" content=applicationStatuses value=status data-qa-select="status"}}
-                        </div>
-                    </div>
+{{#aljs-modal modalId="update-status-modal"}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium" data-qa-label="updateStatus">{{labels.updateStatus}}</h2>
+    </modalHeader>
+    <modalBody>
+        <div class="slds-form--stacked">
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="stage">{{labels.stage}}</label>
+                <div class="slds-form-element__control">
+                    {{view "select" class="slds-select" content=applicationStages value=stage data-qa-select="stage"}}
+
                 </div>
             </div>
-            <div class="modal__footer">
-                <button class="button button--secondary" data-dismiss="modal" type="button" data-qa-button="cancel">{{labels.cancel}}</button>
-                <button class="button button--primary js-save" data-dismiss="modal" type="button" {{action "clickUpdateStatus"}} data-qa-button="update">{{labels.update}}</button>
+            <div class="slds-form-element">
+                <label class="slds-form-element__label" for="status">{{labels.status}}</label>
+                <div class="slds-form-element__control">
+                    {{view "select" class="slds-select" content=applicationStatuses value=status data-qa-select="status"}}
+                </div>
             </div>
         </div>
-    </div>
-</div>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral" data-aljs-dismiss="update-status-modal" type="button" data-qa-button="cancel">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--brand" data-aljs-dismiss="update-status-modal" type="button" {{action "clickUpdateStatus"}} data-qa-button="update">{{labels.update}}</button>
+    </modalFooter>
+{{/aljs-modal}}

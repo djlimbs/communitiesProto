@@ -1,9 +1,9 @@
-{{#aljs-modal modalId="status-modal" class=""}}
+{{#aljs-modal modalId="bulk-status-modal" class=""}}
     <modalHeader>
         <h2 class="slds-text-heading--medium">{{labels.updateStatus}}</h2>
     </modalHeader>
     <modalBody>
-        <div class="slds-notify slds-notify--alert slds-theme--alert-texture slds-m-bottom--medium" role="alert">
+        <div class="slds-notify slds-notify--alert slds-theme--alert-texture slds-m-bottom--medium slds-text-align--left" role="alert">
             <span class="slds-assistive-text">Warning</span>
             <h2>
                 <svg aria-hidden="true" class="slds-icon slds-icon--small slds-m-right--x-small">
@@ -28,7 +28,7 @@
         </div>
     </modalBody>
     <modalFooter>
-        <button class="slds-button slds-button--neutral" data-aljs-dismiss="status-modal" tabindex="-1">{{labels.cancel}}</button>
-        <button class="slds-button slds-button--brand" data-aljs-dismiss="status-modal" tabindex="-1" {{bind-attr disabled="disableConfirmBulkUpdate"}} {{action "clickConfirmBulkUpdate"}} data-qa-button="update">{{labels.update}} {{results.total}} {{labels.applicantsCapitalizedParens}}</button>
+        <button class="slds-button slds-button--neutral" data-aljs-dismiss="bulk-status-modal" tabindex="-1">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--brand" data-aljs-dismiss="bulk-status-modal" tabindex="-1" {{bind-attr disabled="disableConfirmBulkUpdate"}} {{action "clickConfirmBulkUpdate"}} data-qa-button="update">{{labels.update}} {{results.total}} {{labels.applicantsCapitalizedParens}}</button>
     </modalFooter>
 {{/aljs-modal}}

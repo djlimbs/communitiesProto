@@ -541,7 +541,8 @@ App.FilterController = Ember.ObjectController.extend({
 	formattedFilterText: function() {
 		var text = this.get('text');
 		var filterTextComponents = text.split(':');
-		var filterText = '<strong>' + filterTextComponents[0] + ': </strong><span class="text-faded">' + filterTextComponents[1] +'</span>';
+		//var filterText = '<strong>' + filterTextComponents[0] + ': </strong><span class="text-faded">' + filterTextComponents[1] +'</span>';
+		var filterText = filterTextComponents[0] + ': ' + filterTextComponents[1];
 
 		return filterText;
 	}.property('text')

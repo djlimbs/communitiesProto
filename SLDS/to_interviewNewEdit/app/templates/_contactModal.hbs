@@ -1,0 +1,60 @@
+{{#aljs-modal modalId="contact-info-modal" class=""}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium" data-qa-label="shareApplicant">{{labels.contactInfo}}</h2>
+    </modalHeader>
+    <modalBody>
+        <div class="row">
+            <div class="column--md--6">
+                <div class="form__group">
+                    <label data-qa-label="firstName">{{labels.appFirstName}}</label>
+                    <div data-qa-label="applicantFirstName">
+                        {{#if applicant.First_Name__c}}
+                            {{applicant.First_Name__c}}
+                        {{else}}
+                            <span class="text-faded">{{labels.notProvided}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="column--md--6">
+                <div class="form__group">
+                    <label data-qa-label="lastName">{{labels.appLastName}}</label>
+                    <div data-qa-label="applicantLastName">
+                        {{#if applicant.Last_Name__c}}
+                            {{applicant.Last_Name__c}}
+                        {{else}}
+                            <span class="text-faded">{{labels.notProvided}}</span>
+                        {{/if}}
+                    </div>
+                </div>    
+            </div>
+            <div class="column--md--6">
+                <div class="form__group">
+                    <label data-qa-label="email">{{labels.appEmail}}</label>
+                    <div data-qa-label="applicantEmail" class="dots">
+                        {{#if applicant.Email__c}}
+                            <a href="mailto:{{unbound applicant.Email__c}}">{{applicant.Email__c}}</a>
+                        {{else}}
+                            <span class="text-faded">{{labels.notProvided}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="column--md--6">
+                <div class="form__group">
+                    <label data-qa-label="mobile">{{labels.appMobile}}</label>
+                    <div data-qa-label="applicantMobile">
+                        {{#if applicant.Mobile_Phone__c}}
+                            {{applicant.Mobile_Phone__c}}
+                        {{else}}
+                            <span class="text-faded">{{labels.notProvided}}</span>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="contact-info-modal">{{labels.ok}}</button>
+    </modalFooter>
+{{/aljs-modal}}

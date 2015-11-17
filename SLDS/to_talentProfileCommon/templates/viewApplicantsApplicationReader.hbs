@@ -1,6 +1,12 @@
-<div class="content pad--sm--n">
-    {{#if alertStatusClass}}
-        <div {{bind-attr class=":alert alertStatusClass :mar--sm--bm"}}>{{labels.thisApplicationHasBeenIn}} {{application.Stage__c}} ({{application.Status__c}}) {{labels.for}} {{thresholdDays}} {{labels.days}}.</div>
-    {{/if}}
-	{{partial "applicationView"}}
-</div>
+{{#if alertStatusClass}}
+	{{#aljs-notification theme=alertStatusClass dismissClass="slds-notify__close"}}
+		<button class="slds-button slds-button--icon-inverse slds-notify__close">
+			<svg aria-hidden="true" class="slds-button__icon">
+  				<use xlink:href="{{unbound assetsLocation}}/assets/icons/action-sprite/svg/symbols.svg#close"></use>
+			</svg>
+			<span class="slds-assistive-text">{{labels.close}}</span>
+			</button>
+		{{labels.thisApplicationHasBeenIn}} {{application.Stage__c}} ({{application.Status__c}}) {{labels.for}} {{thresholdDays}} {{labels.days}}.
+	{{/aljs-notification}}
+{{/if}}
+{{partial "applicationView"}}

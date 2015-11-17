@@ -1,0 +1,26 @@
+<div aria-hidden="false" aria-labelledby="sendEmailToApplicantModalLabel" class="modal fade in" id="sendEmailToApplicantModal" role="dialog" tabindex="-1" data-qa-container="sendEmailToApplicantModal">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top pad--sm--bn">
+                <button class="close" data-dismiss="modal" type="button" {{action "clickCancelModal"}} data-qa-button="closeModal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h2 class="modal__heading" data-qa-label="notifyApplicant">
+                    {{labels.notifyApplicantToChooseTime}}
+                </h2>
+            </div>
+            <div class="panel__body pad--sm--xl">
+                <p data-qa-label="sendEmailBody1">
+                    {{labels.sendEmailModalBody1}}
+                </p>
+                <p data-qa-label="sendEmailBody2">
+                    {{labels.sendEmailModalBody2}}
+                </p>
+            </div>
+            <div class="modal__footer pad--sm--tn">
+                <button class="button button--secondary" {{action "clickJustSave"}} data-dismiss="modal" type="button" data-qa-button="saveDontSend">{{labels.saveDontSendYet}}</button>
+                <button class="button button--primary" {{action "clickSendEmail"}}  data-dismiss="modal" type="button" data-qa-button="saveAndSend">{{labels.saveAndSend}}</button>
+            </div>
+        </div>
+    </div>
+</div>

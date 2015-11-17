@@ -1,0 +1,18 @@
+<div class="modal fade" id="oauthIntoGoogleModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel" aria-hidden="true" data-qa-container="oauthIntoGoogleModal">
+    <div class="modal__shell">
+        <div class="modal__content">
+            <div class="modal__top">
+                <button type="button" class="close" data-dismiss="modal" data-qa-button="closeModal">
+                    <span class="close-modal-x"></span>
+                </button>
+                <h2 class="modal__heading" data-qa-label="googleCalendar">{{labels.googleCalendar}}</h2>
+            </div>
+            <div class="modal__body" data-qa-label="signIntoGoogle">
+                {{labels.toCompleteThisActionSignIntoGoogle}}
+            </div>
+            <div class="modal__footer">
+                <button type="button" class="button button--primary create-item" data-dismiss="modal" {{action "clickOauthIntoGoogle"}} data-qa-button="continue">{{labels.continue}}</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,6 @@
-<div class="slds-tile slds-tile--board">
-    {{application.First_Name__c}} {{application.Last_Name__c}}
-    <small class="slds-show to-va-sort-info slds-p-top--xx-small">{{labels.appliedOn}}: {{formatDate application.Applied_On__c}}</small>
+<div class="slds-media slds-tile">
+    <div class="slds-media__body">
+        <p class="slds-tile__title slds-truncate"><a href="#">{{application.First_Name__c}} {{application.Last_Name__c}}</a></p>
+        <small class="slds-show to-va-sort-info slds-p-top--xx-small">{{labels.appliedOn}}: {{formatDate application.Applied_On__c}}</small> 
+    </div>
 </div>

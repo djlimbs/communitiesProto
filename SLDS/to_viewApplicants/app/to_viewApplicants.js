@@ -43,6 +43,10 @@ offset : self.get('offset')
 })
 */
 
+$.aljsInit({
+	assetsLocation: assetsLocation
+});
+
 var monthMap = null;
 
 Ember.Handlebars.helper('convertNewLinesToBreaks', function(text, name) {
@@ -339,9 +343,8 @@ App.ViewApplicantsView = Ember.View.extend({
 		$('body').keydown(function(e) {
 			var isInlineFeedbackVisible = ctrl.get('isInlineFeedbackVisible');
 
-			if ($('input:focus').length === 0 && $('.modal[aria-hidden="false"]').length === 0 
-					&& $('textarea:focus').length ===0 && $('.tooltipster-base').length === 0
-					&& !isInlineFeedbackVisible) {
+			if ($('input:focus').length === 0 && $('.slds-fade-in-open').length === 0 
+					&& $('textarea:focus').length ===0 && !isInlineFeedbackVisible) {
 				switch(e.which) {
 			        case 37:
 				        var buttonSelector = '.js-prev';
@@ -367,14 +370,14 @@ App.ViewApplicantsView = Ember.View.extend({
 		});
 
 		$('body').tooltip({
-            selector: '[data-toggle=tooltip]'
+            selector: '[data-aljs="tooltip"]'
         });
 
-        $('#share-modal').on('shown.jui.modal', function() {
+        $('#share-modal').on('shown.aljs.modal', function() {
         	$('#share-modal').find('input').select();
         });
 
-        $('#status-modal').on('shown.jui.modal', function() {
+        $('#bulk-status-modal').on('shown.aljs.modal', function() {
         	var filters = ctrl.get('filters');
         	var stages = ctrl.get('applicationStages');
         	stageAndStatusFilter = filters.findBy('name', 'stageAndStatus');
@@ -750,9 +753,24 @@ App.ViewApplicantsController = Ember.ObjectController.extend(App.SearchAndResult
 App.ViewApplicantsApplicationReaderController = Ember.ObjectController.extend(App.ApplicationReaderMixin, {
 	needs: ['viewApplicants'],
 	//shareUrlBinding: 'controllers.viewApplicants.shareUrl',
+	activeTabIndex: 0,
 	selectedTab: 'application',
 	retPage: 'to_viewApplicants',
 	isInlineFeedbackVisible: false,
+	tabs: [
+		{
+			label: 'Application',
+			partial: 'applicationViewApplication'
+		},
+		{
+			label: 'Resume',
+			partial: 'applicationViewResume'
+		},
+		{
+			label: 'LinkedIn',
+			partial: 'applicationViewLinkedIn'
+		}
+	],
 	updateApplicationLinkedInLinkId: function() {
 		var linkObj = App.Fixtures.get('newLinkedInLink');
 
@@ -783,9 +801,8 @@ App.ResultController = Ember.ObjectController.extend({
 		var alertStatus = this.get('Alert_Status__c');
 		var currentApplicationId = this.get('parentController.currentApplicationId');
 		var appId = this.get('Id');
-		var alertStatusString = currentApplicationId === appId ? '' : 'to-va-applicant--not-selected ';
 
-		return Ember.isEmpty(alertStatus) ? null : alertStatus === 'Warning' ? alertStatusString + 'to-va-threshold--warning' : alertStatusString + 'to-va-threshold--error';
+		return Ember.isEmpty(alertStatus) ? '' : alertStatus === 'Warning' ? 'to-va-threshold--warning' : 'to-va-threshold--error';
 	}.property('parentController.results.viewableApplications', 'parentController.currentApplicationId'),
 	applicationRatingVal: function() {
 		return this.get(scoreSort);

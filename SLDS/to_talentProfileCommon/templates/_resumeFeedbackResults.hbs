@@ -1,26 +1,27 @@
-<div class="slds-tile slds-tile--board" data-qa-label="applicationName">
-    {{application.First_Name__c}} {{application.Last_Name__c}}
-    <small class="slds-show to-va-sort-info" data-qa-label="resume">{{labels.resumes}}: 
+<div class="slds-media slds-tile">
+    <div class="slds-media__body">
+        <p class="slds-tile__title slds-truncate"><a href="#">{{application.First_Name__c}} {{application.Last_Name__c}}</a></p>
+        <small class="slds-show to-va-sort-info to-va-has-feedback">{{labels.resumes}}: 
         <span class="to-va-feedback-container">
             <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
-                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
             </svg>
             <span class="slds-assistive-text">Positive</span>
             {{application.resumeFeedbackScore.positiveFeedback}}
         </span>
         <span class="to-va-feedback-container">
             <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default slds-icon--flip-x">
-                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#like"></use>
             </svg>
             <span class="slds-assistive-text">Negative</span>
             {{application.resumeFeedbackScore.negativeFeedback}}
         </span>
-        <span class="to-va-feedback-container">
+        <span class="to-va-feedback-container">          
             <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
-                <use xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#help"></use>
-            <span class="slds-assistive-text">Neutral</span>
-            </svg>
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#help"></use>
+            </svg><span class="slds-assistive-text">Neutral</span>
             {{application.resumeFeedbackScore.neutralFeedback}}
         </span>
     </small>
+    </div>
 </div>

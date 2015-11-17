@@ -5,13 +5,13 @@
     <modalBody>
         <div class="slds-form-element">
             <div class="slds-form-element__control">
+                <label for="url">{{labels.copyAndPasteLink}}</label>
                 {{input type="text" class="slds-input" value=shareUrl}}
-
-                {{#if hiringManager}}
-                    <label class="block mar--sm--bn mar--sm--tm" data-qa-label="hiringManager">{{labels.hiringManager}}</label>
-                    <div data-qa-label="hiringManagerName">{{hiringManager.Name}}</div>
-                    <a {{bind-attr href="mailLink"}} data-qa-link="hiringManagerEmail">{{hiringManager.Email}}</a>
-                {{/if}}    
+                <div class="slds-m-top--medium">
+                    <p class="slds-text-heading--label">{{labels.hiringManager}}</p>
+                    <p>{{hiringManager.Name}}</p>
+                    <p><a {{bind-attr href="mailLink"}} data-qa-link="hiringManagerEmail">{{hiringManager.Email}}</a></p>
+                </div>
             </div>
         </div>
     </modalBody>

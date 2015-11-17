@@ -4,9 +4,12 @@
     <div class="slds-grid">
         {{partial "viewApplicantsFilterAndResults"}}
         <div class="slds-col slds-size--3-of-4 slds-p-top--large slds-p-around--large">
-            <!-- Application Reader -->
+            {{#if noResultsFound}}
+                <div class="slds-card slds-p-around--small">
+                    <em class="slds-opacity--50" data-qa-label="noApplicantsFound">{{labels.noApplicantsFound}}</em>
+                </div>
+            {{/if}}
             {{outlet}}
-            <!-- /Application Reader -->
         </div>
 
         {{!--
