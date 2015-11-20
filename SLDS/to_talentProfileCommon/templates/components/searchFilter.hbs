@@ -34,7 +34,9 @@
                         {{view "select" class="slds-select" content=filterOptions value=selectedFilter prompt=labels.selectPlaceHolder data-qa-select="selectedFilter"}}
                     </label>
                 </div>
-                <hr class="slds-m-bottom--large">
+                {{#if selectedFilter}}
+                    <hr class="slds-m-bottom--large">
+                {{/if}}
                 {{partial filterPartial}}
             </div>
         </fieldset>

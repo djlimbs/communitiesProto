@@ -102,13 +102,13 @@
         </div>
         <div class="slds-tabs--default slds-p-left--medium slds-p-right--medium slds-p-bottom--medium">
             <ul class="slds-tabs--default__nav" role="tablist">
-                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label showApplicationDetails:slds-active" title="tabLink.label" tabindex="0"}} role="presentation" {{action "selectTab" "application"}} data-qa-button="applicationTab"><a href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.application}}</a></li>
-                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label showResume:slds-active" title="tabLink.label" tabindex="1"}} role="presentation" {{action "selectTab" "resume"}} data-qa-button="resumeTab"><a href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.resume}}</a></li>
-                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label showLinkedIn:slds-active" title="tabLink.label" tabindex="2"}} role="presentation" {{action "selectTab" "linkedin"}} data-qa-button="linkedInTab"><a href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.linkedin}}</a></li>
+                <li {{bind-attr class=":slds-tabs--default__item :slds-text-heading--label showApplicationDetails:slds-active" title="tabLink.label" tabindex="0"}} role="presentation" {{action "selectTab" "application"}} data-qa-button="applicationTab"><a class="slds-tabs--default__link" href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.application}}</a></li>
+                <li {{bind-attr class=":slds-tabs--default__item :slds-text-heading--label showResume:slds-active" title="tabLink.label" tabindex="1"}} role="presentation" {{action "selectTab" "resume"}} data-qa-button="resumeTab"><a class="slds-tabs--default__link" href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.resume}}</a></li>
+                <li {{bind-attr class=":slds-tabs--default__item :slds-text-heading--label showLinkedIn:slds-active" title="tabLink.label" tabindex="2"}} role="presentation" {{action "selectTab" "linkedin"}} data-qa-button="linkedInTab"><a class="slds-tabs--default__link" href="#" role="tab" aria-selected="true" aria-controls="tab-default-1">{{labels.linkedin}}</a></li>
             </ul>
             <div class="slds-tabs__content" role="tabpanel">
                 {{#if showApplicationDetails}}
-                    <div id="tab-application" class="slds-tabs__content" role="tabpanel">
+                    <div id="tab-application" class="slds-tabs--default__content" role="tabpanel">
                         {{partial "applicationDetails"}}
                     </div>
                 {{/if}}

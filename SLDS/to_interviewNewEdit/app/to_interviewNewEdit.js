@@ -553,12 +553,12 @@ App.FullCalendarComponent = Ember.Component.extend({
             // X button for time slots
             eventMouseover: function(event, jsEvent, view) {
                 if (event.editable === true) {
-                    $(this).find('.fc-content').prepend('<div style="position: absolute; right: 0; top: -2px;"><span class="close-btn">x</span></div>');
+                    $(this).find('.fc-content').prepend('<div class="js-deleteEvent" style="position: absolute; right: 0; top: -2px;"><span class="close-btn">x</span></div>');
                 }
             },
             eventMouseout: function(event, jsEvent, view) {
                 if (event.editable === true) {
-                    $(this).find('.fc-content').find('.juicon').remove();
+                    $(this).find('.fc-content').find('.js-deleteEvent').remove();
                 }
             },
             eventSources: [
@@ -620,7 +620,7 @@ App.FullCalendarComponent = Ember.Component.extend({
 
                 participants.forEach(function(p, i) {
                     var liIndex = i+1;
-                    var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('box-shadow');
+                    var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('border-left-color');
                     var liColorArray = liCss.match(/rgb\(.+?\)/) || liCss.match(/#.+/);
                     var liColor = !Ember.isNone(liColorArray) ? liColorArray[0] : null;
 
@@ -694,7 +694,7 @@ App.FullCalendarComponent = Ember.Component.extend({
                                 
                 participants.forEach(function(p, i) {
                     var liIndex = i+1;
-                    var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('box-shadow');
+                    var liCss = $chosenParticipants.find('li:eq(' + liIndex + ')').css('border-left-color');
                     var liColorArray = liCss.match(/rgb\(.+?\)/) || liCss.match(/#.+/);
                     var liColor = !Ember.isNone(liColorArray) ? liColorArray[0] : null;
                     var emailComponents = p.Email.split('@');
@@ -773,7 +773,7 @@ App.InterviewNewEditView = Ember.View.extend({
         var self = this;
 
         if (!visited) {
-            $('#gettingStartedModal').modal();
+            $('#gettingStartedModal').modal('show');
         }
 
         $('#updateInvitationModal').on('shown.jui.modal', function() {
@@ -812,8 +812,17 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
     isLocationDropdownOpen: false,
     statusClass: function() {
         var status = this.get('interview').Status__c;
+        var statusClass = '';
 
-        return !Ember.isNone(status) ? status.toLowerCase() : 'draft';
+        if (status === 'Proposed') {
+            statusClass = 'slds-theme--warning';
+        } else if (status === 'Canceled' || status === 'Declined') {
+            statusClass = 'slds-theme—-error';
+        } else if (status === 'Accepted') {
+            statusClass = 'slds-theme--success';
+        }
+
+        return statusClass;
     }.property(''),
     isAtMaxParticipants: function() {
         return this.get('participants').length >= 10 ? 'disabled' : false;
@@ -895,9 +904,9 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             }
         } else if (shouldNotifyCalendar === true) {
 
-            $('#oauthIntoGoogleModal').modal();
+            $('#oauthIntoGoogleModal').modal('show');
 
-            $('#oauthIntoGoogleModal').one('hidden.jui.modal', function() {
+            $('#oauthIntoGoogleModal').one('dismissed.aljs.modal', function() {
                 openGoogleOauthModal = false;
             });
             
@@ -1190,9 +1199,9 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             this.notifyPropertyChange('participants');
             if (this.get('isOauthedIntoGoogle') === false && openGoogleOauthModal === true) {
                 self.set('shouldNotifyCalendar', true);
-                $('#oauthIntoGoogleModal').modal();
+                $('#oauthIntoGoogleModal').modal('show');
 
-                $('#oauthIntoGoogleModal').one('hidden.jui.modal', function() {
+                $('#oauthIntoGoogleModal').one('hidden.aljs.modal', function() {
                     openGoogleOauthModal = false;
                 });
             } else {
@@ -1247,15 +1256,15 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 if (numTimeSlots > 1 && areParticipantsSelected && isLocationSelected) {
                 // if we have multiple time slots and necessary data has been filled out
 
-                    $('#sendEmailToApplicantModal').modal();
-                    $('#sendEmailToApplicantModal').one('hidden.jui.modal', function() {
+                    $('#sendEmailToApplicantModal').modal('show');
+                    $('#sendEmailToApplicantModal').one('hidden.aljs.modal', function() {
                         self.set('isSaving', false);
                     });
 
                 } else if (numTimeSlots === 1 && areParticipantsSelected && isLocationSelected) {
                 // if there's only a single timeslot and necessary info has been filled out
-                    $('#sendICSModal').modal();
-                    $('#sendICSModal').one('hidden.jui.modal', function() {
+                    $('#sendICSModal').modal('show');
+                    $('#sendICSModal').one('hidden.aljs.modal', function() {
                         self.set('isSaving', false);
                     });
                 } else {
@@ -1266,8 +1275,8 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 // Updating a proposed interview.
                 if (numTimeSlots === 1 && areParticipantsSelected && isLocationSelected) {
                     // if there's only a single timeslot and necessary info has been filled out
-                    $('#sendICSModal').modal();
-                    $('#sencICSModal').one('hidden.jui.modal', function() {
+                    $('#sendICSModal').modal('show');
+                    $('#sencICSModal').one('hidden.aljs.modal', function() {
                         self.set('isSaving', false);
                     });
                 } else {
@@ -1277,13 +1286,13 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 if ((this.get('scheduleChanged') === true || this.get('locationChanged') === true) 
                         && numTimeSlots > 0 && areParticipantsSelected && isLocationSelected) {
                     
-                    $('#updateInvitationModal').modal();
-                    $('#updateInvitationModal').one('hidden.jui.modal', function() {
+                    $('#updateInvitationModal').modal('show');
+                    $('#updateInvitationModal').one('hidden.aljs.modal', function() {
                         self.set('isSaving', false);
                     });
                 } else if (this.get('topicsChanged') === true) {
-                    $('#topicsChangedModal').modal();
-                    $('#topicsChangedModal').one('hidden.jui.modal', function() {
+                    $('#topicsChangedModal').modal('show');
+                    $('#topicsChangedModal').one('hidden.aljs.modal', function() {
                         self.set('isSaving', false);
                     });
                 } else {
@@ -1294,19 +1303,19 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                     // Schedule/location changed
                     if (Ember.isEmpty(interview.Start_Time__c) && numTimeSlots > 1) {
                         // If there are more than 1 timeslots and never accepted, new modal
-                        $('#reproposeNotAcceptedModal').modal();
-                        $('#reproposeNotAcceptedModal').one('hidden.jui.modal', function() {
+                        $('#reproposeNotAcceptedModal').modal('show');
+                        $('#reproposeNotAcceptedModal').one('hidden.aljs.modal', function() {
                             self.set('isSaving', false);
                         });
                     } else if (Ember.isEmpty(interview.Start_Time__c) && numTimeSlots === 1) {
                         // If never accepted and there's only 1 timeslot, show modal to set to accepted
-                        $('#sendICSModal').modal();
-                        $('#sencICSModal').one('hidden.jui.modal', function() {
+                        $('#sendICSModal').modal('show');
+                        $('#sencICSModal').one('hidden.aljs.modal', function() {
                             self.set('isSaving', false);
                         });
                     } else if (!Ember.isEmpty(interview.Start_Time__c)) {
-                        $('#updateInvitationModal').modal();
-                        $('#updateInvitationModal').one('hidden.jui.modal', function() {
+                        $('#updateInvitationModal').modal('show');
+                        $('#updateInvitationModal').one('hidden.aljs.modal', function() {
                             self.set('isSaving', false);
                         });
                     }
@@ -1387,14 +1396,14 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
             this.set('disableLocationSave', true);
             var $googleMapsModal = $('#googleMapsModal');
 
-            $googleMapsModal.modal()
-            $googleMapsModal.one('shown.jui.modal', function() {
+            $googleMapsModal.modal('show')
+            $googleMapsModal.one('shown.aljs.modal', function() {
                 Ember.run.later(this, function() {
                     $('#pac-input').focus();
                 }, 200);
             });
 
-            $googleMapsModal.one('hidden.jui.modal', function() {
+            $googleMapsModal.one('hidden.aljs.modal', function() {
                 Ember.run.later(this, function() {
                     $('#pac-input').val('');
                 }, 200);
@@ -1608,6 +1617,8 @@ App.InterviewNewEditRoute = Ember.Route.extend({
     setupTopics: function(interviewNewEditObj) {
         if (!Ember.isEmpty(interviewNewEditObj.interview.Topics__c)) {
             interviewNewEditObj.interview.topics = interviewNewEditObj.interview.Topics__c.split(';');
+        } else {
+            interviewNewEditObj.interview.topics = [];
         }
 
         interviewNewEditObj.originalTopics = interviewNewEditObj.interview.topics;

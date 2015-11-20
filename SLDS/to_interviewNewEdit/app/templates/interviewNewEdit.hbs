@@ -10,13 +10,9 @@
                         <li class="slds-list__item slds-text-heading--label"><a href="javascript:void(0)">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</a></li>
                     </ol>
                 </nav>
-                <div class="slds-grid">
-                    <div class="slds-grid slds-no-space">
-                        <!-- Page Title -->
-                        <h1 class="slds-text-heading--medium slds-truncate">{{#if isEdit}}{{labels.edit}}{{else}}{{labels.new}}{{/if}} {{labels.interview}}</h1>
-                        <!-- /Page Title -->
-                    </div>
-                </div>
+                <!-- Page Title -->
+                <h1 class="slds-text-heading--medium slds-truncate">{{#if isEdit}}{{labels.edit}}{{else}}{{labels.new}}{{/if}} {{labels.interview}} <span {{bind-attr class=":slds-badge :slds-m-left--x-small statusClass"}}>{{unbound interview.Status__c}}</span></h1>
+                <!-- /Page Title -->
             </div>
             <div class="slds-col slds-no-flex slds-align-bottom">
                 <button class="slds-button slds-button--neutral slds-m-right--medium" data-aljs-show="getting-started-modal">{{labels.help}}
@@ -25,7 +21,15 @@
                     </svg>
                 </button>
                 <button class="slds-button slds-button--neutral" {{action "clickCancel"}} data-qa-button="cancel">{{labels.cancel}}</button>
-                <button class="slds-button slds-button--brand" {{action "clickSave"}} data-qa-button="save">{{labels.save}}</button>
+                <button class="slds-button slds-button--brand" {{action "clickSave"}} data-qa-button="save">
+                    {{#if isSaving}}
+                        <div class="slds-spinner--small slds-show--inline-block">
+                            <img src="{{unbound assetsLocation}}/assets/images/spinners/slds_spinner.gif" alt="Loading...">
+                        </div>
+                    {{else}}
+                        {{labels.save}}
+                    {{/if}}
+                </button>
             </div>
         </div>
     </div>
@@ -56,10 +60,10 @@
                     </div>
             </div>
             <!-- Participants List -->
-            <ul class="slds-list--vertical slds-has-cards slds-m-top--medium">
+            <ul id="chosenParticipants" class="slds-list--vertical slds-has-cards slds-m-top--medium">
                 <!-- Participant -->
                 <li class="slds-list__item to-im-participant">
-                    <div class="slds-tile slds-tile--board slds-p-around--xx-small">
+                    <div class="slds-tile slds-tile--board slds-p-around--medium">
                         <div class="slds-tile__detail">
                             <p class="slds-truncate" data-qa-label="applicantName">{{applicant.First_Name__c}} {{applicant.Last_Name__c}}</p>
                             <p class="slds-truncate slds-text-body--small">{{labels.applicant}}</p>
@@ -69,7 +73,7 @@
                 {{#if participants}}
                     {{#each participant in participants}}
                         <li class="slds-list__item to-im-participant">
-                            <div class="slds-tile slds-tile--board slds-p-around--xx-small">
+                            <div class="slds-tile slds-tile--board slds-p-around--medium">
                                 <div class="slds-tile__detail slds-clearfix">
                                     <a href="javascript:void(0)" class="slds-float--right slds-icon__container" data-qa-button="removeParticipant" {{action "clickRemoveParticipant" participant}}>
                                         <svg aria-hidden="true" class="slds-icon slds-icon--x-small slds-icon-text-default">
@@ -94,8 +98,8 @@
                         --}}
                     {{/each}}
                 {{else}}
-                    <li class="slds-list__item to-im-participant">
-                        <div class="slds-tile slds-tile--board slds-p-around--xx-small">
+                    <li class="slds-list__item to-im-participant to-im-no-participants">
+                        <div class="slds-tile slds-tile--board slds-p-around--medium">
                             <div class="slds-tile__detail">
                                 <p class="slds-truncate" data-qa-label="emptyState">{{labels.noParticipantsExist}}</p>
                             </div>
@@ -127,8 +131,8 @@
             <!-- Where -->
             <div class="slds-form-element slds-m-top--large">
                 <label class="slds-form-element__label slds-text-heading--medium" for="lookup" data-qa-label="where">{{labels.where}}</label>
-                <div class="slds-picklist js-locationDropdown" aria-expanded="true" data-aljs="picklist">
-                    <button class="slds-button slds-button--neutral slds-picklist__label to-im-where" aria-haspopup="true" {{action "clickToggleDropdown"}}>
+                <div class="slds-picklist js-locationDropdown" aria-expanded="true" data-qa-picklist="locationDropdown">
+                    <button class="slds-button slds-button--neutral slds-picklist__label to-im-where" aria-haspopup="true" {{action "clickToggleDropdown"}} data-qa-button="toggleLocationDropdown">
                         <p class="slds-truncate">{{selectedLocation.Location_Name__c}}</p>
                         {{#if isSelectedLocationInPersonOrGoogle}}
                             <p class="slds-truncate slds-text-body--small">{{selectedLocationAddress}}</p>
@@ -144,9 +148,9 @@
                         <ul class="slds-dropdown__list" role="menu">
                             {{#each location in availableLocations itemController="location"}}
                                 {{#unless location.isSelected}}
-                                    <li class="slds-dropdown__item" {{action "clickSelectLocation" location}} data-qa-label="locationName">
+                                    <li class="slds-dropdown__item" {{action "clickSelectLocation" location}} data-qa-button="selectLocation">
                                         <a href="javascript:void(0)" role="menuitemradio">
-                                            <p class="slds-truncate">
+                                            <p class="slds-truncate" data-qa-label="locationName">
                                                 <svg aria-hidden="true" class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
                                                 </svg>{{location.Location_Name__c}}
@@ -162,7 +166,7 @@
                                 {{#unless customLocation.isSelected}}
                                     <li href="#" class="slds-dropdown__item" {{action "clickSelectCustomLocation" customLocation.Location_Name__c}} data-qa-button="selectCustomLocation">
                                         <a href="javascript:void(0)" role="menuitemradio">
-                                            <p class="slds-truncate">
+                                            <p class="slds-truncate" data-qa-label="locationName">
                                                 <svg aria-hidden="true" class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small">
                                                     <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
                                                 </svg>{{customLocation.Location_Name__c}}
@@ -173,7 +177,7 @@
                             {{/each}}
                             <li href="#" class="slds-dropdown__item" {{action "clickSelectGoogleMaps"}} data-qa-button="selectGoogleLocation">
                                 <a href="javascript:void(0)" role="menuitemradio">
-                                    <p class="slds-truncate">
+                                    <p class="slds-truncate" data-qa-label="googleMaps">
                                         <svg aria-hidden="true" class="slds-icon slds-icon--selected slds-icon--x-small slds-icon-text-default slds-m-right--x-small">
                                             <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="{{unbound assetsLocation}}/assets/icons/utility-sprite/svg/symbols.svg#check"></use>
                                         </svg>{{labels.placeFromGoogleMaps}}
@@ -223,6 +227,11 @@
 
     {{partial "contactModal"}}
     {{partial "gettingStartedModal"}}
+    {{partial "oauthIntoGoogleModal"}}
+    {{partial "googleMapsModal"}}
+    {{partial "sendEmailToApplicant"}}
+    {{partial "sendICSModal"}}
+
 
 </div>
 

@@ -1,15 +1,15 @@
-{{#aljs-modal modalId="stage-status-modal" bodyClass="slds-p-horizontal--x-large slds-p-bottom--x-large slds-p-top--large"}}
+{{#aljs-modal modalId="stage-status-modal" bodyClass="slds-p-around--x-large"}}
 	<modalHeader>
 		<h2 class="slds-text-heading--medium">{{labels.totalApplicants}}</h2>
 	</modalHeader>
 	<modalBody>
-		<div class="slds-tabs--default" data-aljs="tabs">
-            <ul class="slds-tabs--default__nav" role="tablist">
-                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label isStageSelected:slds-active"}} title="By Stage" role="presentation" {{action "setIsStageSelected" true}} data-qa-button="stage"><a href="#" role="tab" aria-selected="true" aria-controls="tab-stage" data-aljs-show="tab-stage" tabindex="-1">{{labels.byStage}}</a></li>
-                <li {{bind-attr class=":slds-tabs__item :slds-text-heading--label isStageSelected::slds-active"}} title="By Source" role="presentation" {{action "setIsStageSelected" false}} data-qa-button="source"><a href="#" role="tab" aria-selected="false" aria-controls="tab-source" data-aljs-show="tab-source" tabindex="-1">{{labels.bySource}}</a></li>
+		<div class="slds-tabs--scoped" data-aljs="tabs">
+            <ul class="slds-tabs--scoped__nav" role="tablist">
+                <li {{bind-attr class=":slds-tabs--scoped__item :slds-text-heading--label isStageSelected:slds-active"}} title="By Stage" role="presentation" {{action "setIsStageSelected" true}} data-qa-button="stage"><a class="slds-tabs--scoped__link" href="#" role="tab" aria-selected="true" aria-controls="tab-stage" data-aljs-show="tab-stage" tabindex="-1">{{labels.byStage}}</a></li>
+                <li {{bind-attr class=":slds-tabs--scoped__item :slds-text-heading--label isStageSelected::slds-active"}} title="By Source" role="presentation" {{action "setIsStageSelected" false}} data-qa-button="source"><a class="slds-tabs--scoped__link" href="#" role="tab" aria-selected="false" aria-controls="tab-source" data-aljs-show="tab-source" tabindex="-1">{{labels.bySource}}</a></li>
             </ul>
             {{#if isStageSelected}}
-	            <div id="tab-stage" class="slds-tabs__content" role="tabpanel">
+	            <div id="tab-stage" class="slds-tabs--scoped__content" role="tabpanel">
 	                    <table class="slds-table slds-table--bordered">
 	                        <thead>
 	                            <tr class="slds-text-heading--label">
@@ -55,7 +55,7 @@
 	                <!-- /By Stage -->
 	            </div>
 	        {{else}}
-	            <div id="tab-source" class="slds-tabs__content" role="tabpanel">
+	            <div id="tab-source" class="slds-tabs--scoped__content" role="tabpanel">
 	                <!-- By Source -->
 	                <div class="slds-scrollable--x">
 	                    <table class="slds-table slds-table--bordered">

@@ -1,18 +1,11 @@
-<div class="modal fade" id="oauthIntoGoogleModal" tabindex="-1" role="dialog" aria-labelledby="discardModalLabel" aria-hidden="true" data-qa-container="oauthIntoGoogleModal">
-    <div class="modal__shell">
-        <div class="modal__content">
-            <div class="modal__top">
-                <button type="button" class="close" data-dismiss="modal" data-qa-button="closeModal">
-                    <span class="close-modal-x"></span>
-                </button>
-                <h2 class="modal__heading" data-qa-label="googleCalendar">{{labels.googleCalendar}}</h2>
-            </div>
-            <div class="modal__body" data-qa-label="signIntoGoogle">
-                {{labels.toCompleteThisActionSignIntoGoogle}}
-            </div>
-            <div class="modal__footer">
-                <button type="button" class="button button--primary create-item" data-dismiss="modal" {{action "clickOauthIntoGoogle"}} data-qa-button="continue">{{labels.continue}}</button>
-            </div>
-        </div>
-    </div>
-</div>
+{{#aljs-modal modalId="oauthIntoGoogleModal"}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium" data-qa-label="googleCalendar">{{labels.googleCalendar}}</h2>
+    </modalHeader>
+    <modalBody>
+        {{labels.toCompleteThisActionSignIntoGoogle}}
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral slds-button--brand" data-aljs-dismiss="oauthIntoGoogleModal" {{action "clickOauthIntoGoogle"}}>{{labels.continue}}</button>
+    </modalFooter>
+{{/aljs-modal}}

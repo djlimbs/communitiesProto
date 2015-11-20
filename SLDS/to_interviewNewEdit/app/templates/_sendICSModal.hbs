@@ -1,23 +1,20 @@
-<div aria-hidden="false" aria-labelledby="sendICSModalLabel" class="modal fade in" id="sendICSModal" role="dialog" tabindex="-1" data-qa-container="sendICSModal">
-    <div class="modal__shell">
-        <div class="modal__content">
-            <div class="modal__top pad--sm--bn">
-                <button class="close" data-dismiss="modal" type="button" {{action "clickCancelModal"}} data-qa-button="closeModal">
-                    <span class="close-modal-x"></span>
-                </button>
-                <h2 class="modal__heading" data-qa-label="sendCalendarInvites">
-                    {{labels.sendCalendarInvitations}}
-                </h2>
-            </div>
-            <div class="panel__body pad--sm--xl">
-                <p data-qa-label="sendInvitesModalBody">
-                    {{labels.sendICSModalBody1}}
-                </p>
-            </div>
-            <div class="modal__footer pad--sm--tn">
-                <button class="button button--secondary" {{action "clickCancelModal"}} data-dismiss="modal" type="button" data-qa-button="cancel">{{labels.cancel}}</button>
-                <button class="button button--primary" {{action "clickSendInvitations"}} data-dismiss="modal" type="button" data-qa-button="continue">{{labels.continue}}</button>
-            </div>
-        </div>
-    </div>
-</div>
+{{#aljs-modal modalId="sendICSModal" hasCustomCloseButton="true"}}
+    <modalHeader>
+        <h2 class="slds-text-heading--medium" data-qa-label="sendCalendarInvites">{{labels.sendCalendarInvitations}}</h2>
+        <button class="slds-button slds-modal__close slds-button--icon-inverse" data-aljs-dismiss="sendICSModal" {{action "clickCancelModal"}} data-qa-button="closeModal">
+            <svg aria-hidden="true" class="slds-button__icon slds-button__icon--inverse slds-button__icon--large">
+                <use xlink:href="{{unbound assetsLocation}}/assets/icons/action-sprite/svg/symbols.svg#close"></use>
+            </svg>
+            <span class="slds-assistive-text">Close</span>
+        </button>
+    </modalHeader>
+    <modalBody>
+        <p data-qa-label="sendInvitesModalBody">
+            {{labels.sendICSModalBody1}}        
+        </p>
+    </modalBody>
+    <modalFooter>
+        <button class="slds-button slds-button--neutral" {{action "clickCancelModal"}} data-aljs-dismiss="sendICSModal" type="button" data-qa-button="cancel">{{labels.cancel}}</button>
+        <button class="slds-button slds-button--neutral slds-button--brand" {{action "clickSendInvitations"}} data-aljs-dismiss="sendICSModal" type="button" data-qa-button="continue">{{labels.continue}}</button>
+    </modalFooter>
+{{/aljs-modal}}

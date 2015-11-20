@@ -1042,7 +1042,7 @@ function program20(depth0,data) {
 function program22(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts, options;
-  data.buffer.push("\n                    <div id=\"tab-application\" class=\"slds-tabs__content\" role=\"tabpanel\">\n                        ");
+  data.buffer.push("\n                    <div id=\"tab-application\" class=\"slds-tabs--default__content\" role=\"tabpanel\">\n                        ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -1339,7 +1339,7 @@ function program30(depth0,data) {
   hashContexts = {'class': depth0,'title': depth0,'tabindex': depth0};
   hashTypes = {'class': "STRING",'title': "STRING",'tabindex': "STRING"};
   options = {hash:{
-    'class': (":slds-tabs__item :slds-text-heading--label showApplicationDetails:slds-active"),
+    'class': (":slds-tabs--default__item :slds-text-heading--label showApplicationDetails:slds-active"),
     'title': ("tabLink.label"),
     'tabindex': ("0")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -1348,7 +1348,7 @@ function program30(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "selectTab", "application", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"applicationTab\"><a href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-default-1\">");
+  data.buffer.push(" data-qa-button=\"applicationTab\"><a class=\"slds-tabs--default__link\" href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-default-1\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.application", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1356,7 +1356,7 @@ function program30(depth0,data) {
   hashContexts = {'class': depth0,'title': depth0,'tabindex': depth0};
   hashTypes = {'class': "STRING",'title': "STRING",'tabindex': "STRING"};
   options = {hash:{
-    'class': (":slds-tabs__item :slds-text-heading--label showResume:slds-active"),
+    'class': (":slds-tabs--default__item :slds-text-heading--label showResume:slds-active"),
     'title': ("tabLink.label"),
     'tabindex': ("1")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -1365,7 +1365,7 @@ function program30(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "selectTab", "resume", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"resumeTab\"><a href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-default-1\">");
+  data.buffer.push(" data-qa-button=\"resumeTab\"><a class=\"slds-tabs--default__link\" href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-default-1\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.resume", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1373,7 +1373,7 @@ function program30(depth0,data) {
   hashContexts = {'class': depth0,'title': depth0,'tabindex': depth0};
   hashTypes = {'class': "STRING",'title': "STRING",'tabindex': "STRING"};
   options = {hash:{
-    'class': (":slds-tabs__item :slds-text-heading--label showLinkedIn:slds-active"),
+    'class': (":slds-tabs--default__item :slds-text-heading--label showLinkedIn:slds-active"),
     'title': ("tabLink.label"),
     'tabindex': ("2")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -1382,7 +1382,7 @@ function program30(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "selectTab", "linkedin", {hash:{},contexts:[depth0,depth0],types:["STRING","STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"linkedInTab\"><a href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-default-1\">");
+  data.buffer.push(" data-qa-button=\"linkedInTab\"><a class=\"slds-tabs--default__link\" href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-default-1\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.linkedin", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -5057,10 +5057,11 @@ function program17(depth0,data) {
   return buffer;
   }
 
-  hashContexts = {'modalId': depth0};
-  hashTypes = {'modalId': "STRING"};
+  hashContexts = {'modalId': depth0,'bodyClass': depth0};
+  hashTypes = {'modalId': "STRING",'bodyClass': "STRING"};
   options = {hash:{
-    'modalId': ("feedback-modal")
+    'modalId': ("feedback-modal"),
+    'bodyClass': ("slds-expanded")
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['aljs-modal'] || (depth0 && depth0['aljs-modal'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-modal", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
@@ -5137,7 +5138,12 @@ function program5(depth0,data) {
     'prompt': ("labels.selectPlaceHolder"),
     'data-qa-select': ("selectedFilter")
   },contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                    </label>\n                </div>\n                <hr class=\"slds-m-bottom--large\">\n                ");
+  data.buffer.push("\n                    </label>\n                </div>\n                ");
+  hashTypes = {};
+  hashContexts = {};
+  stack1 = helpers['if'].call(depth0, "selectedFilter", {hash:{},inverse:self.noop,fn:self.program(6, program6, data),contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data});
+  if(stack1 || stack1 === 0) { data.buffer.push(stack1); }
+  data.buffer.push("\n                ");
   hashTypes = {};
   hashContexts = {};
   options = {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
@@ -5160,6 +5166,11 @@ function program5(depth0,data) {
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.ok", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
   data.buffer.push("</button>\n    </modalFooter>\n");
   return buffer;
+  }
+function program6(depth0,data) {
+  
+  
+  data.buffer.push("\n                    <hr class=\"slds-m-bottom--large\">\n                ");
   }
 
   data.buffer.push("<div class=\"slds-clearfix\">\n    <h3 class=\"slds-text-heading--small slds-float--left\">");
@@ -5508,18 +5519,18 @@ function program1(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.totalApplicants", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("</h2>\n	</modalHeader>\n	<modalBody>\n		<div class=\"slds-tabs--default\" data-aljs=\"tabs\">\n            <ul class=\"slds-tabs--default__nav\" role=\"tablist\">\n                <li ");
+  data.buffer.push("</h2>\n	</modalHeader>\n	<modalBody>\n		<div class=\"slds-tabs--scoped\" data-aljs=\"tabs\">\n            <ul class=\"slds-tabs--scoped__nav\" role=\"tablist\">\n                <li ");
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
-    'class': (":slds-tabs__item :slds-text-heading--label isStageSelected:slds-active")
+    'class': (":slds-tabs--scoped__item :slds-text-heading--label isStageSelected:slds-active")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
   data.buffer.push(" title=\"By Stage\" role=\"presentation\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setIsStageSelected", true, {hash:{},contexts:[depth0,depth0],types:["STRING","BOOLEAN"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"stage\"><a href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-stage\" data-aljs-show=\"tab-stage\" tabindex=\"-1\">");
+  data.buffer.push(" data-qa-button=\"stage\"><a class=\"slds-tabs--scoped__link\" href=\"#\" role=\"tab\" aria-selected=\"true\" aria-controls=\"tab-stage\" data-aljs-show=\"tab-stage\" tabindex=\"-1\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.byStage", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -5527,14 +5538,14 @@ function program1(depth0,data) {
   hashContexts = {'class': depth0};
   hashTypes = {'class': "STRING"};
   options = {hash:{
-    'class': (":slds-tabs__item :slds-text-heading--label isStageSelected::slds-active")
+    'class': (":slds-tabs--scoped__item :slds-text-heading--label isStageSelected::slds-active")
   },contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   data.buffer.push(escapeExpression(((stack1 = helpers['bind-attr'] || (depth0 && depth0['bind-attr'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "bind-attr", options))));
   data.buffer.push(" title=\"By Source\" role=\"presentation\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "setIsStageSelected", false, {hash:{},contexts:[depth0,depth0],types:["STRING","BOOLEAN"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-button=\"source\"><a href=\"#\" role=\"tab\" aria-selected=\"false\" aria-controls=\"tab-source\" data-aljs-show=\"tab-source\" tabindex=\"-1\">");
+  data.buffer.push(" data-qa-button=\"source\"><a class=\"slds-tabs--scoped__link\" href=\"#\" role=\"tab\" aria-selected=\"false\" aria-controls=\"tab-source\" data-aljs-show=\"tab-source\" tabindex=\"-1\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.bySource", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -5553,7 +5564,7 @@ function program1(depth0,data) {
 function program2(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n	            <div id=\"tab-stage\" class=\"slds-tabs__content\" role=\"tabpanel\">\n	                    <table class=\"slds-table slds-table--bordered\">\n	                        <thead>\n	                            <tr class=\"slds-text-heading--label\">\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\" data-qa-label=\"stage\">");
+  data.buffer.push("\n	            <div id=\"tab-stage\" class=\"slds-tabs--scoped__content\" role=\"tabpanel\">\n	                    <table class=\"slds-table slds-table--bordered\">\n	                        <thead>\n	                            <tr class=\"slds-text-heading--label\">\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\" data-qa-label=\"stage\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.stage", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -5639,7 +5650,7 @@ function program5(depth0,data) {
 function program7(depth0,data) {
   
   var buffer = '', stack1, hashTypes, hashContexts;
-  data.buffer.push("\n	            <div id=\"tab-source\" class=\"slds-tabs__content\" role=\"tabpanel\">\n	                <!-- By Source -->\n	                <div class=\"slds-scrollable--x\">\n	                    <table class=\"slds-table slds-table--bordered\">\n	                        <thead>\n	                            <tr class=\"slds-text-heading--label\">\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\">");
+  data.buffer.push("\n	            <div id=\"tab-source\" class=\"slds-tabs--scoped__content\" role=\"tabpanel\">\n	                <!-- By Source -->\n	                <div class=\"slds-scrollable--x\">\n	                    <table class=\"slds-table slds-table--bordered\">\n	                        <thead>\n	                            <tr class=\"slds-text-heading--label\">\n	                                <th scope=\"col\">\n	                                    <span class=\"slds-truncate\">");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.source", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -5690,7 +5701,7 @@ function program8(depth0,data) {
   hashTypes = {'modalId': "STRING",'bodyClass': "STRING"};
   options = {hash:{
     'modalId': ("stage-status-modal"),
-    'bodyClass': ("slds-p-horizontal--x-large slds-p-bottom--x-large slds-p-top--large")
+    'bodyClass': ("slds-p-around--x-large")
   },inverse:self.noop,fn:self.program(1, program1, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['aljs-modal'] || (depth0 && depth0['aljs-modal'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-modal", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
