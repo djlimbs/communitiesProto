@@ -187,13 +187,9 @@
                         </ul>
                     </div>
                     {{#if googlePlaceSelected}}
-                        <small class="block mar--sm--ts">
-                            <a class="block" href="#" {{action "clickSelectGoogleMaps"}} data-qa-link="editGoogleLocation">
-                                <div class="part__body">
-                                    {{labels.editUsingGoogleMaps}}
-                                </div>
-                            </a>
-                        </small>
+                        <a href="javascript:void(0)" {{action "clickSelectGoogleMaps"}} data-qa-link="editGoogleLocation">
+                            {{labels.editUsingGoogleMaps}}
+                        </a>
                     {{/if}}
                 </div>
             </div>

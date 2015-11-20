@@ -303,7 +303,8 @@ function initializeGoogleMaps(self) {
                     $('#pac-input').focus();
                 }, 200);
             }, function() {
-                $('.geolocation-alert').addClass('visible');
+                //self.set('showGeolocationError', true);
+                $('.js-geolocationError').removeClass('slds-hide');
                 $self.removeClass('load-this');
                 $self.removeClass('disabled');
             });
@@ -1497,9 +1498,9 @@ App.InterviewNewEditController = Ember.ObjectController.extend({
                 });
             }
         },
-        clickGeoLocationClose: function() {
-            $('.geolocation-alert').removeClass('visible');
-        },
+        // clickGeoLocationClose: function() {
+        //     $('.geolocation-alert').removeClass('visible');
+        // },
         clickSendEmail: function() {
             var saveObj = this.get('saveObj');
 

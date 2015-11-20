@@ -4,8 +4,7 @@
     </modalHeader>
     <modalBody>
         <input id="pac-input" class="controls to-im-pac-input slds-input" type="text" placeholder="{{unbound labels.enterALocation}}" data-qa-input="location">
-        <div id="map-canvas" style="height:60vh;"></div>
-        {{#aljs-notification theme="slds-theme--warning" dismissClass="slds-notify__close"}}
+        {{#aljs-notification theme="slds-theme--warning" dismissClass="slds-notify__close" class="slds-hide js-geolocationError"}}
             <span class="slds-assistive-text">Info</span>
             <button class="slds-button slds-button--icon-inverse slds-notify__close">
                 <svg aria-hidden="true" class="slds-button__icon">
@@ -19,6 +18,7 @@
                 </div>
             </div>
         {{/aljs-notification}}
+        <div id="map-canvas" style="height:60vh;"></div>
     </modalBody>
     <modalFooter>
         {{!-- <span class="pad--sm--s alert alert--warning geolocation-alert slide-in" style="margin-right: 5px; padding-top: 10px !important; top: 2px; border-width: 1px; position: relative;" data-qa-alert="couldNotDetermineLocation">

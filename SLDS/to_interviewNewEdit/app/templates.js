@@ -196,16 +196,17 @@ function program1(depth0,data) {
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.unbound.call(depth0, "labels.enterALocation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\" data-qa-input=\"location\">\n        <div id=\"map-canvas\" style=\"height:60vh;\"></div>\n        ");
-  hashContexts = {'theme': depth0,'dismissClass': depth0};
-  hashTypes = {'theme': "STRING",'dismissClass': "STRING"};
+  data.buffer.push("\" data-qa-input=\"location\">\n        ");
+  hashContexts = {'theme': depth0,'dismissClass': depth0,'class': depth0};
+  hashTypes = {'theme': "STRING",'dismissClass': "STRING",'class': "STRING"};
   options = {hash:{
     'theme': ("slds-theme--warning"),
-    'dismissClass': ("slds-notify__close")
+    'dismissClass': ("slds-notify__close"),
+    'class': ("slds-hide js-geolocationError")
   },inverse:self.noop,fn:self.program(2, program2, data),contexts:[],types:[],hashContexts:hashContexts,hashTypes:hashTypes,data:data};
   stack2 = ((stack1 = helpers['aljs-notification'] || (depth0 && depth0['aljs-notification'])),stack1 ? stack1.call(depth0, options) : helperMissing.call(depth0, "aljs-notification", options));
   if(stack2 || stack2 === 0) { data.buffer.push(stack2); }
-  data.buffer.push("\n    </modalBody>\n    <modalFooter>\n        \n        \n\n        <button id=\"gotoMyLocation\" class=\"slds-button slds-button--neutral\" type=\"button\" data-qa-button=\"gotoMyLocation\" style=\"position:relative; z-index:1;\">\n            ");
+  data.buffer.push("\n        <div id=\"map-canvas\" style=\"height:60vh;\"></div>\n    </modalBody>\n    <modalFooter>\n        \n        \n\n        <button id=\"gotoMyLocation\" class=\"slds-button slds-button--neutral\" type=\"button\" data-qa-button=\"gotoMyLocation\" style=\"position:relative; z-index:1;\">\n            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.goToMyLocation", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
@@ -1120,15 +1121,15 @@ function program24(depth0,data) {
 function program26(depth0,data) {
   
   var buffer = '', hashTypes, hashContexts;
-  data.buffer.push("\n                        <small class=\"block mar--sm--ts\">\n                            <a class=\"block\" href=\"#\" ");
+  data.buffer.push("\n                        <a href=\"javascript:void(0)\" ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers.action.call(depth0, "clickSelectGoogleMaps", {hash:{},contexts:[depth0],types:["STRING"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push(" data-qa-link=\"editGoogleLocation\">\n                                <div class=\"part__body\">\n                                    ");
+  data.buffer.push(" data-qa-link=\"editGoogleLocation\">\n                            ");
   hashTypes = {};
   hashContexts = {};
   data.buffer.push(escapeExpression(helpers._triageMustache.call(depth0, "labels.editUsingGoogleMaps", {hash:{},contexts:[depth0],types:["ID"],hashContexts:hashContexts,hashTypes:hashTypes,data:data})));
-  data.buffer.push("\n                                </div>\n                            </a>\n                        </small>\n                    ");
+  data.buffer.push("\n                        </a>\n                    ");
   return buffer;
   }
 
